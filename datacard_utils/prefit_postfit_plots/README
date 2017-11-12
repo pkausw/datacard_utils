@@ -1,0 +1,15 @@
+Script to produce prefit and postfit plots based on the combine output
+
+You need
+1) datacard.txt file
+2) mlfit.root file (or fitDiagnostics.root as it is called in the new combine version)
+3) If you want the proper x-axis shown, instead of anonymus numbering you also need the file containing the MVA template shapes.
+
+The working directory should be the same as the working directory for the fits themselves. 
+-> The relative path of the template file as written in the datacards needs to be readable.
+
+The script works with KIT and RWTH cards. Relatively certain that it will also work with DESY cards.
+
+To produce the plots do for example:
+
+python PrePostFitPlots.py fitDiagnosticstestDNN.root testDNN.txt
