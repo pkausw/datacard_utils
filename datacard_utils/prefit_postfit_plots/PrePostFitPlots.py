@@ -19,15 +19,15 @@ color_dict["ttbarW"]=ROOT.kBlue-10
 color_dict["ttbarZ"]=ROOT.kBlue-6
 color_dict["diboson"]=ROOT.kAzure+2
 color_dict["QCD"]=ROOT.kYellow
-color_dict["ttH_hbb"]=ROOT.kBlue+1
-color_dict["ttH_hcc"]=ROOT.kBlue+1
-color_dict["ttH_htt"]=ROOT.kBlue+1
-color_dict["ttH_hgg"]=ROOT.kBlue+1
-color_dict["ttH_hgluglu"]=ROOT.kBlue+1
-color_dict["ttH_hww"]=ROOT.kBlue+1
-color_dict["ttH_hzz"]=ROOT.kBlue+1
-color_dict["ttH_hzg"]=ROOT.kBlue+1
-color_dict["ttH"]=ROOT.kBlue+1
+color_dict["ttH_hbb"]=ROOT.kBlue-4
+color_dict["ttH_hcc"]=ROOT.kBlue-4
+color_dict["ttH_htt"]=ROOT.kBlue-4
+color_dict["ttH_hgg"]=ROOT.kBlue-4
+color_dict["ttH_hgluglu"]=ROOT.kBlue-4
+color_dict["ttH_hww"]=ROOT.kBlue-4
+color_dict["ttH_hzz"]=ROOT.kBlue-4
+color_dict["ttH_hzg"]=ROOT.kBlue-4
+color_dict["ttH"]=ROOT.kBlue-4
 color_dict["total_background"]=ROOT.kBlack
 color_dict["total_signal"]=ROOT.kBlack
 color_dict["total_covar"]=ROOT.kBlack
@@ -76,11 +76,13 @@ def GetCanvas(canvas_name):
     c.GetPad(1).SetLeftMargin(0.1);
     c.GetPad(1).SetRightMargin(0.05);
     c.GetPad(1).SetBottomMargin(0);
+    c.GetPad(1).SetTicks(1,1)
     c.GetPad(2).SetPad(0.05,0.0,0.95,0.3);
     c.GetPad(2).SetRightMargin(0.05);
     c.GetPad(2).SetLeftMargin(0.1);
     c.GetPad(2).SetTopMargin(0);
-    c.GetPad(2).SetBottomMargin(0.2)
+    c.GetPad(2).SetBottomMargin(0.23)
+    c.GetPad(2).SetTicks(1,1)
     c.cd();
     return c
 
@@ -202,7 +204,7 @@ def GetDataHistogram(processes_histos_dict):
 
 def GetSignal(processes_histos_dict,background_integral):
     signal = processes_histos_dict["total_signal"]
-    signal.SetLineColor(ROOT.kBlue+1)
+    signal.SetLineColor(ROOT.kBlue-4)
     signal.SetFillStyle(0)
     signal.SetLineWidth(2)
     signal_integral = signal.Integral()
@@ -222,27 +224,27 @@ def GetLegend():
 
 def getLegendL():
     legend=ROOT.TLegend()
-    legend.SetX1NDC(0.63)
-    legend.SetX2NDC(0.79)
-    legend.SetY1NDC(0.88)
-    legend.SetY2NDC(0.89)
+    legend.SetX1NDC(0.61)
+    legend.SetX2NDC(0.78)
+    legend.SetY1NDC(0.87)
+    legend.SetY2NDC(0.88)
     legend.SetBorderSize(0);
     legend.SetLineStyle(0);
     legend.SetTextFont(42);
-    legend.SetTextSize(0.03);
+    legend.SetTextSize(0.035);
     legend.SetFillStyle(0);
     return legend
 
 def getLegendR():
     legend=ROOT.TLegend()
-    legend.SetX1NDC(0.79)
+    legend.SetX1NDC(0.78)
     legend.SetX2NDC(0.96)
-    legend.SetY1NDC(0.88)
-    legend.SetY2NDC(0.89)
+    legend.SetY1NDC(0.87)
+    legend.SetY2NDC(0.88)
     legend.SetBorderSize(0);
     legend.SetLineStyle(0);
     legend.SetTextFont(42);
-    legend.SetTextSize(0.03);
+    legend.SetTextSize(0.035);
     legend.SetFillStyle(0);
     return legend
 
@@ -296,18 +298,19 @@ def GetRatioHisto(nominator,denominator,templateHisto=None):
     ratio.GetXaxis().SetLimits(lowerx,upperx)
     ratio.SetTitle("")
     ratio.GetYaxis().SetLabelFont(43)
-    ratio.GetYaxis().SetLabelSize(18)
+    ratio.GetYaxis().SetLabelSize(26)
     ratio.GetXaxis().SetLabelFont(43)
-    ratio.GetXaxis().SetLabelSize(18)
+    ratio.GetXaxis().SetLabelSize(26)
     ratio.GetYaxis().SetTitle("data/MC")
-    ratio.GetYaxis().SetTitleOffset(2.0)
+    ratio.GetYaxis().SetTitleOffset(1.5)
     ratio.GetYaxis().SetTitleFont(43)
-    ratio.GetYaxis().SetTitleSize(22)
+    ratio.GetYaxis().SetTitleSize(30)
     ratio.GetXaxis().SetTitle("discriminant value")
-    ratio.GetXaxis().SetTitleOffset(3.0)
+    ratio.GetXaxis().SetTitleOffset(2.3)
     ratio.GetXaxis().SetTitleFont(43)
-    ratio.GetXaxis().SetTitleSize(22)
+    ratio.GetXaxis().SetTitleSize(30)
     ratio.GetYaxis().CenterTitle()
+    ratio.GetYaxis().SetNdivisions(506)
     #ratio.GetYaxis().SetNdivisions( 503 )
     #ratio.GetXaxis().SetNdivisions( 510 )
     #ratio.GetXaxis().SetTickLength( line.GetXaxis().GetTickLength() * 2.0 )
@@ -348,11 +351,11 @@ def GetRatioErrorGraph(error_graph,templateHisto=None):
 
 def SetUpStack(stack):
     stack.GetYaxis().SetLabelFont(43)
-    stack.GetYaxis().SetLabelSize(18)
+    stack.GetYaxis().SetLabelSize(26)
     stack.GetYaxis().SetTitle("Events")
-    stack.GetYaxis().SetTitleOffset(2.0)
+    stack.GetYaxis().SetTitleOffset(1.7)
     stack.GetYaxis().SetTitleFont(43)
-    stack.GetYaxis().SetTitleSize(22)
+    stack.GetYaxis().SetTitleSize(30)
     stack.SetTitle("")
     return 0
 
@@ -361,11 +364,11 @@ def SetUpStack(stack):
 def GetCMSandInfoLabels():
     cms = ROOT.TLatex(0.12, 0.92, '#scale[1.5]{#bf{CMS}}'  );# add this for preliminary #it{Preliminary}
     cms.SetTextFont(43)
-    cms.SetTextSize(22)
+    cms.SetTextSize(26)
     cms.SetNDC()
     info = ROOT.TLatex(0.7, 0.92, '35.9 fb^{-1} (13 TeV)'  );
     info.SetTextFont(43)
-    info.SetTextSize(22)
+    info.SetTextSize(26)
     info.SetNDC()
     return cms,info
 
@@ -377,9 +380,9 @@ def GetFitLabel(prepostfitflag):
         category = "post-fit s+b"
     else:
         category = "post-fit b"
-    label = ROOT.TLatex(0.15, 0.8, category  );
+    label = ROOT.TLatex(0.15, 0.78, category  );
     label.SetTextFont(42)
-    label.SetTextSize(0.035)
+    label.SetTextSize(0.04)
     label.SetNDC()
     return label
 
@@ -439,9 +442,9 @@ def GetCatLabel(cat,prepostfitflag):
     #else:
         #category = cat+", post-fit b"
     category=cat
-    label = ROOT.TLatex(0.15, 0.85, category  );
+    label = ROOT.TLatex(0.15, 0.83, category  );
     label.SetTextFont(42)
-    label.SetTextSize(0.035)
+    label.SetTextSize(0.04)
     label.SetNDC()
     return label
 
