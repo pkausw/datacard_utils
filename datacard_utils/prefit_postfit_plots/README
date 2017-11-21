@@ -3,6 +3,10 @@ Script to produce prefit and postfit plots based on the combine output
 You need
 1) datacard.txt file
 2) mlfit.root file (or fitDiagnostics.root as it is called in the new combine version)
+2b) The mlfit file needs to contain the shapes and error bands of course. So you need to call combine with 
+"--saveNormalizations --saveShapes --saveWithUncertainties --saveOverallShapes"
+Maybe "--saveShapes --saveWithUncertainties" is enough. I did not try.
+
 3) If you want the proper x-axis shown, instead of anonymus numbering you also need the file containing the MVA template shapes.
 
 The working directory should be the same as the working directory for the fits themselves. 

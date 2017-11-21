@@ -73,13 +73,13 @@ def GetCanvas(canvas_name):
     c = ROOT.TCanvas(canvas_name,"",900,800)
     c.Divide(1,2);
     c.GetPad(1).SetPad(0.05,0.3,0.95,1);
-    c.GetPad(1).SetLeftMargin(0.1);
-    c.GetPad(1).SetRightMargin(0.05);
+    c.GetPad(1).SetLeftMargin(0.11);
+    c.GetPad(1).SetRightMargin(0.04);
     c.GetPad(1).SetBottomMargin(0);
     c.GetPad(1).SetTicks(1,1)
     c.GetPad(2).SetPad(0.05,0.0,0.95,0.3);
-    c.GetPad(2).SetRightMargin(0.05);
-    c.GetPad(2).SetLeftMargin(0.1);
+    c.GetPad(2).SetRightMargin(0.04);
+    c.GetPad(2).SetLeftMargin(0.11);
     c.GetPad(2).SetTopMargin(0);
     c.GetPad(2).SetBottomMargin(0.23)
     c.GetPad(2).SetTicks(1,1)
@@ -89,13 +89,14 @@ def GetCanvas(canvas_name):
 # returns directory in tfile***    
 def GetDirectory(fitfile,directory):
     dir_ = fitfile.Get(directory)
+    print "dir ", dir_
     return dir_
 
 #returns a list of all channels in the given directory***
 def GetChannels(directory):
     channels = []
     for key in directory.GetListOfKeys():
-        if "ch" in key.GetName():
+        if key.IsFolder():
             channels.append(key.GetName())
     return channels
 
@@ -302,7 +303,7 @@ def GetRatioHisto(nominator,denominator,templateHisto=None):
     ratio.GetXaxis().SetLabelFont(43)
     ratio.GetXaxis().SetLabelSize(26)
     ratio.GetYaxis().SetTitle("data/MC")
-    ratio.GetYaxis().SetTitleOffset(1.5)
+    ratio.GetYaxis().SetTitleOffset(1.23)
     ratio.GetYaxis().SetTitleFont(43)
     ratio.GetYaxis().SetTitleSize(30)
     ratio.GetXaxis().SetTitle("discriminant value")
@@ -353,7 +354,7 @@ def SetUpStack(stack):
     stack.GetYaxis().SetLabelFont(43)
     stack.GetYaxis().SetLabelSize(26)
     stack.GetYaxis().SetTitle("Events")
-    stack.GetYaxis().SetTitleOffset(1.7)
+    stack.GetYaxis().SetTitleOffset(1.43)
     stack.GetYaxis().SetTitleFont(43)
     stack.GetYaxis().SetTitleSize(30)
     stack.SetTitle("")
@@ -430,6 +431,31 @@ def GetCatLabel(cat,prepostfitflag):
             break
     print jets_relation,jets
     print btags_relation,btags
+    #special rules for desy cards
+    if "dl_" in cat:
+      jets = ""
+      btags = ""
+      jets_relation = ""
+      btags_relation = ""
+      for part in help_array:
+        if "j" in part and "t" in part: # now we have the jet-tag part. i hope
+          subparts=part.split("j")
+          subpart1=subparts[0]
+          for character in subpart1:
+            if character.isdigit():
+              jets = character
+            if "ge" in part:
+              jets_relation = "#geq"
+            else:
+              jets_relation = "="
+          subpart2=subparts[1]
+          for character in subpart2:
+            if character.isdigit():
+              btags = character
+            if "ge" in part:
+              btags_relation = "#geq"
+            else:
+              btags_relation = "="
     cat = help_array[0]+", #jets "+jets_relation+" "+jets+", #btags "+btags_relation+" "+btags+", "
     if dnn_node!="":
         cat+=dnn_node 
@@ -634,42 +660,55 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag):
 def ReadDatacard(datacard):
     print "reading datacard"
     buzzwords_in_relevant_lines = []
+    shapeLines=[]
+    categoryLine=""
+    channel_category_dict = {}
+    foundCategoryLine=False
     with open(datacard, "r") as ins:
         for line in ins:
-            if "shapes *" in line:
-                line_array = line.split(' ')
-                modified_line_array = []
-                for element in line_array:
-                    if not element=='' and not element=='*' and not "$SYSTEMATIC" in element and ("ch" in element or "$PROCESS" in element or ".root" in element):
-                        modified_line_array.append(element)
-                buzzwords_in_relevant_lines.append(modified_line_array)
-    print "buzzwords in line ", buzzwords_in_relevant_lines
-    channel_category_dict = {}
-    for relevant_line in buzzwords_in_relevant_lines:
-        channel = ""
-        category = ""
-        histopath= ""
-        histoexpression = ""
-        for buzzword in relevant_line:
-            if "ch" in buzzword:
-                channel = buzzword
-            if "$PROCESS" in buzzword:
-                category = buzzword.replace("$PROCESS","").replace("/","").replace("_finaldiscr_","")
-            if "$PROCESS" in buzzword:
-                histoexpression = buzzword
-            if ".root" in buzzword:
-                histopath = buzzword                
-        
-        channel_category_dict[channel]={}
-        channel_category_dict[channel]["catname"] = category
-        channel_category_dict[channel]["histopath"] = histopath
-        channel_category_dict[channel]["histoexpression"] = histoexpression
-        
-    print channel_category_dict
-    #channel_category_dict = {}
-    return channel_category_dict
+            formattedLine=line
+            # remove uneeded separators from line
+            while "\t" in line or "  " in line or "\n" in line :
+              line=line.replace("\t"," ").replace("  "," ").replace("\n","")
+            if "shapes *" in line.replace("\t"," "):
+              shapeLines.append(line)
+            if "bin " in line and foundCategoryLine==False:
+              foundCategoryLine=True
+              categoryLine=line
+    categoriesFromLine=categoryLine.split(" ")[1:]
+    print categoriesFromLine
+    print shapeLines
+    for cfl in categoriesFromLine:
+      channel = cfl
+      category = ""
+      histopath= ""
+      histoexpression = ""
+      for line in shapeLines:
+        splitline=line.split(" ")
+        pref=splitline[0]
+        shapeproc=splitline[1] #disregared for now
+        shapeChannel=splitline[2]
+        shapeFile=splitline[3]
+        shapeProcessPart=splitline[4]
+        shapeSysPart=splitline[5]
+        if shapeproc!="*" :
+          continue
+        if not (shapeChannel==channel or shapeChannel=="*"):
+          continue
+        histopath=shapeFile
+        if "$CHANNEL" in shapeProcessPart:
+          # This is needed for unanonymized kit cards
+          shapeProcessPart.replace("$CHANNEL",channel)
+        category=shapeProcessPart.replace("$PROCESS","").replace("/","").replace("_finaldiscr_","")
+        histoexpression=shapeProcessPart
+      channel_category_dict[channel]={}
+      channel_category_dict[channel]["catname"] = category
+      channel_category_dict[channel]["histopath"] = histopath
+      channel_category_dict[channel]["histoexpression"] = histoexpression  
     
-    #print mod_array
+    print channel_category_dict
+    return channel_category_dict
+          
 ################################################################################# main function #################################################################################
 
 def main(fitfile_,datacard_):
