@@ -3,6 +3,7 @@ import sys
 import os
 import CMS_lumi
 import re
+from array import array
 ROOT.gROOT.SetBatch(True)
 
 
@@ -204,15 +205,24 @@ def GetDataHistogram(processes_histos_dict):
     return data
 
 def GetSignal(processes_histos_dict,background_integral):
-    signal = processes_histos_dict["total_signal"]
+    signal_unscaled = processes_histos_dict["total_signal"]
+    signal=signal_unscaled.Clone()
     signal.SetLineColor(ROOT.kBlue-4)
     signal.SetFillStyle(0)
     signal.SetLineWidth(2)
     signal_integral = signal.Integral()
+    scaleFactor=0.0
+    scaleMode=15.0
     #print signal_integral
     if signal_integral>0.:
-        signal.Scale(background_integral/signal_integral)
-        return signal,background_integral/signal_integral
+      if scaleMode>0:
+        scaleFactor=scaleMode
+        signal.Scale(scaleFactor)
+        return signal,scaleFactor
+      else:
+        scaleFactor=background_integral/signal_integral
+        signal.Scale(scaleFactor)
+        return signal,scaleFactor
     else:
         return None,0.
 
@@ -332,7 +342,8 @@ def GetRatioErrorGraph(error_graph,templateHisto=None):
           theCorrectXError=templateHisto.GetBinWidth(i+1)/2.0
           theCorrectXvalue=templateHisto.GetXaxis().GetBinCenter(i+1)
           #print theCorrectXvalue
-          ratio_error_graph.SetPoint(i,theCorrectXvalue,1)
+          print i, theCorrectXvalue, error_graph.GetY()[i],error_graph.GetErrorYhigh(i),error_graph.GetErrorYlow(i)
+          ratio_error_graph.SetPoint(i,theCorrectXvalue,1),
           ratio_error_graph.SetPointEYhigh(i,error_graph.GetErrorYhigh(i)/error_graph.GetY()[i])
           ratio_error_graph.SetPointEYlow(i,error_graph.GetErrorYlow(i)/error_graph.GetY()[i])
           ratio_error_graph.SetPointEXhigh(i,theCorrectXError)
@@ -485,6 +496,17 @@ def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHi
     processes_histos_dict = categories_processes_histos_dict[category]
     #print processes_histos_dict
     
+    for process in processes_histos_dict:
+      oldh=processes_histos_dict[process]
+      processes_histos_dict[process]=rebinToTemplate(oldh,templateHisto)
+    
+    theTotalBackgroundHisto=processes_histos_dict["total_background"].Clone()
+    for process in processes_histos_dict:
+      oldh=processes_histos_dict[process]
+      processes_histos_dict[process]=stripEmptyBins(oldh,theTotalBackgroundHisto)
+    oldTemplate=templateHisto.Clone()
+    templateHisto=stripEmptyBins(oldTemplate,theTotalBackgroundHisto)
+    
     # set colors of histograms
     ColorizeHistograms(processes_histos_dict)
     
@@ -552,8 +574,49 @@ def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHi
     if data!=None:
         ratio_background_data = GetRatioHisto(data,background,templateHisto)
     
-    return  stack,legendL,legendR,error_graph,data,ratio_background_data,signal,ratio_error_graph
+    return  stack,legendL,legendR,error_graph,data,ratio_background_data,signal,ratio_error_graph, templateHisto
 
+def rebinToTemplate(histo,templateHisto=None):
+  if templateHisto==None:
+    return histo
+  outhisto=templateHisto.Clone()
+  outhisto.SetName(histo.GetName())
+  outhisto.SetTitle(histo.GetTitle())
+  nBins=templateHisto.GetNbinsX()
+  for i in range(nBins):
+    ibin=i+1
+    outhisto.SetBinContent(ibin,histo.GetBinContent(ibin))
+    outhisto.SetBinError(ibin,histo.GetBinError(ibin))
+  return outhisto  
+
+def stripEmptyBins(histo,template):
+  firstFilledBin=0
+  lastFilledBin=0
+  nBinsTemplate=template.GetNbinsX()
+  epsilonCutOff=0.000001
+  for i in range(1,nBinsTemplate+1,1):
+    if template.GetBinContent(i)>epsilonCutOff:
+      firstFilledBin=i
+      break
+  for i in range(nBinsTemplate,0,-1):
+    if template.GetBinContent(i)>epsilonCutOff:
+      lastFilledBin=i
+      break
+  # get binEdgeArray  
+  binEdgeArray=array("f",[])
+  binContents=[]
+  binErrors=[]
+  for i in range(firstFilledBin,lastFilledBin+2,1):
+    binEdgeArray.append(histo.GetBinLowEdge(i))
+    binContents.append(histo.GetBinContent(i))
+    binErrors.append(histo.GetBinError(i))
+  # create new histo without empty bins at the ends                     
+  newHisto=ROOT.TH1F(histo.GetName(),histo.GetTitle(),len(binEdgeArray)-1,binEdgeArray)
+  newNBins=newHisto.GetNbinsX()
+  for i in range(newNBins):
+    newHisto.SetBinContent(i+1,binContents[i])
+    newHisto.SetBinError(i+1,binErrors[i])
+  return newHisto  
 
 def Plot(fitfile_,ch_cat_dict_,prepostfitflag):
     
@@ -570,6 +633,7 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag):
         canvas = GetCanvas(dir_+channel)
         
         templateRootFilePath=ch_cat_dict_[channel]["histopath"]
+        print templateRootFilePath
         templateHistoExpression=ch_cat_dict_[channel]["histoexpression"]
         print templateRootFilePath,templateHistoExpression
         templateHisto=None
@@ -578,7 +642,7 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag):
           print templateHistoExpression.replace("$PROCESS","ttH_hbb")
           templateRootFile=ROOT.TFile(templateRootFilePath,"READ")
           templateHisto=templateRootFile.Get(templateHistoExpression.replace("$PROCESS","ttH_hbb"))
-        stack,legendL,legendR,error_band,data,ratio_data_prediction,signal,ratio_error_band = GetPlots(categories_processes_histos_dict,channel,dir_,templateHisto)
+        stack,legendL,legendR,error_band,data,ratio_data_prediction,signal,ratio_error_band, templateHisto = GetPlots(categories_processes_histos_dict,channel,dir_,templateHisto)
         
         canvas.cd(1)
         
