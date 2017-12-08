@@ -183,6 +183,62 @@ def GetHistoFromTGraphAE(tgraph,category,nbins_new_):
     histo.SetBinErrorOption(ROOT.TH1.kPoisson)
     return histo
 
+# converts the TGraphAsymmError data object in the mlfit file to a histogram (therby dropping bins again) and in addition sets asymmetric errors***
+def makeAsymErrorsForDataHisto(datahisto):
+    oldname=datahisto.GetName()
+    datahisto.SetName(oldname+"_old")
+    binEdgeArray=array("f",[])
+    nBins=datahisto.GetNbinsX()
+    for i in range(1,nBins+2,1):
+      binEdgeArray.append(datahisto.GetBinLowEdge(i))
+      
+    newHisto = ROOT.TH1F(oldname,datahisto.GetTitle(),len(binEdgeArray)-1,binEdgeArray)
+    # set this flag for asymmetric errors in data histogram
+    newHisto.Sumw2(ROOT.kFALSE)
+    # loop has to go from 0..nbins_new-1 for a tgraphasymmerror with nbins_new points
+    for i in range(1,nBins+1,1):
+        # first point (point 0) in tgraphae corresponds to first bin (bin 1 (0..1)) in histogram
+        entries = datahisto.GetBinContent(i)
+        for k in range(int(round(entries))):# rounding necessary if used with asimov dataset because entries can be non-integer in this case
+            newHisto.Fill(datahisto.GetBinCenter(i))
+        print newHisto.GetBinContent(i)  
+    # set this flag for calculation of asymmetric errors in data histogram
+    newHisto.SetBinErrorOption(ROOT.TH1.kPoisson)
+    return newHisto
+
+#def createGraphToDrawFromDataHist(datahisto,SoBCut=0.0):
+  #nBins=datahisto.GetNbinsX()
+  #theGraph=ROOT.TGraphAsymmErrors()
+  
+def blindDataHisto(datahisto, signalhisto, backgroundhisto,SoBCut=0.01):
+    oldname=datahisto.GetName()
+    datahisto.SetName(oldname+"_old")
+    binEdgeArray=array("f",[])
+    nBins=datahisto.GetNbinsX()
+    for i in range(1,nBins+2,1):
+      binEdgeArray.append(datahisto.GetBinLowEdge(i))
+      
+    newHisto = ROOT.TH1F(oldname,datahisto.GetTitle(),len(binEdgeArray)-1,binEdgeArray)
+    # set this flag for asymmetric errors in data histogram
+    newHisto.Sumw2(ROOT.kFALSE)
+    startBlinding=False
+    for i in range(1,nBins+1,1):
+        # first point (point 0) in tgraphae corresponds to first bin (bin 1 (0..1)) in histogram
+        if signalhisto.GetBinContent(i)>0 and backgroundhisto.GetBinContent(i)<=0:
+          startBlinding=True
+        if signalhisto.GetBinContent(i)/float(backgroundhisto.GetBinContent(i))>SoBCut:
+          startBlinding=True
+        if startBlinding==True:
+          continue
+        entries = datahisto.GetBinContent(i)
+        for k in range(int(round(entries))):# rounding necessary if used with asimov dataset because entries can be non-integer in this case
+            newHisto.Fill(datahisto.GetBinCenter(i))
+        print newHisto.GetBinContent(i)  
+    # set this flag for calculation of asymmetric errors in data histogram
+    newHisto.SetBinErrorOption(ROOT.TH1.kPoisson)
+    return newHisto
+
+
 # provided a mlfitfile and a directory in this file, this function returns the dict["ch1"]["ttbarOther"]->corresponding histogram dictionary***
 def GetHistos(fitfile,directory):
     # get directory in mlfit file
@@ -296,7 +352,7 @@ def GetRatioHisto(nominator,denominator,templateHisto=None):
         #print theCorrectXvalue
         ratio.SetPoint(i-1,theCorrectXvalue,nominator.GetBinContent(i)/denominator.GetBinContent(i))
         ratio.SetPointError(i-1,0.,0.,(nominator.GetBinErrorLow(i))/denominator.GetBinContent(i),(nominator.GetBinErrorUp(i))/denominator.GetBinContent(i))
-        #print i-1,theCorrectXvalue,nominator.GetBinContent(i)/denominator.GetBinContent(i)
+        print i-1,theCorrectXvalue,nominator.GetBinContent(i),denominator.GetBinContent(i),nominator.GetBinContent(i)/denominator.GetBinContent(i)
         #print i-1,0.,0.,(nominator.GetBinErrorLow(i))/denominator.GetBinContent(i),(nominator.GetBinErrorUp(i))/denominator.GetBinContent(i)
     else:    
       for i in range(1,nominator.GetNbinsX()+1,1):
@@ -486,7 +542,7 @@ def GetCatLabel(cat,prepostfitflag):
     return label
 
 
-def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHisto=None):
+def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHisto=None, blind=False):
     # create legend
     #legend = GetLegend()
     legendL=getLegendL()
@@ -506,6 +562,16 @@ def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHi
       processes_histos_dict[process]=stripEmptyBins(oldh,theTotalBackgroundHisto)
     oldTemplate=templateHisto.Clone()
     templateHisto=stripEmptyBins(oldTemplate,theTotalBackgroundHisto)
+    
+    # fix data histo 
+    olddata=processes_histos_dict["data"].Clone()
+    processes_histos_dict["data"]=makeAsymErrorsForDataHisto(olddata)
+    
+    # Set data bin contents to zero if blinding is required
+    if blind==True:
+      olddata=processes_histos_dict["data"].Clone()
+      processes_histos_dict["data"]=blindDataHisto(olddata,processes_histos_dict["total_signal"],processes_histos_dict["total_background"],SoBCut=0.01)
+      
     
     # set colors of histograms
     ColorizeHistograms(processes_histos_dict)
@@ -593,7 +659,7 @@ def stripEmptyBins(histo,template):
   firstFilledBin=0
   lastFilledBin=0
   nBinsTemplate=template.GetNbinsX()
-  epsilonCutOff=0.000001
+  epsilonCutOff=0.00001
   for i in range(1,nBinsTemplate+1,1):
     if template.GetBinContent(i)>epsilonCutOff:
       firstFilledBin=i
@@ -618,7 +684,7 @@ def stripEmptyBins(histo,template):
     newHisto.SetBinError(i+1,binErrors[i])
   return newHisto  
 
-def Plot(fitfile_,ch_cat_dict_,prepostfitflag):
+def Plot(fitfile_,ch_cat_dict_,prepostfitflag,blind=False):
     
     fitfile = ROOT.TFile.Open(fitfile_,"READ")
     
@@ -642,7 +708,7 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag):
           print templateHistoExpression.replace("$PROCESS","ttH_hbb")
           templateRootFile=ROOT.TFile(templateRootFilePath,"READ")
           templateHisto=templateRootFile.Get(templateHistoExpression.replace("$PROCESS","ttH_hbb"))
-        stack,legendL,legendR,error_band,data,ratio_data_prediction,signal,ratio_error_band, templateHisto = GetPlots(categories_processes_histos_dict,channel,dir_,templateHisto)
+        stack,legendL,legendR,error_band,data,ratio_data_prediction,signal,ratio_error_band, templateHisto = GetPlots(categories_processes_histos_dict,channel,dir_,templateHisto,blind)
         
         canvas.cd(1)
         
@@ -781,7 +847,7 @@ def main(fitfile_,datacard_):
     ch_cat_dict = ReadDatacard(datacard_)
     
     # plot prefit
-    Plot(fitfile_,ch_cat_dict,"shapes_prefit")
+    Plot(fitfile_,ch_cat_dict,"shapes_prefit",blind=True)
     
     # plot post fit after s+b fit
     Plot(fitfile_,ch_cat_dict,"shapes_fit_s")
