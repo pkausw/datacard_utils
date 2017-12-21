@@ -593,7 +593,7 @@ def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHi
      
     procListForLegend=[] 
     if data!=None:
-        procListForLegend.append([data,"Asimov s+b","p"])
+        procListForLegend.append([data,"data","p"])
         
     if signal!=None:
         procListForLegend.append([signal,latex_dict["ttH"]+" #times "+str(round(sf,1)),"l"])
@@ -850,10 +850,10 @@ def main(fitfile_,datacard_):
     Plot(fitfile_,ch_cat_dict,"shapes_prefit",blind=True)
     
     # plot post fit after s+b fit
-    Plot(fitfile_,ch_cat_dict,"shapes_fit_s")
+    #Plot(fitfile_,ch_cat_dict,"shapes_fit_s")
 
     # plot post fit after b-only fit
-    Plot(fitfile_,ch_cat_dict,"shapes_fit_b")
+    #Plot(fitfile_,ch_cat_dict,"shapes_fit_b")
 
 
 if __name__ == "__main__":
