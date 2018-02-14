@@ -246,17 +246,6 @@ def GetHistosForCategoriesProcesses(directory,categories_processes_dict):
                 dictt[cat][process] = GetHistoWithoutZeroBins(histo,cat,nbins)
     return dictt
 
-def GetDiscriminant(catname):
-    """
-    Returns the discriminant: 2D, BDT, DNN
-    """
-    if "ljets" in catname:
-        return "2D"
-    elif "dl" in catname:
-        return "2D"
-    else:
-        return "DNN"
-
 #starting from the rigth side of the histogram, finds the bin number where the first time the bin content is smaller than 0.1*** 
 def FindNewBinNumber(histo):
     nbins_old = histo.GetNbinsX()
@@ -813,7 +802,7 @@ def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHi
     if ymax < 0:
         ymax = error_graph.GetHistogram().GetMaximum() * abs(ymax)
     stack.SetMaximum(ymax)
-    stack.SetMinimum(1E-4) # suppress showing 0 on y axis by setting minimum to epsilon
+    stack.SetMinimum(0.9) # suppress showing 0 on y axis
     
     # calculate the ratio between background only or background+signal prediction and data
     ratio_background_data = None
@@ -884,13 +873,13 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,blind=False,ymax=None):
             # depending on MVA method, decide which y-axis SF to use
             catname = ch_cat_dict_[channel]["catname"]
             if "low" in catname:
-                ymaxsf = 1.4
+                ymaxsf = 1.1
             elif "high" in catname:
                 ymaxsf = 2.5
             elif  "BDT" in catname:
                 ymaxsf = 1.4
             else:
-                ymaxsf = 1.1
+                ymaxsf = 8
 
             ymax_per_channel[channel] = -1. * ymaxsf
 
@@ -939,18 +928,19 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,blind=False,ymax=None):
         
         legendL.Draw("same")
         legendR.Draw("same")
-        
-        
-        
+               
         catlabel = GetCatLabel(ch_cat_dict_[channel]["catname"],prepostfitflag)
         catlabel.Draw("same")
         fitlabel = GetFitLabel(prepostfitflag)
         fitlabel.Draw("same")
+
+        discriminantLabel = GetDiscriminantLabel(ch_cat_dict_[channel]["catname"],prepostfitflag)
+        if "DNN" in discriminantLabel:
+            ROOT.gPad.SetLogy()
         
         canvas.cd(2)
         #ratio_background_data.GetXaxis().SetRange(1,background_tot.GetMinimumBin()-1)
         if ratio_data_prediction!=None:
-            discriminantLabel = GetDiscriminantLabel(ch_cat_dict_[channel]["catname"],prepostfitflag)
             ratio_data_prediction.GetXaxis().SetTitle(discriminantLabel)
             ratio_data_prediction.Draw("AP2")
 
