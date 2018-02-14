@@ -614,7 +614,7 @@ def GetCatLabel(cat,prepostfitflag):
     cat = cat.replace("ttJets","tt")
     dnn_node = ""
     if cat.find("tt")>0:
-        print ">>>>>>>>>>>>>>>> cat: ", cat
+        #print ">>>>>>>>>>>>>>>> cat: ", cat
         dnn_node = cat[cat.find("tt"):]
         dnn_node += " node"
         dnn_node = dnn_node.replace("_","+")
@@ -638,13 +638,13 @@ def GetCatLabel(cat,prepostfitflag):
                 if "j" in part:
                     jets = character
                     if "ge" in part:
-                        jets_relation = "#geq "
+                        jets_relation = "#geq"
                     else:
                         jets_relation = ""
                 elif ("t" in part or "b" in part) and not "v" in part and len(part)<5:
                     btags = character
                     if "ge" in part:
-                        btags_relation = "#geq "
+                        btags_relation = "#geq"
                     else:
                         btags_relation = ""
         if jets!="" and btags!="":
@@ -665,18 +665,18 @@ def GetCatLabel(cat,prepostfitflag):
           for character in subpart1:
             if character.isdigit():
               jets = character
-            if "ge" in part:
+            if "ge" in subpart1:
               jets_relation = "#geq"
             else:
-              jets_relation = "="
+              jets_relation = ""
           subpart2=subparts[1]
           for character in subpart2:
             if character.isdigit():
               btags = character
-            if "ge" in part:
+            if "ge" in subpart2:
               btags_relation = "#geq"
             else:
-              btags_relation = "="
+              btags_relation = ""
     cat = help_array[0]+" ("+jets_relation+jets+" jets, "+btags_relation+btags+" b-tags) "
     if dnn_node!="":
         cat+=dnn_node 
