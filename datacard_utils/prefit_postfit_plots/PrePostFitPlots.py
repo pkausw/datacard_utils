@@ -16,21 +16,24 @@ color_dict["ttbarPlusBBbar"]=ROOT.kRed+3
 color_dict["singlet"]=ROOT.kMagenta
 color_dict["zjets"]=ROOT.kGreen-3
 color_dict["wjets"]=ROOT.kGreen-7
+color_dict["vjets"]=ROOT.kGreen-3
 color_dict["ttbarW"]=ROOT.kBlue-10
 color_dict["ttbarZ"]=ROOT.kBlue-6
+color_dict["ttbarV"]=ROOT.kBlue-10
 color_dict["diboson"]=ROOT.kAzure+2
 color_dict["QCD"]=ROOT.kYellow
-color_dict["ttH_hbb"]=ROOT.kBlue-4
-color_dict["ttH_hcc"]=ROOT.kBlue-4
-color_dict["ttH_htt"]=ROOT.kBlue-4
-color_dict["ttH_hgg"]=ROOT.kBlue-4
-color_dict["ttH_hgluglu"]=ROOT.kBlue-4
-color_dict["ttH_hww"]=ROOT.kBlue-4
-color_dict["ttH_hzz"]=ROOT.kBlue-4
-color_dict["ttH_hzg"]=ROOT.kBlue-4
-color_dict["ttH"]=ROOT.kBlue-4
+color_signal=ROOT.kCyan
+color_dict["ttH_hbb"]=color_signal
+color_dict["ttH_hcc"]=color_signal
+color_dict["ttH_htt"]=color_signal
+color_dict["ttH_hgg"]=color_signal
+color_dict["ttH_hgluglu"]=color_signal
+color_dict["ttH_hww"]=color_signal
+color_dict["ttH_hzz"]=color_signal
+color_dict["ttH_hzg"]=color_signal
+color_dict["ttH"]=color_signal
 color_dict["total_background"]=ROOT.kBlack
-color_dict["total_signal"]=ROOT.kBlack
+color_dict["total_signal"]=color_signal
 color_dict["total_covar"]=ROOT.kBlack
 color_dict["total"]=ROOT.kBlack
 color_dict["data"]=ROOT.kBlack
@@ -41,12 +44,14 @@ latex_dict["ttbarPlusCCbar"]="t#bar{t}+c#bar{c}"
 latex_dict["ttbarPlusB"]="t#bar{t}+b"
 latex_dict["ttbarPlus2B"]="t#bar{t}+2b"
 latex_dict["ttbarPlusBBbar"]="t#bar{t}+b#bar{b}"
-latex_dict["singlet"]="Single Top"
+latex_dict["singlet"]="single t"
 latex_dict["zjets"]="Z+jets"
 latex_dict["wjets"]="W+jets"
-latex_dict["ttbarW"]="t#bar{t}W"
-latex_dict["ttbarZ"]="t#bar{t}Z"
-latex_dict["diboson"]="Diboson"
+latex_dict["vjets"]="V+jets"
+latex_dict["ttbarW"]="t#bar{t}+W"
+latex_dict["ttbarZ"]="t#bar{t}+Z"
+latex_dict["ttbarV"]="t#bar{t}+V"
+latex_dict["diboson"]="diboson"
 latex_dict["QCD"]="QCD"
 latex_dict["ttH_hbb"]="t#bar{t}H"
 latex_dict["ttH_hcc"]="t#bar{t}H"
@@ -56,33 +61,134 @@ latex_dict["ttH_hgluglu"]="t#bar{t}H"
 latex_dict["ttH_hww"]="t#bar{t}H"
 latex_dict["ttH_hzz"]="t#bar{t}H"
 latex_dict["ttH_hzg"]="t#bar{t}H"
-latex_dict["ttH"]="t#bar{t}H"
-latex_dict["total_background"]="Total background"
-latex_dict["total_signal"]="Total signal"
+latex_dict["ttH"]="t#bar{t}H_{SM}"
+latex_dict["total_background"]="total background"
+latex_dict["total_signal"]="signal"
 latex_dict["total_covar"]="bla"
-latex_dict["total"]="Total s+b"
+latex_dict["total"]="total s+b"
 latex_dict["data"]="data"
 
+tick_length_xaxis = 0.05
+tick_length_yaxis = 0.03
+tick_length_rxaxis = 0.11
+tick_length_ryaxis = 0.04
+axis_label_font = 42
+axis_label_offset = 0.01
+axis_label_size = 0.05
+
+xaxis_title_offset = 1.0
+yaxis_title_offset = 0.55
+axis_title_font = 42
+axis_title_size = 0.14
+
+sf_stack_ratio = 1./2.25
+
+categoy_label_font_size = 0.045
+
+
+def GetSortedProcesses(processes_histos_dict):
+    order = [
+        'diboson',
+        
+        'ttbarW',
+        'ttbarZ',
+        'ttbarV',
+        
+        'wjets',
+        'zjets',
+        'vjets',
+
+        'singlet',
+
+        'ttbarPlusBBbar',
+        'ttbarPlus2B',
+        'ttbarPlusB',
+        'ttbarPlusCCbar',
+        'ttbarOther',
+        'total_background',
+
+        'ttH_hgg',
+        'ttH_hzg',
+        'ttH_hcc',
+        'ttH_hgluglu',
+        'ttH_htt',
+        'ttH_hzz',
+        'ttH_hww',
+        'total_signal',
+        
+        'data',
+        'total',
+    ]
+
+    ordered_processes = []
+    for proc in order:
+        if proc in processes_histos_dict:
+            ordered_processes.append( [ proc, processes_histos_dict[proc] ] )
+
+    return ordered_processes
+
+
+def MergeProcesses(processes_histos_dict, proc_A, proc_B, proc_Sum):
+    """
+    Merge processes A and B to new process Sum
+    
+    Removes the individual process A and B from the
+    processes_histos_dict and adds a new process A+B.
+    Should be safe if any of A or B does not exist.
+
+    Use e.g. to merge ttW and ttZ.
+    """
+
+    new_dict = processes_histos_dict
+
+#    intA = new_dict[proc_A].Integral()
+#    intB = new_dict[proc_B].Integral()
+#    print proc_A, ": ", intA 
+#    print proc_B, ": ", intB
+#    print  "Sum: ", intA+intB
+    
+    if proc_A in new_dict or proc_B in new_dict:
+        if proc_A in new_dict:
+            new_dict[proc_Sum] = new_dict[proc_A].Clone()
+            if proc_B in new_dict:
+                new_dict[proc_Sum].Add( new_dict[proc_B] )
+        else:
+            new_dict[proc_Sum] = new_dict[proc_B].Clone()
+
+        if proc_A in new_dict:
+            new_dict.pop(proc_A)
+        if proc_B in new_dict:
+            new_dict.pop(proc_B)
+
+#    print proc_Sum, ": ", new_dict[proc_Sum].Integral()
+        
+    return new_dict
+
+                                
 def ColorizeHistograms(processes_histos_dict):
     for process in processes_histos_dict:
         processes_histos_dict[process].SetLineColor(ROOT.kBlack)
         processes_histos_dict[process].SetFillColor(color_dict[process])
     return 0
 
+def SetPadMargins():
+    ROOT.gStyle.SetFrameLineWidth(2);
+    ROOT.gStyle.SetPadLeftMargin(0.15)
+    ROOT.gStyle.SetPadRightMargin(0.02)
+    ROOT.gStyle.SetPadTopMargin(0.08)
+    ROOT.gStyle.SetPadBottomMargin(0.0)
+    
+
 def GetCanvas(canvas_name):
     ROOT.gStyle.SetOptStat(0)
-    c = ROOT.TCanvas(canvas_name,"",900,800)
-    c.Divide(1,2);
-    c.GetPad(1).SetPad(0.05,0.3,0.95,1);
-    c.GetPad(1).SetLeftMargin(0.11);
-    c.GetPad(1).SetRightMargin(0.04);
-    c.GetPad(1).SetBottomMargin(0);
+    c = ROOT.TCanvas(canvas_name,"",800,850)
+    c.Divide(1,2)
+    c.GetPad(1).SetPad(0.0,0.3,1.0,1.0)
+    c.GetPad(2).SetPad(0.0,0.0,1.0,0.3)
+    c.GetPad(1).SetBottomMargin(0)
     c.GetPad(1).SetTicks(1,1)
-    c.GetPad(2).SetPad(0.05,0.0,0.95,0.3);
-    c.GetPad(2).SetRightMargin(0.04);
-    c.GetPad(2).SetLeftMargin(0.11);
-    c.GetPad(2).SetTopMargin(0);
-    c.GetPad(2).SetBottomMargin(0.23)
+    c.GetPad(2).SetTopMargin(0)
+    c.GetPad(2).SetBottomMargin(0.32)
     c.GetPad(2).SetTicks(1,1)
     c.cd();
     return c
@@ -139,6 +245,17 @@ def GetHistosForCategoriesProcesses(directory,categories_processes_dict):
                 # drop the unnecessary bins and save the resulting histo in the dictionary
                 dictt[cat][process] = GetHistoWithoutZeroBins(histo,cat,nbins)
     return dictt
+
+def GetDiscriminant(catname):
+    """
+    Returns the discriminant: 2D, BDT, DNN
+    """
+    if "ljets" in catname:
+        return "2D"
+    elif "dl" in catname:
+        return "2D"
+    else:
+        return "DNN"
 
 #starting from the rigth side of the histogram, finds the bin number where the first time the bin content is smaller than 0.1*** 
 def FindNewBinNumber(histo):
@@ -201,7 +318,7 @@ def makeAsymErrorsForDataHisto(datahisto):
         entries = datahisto.GetBinContent(i)
         for k in range(int(round(entries))):# rounding necessary if used with asimov dataset because entries can be non-integer in this case
             newHisto.Fill(datahisto.GetBinCenter(i))
-        print newHisto.GetBinContent(i)  
+        #print newHisto.GetBinContent(i)  
     # set this flag for calculation of asymmetric errors in data histogram
     newHisto.SetBinErrorOption(ROOT.TH1.kPoisson)
     return newHisto
@@ -233,7 +350,7 @@ def blindDataHisto(datahisto, signalhisto, backgroundhisto,SoBCut=0.01):
         entries = datahisto.GetBinContent(i)
         for k in range(int(round(entries))):# rounding necessary if used with asimov dataset because entries can be non-integer in this case
             newHisto.Fill(datahisto.GetBinCenter(i))
-        print newHisto.GetBinContent(i)  
+        #print newHisto.GetBinContent(i)  
     # set this flag for calculation of asymmetric errors in data histogram
     newHisto.SetBinErrorOption(ROOT.TH1.kPoisson)
     return newHisto
@@ -263,12 +380,12 @@ def GetDataHistogram(processes_histos_dict):
 def GetSignal(processes_histos_dict,background_integral):
     signal_unscaled = processes_histos_dict["total_signal"]
     signal=signal_unscaled.Clone()
-    signal.SetLineColor(ROOT.kBlue-4)
+    signal.SetLineColor(color_dict["total_signal"])
     signal.SetFillStyle(0)
     signal.SetLineWidth(2)
     signal_integral = signal.Integral()
     scaleFactor=0.0
-    scaleMode=15.0
+    scaleMode=15
     #print signal_integral
     if signal_integral>0.:
       if scaleMode>0:
@@ -291,27 +408,27 @@ def GetLegend():
 
 def getLegendL():
     legend=ROOT.TLegend()
-    legend.SetX1NDC(0.61)
-    legend.SetX2NDC(0.78)
-    legend.SetY1NDC(0.87)
+    legend.SetX1NDC(0.68)
+    legend.SetX2NDC(0.83)
+    legend.SetY1NDC(0.83)
     legend.SetY2NDC(0.88)
     legend.SetBorderSize(0);
     legend.SetLineStyle(0);
     legend.SetTextFont(42);
-    legend.SetTextSize(0.035);
+    legend.SetTextSize(0.038);
     legend.SetFillStyle(0);
     return legend
 
 def getLegendR():
     legend=ROOT.TLegend()
-    legend.SetX1NDC(0.78)
+    legend.SetX1NDC(0.81)
     legend.SetX2NDC(0.96)
-    legend.SetY1NDC(0.87)
+    legend.SetY1NDC(0.83)
     legend.SetY2NDC(0.88)
     legend.SetBorderSize(0);
     legend.SetLineStyle(0);
     legend.SetTextFont(42);
-    legend.SetTextSize(0.035);
+    legend.SetTextSize(0.038);
     legend.SetFillStyle(0);
     return legend
 
@@ -338,12 +455,10 @@ def GetErrorGraph(histo):
     error_graph.SetFillColor(ROOT.kBlack)
     return error_graph
 
-def GetRatioHisto(nominator,denominator,templateHisto=None):
+def GetRatioGraph(nominator,denominator,templateHisto=None):
     ratio = ROOT.TGraphAsymmErrors(nominator.GetNbinsX())
     lowerx=0
     upperx=nominator.GetNbinsX()
-    #print "ratio"
-    #templateHisto=None
     if templateHisto!=None:
       lowerx=templateHisto.GetBinLowEdge(1)
       upperx=templateHisto.GetBinLowEdge(nominator.GetNbinsX())+templateHisto.GetBinWidth(nominator.GetNbinsX())
@@ -352,7 +467,7 @@ def GetRatioHisto(nominator,denominator,templateHisto=None):
         #print theCorrectXvalue
         ratio.SetPoint(i-1,theCorrectXvalue,nominator.GetBinContent(i)/denominator.GetBinContent(i))
         ratio.SetPointError(i-1,0.,0.,(nominator.GetBinErrorLow(i))/denominator.GetBinContent(i),(nominator.GetBinErrorUp(i))/denominator.GetBinContent(i))
-        print i-1,theCorrectXvalue,nominator.GetBinContent(i),denominator.GetBinContent(i),nominator.GetBinContent(i)/denominator.GetBinContent(i)
+        #print i-1,theCorrectXvalue,nominator.GetBinContent(i),denominator.GetBinContent(i),nominator.GetBinContent(i)/denominator.GetBinContent(i)
         #print i-1,0.,0.,(nominator.GetBinErrorLow(i))/denominator.GetBinContent(i),(nominator.GetBinErrorUp(i))/denominator.GetBinContent(i)
     else:    
       for i in range(1,nominator.GetNbinsX()+1,1):
@@ -361,27 +476,37 @@ def GetRatioHisto(nominator,denominator,templateHisto=None):
           #print i-1,i-1+0.5,nominator.GetBinContent(i)/denominator.GetBinContent(i)
           #print i-1,0.,0.,(nominator.GetBinErrorLow(i))/denominator.GetBinContent(i),(nominator.GetBinErrorUp(i))/denominator.GetBinContent(i)
     ratio.SetMarkerStyle(20)
-    ratio.GetYaxis().SetRangeUser(0.00,1.99)
+
+    ratio.GetYaxis().SetRangeUser(0.01,1.99)
     ratio.GetXaxis().SetLimits(lowerx,upperx)
+
     ratio.SetTitle("")
-    ratio.GetYaxis().SetLabelFont(43)
-    ratio.GetYaxis().SetLabelSize(26)
-    ratio.GetXaxis().SetLabelFont(43)
-    ratio.GetXaxis().SetLabelSize(26)
+
+    ratio.GetYaxis().SetLabelFont(axis_label_font)
+    ratio.GetYaxis().SetLabelOffset(axis_label_offset)
+    ratio.GetYaxis().SetTickLength(tick_length_ryaxis)
+    ratio.GetYaxis().SetLabelSize(axis_label_size/sf_stack_ratio)
+    ratio.GetXaxis().SetLabelFont(axis_label_font)
+    ratio.GetXaxis().SetLabelOffset(axis_label_offset)
+    ratio.GetXaxis().SetLabelSize(axis_label_size/sf_stack_ratio)
+    ratio.GetXaxis().SetTickLength(tick_length_rxaxis)
+
     ratio.GetYaxis().SetTitle("data/MC")
-    ratio.GetYaxis().SetTitleOffset(1.23)
-    ratio.GetYaxis().SetTitleFont(43)
-    ratio.GetYaxis().SetTitleSize(30)
+    ratio.GetYaxis().SetTitleFont(axis_title_font)
+    ratio.GetYaxis().SetTitleSize(axis_title_size)
+    ratio.GetYaxis().SetTitleOffset(yaxis_title_offset)
+
     ratio.GetXaxis().SetTitle("discriminant value")
-    ratio.GetXaxis().SetTitleOffset(2.3)
-    ratio.GetXaxis().SetTitleFont(43)
-    ratio.GetXaxis().SetTitleSize(30)
+    ratio.GetXaxis().SetTitleFont(axis_title_font)
+    ratio.GetXaxis().SetTitleSize(axis_title_size)
+    ratio.GetXaxis().SetTitleOffset(xaxis_title_offset)
     ratio.GetYaxis().CenterTitle()
     ratio.GetYaxis().SetNdivisions(506)
     #ratio.GetYaxis().SetNdivisions( 503 )
     #ratio.GetXaxis().SetNdivisions( 510 )
     #ratio.GetXaxis().SetTickLength( line.GetXaxis().GetTickLength() * 2.0 )
     #ratio.GetYaxis().SetTickLength( line.GetYaxis().GetTickLength() * 1.65 )
+    
     return ratio
 
 def GetRatioErrorGraph(error_graph,templateHisto=None):
@@ -398,7 +523,7 @@ def GetRatioErrorGraph(error_graph,templateHisto=None):
           theCorrectXError=templateHisto.GetBinWidth(i+1)/2.0
           theCorrectXvalue=templateHisto.GetXaxis().GetBinCenter(i+1)
           #print theCorrectXvalue
-          print i, theCorrectXvalue, error_graph.GetY()[i],error_graph.GetErrorYhigh(i),error_graph.GetErrorYlow(i)
+          #print i, theCorrectXvalue, error_graph.GetY()[i],error_graph.GetErrorYhigh(i),error_graph.GetErrorYlow(i)
           ratio_error_graph.SetPoint(i,theCorrectXvalue,1),
           ratio_error_graph.SetPointEYhigh(i,error_graph.GetErrorYhigh(i)/error_graph.GetY()[i])
           ratio_error_graph.SetPointEYlow(i,error_graph.GetErrorYlow(i)/error_graph.GetY()[i])
@@ -418,26 +543,50 @@ def GetRatioErrorGraph(error_graph,templateHisto=None):
     
 
 def SetUpStack(stack):
-    stack.GetYaxis().SetLabelFont(43)
-    stack.GetYaxis().SetLabelSize(26)
-    stack.GetYaxis().SetTitle("Events")
-    stack.GetYaxis().SetTitleOffset(1.43)
-    stack.GetYaxis().SetTitleFont(43)
-    stack.GetYaxis().SetTitleSize(30)
+    stack.GetYaxis().SetLabelFont(axis_label_font)
+    stack.GetYaxis().SetLabelOffset(axis_label_offset)
+    stack.GetYaxis().SetLabelSize(axis_label_size)
+    stack.GetYaxis().SetTickLength(tick_length_yaxis)
+    stack.GetXaxis().SetTickLength(tick_length_xaxis)
+
+    stack.GetYaxis().SetTitle("events")
+    stack.GetYaxis().SetTitleOffset(yaxis_title_offset / sf_stack_ratio)
+    stack.GetYaxis().SetTitleFont(axis_title_font)
+    stack.GetYaxis().SetTitleSize(sf_stack_ratio * axis_title_size)
+
     stack.SetTitle("")
+
     return 0
 
 
 # replace this with proper cms label function
 def GetCMSandInfoLabels():
-    cms = ROOT.TLatex(0.12, 0.92, '#scale[1.5]{#bf{CMS}}'  );# add this for preliminary #it{Preliminary}
+    posy = 1.-ROOT.gStyle.GetPadTopMargin()+0.03
+
+    cms = ROOT.TPaveText(
+        ROOT.gStyle.GetPadLeftMargin(),posy+0.02,
+        1.-ROOT.gStyle.GetPadRightMargin(), 1.,
+        "NDC"
+    )
+    cms.AddText("#scale[1.5]{#bf{CMS}}")
+    cms.SetFillColor(0)
     cms.SetTextFont(43)
     cms.SetTextSize(26)
-    cms.SetNDC()
-    info = ROOT.TLatex(0.7, 0.92, '35.9 fb^{-1} (13 TeV)'  );
+    cms.SetMargin(0.)
+    cms.SetTextAlign(13)
+
+    info = ROOT.TPaveText(
+        0.7, posy,
+        1.-ROOT.gStyle.GetPadRightMargin(), 1.,
+        "NDC"
+    )
+    info.AddText("35.9 fb^{-1} (13 TeV)")
+    info.SetFillColor(0)
     info.SetTextFont(43)
     info.SetTextSize(26)
-    info.SetNDC()
+    info.SetMargin(0.)
+    info.SetTextAlign(33)
+
     return cms,info
 
 def GetFitLabel(prepostfitflag):
@@ -445,28 +594,43 @@ def GetFitLabel(prepostfitflag):
     if "prefit" in prepostfitflag:
         category = "pre-fit expectation"
     elif "fit_s" in prepostfitflag:
-        category = "post-fit s+b"
+        category = "post-fit"
     else:
-        category = "post-fit b"
-    label = ROOT.TLatex(0.15, 0.78, category  );
+        category = "background-only post-fit"
+    label = ROOT.TLatex(
+        ROOT.gStyle.GetPadLeftMargin()+0.05,
+        1.-ROOT.gStyle.GetPadTopMargin()-0.13,
+        category
+    )
     label.SetTextFont(42)
-    label.SetTextSize(0.04)
+    label.SetTextSize(categoy_label_font_size)
     label.SetNDC()
     return label
 
+def GetDiscriminantLabel(cat,prepostfitflag):
+    if cat.find("tt")>0:
+        return "DNN discriminant"
+
+    help_array = cat.split("_")
+    if "high" in help_array or "low" in help_array:
+        return "MEM discriminant"
+
+    return "BDT discriminant"
+
 def GetCatLabel(cat,prepostfitflag):
     category = ""
-    #cat = cat.replace("_"," ")
-    cat = cat.replace("ljets","l+jets")
+    cat = cat.replace("ljets","SL")
     cat = cat.replace("mu","#mu")
     cat = cat.replace("ttH125","ttH")
     cat = cat.replace("ttJets","tt")
     dnn_node = ""
     if cat.find("tt")>0:
+        print ">>>>>>>>>>>>>>>> cat: ", cat
         dnn_node = cat[cat.find("tt"):]
-        dnn_node += " DNN-node"
+        dnn_node += " node"
         dnn_node = dnn_node.replace("_","+")
         dnn_node = dnn_node.replace("ttH+bb","ttH")
+        dnn_node = dnn_node.replace("tt","t#bar{t}")
     print dnn_node
     help_array = cat.split("_")
     print help_array
@@ -474,7 +638,7 @@ def GetCatLabel(cat,prepostfitflag):
     btags = ""
     jets_relation = ""
     btags_relation = ""
-    bdt_cat = "BDT"
+    bdt_cat = "" # no label in case of pure BDT
     if "high" in help_array:
         bdt_cat = "BDT-high"
     elif "low" in help_array:
@@ -485,21 +649,22 @@ def GetCatLabel(cat,prepostfitflag):
                 if "j" in part:
                     jets = character
                     if "ge" in part:
-                        jets_relation = "#geq"
+                        jets_relation = "#geq "
                     else:
-                        jets_relation = "="
+                        jets_relation = ""
                 elif ("t" in part or "b" in part) and not "v" in part and len(part)<5:
                     btags = character
                     if "ge" in part:
-                        btags_relation = "#geq"
+                        btags_relation = "#geq "
                     else:
-                        btags_relation = "="
+                        btags_relation = ""
         if jets!="" and btags!="":
             break
     print jets_relation,jets
     print btags_relation,btags
     #special rules for desy cards
     if "dl_" in cat:
+      help_array[0] = "DL"
       jets = ""
       btags = ""
       jets_relation = ""
@@ -523,7 +688,7 @@ def GetCatLabel(cat,prepostfitflag):
               btags_relation = "#geq"
             else:
               btags_relation = "="
-    cat = help_array[0]+", #jets "+jets_relation+" "+jets+", #btags "+btags_relation+" "+btags+", "
+    cat = help_array[0]+" ("+jets_relation+jets+" jets, "+btags_relation+btags+" b-tags) "
     if dnn_node!="":
         cat+=dnn_node 
     else:
@@ -535,14 +700,19 @@ def GetCatLabel(cat,prepostfitflag):
     #else:
         #category = cat+", post-fit b"
     category=cat
-    label = ROOT.TLatex(0.15, 0.83, category  );
+    label = ROOT.TLatex(
+        ROOT.gStyle.GetPadLeftMargin()+0.05,
+        1.-ROOT.gStyle.GetPadTopMargin()-0.08,
+        category
+    )
     label.SetTextFont(42)
-    label.SetTextSize(0.04)
+    label.SetTextSize(categoy_label_font_size)
     label.SetNDC()
     return label
 
 
-def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHisto=None, blind=False):
+def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHisto=None, blind=False,ymax=-1):
+    
     # create legend
     #legend = GetLegend()
     legendL=getLegendL()
@@ -571,7 +741,10 @@ def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHi
     if blind==True:
       olddata=processes_histos_dict["data"].Clone()
       processes_histos_dict["data"]=blindDataHisto(olddata,processes_histos_dict["total_signal"],processes_histos_dict["total_background"],SoBCut=0.01)
-      
+
+    # merge minor backgrounds
+    MergeProcesses(processes_histos_dict,"wjets","zjets","vjets")
+    MergeProcesses(processes_histos_dict,"ttbarW","ttbarZ","ttbarV")
     
     # set colors of histograms
     ColorizeHistograms(processes_histos_dict)
@@ -583,64 +756,73 @@ def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHi
     background = None
     if prepostfitflag=="shapes_fit_s":
         background = processes_histos_dict["total"]
+        #print ">>>>> total ", background.GetMaximum()
     else:
-        background = processes_histos_dict["total_background"]
-        
-    signal,sf = GetSignal(processes_histos_dict,background.Integral())
+        background = processes_histos_dict["total_background"]        
+    signal = None
+    if prepostfitflag=="shapes_prefit":
+        signal,sf = GetSignal(processes_histos_dict,background.Integral())
     
     # get data histogram
     data = GetDataHistogram(processes_histos_dict)
      
-    procListForLegend=[] 
-    if data!=None:
-        procListForLegend.append([data,"data","p"])
-        
-    if signal!=None:
-        procListForLegend.append([signal,latex_dict["ttH"]+" #times "+str(round(sf,1)),"l"])
-    
+   
     # sort histograms in cateogory depending on their integral (first with largest integral, last with smallest) -> to get smallest contributions in the stack plot on top of it
-    sorted_processes_histos_list = sorted(processes_histos_dict.items(),key=lambda x: x[1].Integral(),reverse=False)
-    #print sorted_processes_histos_list
+#    sorted_processes_histos_list = sorted(processes_histos_dict.items(),key=lambda x: x[1].Integral(),reverse=False)
+    sorted_processes_histos_list = GetSortedProcesses(processes_histos_dict)
+    #print "sorted_processes_histos_list: ", sorted_processes_histos_list
+
+    procListForLegend=[] 
     
     # add background histogram to the stackplot
-    n_ttH = 0
     for process in sorted_processes_histos_list:
-        # avoid all total histograms and data for background+signal
-        if prepostfitflag=="shapes_fit_s":
-            if not "total" in process[0] and not "data" in process[0]:
-                stack.Add(process[1])
-                if "ttH" in process[0]:
-                    if n_ttH<1:
-                        procListForLegend.append([process[1],latex_dict[process[0]],"f"])
-                        n_ttH+=1
-                else:
-                    procListForLegend.append([process[1],latex_dict[process[0]],"f"])
         # avoid all total histograms, data and signal processes for background only
-        else:
-            if not "total" in process[0] and not "data" in process[0] and not "ttH" in process[0]:
+        if not "total" in process[0] and not "data" in process[0] and not "ttH" in process[0]:
+            stack.Add(process[1])
+            procListForLegend.append([process[1],latex_dict[process[0]],"f"])
+    procListForLegend.reverse()
+
+    # add signal histogram to the stack (in case of s+b fit)
+    if prepostfitflag=="shapes_fit_s":
+        for process in sorted_processes_histos_list:
+            if process[0] == "total_signal":
                 stack.Add(process[1])
-                procListForLegend.append([process[1],latex_dict[process[0]],"f"])
+                procListForLegend.insert(0,[process[1],latex_dict[process[0]],"f"])
+    elif prepostfitflag=="shapes_fit_b":
+        procListForLegend.insert(0,[None,"",""]) # add blank line
+    elif prepostfitflag=="shapes_prefit" and signal!=None:
+        procListForLegend.insert(0,[signal,str(sf)+"#times"+latex_dict["ttH"],"l"])
+    if data!=None:
+        procListForLegend.insert(0,[data,"data","p"])
 
     for ileg, leg in enumerate(procListForLegend):
       if ileg%2==0:
         legendL.AddEntry22(leg[0],leg[1],leg[2])
       else:
         legendR.AddEntry22(leg[0],leg[1],leg[2])
-    
+
+    #print ">>>>> stack ", stack.GetMaximum()
+
+        
     # from total background or total background+signal prediction histogram in mlfit file, get the error band
     error_graph = GetErrorGraph(background)
     
     ratio_error_graph = GetRatioErrorGraph(error_graph,templateHisto)
     
-    # everything should fit in the plots 
-    stack.SetMaximum(error_graph.GetHistogram().GetMaximum()*1.1)
+    # everything should fit in the plots
+    if ymax < 0:
+        ymax = error_graph.GetHistogram().GetMaximum() * abs(ymax)
+    stack.SetMaximum(ymax)
+    stack.SetMinimum(1E-4) # suppress showing 0 on y axis by setting minimum to epsilon
     
     # calculate the ratio between background only or background+signal prediction and data
     ratio_background_data = None
     if data!=None:
-        ratio_background_data = GetRatioHisto(data,background,templateHisto)
+        ratio_background_data = GetRatioGraph(data,background,templateHisto)
+
     
-    return  stack,legendL,legendR,error_graph,data,ratio_background_data,signal,ratio_error_graph, templateHisto
+        
+    return  stack,ymax,legendL,legendR,error_graph,data,ratio_background_data,signal,ratio_error_graph
 
 def rebinToTemplate(histo,templateHisto=None):
   if templateHisto==None:
@@ -684,7 +866,7 @@ def stripEmptyBins(histo,template):
     newHisto.SetBinError(i+1,binErrors[i])
   return newHisto  
 
-def Plot(fitfile_,ch_cat_dict_,prepostfitflag,blind=False):
+def Plot(fitfile_,ch_cat_dict_,prepostfitflag,blind=False,ymax=None):
     
     fitfile = ROOT.TFile.Open(fitfile_,"READ")
     
@@ -693,22 +875,48 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,blind=False):
     categories_processes_histos_dict = GetHistos(fitfile,dir_)
     
     channels = GetChannels(GetDirectory(fitfile,dir_))
-    
+
+    # list of y-axis ranges
+    ymax_per_channel = {}
+    if ymax is None:
+        for channel in channels:
+            
+            # depending on MVA method, decide which y-axis SF to use
+            catname = ch_cat_dict_[channel]["catname"]
+            if "low" in catname:
+                ymaxsf = 1.4
+            elif "high" in catname:
+                ymaxsf = 2.5
+            elif  "BDT" in catname:
+                ymaxsf = 1.4
+            else:
+                ymaxsf = 1.1
+
+            ymax_per_channel[channel] = -1. * ymaxsf
+
+    else:
+        ymax_per_channel = ymax
+        
     for channel in channels:
     
         canvas = GetCanvas(dir_+channel)
         
         templateRootFilePath=ch_cat_dict_[channel]["histopath"]
-        print templateRootFilePath
+        #print templateRootFilePath
         templateHistoExpression=ch_cat_dict_[channel]["histoexpression"]
-        print templateRootFilePath,templateHistoExpression
+        #print templateRootFilePath,templateHistoExpression
         templateHisto=None
         if templateRootFilePath!="" and templateHistoExpression!="":
-          print templateRootFilePath
-          print templateHistoExpression.replace("$PROCESS","ttH_hbb")
+          #print templateRootFilePath
+          #print templateHistoExpression.replace("$PROCESS","ttH_hbb")
           templateRootFile=ROOT.TFile(templateRootFilePath,"READ")
           templateHisto=templateRootFile.Get(templateHistoExpression.replace("$PROCESS","ttH_hbb"))
-        stack,legendL,legendR,error_band,data,ratio_data_prediction,signal,ratio_error_band, templateHisto = GetPlots(categories_processes_histos_dict,channel,dir_,templateHisto,blind)
+
+          stack,ymax_this_channel,legendL,legendR,error_band,data,ratio_data_prediction,signal,ratio_error_band = GetPlots(categories_processes_histos_dict,channel,dir_,templateHisto,blind,ymax_per_channel[channel])
+
+        # if y-axis range has not been provided, fill dict to return  
+        if ymax_per_channel[channel] < 0:
+            ymax_per_channel[channel] = ymax_this_channel
         
         canvas.cd(1)
         
@@ -726,6 +934,8 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,blind=False):
             signal.Draw("histsame")
         
         error_band.Draw("2same")
+
+        ROOT.gPad.RedrawAxis()
         
         legendL.Draw("same")
         legendR.Draw("same")
@@ -740,17 +950,17 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,blind=False):
         canvas.cd(2)
         #ratio_background_data.GetXaxis().SetRange(1,background_tot.GetMinimumBin()-1)
         if ratio_data_prediction!=None:
+            discriminantLabel = GetDiscriminantLabel(ch_cat_dict_[channel]["catname"],prepostfitflag)
+            ratio_data_prediction.GetXaxis().SetTitle(discriminantLabel)
             ratio_data_prediction.Draw("AP2")
-            linemin=0
-            linemax=ratio_data_prediction.GetN()
-            if templateHisto!=None:
-              linemin=templateHisto.GetBinLowEdge(1)
-              linemax=templateHisto.GetBinLowEdge(stack.GetXaxis().GetNbins())+templateHisto.GetBinWidth(stack.GetXaxis().GetNbins())
-              print linemin, linemax
-            ratio_line = ROOT.TLine(linemin,1,linemax,1)
-            ratio_line.SetLineStyle(2)
-            ratio_line.Draw("same")
-            ratio_error_band.Draw("2same")
+
+        linemin = ratio_error_band.GetX()[0] - ratio_error_band.GetEXlow()[0]
+        linemax = ratio_error_band.GetX()[ratio_error_band.GetN()-1] + ratio_error_band.GetEXhigh()[ratio_error_band.GetN()-1]
+        ratio_line = ROOT.TLine(linemin,1,linemax,1)
+        ratio_line.SetNDC(False)
+        ratio_line.SetLineStyle(2)
+        ratio_line.Draw("same")
+        ratio_error_band.Draw("2same")
         
         canvas.cd(1)
         cms,info = GetCMSandInfoLabels()
@@ -783,7 +993,7 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,blind=False):
     
     fitfile.Close()
     
-    return 0
+    return ymax_per_channel
     
 
 
@@ -843,17 +1053,21 @@ def ReadDatacard(datacard):
 
 def main(fitfile_,datacard_):
     
-    print datacard_
+    #print datacard_
     ch_cat_dict = ReadDatacard(datacard_)
+    print ">>>>>>>>>>>>>>>>> ", ch_cat_dict
+
+    SetPadMargins()
+
     
     # plot prefit
-    Plot(fitfile_,ch_cat_dict,"shapes_prefit",blind=True)
+    maxy = Plot(fitfile_,ch_cat_dict,"shapes_prefit",blind=False)
     
     # plot post fit after s+b fit
-    #Plot(fitfile_,ch_cat_dict,"shapes_fit_s")
+    Plot(fitfile_,ch_cat_dict,"shapes_fit_s",blind=False,ymax=maxy)
 
     # plot post fit after b-only fit
-    #Plot(fitfile_,ch_cat_dict,"shapes_fit_b")
+    Plot(fitfile_,ch_cat_dict,"shapes_fit_b",blind=False,ymax=maxy)
 
 
 if __name__ == "__main__":
