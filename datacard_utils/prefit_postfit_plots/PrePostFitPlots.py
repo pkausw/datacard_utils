@@ -682,12 +682,7 @@ def GetCatLabel(cat,prepostfitflag):
         cat+=dnn_node 
     else:
         cat+=bdt_cat
-    #if "prefit" in prepostfitflag:
-        #category = cat+", pre-fit"
-    #elif "fit_s" in prepostfitflag:
-        #category = cat+", post-fit s+b"
-    #else:
-        #category = cat+", post-fit b"
+
     category=cat
     label = ROOT.TLatex(
         ROOT.gStyle.GetPadLeftMargin()+0.05,
@@ -876,7 +871,7 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,blind=False,ymax=None):
                 ymaxsf = 1.1
             elif "high" in catname:
                 ymaxsf = 2.5
-            elif  "BDT" in catname:
+            elif  "BDT" in catname or "ljets" in catname:
                 ymaxsf = 1.4
             else:
                 ymaxsf = 8
