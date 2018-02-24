@@ -538,7 +538,7 @@ def SetUpStack(stack):
     stack.GetYaxis().SetTickLength(tick_length_yaxis)
     stack.GetXaxis().SetTickLength(tick_length_xaxis)
 
-    stack.GetYaxis().SetTitle("events")
+    stack.GetYaxis().SetTitle("events / bin width")
     stack.GetYaxis().SetTitleOffset(yaxis_title_offset / sf_stack_ratio)
     stack.GetYaxis().SetTitleFont(axis_title_font)
     stack.GetYaxis().SetTitleSize(sf_stack_ratio * axis_title_size)
@@ -797,7 +797,7 @@ def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHi
     if ymax < 0:
         ymax = error_graph.GetHistogram().GetMaximum() * abs(ymax)
     stack.SetMaximum(ymax)
-    stack.SetMinimum(0.9) # suppress showing 0 on y axis
+    stack.SetMinimum(0.1) # suppress showing 0 on y axis
     
     # calculate the ratio between background only or background+signal prediction and data
     ratio_background_data = None
@@ -871,9 +871,11 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,blind=False,ymax=None):
                 ymaxsf = 1.1
             elif "high" in catname:
                 ymaxsf = 2.5
-            elif  "BDT" in catname or "ljets" in catname:
+            elif  "BDT" in catname: # DL 43 in log-scale
+                ymaxsf = 90
+            elif  "ljets" in catname:
                 ymaxsf = 1.4
-            else:
+            else: # DNN in log-scale
                 ymaxsf = 8
 
             ymax_per_channel[channel] = -1. * ymaxsf
@@ -901,7 +903,12 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,blind=False,ymax=None):
         # if y-axis range has not been provided, fill dict to return  
         if ymax_per_channel[channel] < 0:
             ymax_per_channel[channel] = ymax_this_channel
-        
+
+        discriminantLabel = GetDiscriminantLabel(ch_cat_dict_[channel]["catname"],prepostfitflag)
+        logy = "DNN" in discriminantLabel or "BDT" in discriminantLabel
+        if logy:
+            stack.SetMinimum(1.9) # suppress diboson fluctuations
+            
         canvas.cd(1)
         
         stack.Draw("hist")
@@ -929,8 +936,7 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,blind=False,ymax=None):
         fitlabel = GetFitLabel(prepostfitflag)
         fitlabel.Draw("same")
 
-        discriminantLabel = GetDiscriminantLabel(ch_cat_dict_[channel]["catname"],prepostfitflag)
-        if "DNN" in discriminantLabel:
+        if logy:
             ROOT.gPad.SetLogy()
         
         canvas.cd(2)
