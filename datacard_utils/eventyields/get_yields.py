@@ -1,5 +1,7 @@
 import ROOT
 
+mu_s = 0.72
+
 bkg_processes = [
     "ttbarOther",
     "ttbarPlusCCbar",
@@ -59,12 +61,12 @@ process_commands = {
 }
 
 sub_category_commands = {
-    "ttH"  : "(\\ttH)",
-    "ttlf" : "(\\ttlf)",
-    "ttcc" : "(\\ttcc)",
-    "ttb"  : "(\\ttb)",
-    "tt2b" : "(\\tttwob)",
-    "ttbb" : "(\\ttbb)",
+    "ttH"  : "\\ttH",
+    "ttlf" : "\\ttlf",
+    "ttcc" : "\\ttcc",
+    "ttb"  : "\\ttb",
+    "tt2b" : "\\tttwob",
+    "ttbb" : "\\ttbb",
     "3t"   : "\\dlFourThree",
     "4tl"  : "\\dlFourFour BDT-low",
     "4th"  : "\\dlFourFour BDT-high",
@@ -113,9 +115,14 @@ def get_yields(in_file, categories, prepostfit):
     return category_yield_map
 
 
-def get_yield_string(category_yield_map,category,process):
+def get_yield_string(category_yield_map,category,process,sig_scale=1):
     y  = category_yield_map[category][process].GetBinContent(1)
     ye = category_yield_map[category][process].GetBinError(1)
+
+    # because signal is not scaled by fitted mu, but mu = 1
+    if process == total_sig:
+        y  = sig_scale * y
+        ye = sig_scale * ye
 
     if y < 1:
         return "{:5.1f}".format(y), "{:3.1f}".format(ye)
@@ -127,14 +134,19 @@ def print_table_line(category_yield_map_prefit,category_yield_map_postfit,njet_c
     print "{:10}".format(process_commands[process]),
     for sub_category in sub_categories:
         yield_val_prefit, yield_err_prefit = get_yield_string(category_yield_map_prefit,category(njet_category,sub_category),process)
-        yield_val_postfit, yield_err_postfit = get_yield_string(category_yield_map_postfit,category(njet_category,sub_category),process)
+        yield_val_postfit, yield_err_postfit = get_yield_string(category_yield_map_postfit,category(njet_category,sub_category),process,mu_s)
         if process == data:
             print "& \\multicolumn{2}{c}{$",yield_val_prefit,"$}",
-        elif print_error:
-            print "& $",yield_val_prefit,"\\pm",yield_err_prefit,"$ & $",yield_val_postfit,"\\pm",yield_err_postfit,"$",
         else:
-            print "& $",yield_val_prefit,"$ & $",yield_val_postfit,"$",
+            print "& $",yield_val_prefit,"$ & ($",yield_val_postfit,"$)",
     print " \\\\"
+    if print_error and process != data:
+        print "{:10}".format("$\\pm$ tot unc."),
+        for sub_category in sub_categories:
+            yield_val_prefit, yield_err_prefit = get_yield_string(category_yield_map_prefit,category(njet_category,sub_category),process)
+            yield_val_postfit, yield_err_postfit = get_yield_string(category_yield_map_postfit,category(njet_category,sub_category),process)
+            print "& $\\pm",yield_err_prefit,"$ & ($\\pm",yield_err_postfit,"$)",
+        print " \\\\"
 
     
 def print_table(category_yield_map_prefit,category_yield_map_postfit,njet_category):
@@ -150,15 +162,14 @@ def print_table(category_yield_map_prefit,category_yield_map_postfit,njet_catego
 
     print "\\begin{tabular}{l",
     for i in range(0,len(sub_categories)):
-        print "cc",
+        print "r@{\;}r",
     print "}"
     print "\\hline\\hline"
-    for sub_category in sub_categories:
-        print " & \\multicolumn{2}{c}{",sub_category_commands[sub_category]," category}",
+    print "& \\multicolumn{",2*len(sub_categories),"}{c}{pre-fit (post-fit) yields}"
     print " \\\\"
     print "Process",
     for sub_category in sub_categories:
-        print " & pre-fit & post-fit",
+        print " & \\multicolumn{2}{c}{",sub_category_commands[sub_category]," node}",
     print " \\\\"
     print "\\hline"
     
@@ -192,8 +203,11 @@ if __name__ == "__main__":
     category_yield_map_postfit = get_yields(in_file, categories, "postfit" )
 
     #print category_yield_map_prefit
-    
-    print_table(category_yield_map_prefit,category_yield_map_postfit,"SL 4j")
+
+    for njet_category in njet_categories:
+        print
+        print
+        print_table(category_yield_map_prefit,category_yield_map_postfit,njet_category)
 
     
 
