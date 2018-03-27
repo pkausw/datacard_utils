@@ -50,7 +50,7 @@ latex_dict["wjets"]="W+jets"
 latex_dict["vjets"]="V+jets"
 latex_dict["ttbarW"]="t#bar{t}+W"
 latex_dict["ttbarZ"]="t#bar{t}+Z"
-latex_dict["ttbarV"]="t#bar{t}+V"
+latex_dict["ttbarV"]="t#bar{t}+V#color[0]{~~~}" # white ~ needed to keep legend column width constant...
 latex_dict["diboson"]="Diboson"
 latex_dict["QCD"]="QCD"
 latex_dict["ttH_hbb"]="t#bar{t}H"
@@ -63,7 +63,7 @@ latex_dict["ttH_hzz"]="t#bar{t}H"
 latex_dict["ttH_hzg"]="t#bar{t}H"
 latex_dict["ttH"]="t#bar{t}H_{SM}"
 latex_dict["total_background"]="total background"
-latex_dict["total_signal"]="signal"
+latex_dict["total_signal"]="signal#color[0]{~~~}" # white ~ needed to keep legend column width constant...
 latex_dict["total_covar"]="bla"
 latex_dict["total"]="total s+b"
 latex_dict["data"]="Data"
@@ -71,22 +71,38 @@ latex_dict["data"]="Data"
 controlplots_variable_label = {}
 controlplots_variable_label["controlplots_njets"] = "Number of jets"
 controlplots_variable_label["controlplots_btags"] = "Number of b-tagged jets"
+controlplots_variable_label["controlplots_var1"] = "Sum pt(jet)/E(jet)"
+controlplots_variable_label["controlplots_var2"] = "Avg. #Delta #eta(jets)"
 
 controlplots_entries_label = {}
 controlplots_entries_label["controlplots_njets"] = "Events"
 controlplots_entries_label["controlplots_btags"] = "Events"
+controlplots_entries_label["controlplots_var1"] = "Events"
+controlplots_entries_label["controlplots_var2"] = "Events"
 
 controlplots_ndivisions = {}
 controlplots_ndivisions["controlplots_njets"] = 110
 controlplots_ndivisions["controlplots_btags"] = 105
+controlplots_ndivisions["controlplots_var1"] = 506
+controlplots_ndivisions["controlplots_var2"] = 506
 
 controlplots_logy = {}
 controlplots_logy["controlplots_njets"] = True
 controlplots_logy["controlplots_btags"] = True
+controlplots_logy["controlplots_var1"] = False
+controlplots_logy["controlplots_var2"] = False
 
 controlplots_ymin = {}
 controlplots_ymin["controlplots_njets"] = 1E2
 controlplots_ymin["controlplots_btags"] = 1E1
+controlplots_ymin["controlplots_var1"] = 1E-1
+controlplots_ymin["controlplots_var2"] = 1E-1
+
+controlplots_ymax = {}
+controlplots_ymax["controlplots_njets"] = 3E7
+controlplots_ymax["controlplots_btags"] = 3E8
+controlplots_ymax["controlplots_var1"] = 1E-1
+controlplots_ymax["controlplots_var2"] = 1E-1
 
 
 tick_length_xaxis = 0.05
@@ -104,7 +120,7 @@ axis_title_size = 0.14
 
 sf_stack_ratio = 1./2.25
 
-categoy_label_font_size = 0.045
+categoy_label_font_size = 0.047
 
 
 def GetSortedProcesses(processes_histos_dict):
@@ -415,36 +431,50 @@ def GetSignal(processes_histos_dict,background_integral):
     else:
         return None,0.
 
-def GetLegend():
-    legend = ROOT.TLegend(0.8,0.5,1.0,0.85)
+def GetLegend(prepostfitflag):
+#    legend = ROOT.TLegend(0.59,0.5,0.97,0.87)
+    legend = ROOT.TLegend(0.54,0.5,0.98,0.87)
+#    if prepostfitflag == "shapes_prefit":
+#        legend.SetX1NDC(0.56)
+#        legend.SetX2NDC(0.94)
+    legend.SetNColumns(2)
+    legend.SetLineStyle(0);
     legend.SetFillStyle(0)
     legend.SetBorderSize(0)
-    legend.SetTextSize(0.025)
+    legend.SetTextSize(0.044)
     return legend
 
-def getLegendL():
+def getLegendL(prepostfitflag):
     legend=ROOT.TLegend()
-    legend.SetX1NDC(0.68)
-    legend.SetX2NDC(0.83)
-    legend.SetY1NDC(0.83)
-    legend.SetY2NDC(0.88)
+    if prepostfitflag == "shapes_prefit":
+        legend.SetX1NDC(0.58)
+    else:
+        legend.SetX1NDC(0.61)
+    legend.SetX2NDC(0.81)
+    legend.SetY1NDC(0.79)
+    legend.SetY2NDC(0.87)
     legend.SetBorderSize(0);
     legend.SetLineStyle(0);
     legend.SetTextFont(42);
-    legend.SetTextSize(0.038);
+    #legend.SetTextSize(0.038);
+    legend.SetTextSize(0.042);
     legend.SetFillStyle(0);
     return legend
 
-def getLegendR():
+def getLegendR(prepostfitflag):
     legend=ROOT.TLegend()
-    legend.SetX1NDC(0.81)
-    legend.SetX2NDC(0.96)
-    legend.SetY1NDC(0.83)
-    legend.SetY2NDC(0.88)
+    if prepostfitflag == "shapes_prefit":
+        legend.SetX1NDC(0.87)
+    else:
+        legend.SetX1NDC(0.79)
+    legend.SetX2NDC(0.99)
+    legend.SetY1NDC(0.79)
+    legend.SetY2NDC(0.87)
     legend.SetBorderSize(0);
     legend.SetLineStyle(0);
     legend.SetTextFont(42);
-    legend.SetTextSize(0.038);
+    #legend.SetTextSize(0.038);
+    legend.SetTextSize(0.042);
     legend.SetFillStyle(0);
     return legend
 
@@ -558,6 +588,15 @@ def GetRatioErrorGraph(error_graph,templateHisto=None):
           ratio_error_graph.SetPointEYhigh(i,error_graph.GetErrorYhigh(i)/error_graph.GetY()[i])
           ratio_error_graph.SetPointEYlow(i,error_graph.GetErrorYlow(i)/error_graph.GetY()[i])
     return ratio_error_graph
+
+
+def has_equidistant_bins(h):
+    width = h.GetXaxis().GetBinWidth(1)
+    for ibin in range(2,h.GetXaxis().GetNbins()+1):
+        if abs( h.GetXaxis().GetBinWidth(ibin) - width ) > 1E-4:
+            return False
+
+    return True
     
 
 def SetUpStack(stack,prepostfitflag):
@@ -567,7 +606,11 @@ def SetUpStack(stack,prepostfitflag):
     stack.GetYaxis().SetTickLength(tick_length_yaxis)
     stack.GetXaxis().SetTickLength(tick_length_xaxis)
 
-    stack.GetYaxis().SetTitle("Events / Bin width")
+    if has_equidistant_bins(stack):
+        width = stack.GetXaxis().GetBinWidth(1)
+        stack.GetYaxis().SetTitle("Events / "+str(round(width,2)))
+    else:
+        stack.GetYaxis().SetTitle("Events / Bin")
         
     stack.GetYaxis().SetTitleOffset(yaxis_title_offset / sf_stack_ratio)
     stack.GetYaxis().SetTitleFont(axis_title_font)
@@ -594,9 +637,9 @@ def GetCMSandInfoLabels(pubstatus):
     if pubstatus == "public":
         cms.AddText("#scale[1.5]{#bf{CMS}}")
     elif pubstatus == "preliminary":
-        cms.AddText("#scale[1.5]{#bf{CMS}} #it{Preliminary}")
+        cms.AddText("#scale[1.5]{#bf{CMS}} #scale[1.1]{#it{Preliminary}}")
     elif pubstatus == "supp":
-        cms.AddText("#scale[1.5]{#bf{CMS}} #it{Supplementary}")
+        cms.AddText("#scale[1.5]{#bf{CMS}} #scale[1.1]{#it{Supplementary}}")
         
     cms.SetFillColor(0)
     cms.SetTextFont(43)
@@ -630,7 +673,7 @@ def GetFitLabel(prepostfitflag):
         category = "Background-only post-fit"
     label = ROOT.TLatex(
         ROOT.gStyle.GetPadLeftMargin()+0.05,
-        1.-ROOT.gStyle.GetPadTopMargin()-0.13,
+        1.-ROOT.gStyle.GetPadTopMargin()-0.2,
         category
     )
     label.SetTextFont(42)
@@ -651,7 +694,7 @@ def GetDiscriminantLabel(cat,prepostfitflag):
 
     return "BDT discriminant"
 
-def GetCatLabel(cat,prepostfitflag):
+def GetCatLabels(cat,prepostfitflag):
     category = ""
     cat = cat.replace("ljets","SL")
     cat = cat.replace("mu","#mu")
@@ -729,6 +772,18 @@ def GetCatLabel(cat,prepostfitflag):
             jets = "4"
             btags_relation = "#geq"
             btags = "2"
+        elif "63_sl" in cat:
+            help_array[0] = "SL"
+            jets_relation = "#geq"
+            jets = "6"
+            btags_relation = ""
+            btags = "3"
+        elif "64_sl" in cat:
+            help_array[0] = "SL"
+            jets_relation = "#geq"
+            jets = "6"
+            btags_relation = "#geq"
+            btags = "4"
         else:
             help_array[0] = "DL"
             jets_relation = "#geq"
@@ -736,30 +791,40 @@ def GetCatLabel(cat,prepostfitflag):
             btags_relation = "#geq"
             btags = "1"
               
-    cat = help_array[0]+" ("+jets_relation+jets+" jets, "+btags_relation+btags+" b-tags) "
+    line1 = help_array[0]+" ("+jets_relation+jets+" jets, "+btags_relation+btags+" b tags)"
+    line2 = ""
     if dnn_node!="":
-        cat+=dnn_node 
+        line2 = dnn_node
     else:
-        cat+=bdt_cat
+        line2 = bdt_cat
 
-    category=cat
-    label = ROOT.TLatex(
+    label1 = ROOT.TLatex(
         ROOT.gStyle.GetPadLeftMargin()+0.05,
-        1.-ROOT.gStyle.GetPadTopMargin()-0.08,
-        category
+        1.-ROOT.gStyle.GetPadTopMargin()-0.09,
+        line1
     )
-    label.SetTextFont(42)
-    label.SetTextSize(categoy_label_font_size)
-    label.SetNDC()
-    return label
+    label1.SetTextFont(42)
+    label1.SetTextSize(categoy_label_font_size)
+    label1.SetNDC()
+
+    label2 = ROOT.TLatex(
+        ROOT.gStyle.GetPadLeftMargin()+0.05,
+        1.-ROOT.gStyle.GetPadTopMargin()-0.145,
+        line2
+    )
+    label2.SetTextFont(42)
+    label2.SetTextSize(categoy_label_font_size)
+    label2.SetNDC()
+
+    if line2 == "":
+        return label1, None
+    return label1, label2
 
 
 def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHisto=None, blind=False,ymax=-1):
     
     # create legend
-    #legend = GetLegend()
-    legendL=getLegendL()
-    legendR=getLegendR()
+    legend = GetLegend(prepostfitflag)
     
     # get dictionary process->histo dictionary for category
     processes_histos_dict = categories_processes_histos_dict[category]
@@ -834,15 +899,12 @@ def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHi
     elif prepostfitflag=="shapes_fit_b":
         procListForLegend.insert(0,[None,"",""]) # add blank line
     elif ( prepostfitflag=="shapes_prefit" or "controlplots" in prepostfitflag ) and signal!=None:
-        procListForLegend.insert(0,[signal,str(sf)+"#times"+latex_dict["ttH"],"l"])
+        procListForLegend.insert(0,[signal,str(sf)+" #times "+latex_dict["ttH"],"l"])
     if data!=None:
         procListForLegend.insert(0,[data,"Data","p"])
 
     for ileg, leg in enumerate(procListForLegend):
-      if ileg%2==0:
-        legendL.AddEntry22(leg[0],leg[1],leg[2])
-      else:
-        legendR.AddEntry22(leg[0],leg[1],leg[2])
+        legend.AddEntry(leg[0],leg[1],leg[2])
 
     #print ">>>>> stack ", stack.GetMaximum()
 
@@ -857,7 +919,8 @@ def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHi
         ymax = error_graph.GetHistogram().GetMaximum() * abs(ymax)
 
     # hack for control plots
-    # ymax = 5E6
+    # ymax = 5E6 # multiplicity
+    #ymax = 1499 # 249 
 
     stack.SetMaximum(ymax)
     stack.SetMinimum(0.1) # suppress showing 0 on y axis
@@ -869,7 +932,7 @@ def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHi
 
     
         
-    return  stack,ymax,legendL,legendR,error_graph,data,ratio_background_data,signal,ratio_error_graph
+    return  stack,ymax,legend,error_graph,data,ratio_background_data,signal,ratio_error_graph
 
 def rebinToTemplate(histo,templateHisto=None):
   if templateHisto==None:
@@ -938,11 +1001,15 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
                 else:
                     ymaxsf = 1.2
             elif "low" in catname:
-                ymaxsf = 1.1
+                ymaxsf = 1.2
             elif "high" in catname:
-                ymaxsf = 2.5
-            elif  "BDT" in catname: # DL 43 in log-scale
-                ymaxsf = 90
+                ymaxsf = 2.9
+            elif "BDT" in catname: # DL 43 in log-scale
+                ymaxsf = 250
+            elif "ttJets_cc" in catname: # DNN in log-scale
+                ymaxsf = 25
+            elif "ttJets_lf" in catname: # DNN in log-scale
+                ymaxsf = 150
             else: # DNN in log-scale
                 ymaxsf = 8
 
@@ -966,7 +1033,7 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
           templateRootFile=ROOT.TFile(templateRootFilePath,"READ")
           templateHisto=templateRootFile.Get(templateHistoExpression.replace("$PROCESS","ttbarOther"))
 
-          stack,ymax_this_channel,legendL,legendR,error_band,data,ratio_data_prediction,signal,ratio_error_band = GetPlots(categories_processes_histos_dict,channel,dir_,templateHisto,blind,ymax_per_channel[channel])
+          stack,ymax_this_channel,legend,error_band,data,ratio_data_prediction,signal,ratio_error_band = GetPlots(categories_processes_histos_dict,channel,dir_,templateHisto,blind,ymax_per_channel[channel])
 
         # if y-axis range has not been provided, fill dict to return  
         if ymax_per_channel[channel] < 0:
@@ -983,11 +1050,13 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
             logy = "DNN" in discriminantLabel or "BDT" in discriminantLabel
 
         if logy:
-            stack.SetMinimum(1.9) # suppress diboson fluctuations
+            #stack.SetMinimum(1.9) # suppress diboson fluctuations
+            stack.SetMinimum(1.4) # suppress diboson fluctuations
 
         if "controlplots" in prepostfitflag:
             logy = controlplots_logy[prepostfitflag]
             stack.SetMinimum(controlplots_ymin[prepostfitflag])
+            stack.SetMaximum(controlplots_ymax[prepostfitflag])
             
         canvas.cd(1)
         
@@ -1008,12 +1077,15 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
 
         ROOT.gPad.RedrawAxis()
         
-        legendL.Draw("same")
-        legendR.Draw("same")
+        legend.Draw("same")
                
-        catlabel = GetCatLabel(ch_cat_dict_[channel]["catname"],prepostfitflag)
-        catlabel.Draw("same")
+        catlabel1,catlabel2 = GetCatLabels(ch_cat_dict_[channel]["catname"],prepostfitflag)
+        catlabel1.Draw("same")
+        if catlabel2 != None:
+            catlabel2.Draw("same")
         fitlabel = GetFitLabel(prepostfitflag)
+        if catlabel2 == None:
+            fitlabel.SetY( fitlabel.GetY()+0.055)
         fitlabel.Draw("same")
 
         if logy:
@@ -1129,16 +1201,18 @@ def main(fitfile_,datacard_):
     #print datacard_
     ch_cat_dict = ReadDatacard(datacard_)
 
-    pubstatus = ""
+    pubstatus = "public"
     
     SetPadMargins()
 
     #Plot(fitfile_,ch_cat_dict,"controlplots_btags",pubstatus=pubstatus,blind=False)
     #Plot(fitfile_,ch_cat_dict,"controlplots_njets",pubstatus=pubstatus,blind=False)
+    #Plot(fitfile_,ch_cat_dict,"controlplots_var1",pubstatus=pubstatus,blind=False)
+    #Plot(fitfile_,ch_cat_dict,"controlplots_var2",pubstatus=pubstatus,blind=False)
     
-    maxy = Plot(fitfile_,ch_cat_dict,"shapes_prefit",pubstatus=pubstatus,blind=False)
-    Plot(fitfile_,ch_cat_dict,"shapes_fit_s",pubstatus=pubstatus,blind=False,ymax=maxy)
-    Plot(fitfile_,ch_cat_dict,"shapes_fit_b",pubstatus="",blind=False,ymax=maxy)
+#    maxy = Plot(fitfile_,ch_cat_dict,"shapes_prefit",pubstatus=pubstatus,blind=False)
+#    Plot(fitfile_,ch_cat_dict,"shapes_fit_s",pubstatus=pubstatus,blind=False,ymax=maxy)
+#    Plot(fitfile_,ch_cat_dict,"shapes_fit_b",pubstatus="",blind=False,ymax=maxy)
 
 
 if __name__ == "__main__":
