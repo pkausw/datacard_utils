@@ -4,8 +4,16 @@ import os
 import CMS_lumi
 import re
 from array import array
+
 ROOT.gROOT.SetBatch(True)
 
+VERBOSE=True
+
+OUTPUT_EXTENSIONS = [
+  'pdf',
+#  'C',
+#  'root',
+]
 
 color_dict = {}
 color_dict["ttbarOther"]=ROOT.kRed-7
@@ -180,9 +188,9 @@ def MergeProcesses(processes_histos_dict, proc_A, proc_B, proc_Sum):
 
 #    intA = new_dict[proc_A].Integral()
 #    intB = new_dict[proc_B].Integral()
-#    print proc_A, ": ", intA 
-#    print proc_B, ": ", intB
-#    print  "Sum: ", intA+intB
+#    if VERBOSE: print proc_A, ": ", intA 
+#    if VERBOSE: print proc_B, ": ", intB
+#    if VERBOSE: print  "Sum: ", intA+intB
     
     if proc_A in new_dict or proc_B in new_dict:
         if proc_A in new_dict:
@@ -197,7 +205,7 @@ def MergeProcesses(processes_histos_dict, proc_A, proc_B, proc_Sum):
         if proc_B in new_dict:
             new_dict.pop(proc_B)
 
-#    print proc_Sum, ": ", new_dict[proc_Sum].Integral()
+#    if VERBOSE: print proc_Sum, ": ", new_dict[proc_Sum].Integral()
         
     return new_dict
 
@@ -394,9 +402,12 @@ def GetHistos(fitfile,directory):
     # get processes in the different channels/categories as dict["chX"]->[processes]
     categories_processes_dict = GetProcessesInCategories(dirr,categories)
     print " >>>> 3 categories_processes_dict: ", categories_processes_dict
+
     # get final dictionary, e.g. dict["ch1"]["ttbarOther"]->corresponding histogram
     categories_processes_histos_dict = GetHistosForCategoriesProcesses(dirr,categories_processes_dict)
-    print categories_processes_histos_dict
+
+    if VERBOSE: print categories_processes_histos_dict
+
     return categories_processes_histos_dict
 
 def GetDataHistogram(processes_histos_dict):
@@ -493,6 +504,7 @@ def AddEntry22( self, histo, label, option='L'):
 #    self.SetX1NDC(self.GetX2NDC()-newwidth)
 
     self.AddEntry(histo, label, option)
+
 ROOT.TLegend.AddEntry22 = AddEntry22
 
 def GetErrorGraph(histo):
@@ -708,9 +720,9 @@ def GetCatLabels(cat,prepostfitflag):
         dnn_node = dnn_node.replace("_","+")
         dnn_node = dnn_node.replace("ttH+bb","ttH")
         dnn_node = dnn_node.replace("tt","t#bar{t}")
-    print dnn_node
+    if VERBOSE: print dnn_node
     help_array = cat.split("_")
-    print help_array
+    if VERBOSE: print help_array
     jets = ""
     btags = ""
     jets_relation = ""
@@ -829,15 +841,15 @@ def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHi
     # get dictionary process->histo dictionary for category
     processes_histos_dict = categories_processes_histos_dict[category]
     #print processes_histos_dict
-    
     for process in processes_histos_dict:
       oldh=processes_histos_dict[process]
       processes_histos_dict[process]=rebinToTemplate(oldh,templateHisto)
-    
+
     theTotalBackgroundHisto=processes_histos_dict["total_background"].Clone()
     for process in processes_histos_dict:
       oldh=processes_histos_dict[process]
       processes_histos_dict[process]=stripEmptyBins(oldh,theTotalBackgroundHisto)
+
     oldTemplate=templateHisto.Clone()
     templateHisto=stripEmptyBins(oldTemplate,theTotalBackgroundHisto)
     
@@ -908,7 +920,6 @@ def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHi
 
     #print ">>>>> stack ", stack.GetMaximum()
 
-        
     # from total background or total background+signal prediction histogram in mlfit file, get the error band
     error_graph = GetErrorGraph(background)
     
@@ -977,9 +988,10 @@ def stripEmptyBins(histo,template):
   return newHisto  
 
 def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None):
-    
+
     fitfile = ROOT.TFile.Open(fitfile_,"READ")
-    
+    if not fitfile: raise SystemExit(1)
+
     dir_ = prepostfitflag
     
     categories_processes_histos_dict = GetHistos(fitfile,dir_)
@@ -995,20 +1007,23 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
             
             # depending on MVA method, decide which y-axis SF to use
             catname = ch_cat_dict_[channel]["catname"]
-            if  "ljets" in catname:
-                if "jge6" in catname:
+
+            if "_sl_" in catname:
+
+                if "_6j" in catname:
                     ymaxsf = 10 # SL 2D 64 in log scale
                 else:
                     ymaxsf = 1.2
-            elif "low" in catname:
+
+            elif "loBDT" in catname:
                 ymaxsf = 1.2
-            elif "high" in catname:
+            elif "hiBDT" in catname:
                 ymaxsf = 2.9
             elif "BDT" in catname: # DL 43 in log-scale
                 ymaxsf = 250
-            elif "ttJets_cc" in catname: # DNN in log-scale
+            elif "DNN_ttcc" in catname: # DNN in log-scale
                 ymaxsf = 25
-            elif "ttJets_lf" in catname: # DNN in log-scale
+            elif "DNN_ttlf" in catname: # DNN in log-scale
                 ymaxsf = 150
             else: # DNN in log-scale
                 ymaxsf = 8
@@ -1021,7 +1036,7 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
     for channel in channels:
     
         canvas = GetCanvas(dir_+channel)
-        
+
         templateRootFilePath=ch_cat_dict_[channel]["histopath"]
         #print templateRootFilePath
         templateHistoExpression=ch_cat_dict_[channel]["histoexpression"]
@@ -1030,8 +1045,11 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
         if templateRootFilePath!="" and templateHistoExpression!="":
           #print templateRootFilePath
           #print templateHistoExpression.replace("$PROCESS","ttH_hbb")
-          templateRootFile=ROOT.TFile(templateRootFilePath,"READ")
-          templateHisto=templateRootFile.Get(templateHistoExpression.replace("$PROCESS","ttbarOther"))
+
+          templateRootFile = ROOT.TFile.Open(templateRootFilePath, "READ")
+          if not templateRootFile: raise SystemExit(1)
+
+          templateHisto = templateRootFile.Get(templateHistoExpression.replace("$PROCESS","ttbarOther"))
 
           stack,ymax_this_channel,legend,error_band,data,ratio_data_prediction,signal,ratio_error_band = GetPlots(categories_processes_histos_dict,channel,dir_,templateHisto,blind,ymax_per_channel[channel])
 
@@ -1130,17 +1148,27 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
         #iPeriod=4   # 13TeV
         #iPos=0     # CMS inside frame
         #CMS_lumi.CMS_lumi(canvas, iPeriod, iPos)
-        
-        
-        canvas.Print(dir_+"_"+ch_cat_dict_[channel]["catname"]+".pdf")
-        #canvas.Print(dir_+"_"+ch_cat_dict_[channel]["catname"]+".png")
-        templateRootFile.Close()
-    
-    fitfile.Close()
-    
-    return ymax_per_channel
-    
 
+        ### output name
+        out_name = channel
+
+        # remove repetitions of 'ttH_hbb_13TeV_' prefixes
+        while out_name.startswith('ttH_hbb_13TeV_'):
+
+          _tmp_idx = out_name.find('ttH_hbb_13TeV_', 1)
+
+          if _tmp_idx != -1: out_name = out_name[_tmp_idx:]; del _tmp_idx;
+          else: del _tmp_idx; break;
+        ### -----------
+
+        for _tmp_ext in OUTPUT_EXTENSIONS:
+            canvas.Print(dir_+'_'+out_name+'.'+_tmp_ext)
+
+        templateRootFile.Close()
+
+    fitfile.Close()
+
+    return ymax_per_channel
 
 def ReadDatacard(datacard):
     print "reading datacard"
@@ -1161,8 +1189,11 @@ def ReadDatacard(datacard):
               foundCategoryLine=True
               categoryLine=line
     categoriesFromLine=categoryLine.split(" ")[1:]
-    print categoriesFromLine
-    print shapeLines
+
+    if VERBOSE:
+       print categoriesFromLine
+       print shapeLines
+
     for cfl in categoriesFromLine:
       channel = cfl
       category = ""
@@ -1180,18 +1211,30 @@ def ReadDatacard(datacard):
           continue
         if not (shapeChannel==channel or shapeChannel=="*"):
           continue
-        histopath=shapeFile
+
+        ### determine path to input ROOT file with templates
+
+        # if absolute path is written in the datacard, use that directly
+        if os.path.isabs(shapeFile): histopath = shapeFile
+        # if relative path is written in the datacard, derive abs path based on datacard location
+        else: histopath = os.path.dirname(os.path.abspath(datacard))+'/'+shapeFile
+
+        histopath = os.path.abspath(histopath)
+        ### ------------------------------------------------
+
         if "$CHANNEL" in shapeProcessPart:
-          # This is needed for unanonymized kit cards
-          shapeProcessPart.replace("$CHANNEL",channel)
+           # This is needed for unanonymized kit cards
+           shapeProcessPart.replace("$CHANNEL",channel)
+
         category=shapeProcessPart.replace("$PROCESS","").replace("/","").replace("_finaldiscr_","")
         histoexpression=shapeProcessPart
+
       channel_category_dict[channel]={}
       channel_category_dict[channel]["catname"] = category
       channel_category_dict[channel]["histopath"] = histopath
       channel_category_dict[channel]["histoexpression"] = histoexpression  
     
-    print channel_category_dict
+#    print  channel_category_dict
     return channel_category_dict
           
 ################################################################################# main function #################################################################################
@@ -1202,21 +1245,20 @@ def main(fitfile_,datacard_):
     ch_cat_dict = ReadDatacard(datacard_)
 
     pubstatus = "public"
-    
+
     SetPadMargins()
 
     #Plot(fitfile_,ch_cat_dict,"controlplots_btags",pubstatus=pubstatus,blind=False)
     #Plot(fitfile_,ch_cat_dict,"controlplots_njets",pubstatus=pubstatus,blind=False)
     #Plot(fitfile_,ch_cat_dict,"controlplots_var1",pubstatus=pubstatus,blind=False)
     #Plot(fitfile_,ch_cat_dict,"controlplots_var2",pubstatus=pubstatus,blind=False)
-    
-#    maxy = Plot(fitfile_,ch_cat_dict,"shapes_prefit",pubstatus=pubstatus,blind=False)
+
+    maxy = Plot(fitfile_,ch_cat_dict,"shapes_prefit",pubstatus=pubstatus,blind=False)
 #    Plot(fitfile_,ch_cat_dict,"shapes_fit_s",pubstatus=pubstatus,blind=False,ymax=maxy)
 #    Plot(fitfile_,ch_cat_dict,"shapes_fit_b",pubstatus="",blind=False,ymax=maxy)
 
 
 if __name__ == "__main__":
     main(sys.argv[1],sys.argv[2])
-        
 
 # usage: python PrePostFitPlots.py mlfitfile.root corresponding_datacard.txt
