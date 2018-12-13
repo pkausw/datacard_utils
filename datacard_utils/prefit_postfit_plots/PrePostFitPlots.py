@@ -22,14 +22,20 @@ color_dict["ttbarPlusB"]=ROOT.kRed-2
 color_dict["ttbarPlus2B"]=ROOT.kRed+2
 color_dict["ttbarPlusBBbar"]=ROOT.kRed+3
 color_dict["singlet"]=ROOT.kMagenta
+color_dict["stop"]=ROOT.kMagenta
 color_dict["zjets"]=ROOT.kGreen-3
 color_dict["wjets"]=ROOT.kGreen-7
 color_dict["vjets"]=ROOT.kGreen-3
 color_dict["ttbarW"]=ROOT.kBlue-10
 color_dict["ttbarZ"]=ROOT.kBlue-6
 color_dict["ttbarV"]=ROOT.kBlue-10
+color_dict["ttw"]=ROOT.kBlue-10
+color_dict["ttz"]=ROOT.kBlue-6
+color_dict["ttv"]=ROOT.kBlue-10
 color_dict["diboson"]=ROOT.kAzure+2
 color_dict["QCD"]=ROOT.kYellow
+color_dict["ddQCD"]=ROOT.kYellow
+
 color_signal=ROOT.kCyan
 color_dict["ttH_hbb"]=color_signal
 color_dict["ttH_hcc"]=color_signal
@@ -40,6 +46,7 @@ color_dict["ttH_hww"]=color_signal
 color_dict["ttH_hzz"]=color_signal
 color_dict["ttH_hzg"]=color_signal
 color_dict["ttH"]=color_signal
+
 color_dict["total_background"]=ROOT.kBlack
 color_dict["total_signal"]=color_signal
 color_dict["total_covar"]=ROOT.kBlack
@@ -53,14 +60,20 @@ latex_dict["ttbarPlusB"]="t#bar{t}+b"
 latex_dict["ttbarPlus2B"]="t#bar{t}+2b"
 latex_dict["ttbarPlusBBbar"]="t#bar{t}+b#bar{b}"
 latex_dict["singlet"]="Single t"
+latex_dict["stop"]="Single t"
 latex_dict["zjets"]="Z+jets"
 latex_dict["wjets"]="W+jets"
 latex_dict["vjets"]="V+jets"
 latex_dict["ttbarW"]="t#bar{t}+W"
 latex_dict["ttbarZ"]="t#bar{t}+Z"
 latex_dict["ttbarV"]="t#bar{t}+V#color[0]{~~~}" # white ~ needed to keep legend column width constant...
+latex_dict["ttw"]="t#bar{t}+W"
+latex_dict["ttz"]="t#bar{t}+Z"
+latex_dict["ttv"]="t#bar{t}+V#color[0]{~~~}" # white ~ needed to keep legend column width constant...
 latex_dict["diboson"]="Diboson"
 latex_dict["QCD"]="QCD"
+latex_dict["ddQCD"]="Data-Driven QCD"
+
 latex_dict["ttH_hbb"]="t#bar{t}H"
 latex_dict["ttH_hcc"]="t#bar{t}H"
 latex_dict["ttH_htt"]="t#bar{t}H"
@@ -138,12 +151,18 @@ def GetSortedProcesses(processes_histos_dict):
         'ttbarW',
         'ttbarZ',
         'ttbarV',
+        'ttw',
+        'ttz',
+        'ttv',
         
         'wjets',
         'zjets',
         'vjets',
 
         'singlet',
+        'stop',
+
+        'ddQCD',
 
         'ttbarPlusBBbar',
         'ttbarPlus2B',
@@ -834,10 +853,10 @@ def GetCatLabels(cat,prepostfitflag):
 
 
 def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHisto=None, blind=False,ymax=-1):
-    
+
     # create legend
     legend = GetLegend(prepostfitflag)
-    
+
     # get dictionary process->histo dictionary for category
     processes_histos_dict = categories_processes_histos_dict[category]
     #print processes_histos_dict
@@ -865,7 +884,8 @@ def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHi
     # merge minor backgrounds
     MergeProcesses(processes_histos_dict,"wjets","zjets","vjets")
     MergeProcesses(processes_histos_dict,"ttbarW","ttbarZ","ttbarV")
-    
+    MergeProcesses(processes_histos_dict,"ttw","ttz","ttv")
+
     # set colors of histograms
     ColorizeHistograms(processes_histos_dict)
     
