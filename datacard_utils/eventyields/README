@@ -1,0 +1,20 @@
+how to create prefit/postfit yield tables
+
+1a (optional) : fit your usual complete datacard and stuff. Do save with uncertainties
+1b : use the rebin_datacards.py script to rebin all the histograms to 1 bin. During this the bin errors will be lost -> we lose the correct AutoMCstat errors in the yield errors
+     Also: ! this will change the existing template ! Te original templates will be backupped in a separate file. Check the code !
+
+2 : create a workspace for this new datacard and 1 bin templates
+
+3 (optional) : transfer the post-fit nuisance values of the real fit to the new 1 bin workspace like this :
+               `PostFitShapes -d combined_SLDNN_DL2Dmix.txt -o test_out.root -m 125 -f fitDiagnosticscombined_SLDNN_DL2Dmix.root:fit_s --postfit --sampling --print`
+                or check the docu (http://cms-analysis.github.io/CombineHarvester/post-fit-shapes.html):
+
+4 : run FitDiagnostics on the new 1 bin workspace with a command similar to this (hint: takes ages):
+    "combine -M FitDiagnostics -m 125 --rMin -5 --rMax 5 --cminDefaultMinimizerStrategy 0 --cminDefaultMinimizerTolerance 0.1 -t -1 --expectSignal 1  --saveNormalizations --saveShapes --saveOverallShapes --saveWithUncertainties --numToysForShapes 50 "
+
+5 : edit the get_yields script to 
+    a) either do only the prefit or the prefit and postfit yields (at the bottom of the script there are two functions one can use)
+    b) have the proper channel names, categories etc.
+
+6 : profit
