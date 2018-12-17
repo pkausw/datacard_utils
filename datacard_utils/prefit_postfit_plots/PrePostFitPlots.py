@@ -8,8 +8,8 @@ ROOT.gROOT.SetBatch(True)
 VERBOSE = False
 
 OUTPUT_EXTENSIONS = [
-#  'pdf',
-  'png',
+  'pdf',
+#  'png',
 #  'C',
 #  'root',
 ]
@@ -211,7 +211,21 @@ CHANNELS_COSMETICS_DICT = {
   'ttH_hbb_13TeV_2017_dl_4j2b_BDT': { 'titleX': 'BDT discriminant', 'labels': ['DL (#geq4 jets, 2 b tags)']    , 'logY': True, 'ymin': 0.5, 'ymax': 5e6, 'ymaxSF': 1, },
   'ttH_hbb_13TeV_2017_dl_4j3b_BDT': { 'titleX': 'BDT discriminant', 'labels': ['DL (#geq4 jets, 3 b tags)']    , 'logY': True, 'ymin': 0.5, 'ymax': 1e5, 'ymaxSF': 1, },
   'ttH_hbb_13TeV_2017_dl_4j4b_BDT': { 'titleX': 'BDT discriminant', 'labels': ['DL (#geq4 jets, #geq4 b tags)'], 'logY': True, 'ymin': 0.5, 'ymax': 4e4, 'ymaxSF': 1, },
+
+  # 2017 DL (baseline selection)
+  'ttH_hbb_13TeV_2017_dl_2J1B_N_jets' : { 'titleX': 'Number of jets'         , 'labels': ['DL (#geq2 jets, #geq1 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e8, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_dl_2J1B_N_btags': { 'titleX': 'Number of b-tagged jets', 'labels': ['DL (#geq2 jets, #geq1 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e8, 'ymaxSF': 1, },
 }
+
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_N_jets'] ['binLabelsX']  = ['2', '3', '4', '5', '6', '7', '8', '#geq9']
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_N_jets'] ['Ndivisions']  = -414
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_N_jets'] ['titleY']      = 'Events'
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_N_jets'] ['addFitLabel'] = False
+
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_N_btags']['binLabelsX']  = ['1', '2', '3', '4', '#geq5']
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_N_btags']['Ndivisions']  = -414
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_N_btags']['titleY']      = 'Events'
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_N_btags']['addFitLabel'] = False
 
 ## luminosity string
 for i_cat in CHANNELS_COSMETICS_DICT:
@@ -659,9 +673,9 @@ def GetErrorGraph(histo):
     return error_graph
 
 def GetRatioGraph(nominator,denominator,templateHisto=None):
-    ratio = ROOT.TGraphAsymmErrors(nominator.GetNbinsX())
-    lowerx=0
-    upperx=nominator.GetNbinsX()
+    ratio  = ROOT.TGraphAsymmErrors(nominator.GetNbinsX())
+    lowerx = 0
+    upperx = nominator.GetNbinsX()
     if templateHisto!=None:
       lowerx=templateHisto.GetBinLowEdge(1)
       upperx=templateHisto.GetBinLowEdge(nominator.GetNbinsX())+templateHisto.GetBinWidth(nominator.GetNbinsX())
@@ -685,7 +699,7 @@ def GetRatioGraph(nominator,denominator,templateHisto=None):
     ratio.GetYaxis().SetRangeUser(0.01,1.99)
     ratio.GetXaxis().SetLimits(lowerx,upperx)
 
-    ratio.SetTitle("")
+    ratio.SetTitle('')
 
     ratio.GetYaxis().SetLabelFont(axis_label_font)
     ratio.GetYaxis().SetLabelOffset(axis_label_offset)
@@ -711,7 +725,7 @@ def GetRatioGraph(nominator,denominator,templateHisto=None):
     #ratio.GetXaxis().SetNdivisions( 510 )
     #ratio.GetXaxis().SetTickLength( line.GetXaxis().GetTickLength() * 2.0 )
     #ratio.GetYaxis().SetTickLength( line.GetYaxis().GetTickLength() * 1.65 )
-    
+
     return ratio
 
 def GetRatioErrorGraph(error_graph,templateHisto=None):
@@ -754,7 +768,6 @@ def has_equidistant_bins(h):
             return False
 
     return True
-    
 
 def SetUpStack(stack,prepostfitflag):
     stack.GetYaxis().SetLabelFont(axis_label_font)
@@ -775,22 +788,19 @@ def SetUpStack(stack,prepostfitflag):
 
     stack.SetTitle("")
 
-    if "controlplots" in prepostfitflag:
-        stack.GetYaxis().SetTitle(controlplots_entries_label[prepostfitflag])
-        stack.GetXaxis().SetNdivisions(controlplots_ndivisions[prepostfitflag])
+#    if "controlplots" in prepostfitflag:
+#        stack.GetYaxis().SetTitle     (controlplots_entries_label[prepostfitflag])
+#        stack.GetXaxis().SetNdivisions(controlplots_ndivisions   [prepostfitflag])
 
     return 0
 
-
 # replace this with proper cms label function
 def GetCMSandInfoLabels(pubstatus):
-    posy = 1.-ROOT.gStyle.GetPadTopMargin()+0.03
 
-    cms = ROOT.TPaveText(
-        ROOT.gStyle.GetPadLeftMargin(),posy+0.02,
-        1.-ROOT.gStyle.GetPadRightMargin(), 1.,
-        "NDC"
-    )
+    posy = 1.0-ROOT.gStyle.GetPadTopMargin()+0.03
+
+    cms = ROOT.TPaveText(ROOT.gStyle.GetPadLeftMargin(), posy+0.02, 1.0-ROOT.gStyle.GetPadRightMargin(), 1.0, "NDC")
+
     if   pubstatus == "public"     : cms.AddText("#scale[1.5]{#bf{CMS}}")
     elif pubstatus == "preliminary": cms.AddText("#scale[1.5]{#bf{CMS}} #scale[1.1]{#it{Preliminary}}")
     elif pubstatus == "supp"       : cms.AddText("#scale[1.5]{#bf{CMS}} #scale[1.1]{#it{Supplementary}}")
@@ -808,7 +818,7 @@ def GetCMSandInfoLabels(pubstatus):
     info.SetMargin(0.)
     info.SetTextAlign(33)
 
-    return cms,info
+    return cms, info
 
 def GetFitLabel(catname, prepostfitflag):
 
@@ -1095,16 +1105,33 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
         canvas.cd(1)
 
         stack.Draw("hist")
-        # unfortunately this has to be done after a first Draw() because only then the axis objects are created ... ROOT ...
 
+        # unfortunately this has to be done after a first Draw() because only then the axis objects are created ... ROOT ...
         SetUpStack(stack, prepostfitflag)
+
+        if 'binLabelsX' in CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]["catname"]]:
+            binLabelsX  =  CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]["catname"]]['binLabelsX']
+            xax = stack.GetXaxis()
+            xaN = len(binLabelsX)
+            xax.Set(xaN, xax.GetBinLowEdge(1), xax.GetBinLowEdge(1 + xax.GetNbins()))
+            xax.SetNdivisions(-414)
+            for _ix in range(xaN): xax.SetBinLabel(_ix+1, binLabelsX[_ix])
+            xax.SetLabelSize(xax.GetLabelSize() * (3./2.))
+
+        if 'Ndivisions' in CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]['catname']]:
+            Ndivisions  =  CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]['catname']]['Ndivisions']
+            stack.GetXaxis().SetNdivisions(Ndivisions)
+
+        if 'titleY' in CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]['catname']]:
+            titleY  =  CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]['catname']]['titleY']
+            stack.GetYaxis().SetTitle(titleY)
 
         stack.Draw("hist")
 
-        if signal!=None:
+        if signal != None:
            signal.Draw("histsame][")
 
-        if data!=None:
+        if data != None:
            data.Draw("histPEX0same")
 
         error_band.Draw("2same")
@@ -1127,10 +1154,22 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
 
         canvas.cd(2)
         #ratio_background_data.GetXaxis().SetRange(1,background_tot.GetMinimumBin()-1)
-        if ratio_data_prediction!=None:
+        if ratio_data_prediction != None:
+
            ratio_data_prediction.GetXaxis().SetTitle(titleX_label)
-           if "controlplots" in prepostfitflag:
-              ratio_data_prediction.GetXaxis().SetNdivisions(controlplots_ndivisions[prepostfitflag])
+
+           if 'binLabelsX' in CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]['catname']]:
+               binLabelsX  =  CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]['catname']]['binLabelsX']
+               xax = ratio_data_prediction.GetXaxis()
+               xaN = len(binLabelsX)
+               xax.Set(xaN, xax.GetBinLowEdge(1), xax.GetBinLowEdge(1 + xax.GetNbins()))
+               xax.SetNdivisions(-414)
+               for _ix in range(xaN): xax.SetBinLabel(_ix+1, binLabelsX[_ix])
+               xax.SetLabelSize(xax.GetLabelSize() * (3./2.))
+
+           if 'Ndivisions' in CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]['catname']]:
+               ratio_data_prediction.GetXaxis().SetNdivisions(CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]['catname']]['Ndivisions'])
+
            ratio_data_prediction.Draw("AP2 E0")
 
         linemin = ratio_error_band.GetX()[0] - ratio_error_band.GetEXlow()[0]
@@ -1276,14 +1315,14 @@ def main(fitfile_,datacard_):
     #print datacard_
     ch_cat_dict = ReadDatacard(datacard_)
 
-    pubstatus = "public"
+    pubstatus = 'preliminary'
 
     SetPadMargins()
 
-    #Plot(fitfile_,ch_cat_dict,"controlplots_btags",pubstatus=pubstatus,blind=False)
-    #Plot(fitfile_,ch_cat_dict,"controlplots_njets",pubstatus=pubstatus,blind=False)
-    #Plot(fitfile_,ch_cat_dict,"controlplots_var1",pubstatus=pubstatus,blind=False)
-    #Plot(fitfile_,ch_cat_dict,"controlplots_var2",pubstatus=pubstatus,blind=False)
+#    Plot(fitfile_, ch_cat_dict, 'controlplots_btags', pubstatus=pubstatus, blind=False)
+#    Plot(fitfile_, ch_cat_dict, 'controlplots_njets', pubstatus=pubstatus, blind=False)
+#    Plot(fitfile_, ch_cat_dict, 'controlplots_var1' , pubstatus=pubstatus, blind=False)
+#    Plot(fitfile_, ch_cat_dict, 'controlplots_var2' , pubstatus=pubstatus, blind=False)
 
 #    maxy = Plot(fitfile_,ch_cat_dict,"shapes_prefit",pubstatus=pubstatus,blind=False)
 #    Plot(fitfile_,ch_cat_dict,"shapes_fit_s",pubstatus=pubstatus,blind=False,ymax=maxy)
