@@ -677,21 +677,21 @@ def GetRatioGraph(nominator,denominator,templateHisto=None):
     lowerx = 0
     upperx = nominator.GetNbinsX()
     if templateHisto!=None:
-      lowerx=templateHisto.GetBinLowEdge(1)
-      upperx=templateHisto.GetBinLowEdge(nominator.GetNbinsX())+templateHisto.GetBinWidth(nominator.GetNbinsX())
-      for i in range(1,nominator.GetNbinsX()+1,1):
-        theCorrectXvalue=templateHisto.GetXaxis().GetBinCenter(i)
-        #print theCorrectXvalue
-        ratio.SetPoint(i-1,theCorrectXvalue,nominator.GetBinContent(i)/denominator.GetBinContent(i))
-        ratio.SetPointError(i-1,0.,0.,(nominator.GetBinErrorLow(i))/denominator.GetBinContent(i),(nominator.GetBinErrorUp(i))/denominator.GetBinContent(i))
-        #print i-1,theCorrectXvalue,nominator.GetBinContent(i),denominator.GetBinContent(i),nominator.GetBinContent(i)/denominator.GetBinContent(i)
-        #print i-1,0.,0.,(nominator.GetBinErrorLow(i))/denominator.GetBinContent(i),(nominator.GetBinErrorUp(i))/denominator.GetBinContent(i)
-    else:    
-      for i in range(1,nominator.GetNbinsX()+1,1):
-          ratio.SetPoint(i-1,i-1+0.5,nominator.GetBinContent(i)/denominator.GetBinContent(i))
-          ratio.SetPointError(i-1,0.,0.,(nominator.GetBinErrorLow(i))/denominator.GetBinContent(i),(nominator.GetBinErrorUp(i))/denominator.GetBinContent(i))
-          #print i-1,i-1+0.5,nominator.GetBinContent(i)/denominator.GetBinContent(i)
-          #print i-1,0.,0.,(nominator.GetBinErrorLow(i))/denominator.GetBinContent(i),(nominator.GetBinErrorUp(i))/denominator.GetBinContent(i)
+       lowerx=templateHisto.GetBinLowEdge(1)
+       upperx=templateHisto.GetBinLowEdge(nominator.GetNbinsX())+templateHisto.GetBinWidth(nominator.GetNbinsX())
+       for i in range(1,nominator.GetNbinsX()+1,1):
+           theCorrectXvalue=templateHisto.GetXaxis().GetBinCenter(i)
+           #print theCorrectXvalue
+           ratio.SetPoint(i-1,theCorrectXvalue,nominator.GetBinContent(i)/denominator.GetBinContent(i))
+           ratio.SetPointError(i-1,0.,0.,(nominator.GetBinErrorLow(i))/denominator.GetBinContent(i),(nominator.GetBinErrorUp(i))/denominator.GetBinContent(i))
+           #print i-1,theCorrectXvalue,nominator.GetBinContent(i),denominator.GetBinContent(i),nominator.GetBinContent(i)/denominator.GetBinContent(i)
+           #print i-1,0.,0.,(nominator.GetBinErrorLow(i))/denominator.GetBinContent(i),(nominator.GetBinErrorUp(i))/denominator.GetBinContent(i)
+    else:
+       for i in range(1,nominator.GetNbinsX()+1,1):
+           ratio.SetPoint(i-1,i-1+0.5,nominator.GetBinContent(i)/denominator.GetBinContent(i))
+           ratio.SetPointError(i-1,0.,0.,(nominator.GetBinErrorLow(i))/denominator.GetBinContent(i),(nominator.GetBinErrorUp(i))/denominator.GetBinContent(i))
+           #print i-1,i-1+0.5,nominator.GetBinContent(i)/denominator.GetBinContent(i)
+           #print i-1,0.,0.,(nominator.GetBinErrorLow(i))/denominator.GetBinContent(i),(nominator.GetBinErrorUp(i))/denominator.GetBinContent(i)
     ratio.SetMarkerStyle(20)
     ratio.SetMarkerSize(1.2)
     #ratio.SetLineWidth(2)
@@ -1170,7 +1170,7 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
            if 'Ndivisions' in CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]['catname']]:
                ratio_data_prediction.GetXaxis().SetNdivisions(CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]['catname']]['Ndivisions'])
 
-           ratio_data_prediction.Draw("AP2 E0")
+           ratio_data_prediction.Draw('APZE0')
 
         linemin = ratio_error_band.GetX()[0] - ratio_error_band.GetEXlow()[0]
         linemax = ratio_error_band.GetX()[ratio_error_band.GetN()-1] + ratio_error_band.GetEXhigh()[ratio_error_band.GetN()-1]
@@ -1185,7 +1185,7 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
 
         info.AddText(CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]["catname"]]['lumi'])
 
-        cms.Draw("same")
+        cms .Draw("same")
         info.Draw("same")
         
         # did not get this to display nicely
