@@ -7,10 +7,11 @@ from array import array
 
 ROOT.gROOT.SetBatch(True)
 
-VERBOSE=True
+VERBOSE = True
 
 OUTPUT_EXTENSIONS = [
-  'pdf',
+#  'pdf',
+  'png',
 #  'C',
 #  'root',
 ]
@@ -33,8 +34,8 @@ color_dict["ttw"]=ROOT.kBlue-10
 color_dict["ttz"]=ROOT.kBlue-6
 color_dict["ttv"]=ROOT.kBlue-10
 color_dict["diboson"]=ROOT.kAzure+2
-color_dict["QCD"]=ROOT.kYellow
-color_dict["ddQCD"]=ROOT.kYellow
+color_dict["QCD"]=ROOT.kGray
+color_dict["ddQCD"]=ROOT.kGray
 
 color_signal=ROOT.kCyan
 color_dict["ttH_hbb"]=color_signal
@@ -71,8 +72,8 @@ latex_dict["ttw"]="t#bar{t}+W"
 latex_dict["ttz"]="t#bar{t}+Z"
 latex_dict["ttv"]="t#bar{t}+V#color[0]{~~~}" # white ~ needed to keep legend column width constant...
 latex_dict["diboson"]="Diboson"
-latex_dict["QCD"]="QCD"
-latex_dict["ddQCD"]="Data-Driven QCD"
+latex_dict["QCD"]="Multijet"
+latex_dict["ddQCD"]="Multijet"
 
 latex_dict["ttH_hbb"]="t#bar{t}H"
 latex_dict["ttH_hcc"]="t#bar{t}H"
@@ -125,7 +126,6 @@ controlplots_ymax["controlplots_btags"] = 3E8
 controlplots_ymax["controlplots_var1"] = 1E-1
 controlplots_ymax["controlplots_var2"] = 1E-1
 
-
 tick_length_xaxis = 0.05
 tick_length_yaxis = 0.03
 tick_length_rxaxis = 0.11
@@ -143,6 +143,72 @@ sf_stack_ratio = 1./2.25
 
 categoy_label_font_size = 0.047
 
+CHANNELS_COSMETICS_DICT = {
+
+  # 2016 FH
+  'ttH_hbb_13TeV_2016_fh_7j3b_MEM': { 'labels': ['FH (7 jets, 3 b tags)']        , 'logY': True, 'ymin': 1.4, 'ymax': 5e7, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_fh_7j4b_MEM': { 'labels': ['FH (7 jets, #geq4 b tags)']    , 'logY': True, 'ymin': 1.4, 'ymax': 3e5, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_fh_8j3b_MEM': { 'labels': ['FH (8 jets, 3 b tags)']        , 'logY': True, 'ymin': 1.4, 'ymax': 5e7, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_fh_8j4b_MEM': { 'labels': ['FH (8 jets, #geq4 b tags)']    , 'logY': True, 'ymin': 1.4, 'ymax': 3e5, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_fh_9j3b_MEM': { 'labels': ['FH (#geq9 jets, 3 b tags)']    , 'logY': True, 'ymin': 1.4, 'ymax': 1e7, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_fh_9j4b_MEM': { 'labels': ['FH (#geq9 jets, #geq4 b tags)'], 'logY': True, 'ymin': 1.4, 'ymax': 3e5, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+
+  # 2016 SL
+  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttlf': { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttcc': { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_tt2b': { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttb' : { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttbb': { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttH' : { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+
+  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttlf': { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttcc': { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_tt2b': { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttb' : { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttbb': { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttH' : { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+
+  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttlf': { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttcc': { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_tt2b': { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttb' : { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttbb': { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttH' : { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+
+  # 2016 DL
+  'ttH_hbb_13TeV_2016_dl_4j3b_BDT'      : { 'labels': ['DL (#geq4 jets, 3 b tags)']                , 'logY': True , 'ymin': 1.0, 'ymax': 2e5, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_dl_4j4b_loBDT_MEM': { 'labels': ['SL (#geq4 jets, #geq4 b tags)', 'BDT-low'] , 'logY': False, 'ymin': 0.1, 'ymax': 180, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_dl_4j4b_hiBDT_MEM': { 'labels': ['SL (#geq4 jets, #geq4 b tags)', 'BDT-high'], 'logY': False, 'ymin': 0.1, 'ymax':  70, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+
+  # 2017 SL
+  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttlf': { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e6, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttcc': { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_tt2b': { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttb' : { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttbb': { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttH' : { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+
+  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttlf': { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e6, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttcc': { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_tt2b': { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttb' : { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttbb': { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttH' : { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+
+  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttlf': { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttcc': { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 2e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_tt2b': { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttb' : { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttbb': { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttH' : { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+
+  # 2017 DL
+  'ttH_hbb_13TeV_2017_dl_3j2b_BDT': { 'labels': ['DL (3 jets, 2 b tags)']        , 'logY': True, 'ymin': 0.5, 'ymax': 5e6, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_dl_3j3b_BDT': { 'labels': ['DL (3 jets, 3 b tags)']        , 'logY': True, 'ymin': 0.5, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_dl_4j2b_BDT': { 'labels': ['DL (#geq4 jets, 2 b tags)']    , 'logY': True, 'ymin': 0.5, 'ymax': 5e6, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_dl_4j3b_BDT': { 'labels': ['DL (#geq4 jets, 3 b tags)']    , 'logY': True, 'ymin': 0.5, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_dl_4j4b_BDT': { 'labels': ['DL (#geq4 jets, #geq4 b tags)'], 'logY': True, 'ymin': 0.5, 'ymax': 4e4, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+}
 
 def GetSortedProcesses(processes_histos_dict):
     order = [
@@ -162,14 +228,15 @@ def GetSortedProcesses(processes_histos_dict):
         'singlet',
         'stop',
 
-        'ddQCD',
-
         'ttbarPlusBBbar',
         'ttbarPlus2B',
         'ttbarPlusB',
         'ttbarPlusCCbar',
         'ttbarOther',
         'total_background',
+
+          'QCD',
+        'ddQCD',
 
         'ttH_hgg',
         'ttH_hzg',
@@ -238,14 +305,13 @@ def ColorizeHistograms(processes_histos_dict):
 def SetPadMargins():
     ROOT.gStyle.SetFrameLineWidth(2);
     ROOT.gStyle.SetPadLeftMargin(0.15)
-    ROOT.gStyle.SetPadRightMargin(0.02)
+    ROOT.gStyle.SetPadRightMargin(0.04)
     ROOT.gStyle.SetPadTopMargin(0.08)
     ROOT.gStyle.SetPadBottomMargin(0.0)
-    
 
 def GetCanvas(canvas_name):
     ROOT.gStyle.SetOptStat(0)
-    c = ROOT.TCanvas(canvas_name,"",800,850)
+    c = ROOT.TCanvas(canvas_name,"",820,850)
     c.Divide(1,2)
     c.GetPad(1).SetPad(0.0,0.3,1.0,1.0)
     c.GetPad(2).SetPad(0.0,0.0,1.0,0.3)
@@ -408,7 +474,6 @@ def blindDataHisto(datahisto, signalhisto, backgroundhisto,SoBCut=0.01):
     # set this flag for calculation of asymmetric errors in data histogram
     newHisto.SetBinErrorOption(ROOT.TH1.kPoisson)
     return newHisto
-
 
 # provided a mlfitfile and a directory in this file, this function returns the dict["ch1"]["ttbarOther"]->corresponding histogram dictionary***
 def GetHistos(fitfile,directory):
@@ -665,25 +730,17 @@ def GetCMSandInfoLabels(pubstatus):
         1.-ROOT.gStyle.GetPadRightMargin(), 1.,
         "NDC"
     )
-    if pubstatus == "public":
-        cms.AddText("#scale[1.5]{#bf{CMS}}")
-    elif pubstatus == "preliminary":
-        cms.AddText("#scale[1.5]{#bf{CMS}} #scale[1.1]{#it{Preliminary}}")
-    elif pubstatus == "supp":
-        cms.AddText("#scale[1.5]{#bf{CMS}} #scale[1.1]{#it{Supplementary}}")
-        
+    if   pubstatus == "public"     : cms.AddText("#scale[1.5]{#bf{CMS}}")
+    elif pubstatus == "preliminary": cms.AddText("#scale[1.5]{#bf{CMS}} #scale[1.1]{#it{Preliminary}}")
+    elif pubstatus == "supp"       : cms.AddText("#scale[1.5]{#bf{CMS}} #scale[1.1]{#it{Supplementary}}")
+
     cms.SetFillColor(0)
     cms.SetTextFont(43)
     cms.SetTextSize(26)
     cms.SetMargin(0.)
     cms.SetTextAlign(13)
 
-    info = ROOT.TPaveText(
-        0.7, posy,
-        1.-ROOT.gStyle.GetPadRightMargin(), 1.,
-        "NDC"
-    )
-    info.AddText("35.9 fb^{-1} (13 TeV)")
+    info = ROOT.TPaveText(0.7, posy, 1.0-ROOT.gStyle.GetPadRightMargin(), 1.0, "NDC")
     info.SetFillColor(0)
     info.SetTextFont(43)
     info.SetTextSize(26)
@@ -702,155 +759,47 @@ def GetFitLabel(prepostfitflag):
         category = "Post-fit"
     else:
         category = "Background-only post-fit"
-    label = ROOT.TLatex(
-        ROOT.gStyle.GetPadLeftMargin()+0.05,
-        1.-ROOT.gStyle.GetPadTopMargin()-0.2,
-        category
-    )
+
+    label = ROOT.TLatex(ROOT.gStyle.GetPadLeftMargin()+0.05, 1.0-ROOT.gStyle.GetPadTopMargin()-0.2, category)
     label.SetTextFont(42)
     label.SetTextSize(categoy_label_font_size)
     label.SetNDC()
+
     return label
 
 def GetDiscriminantLabel(cat,prepostfitflag):
     if "controlplots" in prepostfitflag:
-        return controlplots_variable_label[prepostfitflag]
-    
-    if cat.find("tt")>0:
-        return "DNN discriminant"
+       return controlplots_variable_label[prepostfitflag]
+
+    if cat.find("DNN")>0:
+       return "DNN discriminant"
 
     help_array = cat.split("_")
-    if "high" in help_array or "low" in help_array:
-        return "MEM discriminant"
+    if "loBDT_MEM" in help_array or "hiBDT_MEM" in help_array:
+       return "MEM discriminant"
 
     return "BDT discriminant"
 
 def GetCatLabels(cat,prepostfitflag):
-    category = ""
-    cat = cat.replace("ljets","SL")
-    cat = cat.replace("mu","#mu")
-    cat = cat.replace("ttH125","ttH")
-    cat = cat.replace("ttJets","tt")
-    dnn_node = ""
-    if cat.find("tt")>0:
-        #print ">>>>>>>>>>>>>>>> cat: ", cat
-        dnn_node = cat[cat.find("tt"):]
-        dnn_node += " node"
-        dnn_node = dnn_node.replace("_","+")
-        dnn_node = dnn_node.replace("ttH+bb","ttH")
-        dnn_node = dnn_node.replace("tt","t#bar{t}")
-    if VERBOSE: print dnn_node
-    help_array = cat.split("_")
-    if VERBOSE: print help_array
-    jets = ""
-    btags = ""
-    jets_relation = ""
-    btags_relation = ""
-    bdt_cat = "" # no label in case of pure BDT, constrolplots
-    if "high" in help_array:
-        bdt_cat = "BDT-high"
-    elif "low" in help_array:
-        bdt_cat = "BDT-low"
-    for part in help_array:
-        for character in part:
-            if character.isdigit():
-                if "j" in part:
-                    jets = character
-                    if "ge" in part:
-                        jets_relation = "#geq"
-                    else:
-                        jets_relation = ""
-                elif ("t" in part or "b" in part) and not "v" in part and len(part)<5:
-                    btags = character
-                    if "ge" in part:
-                        btags_relation = "#geq"
-                    else:
-                        btags_relation = ""
-        if jets!="" and btags!="":
-            break
-    print jets_relation,jets
-    print btags_relation,btags
-    #special rules for desy cards
-    if "dl_" in cat:
-      help_array[0] = "DL"
-      jets = ""
-      btags = ""
-      jets_relation = ""
-      btags_relation = ""
-      for part in help_array:
-        if "j" in part and "t" in part: # now we have the jet-tag part. i hope
-          subparts=part.split("j")
-          subpart1=subparts[0]
-          for character in subpart1:
-            if character.isdigit():
-              jets = character
-            if "ge" in subpart1:
-              jets_relation = "#geq"
-            else:
-              jets_relation = ""
-          subpart2=subparts[1]
-          for character in subpart2:
-            if character.isdigit():
-              btags = character
-            if "ge" in subpart2:
-              btags_relation = "#geq"
-            else:
-              btags_relation = ""
-    if "controlplots" in prepostfitflag:
-        if "baseline_sl" in cat:
-            help_array[0] = "SL"
-            jets_relation = "#geq"
-            jets = "4"
-            btags_relation = "#geq"
-            btags = "2"
-        elif "63_sl" in cat:
-            help_array[0] = "SL"
-            jets_relation = "#geq"
-            jets = "6"
-            btags_relation = ""
-            btags = "3"
-        elif "64_sl" in cat:
-            help_array[0] = "SL"
-            jets_relation = "#geq"
-            jets = "6"
-            btags_relation = "#geq"
-            btags = "4"
-        else:
-            help_array[0] = "DL"
-            jets_relation = "#geq"
-            jets = "2"
-            btags_relation = "#geq"
-            btags = "1"
-              
-    line1 = help_array[0]+" ("+jets_relation+jets+" jets, "+btags_relation+btags+" b tags)"
-    line2 = ""
-    if dnn_node!="":
-        line2 = dnn_node
-    else:
-        line2 = bdt_cat
 
-    label1 = ROOT.TLatex(
-        ROOT.gStyle.GetPadLeftMargin()+0.05,
-        1.-ROOT.gStyle.GetPadTopMargin()-0.09,
-        line1
-    )
-    label1.SetTextFont(42)
-    label1.SetTextSize(categoy_label_font_size)
-    label1.SetNDC()
+    txt_labels = CHANNELS_COSMETICS_DICT[cat]['labels']
 
-    label2 = ROOT.TLatex(
-        ROOT.gStyle.GetPadLeftMargin()+0.05,
-        1.-ROOT.gStyle.GetPadTopMargin()-0.145,
-        line2
-    )
-    label2.SetTextFont(42)
-    label2.SetTextSize(categoy_label_font_size)
-    label2.SetNDC()
+    label1 = None
+    label2 = None
 
-    if line2 == "":
-        return label1, None
+    if len(txt_labels) >= 1: 
+       label1 = ROOT.TLatex(ROOT.gStyle.GetPadLeftMargin()+0.05, 1.0-ROOT.gStyle.GetPadTopMargin()-0.09, txt_labels[0])
+       label1.SetTextFont(42)
+       label1.SetTextSize(categoy_label_font_size)
+       label1.SetNDC()
+
+    if len(txt_labels) >= 2: 
+       label2 = ROOT.TLatex(ROOT.gStyle.GetPadLeftMargin()+0.05, 1.0-ROOT.gStyle.GetPadTopMargin()-0.145, txt_labels[1])
+       label2.SetTextFont(42)
+       label2.SetTextSize(categoy_label_font_size)
+       label2.SetNDC()
+
     return label1, label2
-
 
 def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHisto=None, blind=False,ymax=-1):
 
@@ -942,28 +891,22 @@ def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHi
 
     # from total background or total background+signal prediction histogram in mlfit file, get the error band
     error_graph = GetErrorGraph(background)
-    
+
     ratio_error_graph = GetRatioErrorGraph(error_graph,templateHisto)
-    
+
     # everything should fit in the plots
     if ymax < 0:
-        ymax = error_graph.GetHistogram().GetMaximum() * abs(ymax)
+       ymax = error_graph.GetHistogram().GetMaximum() * abs(ymax)
 
-    # hack for control plots
-    # ymax = 5E6 # multiplicity
-    #ymax = 1499 # 249 
+#    stack.SetMaximum(ymax)
+#    stack.SetMinimum(0.1) # suppress showing 0 on y axis
 
-    stack.SetMaximum(ymax)
-    stack.SetMinimum(0.1) # suppress showing 0 on y axis
-    
     # calculate the ratio between background only or background+signal prediction and data
     ratio_background_data = None
-    if data!=None:
-        ratio_background_data = GetRatioGraph(data,background,templateHisto)
+    if data != None:
+       ratio_background_data = GetRatioGraph(data,background,templateHisto)
 
-    
-        
-    return  stack,ymax,legend,error_graph,data,ratio_background_data,signal,ratio_error_graph
+    return stack,ymax,legend,error_graph,data,ratio_background_data,signal,ratio_error_graph
 
 def rebinToTemplate(histo,templateHisto=None):
   if templateHisto==None:
@@ -1024,29 +967,11 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
     ymax_per_channel = {}
     if ymax is None:
         for channel in channels:
-            
+
             # depending on MVA method, decide which y-axis SF to use
             catname = ch_cat_dict_[channel]["catname"]
 
-            if "_sl_" in catname:
-
-                if "_6j" in catname:
-                    ymaxsf = 10 # SL 2D 64 in log scale
-                else:
-                    ymaxsf = 1.2
-
-            elif "loBDT" in catname:
-                ymaxsf = 1.2
-            elif "hiBDT" in catname:
-                ymaxsf = 2.9
-            elif "BDT" in catname: # DL 43 in log-scale
-                ymaxsf = 250
-            elif "DNN_ttcc" in catname: # DNN in log-scale
-                ymaxsf = 25
-            elif "DNN_ttlf" in catname: # DNN in log-scale
-                ymaxsf = 150
-            else: # DNN in log-scale
-                ymaxsf = 8
+            ymaxsf = CHANNELS_COSMETICS_DICT[catname]['ymaxSF']
 
             ymax_per_channel[channel] = -1. * ymaxsf
 
@@ -1063,72 +988,64 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
         #print templateRootFilePath,templateHistoExpression
         templateHisto=None
         if templateRootFilePath!="" and templateHistoExpression!="":
-          #print templateRootFilePath
-          #print templateHistoExpression.replace("$PROCESS","ttH_hbb")
+           #print templateRootFilePath
+           #print templateHistoExpression.replace("$PROCESS","ttH_hbb")
 
-          templateRootFile = ROOT.TFile.Open(templateRootFilePath, "READ")
-          if not templateRootFile: raise SystemExit(1)
+           templateRootFile = ROOT.TFile.Open(templateRootFilePath, "READ")
+           if not templateRootFile: raise SystemExit(1)
 
-          templateHisto = templateRootFile.Get(templateHistoExpression.replace("$PROCESS","ttbarOther"))
+           templateHisto = templateRootFile.Get(templateHistoExpression.replace("$PROCESS","ttbarOther"))
 
-          stack,ymax_this_channel,legend,error_band,data,ratio_data_prediction,signal,ratio_error_band = GetPlots(categories_processes_histos_dict,channel,dir_,templateHisto,blind,ymax_per_channel[channel])
+           stack,ymax_this_channel,legend,error_band,data,ratio_data_prediction,signal,ratio_error_band = GetPlots(categories_processes_histos_dict,channel,dir_,templateHisto,blind,ymax_per_channel[channel])
 
         # if y-axis range has not been provided, fill dict to return  
         if ymax_per_channel[channel] < 0:
-            ymax_per_channel[channel] = ymax_this_channel
+           ymax_per_channel[channel] = ymax_this_channel
 
         discriminantLabel = GetDiscriminantLabel(ch_cat_dict_[channel]["catname"],prepostfitflag)
-        logy = False
-        if "ljets" in ch_cat_dict_[channel]["catname"]:
-            if "jge6" in ch_cat_dict_[channel]["catname"]:
-                logy = True
-            else:
-                logy = False
-        else:
-            logy = "DNN" in discriminantLabel or "BDT" in discriminantLabel
 
-        if logy:
-            #stack.SetMinimum(1.9) # suppress diboson fluctuations
-            stack.SetMinimum(1.4) # suppress diboson fluctuations
+        logy = CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]["catname"]].get('logY', False)
 
-        if "controlplots" in prepostfitflag:
-            logy = controlplots_logy[prepostfitflag]
-            stack.SetMinimum(controlplots_ymin[prepostfitflag])
-            stack.SetMaximum(controlplots_ymax[prepostfitflag])
-            
+        if 'ymin' in CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]["catname"]]: stack.SetMinimum(CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]["catname"]]['ymin'])
+        if 'ymax' in CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]["catname"]]: stack.SetMaximum(CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]["catname"]]['ymax'])
+
+#        if "controlplots" in prepostfitflag:
+#           logy = controlplots_logy[prepostfitflag]
+#           stack.SetMinimum(controlplots_ymin[prepostfitflag])
+#           stack.SetMaximum(controlplots_ymax[prepostfitflag])
+
         canvas.cd(1)
-        
+
         stack.Draw("hist")
         # unfortunately this has to be done after a first Draw() because only then the axis objects are created ... ROOT ...
 
-        SetUpStack(stack,prepostfitflag)
-        
+        SetUpStack(stack, prepostfitflag)
+
         stack.Draw("hist")
-        
+
         if signal!=None:
-            signal.Draw("histsame][")
+           signal.Draw("histsame][")
 
         if data!=None:
-            data.Draw("histPEX0same")
-        
+           data.Draw("histPEX0same")
+
         error_band.Draw("2same")
 
         ROOT.gPad.RedrawAxis()
         
         legend.Draw("same")
-               
-        catlabel1,catlabel2 = GetCatLabels(ch_cat_dict_[channel]["catname"],prepostfitflag)
-        catlabel1.Draw("same")
-        if catlabel2 != None:
-            catlabel2.Draw("same")
+
+        catlabel1, catlabel2 = GetCatLabels(ch_cat_dict_[channel]["catname"],prepostfitflag)
+
+        if catlabel1 != None: catlabel1.Draw("same")
+        if catlabel2 != None: catlabel2.Draw("same")
+
         fitlabel = GetFitLabel(prepostfitflag)
-        if catlabel2 == None:
-            fitlabel.SetY( fitlabel.GetY()+0.055)
+        if catlabel2 == None: fitlabel.SetY(fitlabel.GetY() + 0.055)
         fitlabel.Draw("same")
 
-        if logy:
-            ROOT.gPad.SetLogy()
-        
+        ROOT.gPad.SetLogy(logy)
+
         canvas.cd(2)
         #ratio_background_data.GetXaxis().SetRange(1,background_tot.GetMinimumBin()-1)
         if ratio_data_prediction!=None:
@@ -1144,9 +1061,12 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
         ratio_line.SetLineStyle(2)
         ratio_line.Draw("same")
         ratio_error_band.Draw("2same")
-        
+
         canvas.cd(1)
-        cms,info = GetCMSandInfoLabels(pubstatus)
+        cms, info = GetCMSandInfoLabels(pubstatus)
+
+        info.AddText(CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]["catname"]]['lumi'])
+
         cms.Draw("same")
         info.Draw("same")
         
@@ -1208,6 +1128,7 @@ def ReadDatacard(datacard):
             if "bin " in line and foundCategoryLine==False:
               foundCategoryLine=True
               categoryLine=line
+
     categoriesFromLine=categoryLine.split(" ")[1:]
 
     if VERBOSE:
@@ -1249,14 +1170,26 @@ def ReadDatacard(datacard):
         category=shapeProcessPart.replace("$PROCESS","").replace("/","").replace("_finaldiscr_","")
         histoexpression=shapeProcessPart
 
+      ### category name
+      cat_name = channel
+
+      # remove repetitions of 'ttH_hbb_13TeV_' prefixes
+      while cat_name.startswith ('ttH_hbb_13TeV_'):
+        _tmp_idx = cat_name.find('ttH_hbb_13TeV_', 1)
+
+        if _tmp_idx != -1: cat_name = cat_name[_tmp_idx:]; del _tmp_idx;
+        else: del _tmp_idx; break;
+      ### -----------
+
       channel_category_dict[channel]={}
-      channel_category_dict[channel]["catname"] = category
-      channel_category_dict[channel]["histopath"] = histopath
+      channel_category_dict[channel]["catname"]         = cat_name # category
+      channel_category_dict[channel]["histopath"]       = histopath
       channel_category_dict[channel]["histoexpression"] = histoexpression  
-    
-#    print  channel_category_dict
+
+    if VERBOSE: print  channel_category_dict
+
     return channel_category_dict
-          
+
 ################################################################################# main function #################################################################################
 
 def main(fitfile_,datacard_):
@@ -1276,7 +1209,6 @@ def main(fitfile_,datacard_):
     maxy = Plot(fitfile_,ch_cat_dict,"shapes_prefit",pubstatus=pubstatus,blind=False)
 #    Plot(fitfile_,ch_cat_dict,"shapes_fit_s",pubstatus=pubstatus,blind=False,ymax=maxy)
 #    Plot(fitfile_,ch_cat_dict,"shapes_fit_b",pubstatus="",blind=False,ymax=maxy)
-
 
 if __name__ == "__main__":
     main(sys.argv[1],sys.argv[2])
