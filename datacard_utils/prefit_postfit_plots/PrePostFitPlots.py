@@ -1285,9 +1285,13 @@ def main(fitfile_,datacard_):
     #Plot(fitfile_,ch_cat_dict,"controlplots_var1",pubstatus=pubstatus,blind=False)
     #Plot(fitfile_,ch_cat_dict,"controlplots_var2",pubstatus=pubstatus,blind=False)
 
-    maxy = Plot(fitfile_,ch_cat_dict,"shapes_prefit",pubstatus=pubstatus,blind=False)
+#    maxy = Plot(fitfile_,ch_cat_dict,"shapes_prefit",pubstatus=pubstatus,blind=False)
 #    Plot(fitfile_,ch_cat_dict,"shapes_fit_s",pubstatus=pubstatus,blind=False,ymax=maxy)
 #    Plot(fitfile_,ch_cat_dict,"shapes_fit_b",pubstatus="",blind=False,ymax=maxy)
+
+    Plot(fitfile_, ch_cat_dict, "shapes_prefit", pubstatus=pubstatus, blind=False)
+    Plot(fitfile_, ch_cat_dict, "shapes_fit_s" , pubstatus=pubstatus, blind=False)
+    Plot(fitfile_, ch_cat_dict, "shapes_fit_b" , pubstatus=""       , blind=False)
 
 if __name__ == "__main__":
     main(sys.argv[1],sys.argv[2])
