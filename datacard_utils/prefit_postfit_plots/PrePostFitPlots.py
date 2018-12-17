@@ -1,13 +1,11 @@
-import ROOT
-import sys
-import os
+#!/usr/bin/env python
+import os, sys, re, array, ROOT
+
 import CMS_lumi
-import re
-from array import array
 
 ROOT.gROOT.SetBatch(True)
 
-VERBOSE = True
+VERBOSE = False
 
 OUTPUT_EXTENSIONS = [
 #  'pdf',
@@ -17,84 +15,85 @@ OUTPUT_EXTENSIONS = [
 ]
 
 color_dict = {}
-color_dict["ttbarOther"]=ROOT.kRed-7
-color_dict["ttbarPlusCCbar"]=ROOT.kRed+1
-color_dict["ttbarPlusB"]=ROOT.kRed-2
-color_dict["ttbarPlus2B"]=ROOT.kRed+2
-color_dict["ttbarPlusBBbar"]=ROOT.kRed+3
-color_dict["singlet"]=ROOT.kMagenta
-color_dict["stop"]=ROOT.kMagenta
-color_dict["zjets"]=ROOT.kGreen-3
-color_dict["wjets"]=ROOT.kGreen-7
-color_dict["vjets"]=ROOT.kGreen-3
-color_dict["ttbarW"]=ROOT.kBlue-10
-color_dict["ttbarZ"]=ROOT.kBlue-6
-color_dict["ttbarV"]=ROOT.kBlue-10
-color_dict["ttw"]=ROOT.kBlue-10
-color_dict["ttz"]=ROOT.kBlue-6
-color_dict["ttv"]=ROOT.kBlue-10
-color_dict["diboson"]=ROOT.kAzure+2
-color_dict["QCD"]=ROOT.kGray
-color_dict["ddQCD"]=ROOT.kGray
+color_dict["ttbarOther"]     = ROOT.kRed+2
+color_dict["ttbarPlusCCbar"] = ROOT.kRed-9
+color_dict["ttbarPlusB"]     = ROOT.kRed+1
+color_dict["ttbarPlus2B"]    = ROOT.kRed-5
+color_dict["ttbarPlusBBbar"] = ROOT.kRed+3
+color_dict["singlet"]        = ROOT.kMagenta
+color_dict["stop"]           = ROOT.kMagenta
+color_dict["zjets"]          = ROOT.kGreen-3
+color_dict["wjets"]          = ROOT.kGreen-7
+color_dict["vjets"]          = ROOT.kGreen-2
+color_dict["ttbarW"]         = ROOT.kBlue-10
+color_dict["ttbarZ"]         = ROOT.kBlue-6
+color_dict["ttbarV"]         = ROOT.kBlue-10
+color_dict["ttw"]            = ROOT.kBlue-10
+color_dict["ttz"]            = ROOT.kBlue-6
+color_dict["ttv"]            = ROOT.kBlue-10
+color_dict["diboson"]        = ROOT.kAzure+2
+color_dict  ["QCD"]          = ROOT.kGray
+color_dict["ddQCD"]          = ROOT.kGray
 
 color_signal=ROOT.kCyan
-color_dict["ttH_hbb"]=color_signal
-color_dict["ttH_hcc"]=color_signal
-color_dict["ttH_htt"]=color_signal
-color_dict["ttH_hgg"]=color_signal
-color_dict["ttH_hgluglu"]=color_signal
-color_dict["ttH_hww"]=color_signal
-color_dict["ttH_hzz"]=color_signal
-color_dict["ttH_hzg"]=color_signal
-color_dict["ttH"]=color_signal
+color_dict["ttH_hbb"]     = color_signal
+color_dict["ttH_hcc"]     = color_signal
+color_dict["ttH_htt"]     = color_signal
+color_dict["ttH_hgg"]     = color_signal
+color_dict["ttH_hgluglu"] = color_signal
+color_dict["ttH_hww"]     = color_signal
+color_dict["ttH_hzz"]     = color_signal
+color_dict["ttH_hzg"]     = color_signal
+color_dict["ttH"]         = color_signal
 
-color_dict["total_background"]=ROOT.kBlack
-color_dict["total_signal"]=color_signal
-color_dict["total_covar"]=ROOT.kBlack
-color_dict["total"]=ROOT.kBlack
-color_dict["data"]=ROOT.kBlack
+color_dict["total_signal"]     = color_signal
+color_dict["total_background"] = ROOT.kBlack
+color_dict["total_covar"]      = ROOT.kBlack
+color_dict["total"]            = ROOT.kBlack
+color_dict["data"]             = ROOT.kBlack
 
 latex_dict = {}
-latex_dict["ttbarOther"]="t#bar{t}+lf"
-latex_dict["ttbarPlusCCbar"]="t#bar{t}+c#bar{c}"
-latex_dict["ttbarPlusB"]="t#bar{t}+b"
-latex_dict["ttbarPlus2B"]="t#bar{t}+2b"
-latex_dict["ttbarPlusBBbar"]="t#bar{t}+b#bar{b}"
-latex_dict["singlet"]="Single t"
-latex_dict["stop"]="Single t"
-latex_dict["zjets"]="Z+jets"
-latex_dict["wjets"]="W+jets"
-latex_dict["vjets"]="V+jets"
-latex_dict["ttbarW"]="t#bar{t}+W"
-latex_dict["ttbarZ"]="t#bar{t}+Z"
-latex_dict["ttbarV"]="t#bar{t}+V#color[0]{~~~}" # white ~ needed to keep legend column width constant...
-latex_dict["ttw"]="t#bar{t}+W"
-latex_dict["ttz"]="t#bar{t}+Z"
-latex_dict["ttv"]="t#bar{t}+V#color[0]{~~~}" # white ~ needed to keep legend column width constant...
-latex_dict["diboson"]="Diboson"
-latex_dict["QCD"]="Multijet"
-latex_dict["ddQCD"]="Multijet"
+latex_dict["ttbarOther"]     = "t#bar{t}+lf"
+latex_dict["ttbarPlusCCbar"] = "t#bar{t}+c#bar{c}"
+latex_dict["ttbarPlusB"]     = "t#bar{t}+b"
+latex_dict["ttbarPlus2B"]    = "t#bar{t}+2b"
+latex_dict["ttbarPlusBBbar"] = "t#bar{t}+b#bar{b}"
+latex_dict["singlet"] = "Single t"
+latex_dict["stop"]    = "Single t"
+latex_dict["zjets"] = "Z+jets"
+latex_dict["wjets"] = "W+jets"
+latex_dict["vjets"] = "V+jets"
+latex_dict["ttbarW"] = "t#bar{t}+W"
+latex_dict["ttbarZ"] = "t#bar{t}+Z"
+latex_dict["ttbarV"] = "t#bar{t}+V#color[0]{~~~}" # white ~ needed to keep legend column width constant...
+latex_dict["ttw"] = "t#bar{t}+W"
+latex_dict["ttz"] = "t#bar{t}+Z"
+latex_dict["ttv"] = "t#bar{t}+V#color[0]{~~~}" # white ~ needed to keep legend column width constant...
+latex_dict["diboson"] = "Diboson"
+latex_dict  ["QCD"] = "Multijet"
+latex_dict["ddQCD"] = "Multijet"
 
-latex_dict["ttH_hbb"]="t#bar{t}H"
-latex_dict["ttH_hcc"]="t#bar{t}H"
-latex_dict["ttH_htt"]="t#bar{t}H"
-latex_dict["ttH_hgg"]="t#bar{t}H"
-latex_dict["ttH_hgluglu"]="t#bar{t}H"
-latex_dict["ttH_hww"]="t#bar{t}H"
-latex_dict["ttH_hzz"]="t#bar{t}H"
-latex_dict["ttH_hzg"]="t#bar{t}H"
-latex_dict["ttH"]="t#bar{t}H_{SM}"
-latex_dict["total_background"]="total background"
-latex_dict["total_signal"]="signal#color[0]{~~~}" # white ~ needed to keep legend column width constant...
-latex_dict["total_covar"]="bla"
-latex_dict["total"]="total s+b"
-latex_dict["data"]="Data"
+latex_dict["ttH_hbb"]     = "t#bar{t}H"
+latex_dict["ttH_hcc"]     = "t#bar{t}H"
+latex_dict["ttH_htt"]     = "t#bar{t}H"
+latex_dict["ttH_hgg"]     = "t#bar{t}H"
+latex_dict["ttH_hgluglu"] = "t#bar{t}H"
+latex_dict["ttH_hww"]     = "t#bar{t}H"
+latex_dict["ttH_hzz"]     = "t#bar{t}H"
+latex_dict["ttH_hzg"]     = "t#bar{t}H"
+latex_dict["ttH"]         = "t#bar{t}H_{SM}"
+
+latex_dict["total_background"] = "total background"
+latex_dict["total_signal"] = "signal#color[0]{~~~}" # white ~ needed to keep legend column width constant...
+latex_dict["total_covar"] = "COV"
+latex_dict["total"] = "total s+b"
+latex_dict["data"] = "Data"
 
 controlplots_variable_label = {}
 controlplots_variable_label["controlplots_njets"] = "Number of jets"
 controlplots_variable_label["controlplots_btags"] = "Number of b-tagged jets"
-controlplots_variable_label["controlplots_var1"] = "Sum pt(jet)/E(jet)"
-controlplots_variable_label["controlplots_var2"] = "Avg. #Delta #eta(jets)"
+controlplots_variable_label["controlplots_var1"]  = "Sum pt(jet)/E(jet)"
+controlplots_variable_label["controlplots_var2"]  = "Avg. #Delta #eta(jets)"
 
 controlplots_entries_label = {}
 controlplots_entries_label["controlplots_njets"] = "Events"
@@ -141,74 +140,133 @@ axis_title_size = 0.14
 
 sf_stack_ratio = 1./2.25
 
-categoy_label_font_size = 0.047
+category_label_font_size = 0.047
+
+################################################################
+################################################################
+################################################################
 
 CHANNELS_COSMETICS_DICT = {
 
   # 2016 FH
-  'ttH_hbb_13TeV_2016_fh_7j3b_MEM': { 'labels': ['FH (7 jets, 3 b tags)']        , 'logY': True, 'ymin': 1.4, 'ymax': 5e7, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_fh_7j4b_MEM': { 'labels': ['FH (7 jets, #geq4 b tags)']    , 'logY': True, 'ymin': 1.4, 'ymax': 3e5, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_fh_8j3b_MEM': { 'labels': ['FH (8 jets, 3 b tags)']        , 'logY': True, 'ymin': 1.4, 'ymax': 5e7, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_fh_8j4b_MEM': { 'labels': ['FH (8 jets, #geq4 b tags)']    , 'logY': True, 'ymin': 1.4, 'ymax': 3e5, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_fh_9j3b_MEM': { 'labels': ['FH (#geq9 jets, 3 b tags)']    , 'logY': True, 'ymin': 1.4, 'ymax': 1e7, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_fh_9j4b_MEM': { 'labels': ['FH (#geq9 jets, #geq4 b tags)'], 'logY': True, 'ymin': 1.4, 'ymax': 3e5, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_fh_7j3b_MEM': { 'titleX': 'MEM discriminant', 'labels': ['FH (7 jets, 3 b tags)']        , 'logY': True, 'ymin': 1.4, 'ymax': 5e7, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_fh_7j4b_MEM': { 'titleX': 'MEM discriminant', 'labels': ['FH (7 jets, #geq4 b tags)']    , 'logY': True, 'ymin': 1.4, 'ymax': 3e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_fh_8j3b_MEM': { 'titleX': 'MEM discriminant', 'labels': ['FH (8 jets, 3 b tags)']        , 'logY': True, 'ymin': 1.4, 'ymax': 5e7, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_fh_8j4b_MEM': { 'titleX': 'MEM discriminant', 'labels': ['FH (8 jets, #geq4 b tags)']    , 'logY': True, 'ymin': 1.4, 'ymax': 3e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_fh_9j3b_MEM': { 'titleX': 'MEM discriminant', 'labels': ['FH (#geq9 jets, 3 b tags)']    , 'logY': True, 'ymin': 1.4, 'ymax': 1e7, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_fh_9j4b_MEM': { 'titleX': 'MEM discriminant', 'labels': ['FH (#geq9 jets, #geq4 b tags)'], 'logY': True, 'ymin': 1.4, 'ymax': 3e5, 'ymaxSF': 1, },
 
   # 2016 SL
-  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttlf': { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttcc': { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_tt2b': { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttb' : { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttbb': { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttH' : { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttlf': { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttcc': { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_tt2b': { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttb' : { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttbb': { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttH' : { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
 
-  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttlf': { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttcc': { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_tt2b': { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttb' : { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttbb': { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttH' : { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttlf': { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttcc': { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_tt2b': { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttb' : { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttbb': { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttH' : { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
 
-  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttlf': { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttcc': { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_tt2b': { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttb' : { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttbb': { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttH' : { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttlf': { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttcc': { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_tt2b': { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttb' : { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttbb': { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttH' : { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
 
   # 2016 DL
-  'ttH_hbb_13TeV_2016_dl_4j3b_BDT'      : { 'labels': ['DL (#geq4 jets, 3 b tags)']                , 'logY': True , 'ymin': 1.0, 'ymax': 2e5, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_dl_4j4b_loBDT_MEM': { 'labels': ['SL (#geq4 jets, #geq4 b tags)', 'BDT-low'] , 'logY': False, 'ymin': 0.1, 'ymax': 180, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2016_dl_4j4b_hiBDT_MEM': { 'labels': ['SL (#geq4 jets, #geq4 b tags)', 'BDT-high'], 'logY': False, 'ymin': 0.1, 'ymax':  70, 'ymaxSF': 1, 'lumi': '35.9 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2016_dl_4j3b_BDT'      : { 'titleX': 'BDT discriminant', 'labels': ['DL (#geq4 jets, 3 b tags)']                , 'logY': True , 'ymin': 1.0, 'ymax': 2e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_dl_4j4b_loBDT_MEM': { 'titleX': 'MEM discriminant', 'labels': ['SL (#geq4 jets, #geq4 b tags)', 'BDT-low'] , 'logY': False, 'ymin': 0.1, 'ymax': 190, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_dl_4j4b_hiBDT_MEM': { 'titleX': 'MEM discriminant', 'labels': ['SL (#geq4 jets, #geq4 b tags)', 'BDT-high'], 'logY': False, 'ymin': 0.1, 'ymax':  70, 'ymaxSF': 1, },
 
   # 2017 SL
-  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttlf': { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e6, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttcc': { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_tt2b': { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttb' : { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttbb': { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttH' : { 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttlf': { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e6, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttcc': { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_tt2b': { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttb' : { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttbb': { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttH' : { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
 
-  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttlf': { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e6, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttcc': { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_tt2b': { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttb' : { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttbb': { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttH' : { 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttlf': { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e6, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttcc': { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_tt2b': { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttb' : { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttbb': { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttH' : { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
 
-  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttlf': { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttcc': { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 2e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_tt2b': { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttb' : { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttbb': { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttH' : { 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttlf': { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttcc': { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 2e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_tt2b': { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttb' : { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttbb': { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttH' : { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
 
   # 2017 DL
-  'ttH_hbb_13TeV_2017_dl_3j2b_BDT': { 'labels': ['DL (3 jets, 2 b tags)']        , 'logY': True, 'ymin': 0.5, 'ymax': 5e6, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2017_dl_3j3b_BDT': { 'labels': ['DL (3 jets, 3 b tags)']        , 'logY': True, 'ymin': 0.5, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2017_dl_4j2b_BDT': { 'labels': ['DL (#geq4 jets, 2 b tags)']    , 'logY': True, 'ymin': 0.5, 'ymax': 5e6, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2017_dl_4j3b_BDT': { 'labels': ['DL (#geq4 jets, 3 b tags)']    , 'logY': True, 'ymin': 0.5, 'ymax': 1e5, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
-  'ttH_hbb_13TeV_2017_dl_4j4b_BDT': { 'labels': ['DL (#geq4 jets, #geq4 b tags)'], 'logY': True, 'ymin': 0.5, 'ymax': 4e4, 'ymaxSF': 1, 'lumi': '41.5 fb^{-1} (13 TeV)', },
+  'ttH_hbb_13TeV_2017_dl_3j2b_BDT': { 'titleX': 'BDT discriminant', 'labels': ['DL (3 jets, 2 b tags)']        , 'logY': True, 'ymin': 0.5, 'ymax': 5e6, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_dl_3j3b_BDT': { 'titleX': 'BDT discriminant', 'labels': ['DL (3 jets, 3 b tags)']        , 'logY': True, 'ymin': 0.5, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_dl_4j2b_BDT': { 'titleX': 'BDT discriminant', 'labels': ['DL (#geq4 jets, 2 b tags)']    , 'logY': True, 'ymin': 0.5, 'ymax': 5e6, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_dl_4j3b_BDT': { 'titleX': 'BDT discriminant', 'labels': ['DL (#geq4 jets, 3 b tags)']    , 'logY': True, 'ymin': 0.5, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_dl_4j4b_BDT': { 'titleX': 'BDT discriminant', 'labels': ['DL (#geq4 jets, #geq4 b tags)'], 'logY': True, 'ymin': 0.5, 'ymax': 4e4, 'ymaxSF': 1, },
 }
+
+## luminosity string
+for i_cat in CHANNELS_COSMETICS_DICT:
+
+    if   i_cat.startswith('ttH_hbb_13TeV_2016'): CHANNELS_COSMETICS_DICT[i_cat]['lumi'] = '35.9 fb^{-1} (13 TeV)'
+    elif i_cat.startswith('ttH_hbb_13TeV_2017'): CHANNELS_COSMETICS_DICT[i_cat]['lumi'] = '41.5 fb^{-1} (13 TeV)'
+    else                                       : CHANNELS_COSMETICS_DICT[i_cat]['lumi'] = ''
+## -----------------
+
+################################################################
+################################################################
+################################################################
+
+def GetLegendColumns():
+
+    legend_columns = [
+
+      # left column
+      [
+        'data',
+        'ttbarOther',
+        'ttbarPlusCCbar',
+        'ttbarPlusB',
+        'ttbarPlus2B',
+        'ttbarPlusBBbar',
+      ],
+
+      # right column
+      [
+        'total_signal',
+
+        'ddQCD',
+          'QCD',
+
+        'stop',
+        'singlet',
+
+        'vjets',
+        'zjets',
+        'wjets',
+
+        'ttv',
+        'ttz',
+        'ttw',
+        'ttbarV',
+        'ttbarZ',
+        'ttbarW',
+
+        'diboson',
+
+        'Uncertainty',
+      ],
+    ]
+
+    return legend_columns
 
 def GetSortedProcesses(processes_histos_dict):
     order = [
@@ -258,7 +316,6 @@ def GetSortedProcesses(processes_histos_dict):
 
     return ordered_processes
 
-
 def MergeProcesses(processes_histos_dict, proc_A, proc_B, proc_Sum):
     """
     Merge processes A and B to new process Sum
@@ -277,12 +334,12 @@ def MergeProcesses(processes_histos_dict, proc_A, proc_B, proc_Sum):
 #    if VERBOSE: print proc_A, ": ", intA 
 #    if VERBOSE: print proc_B, ": ", intB
 #    if VERBOSE: print  "Sum: ", intA+intB
-    
+
     if proc_A in new_dict or proc_B in new_dict:
         if proc_A in new_dict:
             new_dict[proc_Sum] = new_dict[proc_A].Clone()
             if proc_B in new_dict:
-                new_dict[proc_Sum].Add( new_dict[proc_B] )
+                new_dict[proc_Sum].Add(new_dict[proc_B])
         else:
             new_dict[proc_Sum] = new_dict[proc_B].Clone()
 
@@ -298,6 +355,7 @@ def MergeProcesses(processes_histos_dict, proc_A, proc_B, proc_Sum):
                                 
 def ColorizeHistograms(processes_histos_dict):
     for process in processes_histos_dict:
+        processes_histos_dict[process].SetLineWidth(2)
         processes_histos_dict[process].SetLineColor(ROOT.kBlack)
         processes_histos_dict[process].SetFillColor(color_dict[process])
     return 0
@@ -320,13 +378,16 @@ def GetCanvas(canvas_name):
     c.GetPad(2).SetTopMargin(0)
     c.GetPad(2).SetBottomMargin(0.32)
     c.GetPad(2).SetTicks(1,1)
-    c.cd();
+    c.cd()
     return c
 
 # returns directory in tfile***    
-def GetDirectory(fitfile,directory):
+def GetDirectory(fitfile, directory):
+
     dir_ = fitfile.Get(directory)
-    print "dir ", dir_
+
+    if VERBOSE: print "Input Folder: ", dir_
+
     return dir_
 
 #returns a list of all channels in the given directory***
@@ -370,7 +431,6 @@ def GetHistosForCategoriesProcesses(directory,categories_processes_dict):
             histo = cat_dir.Get(process)
             if process=="data":
                 # convert the tgraphasymmerror to a histogram, drop the unnecessary bins, set asymmetric errors and save the resulting histo in the dictionary
-                print ""
                 dictt[cat][process] = GetHistoFromTGraphAE(histo,cat,nbins)
             else:
                 # drop the unnecessary bins and save the resulting histo in the dictionary
@@ -423,12 +483,13 @@ def GetHistoFromTGraphAE(tgraph,category,nbins_new_):
 # converts the TGraphAsymmError data object in the mlfit file to a histogram (therby dropping bins again) and in addition sets asymmetric errors***
 def makeAsymErrorsForDataHisto(datahisto):
     oldname=datahisto.GetName()
-    datahisto.SetName(oldname+"_old")
-    binEdgeArray=array("f",[])
+    datahisto.SetName (oldname+"_old")
+    datahisto.SetTitle(oldname+"_old")
+    binEdgeArray=array.array("f",[])
     nBins=datahisto.GetNbinsX()
     for i in range(1,nBins+2,1):
-      binEdgeArray.append(datahisto.GetBinLowEdge(i))
-      
+        binEdgeArray.append(datahisto.GetBinLowEdge(i))
+
     newHisto = ROOT.TH1F(oldname,datahisto.GetTitle(),len(binEdgeArray)-1,binEdgeArray)
     # set this flag for asymmetric errors in data histogram
     newHisto.Sumw2(ROOT.kFALSE)
@@ -443,19 +504,16 @@ def makeAsymErrorsForDataHisto(datahisto):
     newHisto.SetBinErrorOption(ROOT.TH1.kPoisson)
     return newHisto
 
-#def createGraphToDrawFromDataHist(datahisto,SoBCut=0.0):
-  #nBins=datahisto.GetNbinsX()
-  #theGraph=ROOT.TGraphAsymmErrors()
-  
 def blindDataHisto(datahisto, signalhisto, backgroundhisto,SoBCut=0.01):
     oldname=datahisto.GetName()
     datahisto.SetName(oldname+"_old")
-    binEdgeArray=array("f",[])
+    binEdgeArray=array.array("f",[])
     nBins=datahisto.GetNbinsX()
     for i in range(1,nBins+2,1):
       binEdgeArray.append(datahisto.GetBinLowEdge(i))
-      
-    newHisto = ROOT.TH1F(oldname,datahisto.GetTitle(),len(binEdgeArray)-1,binEdgeArray)
+
+    newHisto = ROOT.TH1F(oldname, datahisto.GetTitle(), len(binEdgeArray)-1,binEdgeArray)
+
     # set this flag for asymmetric errors in data histogram
     newHisto.Sumw2(ROOT.kFALSE)
     startBlinding=False
@@ -479,13 +537,13 @@ def blindDataHisto(datahisto, signalhisto, backgroundhisto,SoBCut=0.01):
 def GetHistos(fitfile,directory):
     # get directory in mlfit file
     dirr = GetDirectory(fitfile,directory)
-    print " >>>> 1 dirr: ", dirr
+    if VERBOSE: print " >>>> 1 dirr: ", dirr
     # get channels/categories in this directory
     categories = GetChannels(dirr)
-    print " >>>> 2 categories: ", categories
+    if VERBOSE: print " >>>> 2 categories: ", categories
     # get processes in the different channels/categories as dict["chX"]->[processes]
     categories_processes_dict = GetProcessesInCategories(dirr,categories)
-    print " >>>> 3 categories_processes_dict: ", categories_processes_dict
+    if VERBOSE: print " >>>> 3 categories_processes_dict: ", categories_processes_dict
 
     # get final dictionary, e.g. dict["ch1"]["ttbarOther"]->corresponding histogram
     categories_processes_histos_dict = GetHistosForCategoriesProcesses(dirr,categories_processes_dict)
@@ -511,8 +569,11 @@ def GetSignal(processes_histos_dict,background_integral):
     signal.SetFillStyle(0)
     signal.SetLineWidth(3)
     signal_integral = signal.Integral()
+
     scaleFactor=0.0
-    scaleMode=15
+
+    scaleMode = 15.
+
     #print signal_integral
     if signal_integral>0.:
       if scaleMode>0:
@@ -580,10 +641,10 @@ def AddEntry22( self, histo, label, option='L'):
     neglen = 0
     sscripts = re.findall("_{.+?}|\^{.+?}",label)
     for s in sscripts:
-	neglen = neglen + 3
+        neglen = neglen + 3
     symbols = re.findall("#[a-zA-Z]+",label)
     for symbol in symbols:
-	neglen = neglen + len(symbol)-1
+        neglen = neglen + len(symbol)-1
     newwidth=max((len(label)-neglen)*0.015*0.05/ts+0.1,width)
 #    self.SetX1NDC(self.GetX2NDC()-newwidth)
 
@@ -749,36 +810,35 @@ def GetCMSandInfoLabels(pubstatus):
 
     return cms,info
 
-def GetFitLabel(prepostfitflag):
-    category=""
-    if "controlplots" in prepostfitflag:
-        category=""
-    elif "prefit" in prepostfitflag:
-        category = "Pre-fit expectation"
-    elif "fit_s" in prepostfitflag:
-        category = "Post-fit"
-    else:
-        category = "Background-only post-fit"
+def GetFitLabel(catname, prepostfitflag):
 
-    label = ROOT.TLatex(ROOT.gStyle.GetPadLeftMargin()+0.05, 1.0-ROOT.gStyle.GetPadTopMargin()-0.2, category)
-    label.SetTextFont(42)
-    label.SetTextSize(categoy_label_font_size)
-    label.SetNDC()
+    label = None
+
+    if CHANNELS_COSMETICS_DICT[catname].get('addFitLabel', True):
+
+       if   prepostfitflag == 'shapes_prefit': fit_label = 'Pre-fit expectation'
+       elif prepostfitflag == 'shapes_fit_b' : fit_label = 'Post-fit (Background-only)'
+       elif prepostfitflag == 'shapes_fit_s' : fit_label = 'Post-fit'
+
+       label = ROOT.TLatex(ROOT.gStyle.GetPadLeftMargin()+0.05, 1.0-ROOT.gStyle.GetPadTopMargin()-0.2, fit_label)
+       label.SetTextFont(42)
+       label.SetTextSize(category_label_font_size)
+       label.SetNDC()
 
     return label
 
-def GetDiscriminantLabel(cat,prepostfitflag):
-    if "controlplots" in prepostfitflag:
-       return controlplots_variable_label[prepostfitflag]
-
-    if cat.find("DNN")>0:
-       return "DNN discriminant"
-
-    help_array = cat.split("_")
-    if "loBDT_MEM" in help_array or "hiBDT_MEM" in help_array:
-       return "MEM discriminant"
-
-    return "BDT discriminant"
+#def GetDiscriminantLabel(cat,prepostfitflag):
+#    if "controlplots" in prepostfitflag:
+#       return controlplots_variable_label[prepostfitflag]
+#
+#    if cat.find("DNN")>0:
+#       return "DNN discriminant"
+#
+#    help_array = cat.split("_")
+#    if "loBDT_MEM" in help_array or "hiBDT_MEM" in help_array:
+#       return "MEM discriminant"
+#
+#    return "BDT discriminant"
 
 def GetCatLabels(cat,prepostfitflag):
 
@@ -790,13 +850,13 @@ def GetCatLabels(cat,prepostfitflag):
     if len(txt_labels) >= 1: 
        label1 = ROOT.TLatex(ROOT.gStyle.GetPadLeftMargin()+0.05, 1.0-ROOT.gStyle.GetPadTopMargin()-0.09, txt_labels[0])
        label1.SetTextFont(42)
-       label1.SetTextSize(categoy_label_font_size)
+       label1.SetTextSize(category_label_font_size)
        label1.SetNDC()
 
     if len(txt_labels) >= 2: 
        label2 = ROOT.TLatex(ROOT.gStyle.GetPadLeftMargin()+0.05, 1.0-ROOT.gStyle.GetPadTopMargin()-0.145, txt_labels[1])
        label2.SetTextFont(42)
-       label2.SetTextSize(categoy_label_font_size)
+       label2.SetTextSize(category_label_font_size)
        label2.SetNDC()
 
     return label1, label2
@@ -813,22 +873,19 @@ def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHi
       oldh=processes_histos_dict[process]
       processes_histos_dict[process]=rebinToTemplate(oldh,templateHisto)
 
-    theTotalBackgroundHisto=processes_histos_dict["total_background"].Clone()
-    for process in processes_histos_dict:
-      oldh=processes_histos_dict[process]
-      processes_histos_dict[process]=stripEmptyBins(oldh,theTotalBackgroundHisto)
+    theTotalBackgroundHisto = processes_histos_dict["total_background"]
 
-    oldTemplate=templateHisto.Clone()
-    templateHisto=stripEmptyBins(oldTemplate,theTotalBackgroundHisto)
-    
+    for process in processes_histos_dict:
+        processes_histos_dict[process] = stripEmptyBins(processes_histos_dict[process], theTotalBackgroundHisto)
+
+    templateHisto = stripEmptyBins(templateHisto, theTotalBackgroundHisto)
+
     # fix data histo 
-    olddata=processes_histos_dict["data"].Clone()
-    processes_histos_dict["data"]=makeAsymErrorsForDataHisto(olddata)
-    
+    processes_histos_dict["data"] = makeAsymErrorsForDataHisto(processes_histos_dict["data"])
+
     # Set data bin contents to zero if blinding is required
     if blind==True:
-      olddata=processes_histos_dict["data"].Clone()
-      processes_histos_dict["data"]=blindDataHisto(olddata,processes_histos_dict["total_signal"],processes_histos_dict["total_background"],SoBCut=0.01)
+       processes_histos_dict["data"] = blindDataHisto(processes_histos_dict["data"], processes_histos_dict["total_signal"], processes_histos_dict["total_background"], SoBCut=0.01)
 
     # merge minor backgrounds
     MergeProcesses(processes_histos_dict,"wjets","zjets","vjets")
@@ -854,45 +911,61 @@ def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHi
     
     # get data histogram
     data = GetDataHistogram(processes_histos_dict)
-     
-   
+
     # sort histograms in cateogory depending on their integral (first with largest integral, last with smallest) -> to get smallest contributions in the stack plot on top of it
 #    sorted_processes_histos_list = sorted(processes_histos_dict.items(),key=lambda x: x[1].Integral(),reverse=False)
     sorted_processes_histos_list = GetSortedProcesses(processes_histos_dict)
     #print "sorted_processes_histos_list: ", sorted_processes_histos_list
 
-    procListForLegend=[] 
-    
+    legdPrc_dict = {}
+
     # add background histogram to the stackplot
     for process in sorted_processes_histos_list:
         # avoid all total histograms, data and signal processes for background only
         if not "total" in process[0] and not "data" in process[0] and not "ttH" in process[0]:
-            stack.Add(process[1])
-            procListForLegend.append([process[1],latex_dict[process[0]],"f"])
-    procListForLegend.reverse()
+           stack.Add(process[1])
+           legdPrc_dict[process[0]] = [process[1], latex_dict[process[0]], "f"]
 
     # add signal histogram to the stack (in case of s+b fit)
     if prepostfitflag=="shapes_fit_s":
-        for process in sorted_processes_histos_list:
-            if process[0] == "total_signal":
-                stack.Add(process[1])
-                procListForLegend.insert(0,[process[1],latex_dict[process[0]],"f"])
+       for process in sorted_processes_histos_list:
+           if process[0] == "total_signal":
+              stack.Add(process[1])
+              legdPrc_dict[process[0]] = [process[1], latex_dict[process[0]], "f"]
+
     elif prepostfitflag=="shapes_fit_b":
-        procListForLegend.insert(0,[None,"",""]) # add blank line
-    elif ( prepostfitflag=="shapes_prefit" or "controlplots" in prepostfitflag ) and signal!=None:
-        procListForLegend.insert(0,[signal,str(sf)+" #times "+latex_dict["ttH"],"l"])
-    if data!=None:
-        procListForLegend.insert(0,[data,"Data","p"])
+         legdPrc_dict["total_signal"] = [None,"",""] # add blank line
 
-    for ileg, leg in enumerate(procListForLegend):
-        legend.AddEntry(leg[0],leg[1],leg[2])
+    elif (prepostfitflag=="shapes_prefit" or "controlplots" in prepostfitflag) and (signal != None):
+         legdPrc_dict["total_signal"] = [signal, str(sf)+" #times "+latex_dict["ttH"], "l"]
 
-    #print ">>>>> stack ", stack.GetMaximum()
+    if data != None: legdPrc_dict['data'] = [data, "Data", "p"]
 
     # from total background or total background+signal prediction histogram in mlfit file, get the error band
     error_graph = GetErrorGraph(background)
 
-    ratio_error_graph = GetRatioErrorGraph(error_graph,templateHisto)
+    legdPrc_dict['Uncertainty'] = [error_graph, "Uncertainty", "f"]
+
+    # we want the legend to have entries from top to bottom, per column
+    # (ROOT default is from left to right, per row)
+    legd_cols = GetLegendColumns()
+
+    legd_cols[0] = [i_leg_col1 for i_leg_col1 in legd_cols[0] if i_leg_col1 in legdPrc_dict]
+    legd_cols[1] = [i_leg_col2 for i_leg_col2 in legd_cols[1] if i_leg_col2 in legdPrc_dict]
+
+    while len(legd_cols[0]) < len(legd_cols[1]): legd_cols[0] += [None]
+    while len(legd_cols[1]) < len(legd_cols[0]): legd_cols[1] += [None]
+
+    legd_list = [None]*(len(legd_cols[0])+len(legd_cols[1]))
+    legd_list[ ::2] = legd_cols[0]
+    legd_list[1::2] = legd_cols[1]
+
+    for i_leg in legd_list:
+
+        if i_leg == None: leg_data = [None, "", ""]
+        else            : leg_data = legdPrc_dict[i_leg]
+
+        legend.AddEntry(leg_data[0], leg_data[1], leg_data[2])
 
     # everything should fit in the plots
     if ymax < 0:
@@ -900,6 +973,8 @@ def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHi
 
 #    stack.SetMaximum(ymax)
 #    stack.SetMinimum(0.1) # suppress showing 0 on y axis
+
+    ratio_error_graph = GetRatioErrorGraph(error_graph, templateHisto)
 
     # calculate the ratio between background only or background+signal prediction and data
     ratio_background_data = None
@@ -935,7 +1010,7 @@ def stripEmptyBins(histo,template):
       lastFilledBin=i
       break
   # get binEdgeArray  
-  binEdgeArray=array("f",[])
+  binEdgeArray=array.array("f",[])
   binContents=[]
   binErrors=[]
   for i in range(firstFilledBin,lastFilledBin+2,1):
@@ -943,7 +1018,10 @@ def stripEmptyBins(histo,template):
     binContents.append(histo.GetBinContent(i))
     binErrors.append(histo.GetBinError(i))
   # create new histo without empty bins at the ends                     
-  newHisto=ROOT.TH1F(histo.GetName(),histo.GetTitle(),len(binEdgeArray)-1,binEdgeArray)
+  histo_name = histo.GetName()
+  histo.SetName(histo_name+'_old')
+
+  newHisto=ROOT.TH1F(histo_name,histo.GetTitle(),len(binEdgeArray)-1,binEdgeArray)
   newNBins=newHisto.GetNbinsX()
   for i in range(newNBins):
     newHisto.SetBinContent(i+1,binContents[i])
@@ -1002,7 +1080,7 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
         if ymax_per_channel[channel] < 0:
            ymax_per_channel[channel] = ymax_this_channel
 
-        discriminantLabel = GetDiscriminantLabel(ch_cat_dict_[channel]["catname"],prepostfitflag)
+        titleX_label = CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]["catname"]]['titleX']
 
         logy = CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]["catname"]].get('logY', False)
 
@@ -1040,19 +1118,20 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
         if catlabel1 != None: catlabel1.Draw("same")
         if catlabel2 != None: catlabel2.Draw("same")
 
-        fitlabel = GetFitLabel(prepostfitflag)
-        if catlabel2 == None: fitlabel.SetY(fitlabel.GetY() + 0.055)
-        fitlabel.Draw("same")
+        fitlabel = GetFitLabel(ch_cat_dict_[channel]["catname"], prepostfitflag)
+        if fitlabel != None:
+           if catlabel2 == None: fitlabel.SetY(fitlabel.GetY() + 0.055)
+           fitlabel.Draw("same")
 
         ROOT.gPad.SetLogy(logy)
 
         canvas.cd(2)
         #ratio_background_data.GetXaxis().SetRange(1,background_tot.GetMinimumBin()-1)
         if ratio_data_prediction!=None:
-            ratio_data_prediction.GetXaxis().SetTitle(discriminantLabel)
-            if "controlplots" in prepostfitflag:
-                ratio_data_prediction.GetXaxis().SetNdivisions(controlplots_ndivisions[prepostfitflag])
-            ratio_data_prediction.Draw("AP2")
+           ratio_data_prediction.GetXaxis().SetTitle(titleX_label)
+           if "controlplots" in prepostfitflag:
+              ratio_data_prediction.GetXaxis().SetNdivisions(controlplots_ndivisions[prepostfitflag])
+           ratio_data_prediction.Draw("AP2 E0")
 
         linemin = ratio_error_band.GetX()[0] - ratio_error_band.GetEXlow()[0]
         linemax = ratio_error_band.GetX()[ratio_error_band.GetN()-1] + ratio_error_band.GetEXhigh()[ratio_error_band.GetN()-1]
@@ -1129,7 +1208,7 @@ def ReadDatacard(datacard):
               foundCategoryLine=True
               categoryLine=line
 
-    categoriesFromLine=categoryLine.split(" ")[1:]
+    categoriesFromLine = categoryLine.split(" ")[1:]
 
     if VERBOSE:
        print categoriesFromLine
@@ -1186,7 +1265,7 @@ def ReadDatacard(datacard):
       channel_category_dict[channel]["histopath"]       = histopath
       channel_category_dict[channel]["histoexpression"] = histoexpression  
 
-    if VERBOSE: print  channel_category_dict
+    if VERBOSE: print channel_category_dict
 
     return channel_category_dict
 
