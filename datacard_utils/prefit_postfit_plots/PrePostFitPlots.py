@@ -44,6 +44,7 @@ color_dict["ttH_hgluglu"] = color_signal
 color_dict["ttH_hww"]     = color_signal
 color_dict["ttH_hzz"]     = color_signal
 color_dict["ttH_hzg"]     = color_signal
+color_dict["ttH_nonhbb"]  = color_signal
 color_dict["ttH"]         = color_signal
 
 color_dict["total_signal"]     = color_signal
@@ -81,6 +82,7 @@ latex_dict["ttH_hgluglu"] = "t#bar{t}H"
 latex_dict["ttH_hww"]     = "t#bar{t}H"
 latex_dict["ttH_hzz"]     = "t#bar{t}H"
 latex_dict["ttH_hzg"]     = "t#bar{t}H"
+latex_dict["ttH_nonhbb"]  = "t#bar{t}H"
 latex_dict["ttH"]         = "t#bar{t}H_{SM}"
 
 latex_dict["total_background"] = "total background"
@@ -183,6 +185,14 @@ CHANNELS_COSMETICS_DICT = {
   'ttH_hbb_13TeV_2016_dl_4j4b_loBDT_MEM': { 'titleX': 'MEM discriminant', 'labels': ['SL (#geq4 jets, #geq4 b tags)', 'BDT-low'] , 'logY': False, 'ymin': 0.1, 'ymax': 190, 'ymaxSF': 1, },
   'ttH_hbb_13TeV_2016_dl_4j4b_hiBDT_MEM': { 'titleX': 'MEM discriminant', 'labels': ['SL (#geq4 jets, #geq4 b tags)', 'BDT-high'], 'logY': False, 'ymin': 0.1, 'ymax':  70, 'ymaxSF': 1, },
 
+  # 2017 FH
+  'ttH_hbb_13TeV_2017_fh_7j3b_MEM': { 'titleX': 'MEM discriminant', 'labels': ['FH (7 jets, 3 b tags)']        , 'logY': True, 'ymin': 1.4, 'ymax': 5e7, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_fh_7j4b_MEM': { 'titleX': 'MEM discriminant', 'labels': ['FH (7 jets, #geq4 b tags)']    , 'logY': True, 'ymin': 1.4, 'ymax': 3e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_fh_8j3b_MEM': { 'titleX': 'MEM discriminant', 'labels': ['FH (8 jets, 3 b tags)']        , 'logY': True, 'ymin': 1.4, 'ymax': 5e7, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_fh_8j4b_MEM': { 'titleX': 'MEM discriminant', 'labels': ['FH (8 jets, #geq4 b tags)']    , 'logY': True, 'ymin': 1.4, 'ymax': 3e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_fh_9j3b_MEM': { 'titleX': 'MEM discriminant', 'labels': ['FH (#geq9 jets, 3 b tags)']    , 'logY': True, 'ymin': 1.4, 'ymax': 1e7, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_fh_9j4b_MEM': { 'titleX': 'MEM discriminant', 'labels': ['FH (#geq9 jets, #geq4 b tags)'], 'logY': True, 'ymin': 1.4, 'ymax': 3e5, 'ymaxSF': 1, },
+
   # 2017 SL
   'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttlf': { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e6, 'ymaxSF': 1, },
   'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttcc': { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e5, 'ymaxSF': 1, },
@@ -260,16 +270,16 @@ def GetLegendColumns():
         'ddQCD',
           'QCD',
 
-        'stop',
+#        'stop',
         'singlet',
 
         'vjets',
         'zjets',
         'wjets',
 
-        'ttv',
-        'ttz',
-        'ttw',
+#        'ttv',
+#        'ttz',
+#        'ttw',
         'ttbarV',
         'ttbarZ',
         'ttbarW',
@@ -317,6 +327,7 @@ def GetSortedProcesses(processes_histos_dict):
         'ttH_htt',
         'ttH_hzz',
         'ttH_hww',
+        'ttH_nonhbb',
         'total_signal',
         
         'data',
@@ -907,7 +918,7 @@ def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHi
     
     # create stack
     stack = ROOT.THStack(category,category)
-    
+
     # get total background or total signal+background prediction
     background = None
     if prepostfitflag=="shapes_fit_s":
@@ -947,7 +958,7 @@ def GetPlots(categories_processes_histos_dict,category,prepostfitflag,templateHi
          legdPrc_dict["total_signal"] = [None,"",""] # add blank line
 
     elif (prepostfitflag=="shapes_prefit" or "controlplots" in prepostfitflag) and (signal != None):
-         legdPrc_dict["total_signal"] = [signal, str(sf)+" #times "+latex_dict["ttH"], "l"]
+         legdPrc_dict["total_signal"] = [signal, '{:1.0f}'.format(sf)+" #times "+latex_dict["ttH"], "l"]
 
     if data != None: legdPrc_dict['data'] = [data, "Data", "p"]
 
