@@ -32,8 +32,8 @@ color_dict["ttw"]            = ROOT.kBlue-10
 color_dict["ttz"]            = ROOT.kBlue-6
 color_dict["ttv"]            = ROOT.kBlue-10
 color_dict["diboson"]        = ROOT.kAzure+2
-color_dict  ["QCD"]          = ROOT.kGray
-color_dict["ddQCD"]          = ROOT.kGray
+color_dict  ["QCD"]          = ROOT.kSpring+2
+color_dict["ddQCD"]          = ROOT.kSpring+2
 
 color_signal=ROOT.kCyan
 color_dict["ttH_hbb"]     = color_signal
