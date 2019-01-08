@@ -1,7 +1,7 @@
 import numpy as np
 from ROOT import TH2F, TCanvas, gStyle, TLatex, TAxis, TLine, TGraphErrors, TGraphAsymmErrors, TLegend, kGreen, kYellow, TPaveText
 
-nchannels = 3
+nchannels = 4
 fontsize = 0.04
 
 #def limits():
@@ -88,7 +88,8 @@ def get_cms_label():
         1.-gStyle.GetPadRightMargin(), 1.#,
 #        "NDC"
     )
-    label.AddText("#scale[1.5]{#bf{CMS}}")
+    #label.AddText("#scale[1.5]{#bf{CMS}}")
+    label.AddText("#scale[1.5]{#bf{CMS}} #scale[1.1]{#it{Preliminary}}")
     label.SetFillColor(0)
     label.SetFillStyle(0)
     label.SetBorderSize(0)
@@ -103,10 +104,10 @@ def get_cms_label():
 
 def bestfit():
     
-    xmin = -2.0
-    xmax = 6
+    xmin = -1.0
+    xmax = 7
 
-    c,h = draw_canvas_histo( xmin, xmax, "Best fit #mu = #sigma/#sigma_{SM} at m_{H} = 125 GeV" )
+    c,h = draw_canvas_histo( xmin, xmax, "Best-fit #hat{#mu} = #hat{#sigma}/#sigma_{SM}" )
 
     # line at SM expectation of mu = 1
     l = TLine()
@@ -114,15 +115,15 @@ def bestfit():
     l.DrawLine( 1.0, 0, 1.0, 3*nchannels+0.5 )
 
 
-    # DL, SL, comb
-    mu    = np.array( [ 0.84, -0.24, 0.72 ] )
-    upper = np.array( [ 0.52,  1.21, 0.45 ] )
-    lower = np.array( [ 0.50,  1.12, 0.45 ] )
-    upper_stat = np.array( [ 0.27, 0.63, 0.24 ] )
-    lower_stat = np.array( [ 0.26, 0.60, 0.24 ] )
-    upper_syst = np.array( [ 0.44, 1.04, 0.38 ] )
-    lower_syst = np.array( [ 0.43, 0.95, 0.38 ] )
-    channels = np.array( [ 7.5, 4.5, 1.5 ] )
+    # FH, SL, DL, comb
+    mu    = np.array( [ 1.00, 1.00, 1.00, 1.00 ] )
+    upper = np.array( [ 1.22, 0.41, 0.85, 0.30 ] )
+    lower = np.array( [ 1.27, 0.38, 0.80,0.27 ] )
+    upper_stat = np.array( [ 0., 0., 0., 0. ] )
+    lower_stat = np.array( [ 0., 0., 0., 0. ] )
+    upper_syst = np.array( [ 0., 0., 0., 0. ] )
+    lower_syst = np.array( [ 0., 0., 0., 0. ] )
+    channels = np.array( [ 10.5, 7.5, 4.5, 1.5 ] )
     zero    = np.zeros( nchannels )
 
     gmu_tot = TGraphAsymmErrors( nchannels, mu, channels, lower, upper, zero, zero )
@@ -146,14 +147,14 @@ def bestfit():
     leg.SetTextFont( 42 )
     leg.SetTextSize( 0.035 )
     leg.SetTextAlign( 11 )
-    leg.DrawLatex( 2.1, 3.1*nchannels, "#mu       #color[4]{tot}    #color[2]{stat}    syst" )
+    leg.DrawLatex( 3.5, 3.1*nchannels, "#mu        #color[4]{tot}     #color[2]{stat}    syst" )
 
     for ich,channel in enumerate(channels):
         res = TLatex();
         res.SetTextFont( 42 )
         res.SetTextSize( 0.045 )
         res.SetTextAlign( 31 )
-        res.DrawLatex( 5.75, channel-0.2,
+        res.DrawLatex( 6.75, channel-0.2,
                        ("%.2f #color[4]{{}^{+%.2f}_{ -%.2f}} #color[2]{{}^{+%.2f}_{ -%.2f}} {}^{+%.2f}_{ -%.2f}"
                         %
                         (mu[ich],upper[ich],lower[ich],
@@ -167,11 +168,11 @@ def bestfit():
     c.RedrawAxis()    
     c.Modified()
     c.Update()
-    c.SaveAs( "HIG-17-026_bestfit.pdf" )
-    c.SaveAs( "HIG-17-026_bestfit.png" ) 
+    c.SaveAs( "HIG-18-030_bestfit.pdf" )
+    #c.SaveAs( "HIG-18-030_bestfit.png" ) 
 
 def draw_canvas_histo( xmin, xmax, title ):
-    c = TCanvas( "c", "Canvas",800,850)
+    c = TCanvas( "c", "Canvas",800,750)
     c.Draw()
     
     h = TH2F( "h", "", 10, xmin, xmax, 3*nchannels+2, 0, 3*nchannels+2 )
@@ -181,9 +182,10 @@ def draw_canvas_histo( xmin, xmax, title ):
 
     yaxis = h.GetYaxis()
     yaxis.SetLabelSize( 0.065 )
-    yaxis.SetBinLabel( 5, "Single-lepton" )
-    yaxis.SetBinLabel( 8, "Dilepton" )
-    yaxis.SetBinLabel( 2, "Combined" )
+    yaxis.SetBinLabel( 11, "Fully-hadronic" )
+    yaxis.SetBinLabel(  8, "Single-lepton" )
+    yaxis.SetBinLabel(  5, "Dilepton" )
+    yaxis.SetBinLabel(  2, "Combined" )
 
     # separating combined result
     l = TLine()
@@ -197,14 +199,15 @@ def draw_canvas_histo( xmin, xmax, title ):
     pub.SetTextAlign( 13 )
     pub.DrawLatex( gStyle.GetPadLeftMargin()+0.03,
                    1.-gStyle.GetPadTopMargin()-0.033,
-                   "#bf{CMS}" )
+                   #"#bf{CMS}" )
+                   "#bf{CMS} #it{Preliminary}")
 
     lumi = TLatex();
     lumi.SetNDC()
     lumi.SetTextFont( 42 )
     lumi.SetTextSize( 0.035 )
     lumi.SetTextAlign( 31 )
-    lumi.DrawLatex( 1-gStyle.GetPadRightMargin(), 0.965, "35.9 fb^{-1} (13 TeV)" )
+    lumi.DrawLatex( 1-gStyle.GetPadRightMargin(), 0.965, "41.5 fb^{-1} (13 TeV)" )
 
 
     return c,h
