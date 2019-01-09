@@ -1,84 +1,8 @@
 import numpy as np
 from ROOT import TH2F, TCanvas, gStyle, TLatex, TAxis, TLine, TGraphErrors, TGraphAsymmErrors, TLegend, kGreen, kYellow, TPaveText
 
-nchannels = 4
+nchannels = 5
 fontsize = 0.04
-
-#def limits():
-
-    ## put real limits here: lepton+jets, dilepton, combined
-    #obs       = np.array( [3.1800042632, 1.83107995924, 1.51963270303] )
-
-    #upper2sig = np.array( [3.67880916595, 2.29233074188, 1.70253658295]   )
-    #upper1sig = np.array( [1.53992033005, 0.970508098602, 0.736265659332] )
-    #expect    = np.array( [3.359375, 2.1171875, 1.6640625]                )
-    #lower1sig = np.array( [1.0274810791, 0.629234552383, 0.480370521545]  )
-    #lower2sig = np.array( [1.63375854492, 1.0131072998, 0.783279418945]   )
-
-    #sig_inj   = np.array( [ 4.5, 2.9, 2.4] ) 
-
-    #channels = np.array( [ 7.5, 4.5, 1.5 ] )
-    #ey      = np.array( [ 0.7, 0.7, 0.7 ] )
-    #zero    = np.zeros( nchannels )
-
-    #xmin = 0.7
-    #xmax = 35
-
-    #c,h = draw_canvas_histo( xmin, xmax, "95% CL limit on #mu = #sigma/#sigma_{SM} at m_{H} = 125 GeV" )
-    #c.SetLogx()
-
-    #gexpect1sig = TGraphAsymmErrors( nchannels, expect, channels, lower1sig, upper1sig, ey, ey )
-    #gexpect1sig.SetFillColor( kGreen )
-    #gexpect1sig.SetLineWidth( 2 )
-    #gexpect1sig.SetLineStyle( 2 )
-    
-    #gexpect2sig = TGraphAsymmErrors( nchannels, expect, channels, lower2sig, upper2sig, ey, ey )
-    #gexpect2sig.SetFillColor( kYellow )
-    #gexpect2sig.SetLineWidth( 2 )
-    #gexpect2sig.SetLineStyle( 2 )
-
-    #gexpect2sig.Draw("2")
-    #gexpect1sig.Draw("2")
-
-    #gobs = TGraphErrors( nchannels, obs, channels, zero, ey )
-    #gobs.SetMarkerStyle( 21 )
-    #gobs.SetMarkerSize( 1.5 )
-    #gobs.SetLineWidth( 2 )
-    #gobs.Draw("pz")
-
-    #gsinj = TGraphErrors( nchannels, sig_inj, channels, zero, ey )
-    #gsinj.SetLineWidth( 2 )
-    #gsinj.SetLineColor( 2 )
-    #gsinj.SetLineStyle( 2 )
-    #gsinj.Draw("z")
-
-    ## dashed line at median expected limits
-    #l = TLine()
-    #l.SetLineStyle( 2 )
-    #l.SetLineWidth( 2 )
-    #for bin in range( nchannels ):
-        #l.DrawLine( expect[bin], channels[bin]-ey[bin], expect[bin], channels[bin]+ey[bin] )
-
-    ## legend
-    #x2 = 1-gStyle.GetPadRightMargin()
-    #y1 = gStyle.GetPadBottomMargin()+gStyle.GetTickLength()+0.02
-    #y2 = 1-gStyle.GetPadTopMargin()
-    ##leg = TLegend( x2-0.3, y2-0.21, x2, y2 )
-    #leg = TLegend( x2-0.34, y1, x2-0.002, y1+0.18 )
-    #leg.SetFillColor( 10 )
-    #leg.SetFillStyle(1000)
-    #leg.AddEntry( gexpect1sig, "Expected #pm1#sigma", "FL" )
-    #leg.AddEntry( gexpect2sig, "Expected #pm2#sigma", "FL" )
-    #leg.AddEntry( gsinj,       "t#bar{t}H(#mu=1) injected", "L" )
-    #leg.AddEntry( gobs,        "Observed", "pl" )
-    #leg.Draw()
-
-    ##draw_disclaimer()
-
-    #c.RedrawAxis()    
-    #c.Modified()
-    #c.Update()
-    #c.SaveAs( "HIG-16-038_limits.pdf" )
 
 
 def get_cms_label():
@@ -115,16 +39,29 @@ def bestfit():
     l.DrawLine( 1.0, 0, 1.0, 3*nchannels+0.5 )
 
 
-    # FH, SL, DL, comb
-    mu    = np.array( [ 1.00, 1.00, 1.00, 1.00 ] )
-    upper = np.array( [ 1.22, 0.41, 0.85, 0.30 ] )
-    lower = np.array( [ 1.27, 0.38, 0.80,0.27 ] )
-    upper_stat = np.array( [ 0., 0., 0., 0. ] )
-    lower_stat = np.array( [ 0., 0., 0., 0. ] )
-    upper_syst = np.array( [ 0., 0., 0., 0. ] )
-    lower_syst = np.array( [ 0., 0., 0., 0. ] )
-    channels = np.array( [ 10.5, 7.5, 4.5, 1.5 ] )
-    zero    = np.zeros( nchannels )
+    if nchannels == 4:
+        # FH, SL, DL, comb
+        mu    = np.array( [ 1.00, 1.00, 1.00, 1.00 ] )
+        upper = np.array( [ 1.22, 0.41, 0.85, 0.36 ] )
+        lower = np.array( [ 1.27, 0.38, 0.80, 0.33 ] )
+        upper_stat = np.array( [ 0., 0., 0., 0. ] )
+        lower_stat = np.array( [ 0., 0., 0., 0. ] )
+        upper_syst = np.array( [ 0., 0., 0., 0. ] )
+        lower_syst = np.array( [ 0., 0., 0., 0. ] )
+        channels = np.array( [ 10.5, 7.5, 4.5, 1.5 ] )
+        zero    = np.zeros( nchannels )
+
+    elif nchannels == 5:
+        # FH, SL, DL, comb, comb16+17
+        mu    = np.array( [ 1.00, 1.00, 1.00, 1.00, 1.00 ] )
+        upper = np.array( [ 1.22, 0.41, 0.85, 0.36, 0.30 ] )
+        lower = np.array( [ 1.27, 0.38, 0.80, 0.33, 0.27 ] )
+        upper_stat = np.array( [ 0., 0., 0., 0., 0. ] )
+        lower_stat = np.array( [ 0., 0., 0., 0., 0. ] )
+        upper_syst = np.array( [ 0., 0., 0., 0., 0. ] )
+        lower_syst = np.array( [ 0., 0., 0., 0., 0. ] )
+        channels = np.array( [ 13.5, 10.5, 7.5, 4.5, 1.5 ] )
+        zero    = np.zeros( nchannels )
 
     gmu_tot = TGraphAsymmErrors( nchannels, mu, channels, lower, upper, zero, zero )
     gmu_tot.SetMarkerStyle( 1 )
@@ -147,7 +84,7 @@ def bestfit():
     leg.SetTextFont( 42 )
     leg.SetTextSize( 0.035 )
     leg.SetTextAlign( 11 )
-    leg.DrawLatex( 3.5, 3.1*nchannels, "#mu        #color[4]{tot}     #color[2]{stat}    syst" )
+    leg.DrawLatex( 3.5, 3.1*nchannels, "#mu      #color[4]{tot}    #color[2]{stat}    syst" )
 
     for ich,channel in enumerate(channels):
         res = TLatex();
@@ -168,8 +105,12 @@ def bestfit():
     c.RedrawAxis()    
     c.Modified()
     c.Update()
-    c.SaveAs( "HIG-18-030_bestfit.pdf" )
-    #c.SaveAs( "HIG-18-030_bestfit.png" ) 
+    if nchannels == 4:
+        c.SaveAs( "HIG-18-030_bestfit_2017.pdf" )
+    elif nchannels == 5:
+        c.SaveAs( "HIG-18-030_bestfit_2016p2017.pdf" )
+                
+        #c.SaveAs( "HIG-18-030_bestfit.png" ) 
 
 def draw_canvas_histo( xmin, xmax, title ):
     c = TCanvas( "c", "Canvas",800,750)
@@ -182,15 +123,26 @@ def draw_canvas_histo( xmin, xmax, title ):
 
     yaxis = h.GetYaxis()
     yaxis.SetLabelSize( 0.065 )
-    yaxis.SetBinLabel( 11, "Fully-hadronic" )
-    yaxis.SetBinLabel(  8, "Single-lepton" )
-    yaxis.SetBinLabel(  5, "Dilepton" )
-    yaxis.SetBinLabel(  2, "Combined" )
+    if nchannels == 4:
+        yaxis.SetBinLabel( 11, "Fully-hadronic" )
+        yaxis.SetBinLabel(  8, "Single-lepton" )
+        yaxis.SetBinLabel(  5, "Dilepton" )
+        yaxis.SetBinLabel(  2, "Combined" )
+    elif nchannels == 5:
+        yaxis.SetBinLabel( 14, "Fully-hadronic" )
+        yaxis.SetBinLabel( 11, "Single-lepton" )
+        yaxis.SetBinLabel(  8, "Dilepton" )
+        yaxis.SetBinLabel(  5, "Combined" )
+        yaxis.SetBinLabel(  2, "2016+2017" )
 
     # separating combined result
-    l = TLine()
-    l.SetLineStyle( 1 )
-    l.DrawLine( xmin, 3, xmax, 3 )
+    l1 = TLine()
+    l1.SetLineStyle( 1 )
+    l1.DrawLine( xmin, 3, xmax, 3 )
+    if nchannels == 5:
+        l2 = TLine()
+        l2.SetLineStyle( 1 )
+        l2.DrawLine( xmin, 6, xmax, 6 )
 
     pub = TLatex();
     pub.SetNDC()
@@ -207,7 +159,10 @@ def draw_canvas_histo( xmin, xmax, title ):
     lumi.SetTextFont( 42 )
     lumi.SetTextSize( 0.035 )
     lumi.SetTextAlign( 31 )
-    lumi.DrawLatex( 1-gStyle.GetPadRightMargin(), 0.965, "41.5 fb^{-1} (13 TeV)" )
+    if nchannels == 4:
+        lumi.DrawLatex( 1-gStyle.GetPadRightMargin(), 0.965, "41.5 fb^{-1} (13 TeV)" )
+    elif nchannels == 5:
+        lumi.DrawLatex( 1-gStyle.GetPadRightMargin(), 0.965, "77.4 fb^{-1} (13 TeV)" )
 
 
     return c,h
