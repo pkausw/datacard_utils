@@ -1,67 +1,55 @@
 import numpy as np
 from ROOT import TH2F, TCanvas, gStyle, TLatex, TAxis, TLine, TGraphErrors, TGraphAsymmErrors, TLegend, kGreen, kYellow, TPaveText
 
-nchannels = 5
+# Which result? Options: "17", "16p17"
+#result_version = "17" 
+result_version = "16p17" 
+
 fontsize = 0.04
 
-
-def get_cms_label():
-    label = TPaveText(
-        gStyle.GetPadLeftMargin()+0.03,
-        1.-gStyle.GetPadTopMargin()-0.12,
-        1.-gStyle.GetPadRightMargin(), 1.#,
-#        "NDC"
-    )
-    #label.AddText("#scale[1.5]{#bf{CMS}}")
-    label.AddText("#scale[1.5]{#bf{CMS}} #scale[1.1]{#it{Preliminary}}")
-    label.SetFillColor(0)
-    label.SetFillStyle(0)
-    label.SetBorderSize(0)
-    label.SetTextFont(43)
-    label.SetTextSize(26)
-    label.SetMargin(0.)
-    label.SetTextAlign(13)
-
-    return label
 
     
 
 def bestfit():
-    
+
+    nchannels = 0
+    if result_version == "17":
+        nchannels = 4
+        #                        FH17    SL17    DL17   comb17
+        mu    =      np.array( [ 1.00,   1.00,   1.00,   1.00 ] )
+        upper =      np.array( [ 1.22,   0.41,   0.85,   0.36 ] )
+        lower =      np.array( [ 1.27,   0.38,   0.80,   0.33 ] )
+        upper_stat = np.array( [ 0.00,   0.00,   0.00,   0.00 ] )
+        lower_stat = np.array( [ 0.00,   0.00,   0.00,   0.00 ] )
+        upper_syst = np.array( [ 0.00,   0.00,   0.00,   0.00 ] )
+        lower_syst = np.array( [ 0.00,   0.00,   0.00,   0.00 ] )
+
+        channels   = np.array( [ 10.5, 7.5, 4.5, 1.5 ] )
+        zero       = np.zeros( nchannels )
+
+    elif result_version == "16p17":
+        nchannels = 6
+        #                       FH16+17 SL16+17 DL16+17 comb16 comb17 comb16+17
+        mu    =      np.array( [ 1.00,   1.00,   1.00,   1.00,  1.00,   1.00 ] )
+        upper =      np.array( [ 0.00,   0.00,   0.00,   0.00,  0.36,   0.30 ] )
+        lower =      np.array( [ 0.00,   0.00,   0.00,   0.00,  0.33,   0.27 ] )
+        upper_stat = np.array( [ 0.00,   0.00,   0.00,   0.00,  0.00,   0.00 ] )
+        lower_stat = np.array( [ 0.00,   0.00,   0.00,   0.00,  0.00,   0.00 ] )
+        upper_syst = np.array( [ 0.00,   0.00,   0.00,   0.00,  0.00,   0.00 ] )
+        lower_syst = np.array( [ 0.00,   0.00,   0.00,   0.00,  0.00,   0.00 ] )
+        
+        channels   = np.array( [ 16.5, 13.5, 10.5, 7.5, 4.5, 1.5 ] )
+        zero       = np.zeros( nchannels )
+
     xmin = -1.0
     xmax = 7
 
-    c,h = draw_canvas_histo( xmin, xmax, "Best-fit #hat{#mu} = #hat{#sigma}/#sigma_{SM}" )
+    c,h = draw_canvas_histo( nchannels, xmin, xmax, "#hat{#mu} = #hat{#sigma}/#sigma_{SM}" )
 
     # line at SM expectation of mu = 1
     l = TLine()
     l.SetLineStyle( 2 )
     l.DrawLine( 1.0, 0, 1.0, 3*nchannels+0.5 )
-
-
-    if nchannels == 4:
-        # FH, SL, DL, comb
-        mu    = np.array( [ 1.00, 1.00, 1.00, 1.00 ] )
-        upper = np.array( [ 1.22, 0.41, 0.85, 0.36 ] )
-        lower = np.array( [ 1.27, 0.38, 0.80, 0.33 ] )
-        upper_stat = np.array( [ 0., 0., 0., 0. ] )
-        lower_stat = np.array( [ 0., 0., 0., 0. ] )
-        upper_syst = np.array( [ 0., 0., 0., 0. ] )
-        lower_syst = np.array( [ 0., 0., 0., 0. ] )
-        channels = np.array( [ 10.5, 7.5, 4.5, 1.5 ] )
-        zero    = np.zeros( nchannels )
-
-    elif nchannels == 5:
-        # FH, SL, DL, comb, comb16+17
-        mu    = np.array( [ 1.00, 1.00, 1.00, 1.00, 1.00 ] )
-        upper = np.array( [ 1.22, 0.41, 0.85, 0.36, 0.30 ] )
-        lower = np.array( [ 1.27, 0.38, 0.80, 0.33, 0.27 ] )
-        upper_stat = np.array( [ 0., 0., 0., 0., 0. ] )
-        lower_stat = np.array( [ 0., 0., 0., 0., 0. ] )
-        upper_syst = np.array( [ 0., 0., 0., 0., 0. ] )
-        lower_syst = np.array( [ 0., 0., 0., 0., 0. ] )
-        channels = np.array( [ 13.5, 10.5, 7.5, 4.5, 1.5 ] )
-        zero    = np.zeros( nchannels )
 
     gmu_tot = TGraphAsymmErrors( nchannels, mu, channels, lower, upper, zero, zero )
     gmu_tot.SetMarkerStyle( 1 )
@@ -78,7 +66,6 @@ def bestfit():
     gmu.SetLineColor( 2 )
     gmu.SetLineWidth( 2 )
     gmu.Draw( "pe1same" )
-
 
     leg = TLatex();
     leg.SetTextFont( 42 )
@@ -105,44 +92,46 @@ def bestfit():
     c.RedrawAxis()    
     c.Modified()
     c.Update()
-    if nchannels == 4:
+    if result_version == "17":
         c.SaveAs( "HIG-18-030_bestfit_2017.pdf" )
-    elif nchannels == 5:
+    elif result_version == "16p17":
         c.SaveAs( "HIG-18-030_bestfit_2016p2017.pdf" )
                 
         #c.SaveAs( "HIG-18-030_bestfit.png" ) 
 
-def draw_canvas_histo( xmin, xmax, title ):
+def draw_canvas_histo( nchannels, xmin, xmax, title ):
     c = TCanvas( "c", "Canvas",800,750)
     c.Draw()
     
-    h = TH2F( "h", "", 10, xmin, xmax, 3*nchannels+2, 0, 3*nchannels+2 )
+    #h = TH2F( "h", "", 10, xmin, xmax, 3*nchannels+2, 0, 3*nchannels+2 )
+    h = TH2F( "h", "", 10, xmin, xmax, int(3.5*nchannels), 0, int(3.5*nchannels) )
     h.Draw()
     h.SetStats( 0 )
     h.SetXTitle( title )
 
     yaxis = h.GetYaxis()
     yaxis.SetLabelSize( 0.065 )
-    if nchannels == 4:
+    if result_version == "17":
         yaxis.SetBinLabel( 11, "Fully-hadronic" )
         yaxis.SetBinLabel(  8, "Single-lepton" )
         yaxis.SetBinLabel(  5, "Dilepton" )
         yaxis.SetBinLabel(  2, "Combined" )
-    elif nchannels == 5:
-        yaxis.SetBinLabel( 14, "Fully-hadronic" )
-        yaxis.SetBinLabel( 11, "Single-lepton" )
-        yaxis.SetBinLabel(  8, "Dilepton" )
-        yaxis.SetBinLabel(  5, "Combined" )
-        yaxis.SetBinLabel(  2, "2016+2017" )
+    elif result_version == "16p17":
+        yaxis.SetBinLabel( 17, "Fully-hadronic" )
+        yaxis.SetBinLabel( 14, "Single-lepton" )
+        yaxis.SetBinLabel( 11, "Dilepton" )
+        yaxis.SetBinLabel(  8, "2016" )
+        yaxis.SetBinLabel(  5, "2017" )
+        yaxis.SetBinLabel(  2, "Combined" )
 
     # separating combined result
     l1 = TLine()
     l1.SetLineStyle( 1 )
     l1.DrawLine( xmin, 3, xmax, 3 )
-    if nchannels == 5:
+    if result_version == "16p17":
         l2 = TLine()
         l2.SetLineStyle( 1 )
-        l2.DrawLine( xmin, 6, xmax, 6 )
+        l2.DrawLine( xmin, 9, xmax, 9 )
 
     pub = TLatex();
     pub.SetNDC()
@@ -159,23 +148,15 @@ def draw_canvas_histo( xmin, xmax, title ):
     lumi.SetTextFont( 42 )
     lumi.SetTextSize( 0.035 )
     lumi.SetTextAlign( 31 )
-    if nchannels == 4:
+    if result_version == "17":
         lumi.DrawLatex( 1-gStyle.GetPadRightMargin(), 0.965, "41.5 fb^{-1} (13 TeV)" )
-    elif nchannels == 5:
-        lumi.DrawLatex( 1-gStyle.GetPadRightMargin(), 0.965, "77.4 fb^{-1} (13 TeV)" )
+    elif result_version == "16p17":
+        lumi.DrawLatex( 1-gStyle.GetPadRightMargin(), 0.965, "35.9 fb^{-1} (2016) + 41.5 fb^{-1} (2017) (13 TeV)" )
 
 
     return c,h
 
-def draw_disclaimer():
-    # disclaimer
-    t = TLatex();
-    t.SetNDC()
-    t.SetTextSize( 0.1 )
-    t.SetTextAlign( 22 )
-    t.SetTextAngle( 45 )
-    t.DrawText( 0.5, 0.5, "FAKE VALUES" )
-    
+
 def my_style():
     
 #    gStyle.SetLabelSize( fontsize, "x" );
@@ -204,15 +185,6 @@ def my_style():
     gStyle.SetTitleSize(0.05,"XYZ")
     gStyle.SetTitleXOffset(1.3)
     gStyle.SetTitleYOffset(1.3)
-
-
-
-
-
-
-
-
-    
 
     gStyle.SetStatX( 0.88 );
     gStyle.SetStatY( 0.87 );
