@@ -5,7 +5,7 @@ set -e
 if [ "$#" -ne 1 ]; then
 
   printf "\n%s\n" " >>> ERROR -- invalid command-line arguments: ./combinecards.sh [1]"
-  printf "%s\n\n" "           [1] path to input directory with outputs of \"combine -M MultiDimFit\" (fails if dir does not exist)"
+  printf "%s\n\n" "           [1] path to input directory containing sub-folders for impacts of each channel (fails if dir does not exist)"
   exit
 fi
 
