@@ -5,7 +5,7 @@ set -e
 if [ "$#" -ne 1 ]; then
 
   printf "\n%s\n" " >>> ERROR -- invalid command-line arguments: ./combinecards.sh [1]"
-  printf "%s\n\n" "           [1] path to input directory with outputs of \"combine --algo impact\" (fails if dir does not exist)"
+  printf "%s\n\n" "           [1] path to input directory with outputs of \"combine -M MultiDimFit\" (fails if dir does not exist)"
   exit
 fi
 
@@ -43,14 +43,14 @@ SUB_DIRS=(
  2016p2017
 )
 
-for i_dir in ${SUB_DIRS[@]}; do
+for i_subdir in ${SUB_DIRS[@]}; do
 
-  if [ -d ${INPUT_DIR}/${i_dir} ]; then
+  if [ -d ${INPUT_DIR}/${i_subdir} ]; then
 
-    cd    ${INPUT_DIR}/${i_dir}
+    cd    ${INPUT_DIR}/${i_subdir}
 
-    if [ -f higgsCombine_${i_dir}.Impacts.mH125.sh ]; then
-          ./higgsCombine_${i_dir}.Impacts.mH125.sh
+    if [ -f higgsCombine_${i_subdir}.Impacts.mH125.sh ]; then
+          ./higgsCombine_${i_subdir}.Impacts.mH125.sh
     fi
 
     rm robustHesse*.root
@@ -59,6 +59,6 @@ for i_dir in ${SUB_DIRS[@]}; do
   fi
 
 done
-unset -v i_dir
+unset -v i_subdir
 
 unset -v INPUT_DIR SUB_DIRS

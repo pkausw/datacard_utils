@@ -9,8 +9,8 @@ VERBOSE = False
 
 OUTPUT_EXTENSIONS = [
   'pdf',
+  'C',
 #  'png',
-#  'C',
 #  'root',
 ]
 
