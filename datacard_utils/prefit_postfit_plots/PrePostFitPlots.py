@@ -225,19 +225,19 @@ CHANNELS_COSMETICS_DICT = {
   'ttH_hbb_13TeV_2017_dl_4j4b_BDT': { 'titleX': 'BDT discriminant', 'labels': ['DL (#geq4 jets, #geq4 b tags)'], 'logY': True, 'ymin': 0.5, 'ymax': 4e4, 'ymaxSF': 1, },
 
   # 2017 DL (baseline selection)
-  'ttH_hbb_13TeV_2017_dl_2J1B_Njets' : { 'titleX': 'Number of jets'         , 'labels': ['DL (#geq2 jets, #geq1 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e8, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2017_dl_2J1B_Nbtags': { 'titleX': 'Number of b-tagged jets', 'labels': ['DL (#geq2 jets, #geq1 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e8, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_dl_baseline_Njets' : { 'titleX': 'Number of jets'         , 'labels': ['DL (#geq2 jets, #geq1 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e8, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_dl_baseline_Nbtags': { 'titleX': 'Number of b-tagged jets', 'labels': ['DL (#geq2 jets, #geq1 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e8, 'ymaxSF': 1, },
 }
 
-CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_Njets'] ['binLabelsX']  = ['2', '3', '4', '5', '6', '7', '8', '#geq9']
-CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_Njets'] ['Ndivisions']  = -414
-CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_Njets'] ['titleY']      = 'Events'
-CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_Njets'] ['addFitLabel'] = False
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_baseline_Njets'] ['binLabelsX']  = ['2', '3', '4', '5', '6', '7', '8', '#geq9']
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_baseline_Njets'] ['Ndivisions']  = -414
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_baseline_Njets'] ['titleY']      = 'Events'
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_baseline_Njets'] ['addFitLabel'] = False
 
-CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_Nbtags']['binLabelsX']  = ['1', '2', '3', '4', '#geq5']
-CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_Nbtags']['Ndivisions']  = -414
-CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_Nbtags']['titleY']      = 'Events'
-CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_Nbtags']['addFitLabel'] = False
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_baseline_Nbtags']['binLabelsX']  = ['1', '2', '3', '4', '#geq5']
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_baseline_Nbtags']['Ndivisions']  = -414
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_baseline_Nbtags']['titleY']      = 'Events'
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_baseline_Nbtags']['addFitLabel'] = False
 
 ## luminosity string
 for i_cat in CHANNELS_COSMETICS_DICT:
@@ -1070,6 +1070,11 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
         for channel in channels:
 
             # depending on MVA method, decide which y-axis SF to use
+            catname = ch_cat_dict_[channel]["catname"]
+
+            if catname not in CHANNELS_COSMETICS_DICT:
+               raise RuntimeError('Plot -- invalid key for CHANNELS_COSMETICS_DICT: key="'+catname+'"')
+
             catname = ch_cat_dict_[channel]["catname"]
 
             ymaxsf = CHANNELS_COSMETICS_DICT[catname]['ymaxSF']
