@@ -22,9 +22,9 @@ color_dict["ttbarPlus2B"]    = ROOT.kRed-5
 color_dict["ttbarPlusBBbar"] = ROOT.kRed+3
 color_dict["singlet"]        = ROOT.kMagenta
 color_dict["stop"]           = ROOT.kMagenta
-color_dict["zjets"]          = ROOT.kGreen-3
-color_dict["wjets"]          = ROOT.kGreen-7
-color_dict["vjets"]          = ROOT.kGreen-2
+color_dict["zjets"]          = ROOT.kOrange-5
+color_dict["wjets"]          = ROOT.kOrange-9
+color_dict["vjets"]          = ROOT.kOrange-4
 color_dict["ttbarW"]         = ROOT.kBlue-10
 color_dict["ttbarZ"]         = ROOT.kBlue-6
 color_dict["ttbarV"]         = ROOT.kBlue-10
@@ -32,8 +32,10 @@ color_dict["ttw"]            = ROOT.kBlue-10
 color_dict["ttz"]            = ROOT.kBlue-6
 color_dict["ttv"]            = ROOT.kBlue-10
 color_dict["diboson"]        = ROOT.kAzure+2
-color_dict  ["QCD"]          = ROOT.kSpring+2
-color_dict["ddQCD"]          = ROOT.kSpring+2
+
+color_qcd = ROOT.TColor(9007, 102/255., 201/255., 77/255.)
+color_dict  ["QCD"]          = 9007
+color_dict["ddQCD"]          = 9007
 
 color_signal=ROOT.kCyan
 color_dict["ttH_hbb"]     = color_signal
@@ -223,19 +225,19 @@ CHANNELS_COSMETICS_DICT = {
   'ttH_hbb_13TeV_2017_dl_4j4b_BDT': { 'titleX': 'BDT discriminant', 'labels': ['DL (#geq4 jets, #geq4 b tags)'], 'logY': True, 'ymin': 0.5, 'ymax': 4e4, 'ymaxSF': 1, },
 
   # 2017 DL (baseline selection)
-  'ttH_hbb_13TeV_2017_dl_2J1B_N_jets' : { 'titleX': 'Number of jets'         , 'labels': ['DL (#geq2 jets, #geq1 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e8, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2017_dl_2J1B_N_btags': { 'titleX': 'Number of b-tagged jets', 'labels': ['DL (#geq2 jets, #geq1 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e8, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_dl_2J1B_Njets' : { 'titleX': 'Number of jets'         , 'labels': ['DL (#geq2 jets, #geq1 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e8, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_dl_2J1B_Nbtags': { 'titleX': 'Number of b-tagged jets', 'labels': ['DL (#geq2 jets, #geq1 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e8, 'ymaxSF': 1, },
 }
 
-CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_N_jets'] ['binLabelsX']  = ['2', '3', '4', '5', '6', '7', '8', '#geq9']
-CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_N_jets'] ['Ndivisions']  = -414
-CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_N_jets'] ['titleY']      = 'Events'
-CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_N_jets'] ['addFitLabel'] = False
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_Njets'] ['binLabelsX']  = ['2', '3', '4', '5', '6', '7', '8', '#geq9']
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_Njets'] ['Ndivisions']  = -414
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_Njets'] ['titleY']      = 'Events'
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_Njets'] ['addFitLabel'] = False
 
-CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_N_btags']['binLabelsX']  = ['1', '2', '3', '4', '#geq5']
-CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_N_btags']['Ndivisions']  = -414
-CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_N_btags']['titleY']      = 'Events'
-CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_N_btags']['addFitLabel'] = False
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_Nbtags']['binLabelsX']  = ['1', '2', '3', '4', '#geq5']
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_Nbtags']['Ndivisions']  = -414
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_Nbtags']['titleY']      = 'Events'
+CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_2J1B_Nbtags']['addFitLabel'] = False
 
 ## luminosity string
 for i_cat in CHANNELS_COSMETICS_DICT:
