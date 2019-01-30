@@ -2,8 +2,8 @@ import numpy as np
 from ROOT import TH2F, TCanvas, gStyle, TLatex, TAxis, TLine, TGraphErrors, TGraphAsymmErrors, TLegend, kGreen, kYellow, TPaveText
 
 # Which result? Options: "17", "16p17"
-#result_version = "17" 
-result_version = "16p17" 
+result_version = "17" 
+#result_version = "16p17" 
 
 fontsize = 0.04
 
@@ -17,12 +17,12 @@ def bestfit():
         nchannels = 4
         #                        FH17    SL17    DL17   comb17
         mu    =      np.array( [ 1.00,   1.00,   1.00,   1.00 ] )
-        upper =      np.array( [ 1.22,   0.41,   0.85,   0.36 ] )
-        lower =      np.array( [ 1.27,   0.38,   0.80,   0.33 ] )
-        upper_stat = np.array( [ 0.00,   0.00,   0.00,   0.00 ] )
-        lower_stat = np.array( [ 0.00,   0.00,   0.00,   0.00 ] )
-        upper_syst = np.array( [ 0.00,   0.00,   0.00,   0.00 ] )
-        lower_syst = np.array( [ 0.00,   0.00,   0.00,   0.00 ] )
+        upper =      np.array( [ 1.23,   0.46,   0.83,   0.38 ] )
+        lower =      np.array( [ 1.30,   0.43,   0.79,   0.36 ] )
+        upper_stat = np.array( [ 0.74,   0.22,   0.47,   0.19 ] )
+        lower_stat = np.array( [ 0.74,   0.21,   0.46,   0.19 ] )
+        upper_syst = np.array( [ 0.99,   0.40,   0.68,   0.33 ] )
+        lower_syst = np.array( [ 1.07,   0.37,   0.65,   0.30 ] )
 
         channels   = np.array( [ 10.5, 7.5, 4.5, 1.5 ] )
         zero       = np.zeros( nchannels )
@@ -31,12 +31,12 @@ def bestfit():
         nchannels = 6
         #                       FH16+17 SL16+17 DL16+17 comb16 comb17 comb16+17
         mu    =      np.array( [ 1.00,   1.00,   1.00,   1.00,  1.00,   1.00 ] )
-        upper =      np.array( [ 0.00,   0.00,   0.00,   0.00,  0.36,   0.30 ] )
-        lower =      np.array( [ 0.00,   0.00,   0.00,   0.00,  0.33,   0.27 ] )
-        upper_stat = np.array( [ 0.00,   0.00,   0.00,   0.00,  0.00,   0.00 ] )
-        lower_stat = np.array( [ 0.00,   0.00,   0.00,   0.00,  0.00,   0.00 ] )
-        upper_syst = np.array( [ 0.00,   0.00,   0.00,   0.00,  0.00,   0.00 ] )
-        lower_syst = np.array( [ 0.00,   0.00,   0.00,   0.00,  0.00,   0.00 ] )
+        upper =      np.array( [ 0.00,   0.00,   0.00,   0.50,  0.38,   0.31 ] )
+        lower =      np.array( [ 0.00,   0.00,   0.00,   0.47,  0.36,   0.29 ] )
+        upper_stat = np.array( [ 0.00,   0.00,   0.00,   0.00,  0.19,   0.15 ] )
+        lower_stat = np.array( [ 0.00,   0.00,   0.00,   0.00,  0.19,   0.15 ] )
+        upper_syst = np.array( [ 0.00,   0.00,   0.00,   0.00,  0.33,   0.28 ] )
+        lower_syst = np.array( [ 0.00,   0.00,   0.00,   0.00,  0.30,   0.25 ] )
         
         channels   = np.array( [ 16.5, 13.5, 10.5, 7.5, 4.5, 1.5 ] )
         zero       = np.zeros( nchannels )
