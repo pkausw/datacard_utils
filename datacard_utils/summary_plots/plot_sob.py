@@ -239,7 +239,8 @@ def get_lumi_label():
         "NDC"
     )
     #label.AddText("41.5 fb^{-1} (13 TeV)")
-    label.AddText("77.4 fb^{-1} (13 TeV)")
+    #label.AddText("77.4 fb^{-1} (13 TeV)")
+    label.AddText("35.9 fb^{-1} (2016) + 41.5 fb^{-1} (2017) (13 TeV)")
     label.SetFillColor(0)
     label.SetFillStyle(0)
     label.SetBorderSize(0)
