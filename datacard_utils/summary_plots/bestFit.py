@@ -1,5 +1,8 @@
 import numpy as np
 from ROOT import TH2F, TCanvas, gStyle, TLatex, TAxis, TLine, TGraphErrors, TGraphAsymmErrors, TLegend, kGreen, kYellow, TPaveText
+import json
+
+results_json = "HIG-18-030_v8108_190213_results_unblinded.json"
 
 # Which result? Options: "17", "16p17"
 result_version = "17" 
@@ -10,34 +13,35 @@ fontsize = 0.04
 
     
 
-def bestfit():
+def bestfit( results_json ):
+
+    with open( results_json, "r" ) as in_file:
+        res = json.load(in_file)
 
     nchannels = 0
     if result_version == "17":
         nchannels = 4
-        #                        FH17    SL17    DL17   comb17
-        mu    =      np.array( [-1.53,   1.90,   1.57,   1.53 ] )
-        upper =      np.array( [ 1.37,   0.61,   0.89,   0.44 ] )
-        lower =      np.array( [ 1.48,   0.55,   0.84,   0.40 ] )
-        upper_stat = np.array( [ 0.80,   0.25,   0.49,   0.20 ] )
-        lower_stat = np.array( [ 0.80,   0.25,   0.47,   0.20 ] )
-        upper_syst = np.array( [ 1.11,   0.56,   0.74,   0.39 ] )
-        lower_syst = np.array( [ 1.25,   0.49,   0.69,   0.34 ] )
-
+        #                        FH17                         SL17                         DL17                         comb17
+        mu    =      np.array( [ res["2017_fh"]["r_nom"],     res["2017_sl"]["r_nom"],     res["2017_dl"]["r_nom"],     res["2017"]["r_nom"]     ] )
+        upper =      np.array( [ res["2017_fh"]["r_tot_up"],  res["2017_sl"]["r_tot_up"],  res["2017_dl"]["r_tot_up"],  res["2017"]["r_tot_up"]  ] )
+        lower =      np.array( [ res["2017_fh"]["r_tot_dn"],  res["2017_sl"]["r_tot_dn"],  res["2017_dl"]["r_tot_dn"],  res["2017"]["r_tot_dn"]  ] )
+        upper_stat = np.array( [ res["2017_fh"]["r_stat_up"], res["2017_sl"]["r_stat_up"], res["2017_dl"]["r_stat_up"], res["2017"]["r_stat_up"] ] )
+        lower_stat = np.array( [ res["2017_fh"]["r_stat_dn"], res["2017_sl"]["r_stat_dn"], res["2017_dl"]["r_stat_dn"], res["2017"]["r_stat_dn"] ] )
+        upper_syst = np.array( [ res["2017_fh"]["r_syst_up"], res["2017_sl"]["r_syst_up"], res["2017_dl"]["r_syst_up"], res["2017"]["r_syst_up"] ] )
+        lower_syst = np.array( [ res["2017_fh"]["r_syst_dn"], res["2017_sl"]["r_syst_dn"], res["2017_dl"]["r_syst_dn"], res["2017"]["r_syst_dn"] ] )
         channels   = np.array( [ 10.5, 7.5, 4.5, 1.5 ] )
         zero       = np.zeros( nchannels )
 
     elif result_version == "16p17":
         nchannels = 6
-        #                       FH16+17 SL16+17 DL16+17 comb16 comb17 comb16+17
-        mu    =      np.array( [-0.33,   1.26,   1.02,   0.85,  1.53,   1.18 ] )
-        upper =      np.array( [ 1.01,   0.41,   0.73,   0.43,  0.44,   0.32 ] )
-        lower =      np.array( [ 1.03,   0.37,   0.70,   0.41,  0.40,   0.29 ] )
-        upper_stat = np.array( [ 0.53,   0.18,   0.39,   0.22,  0.20,   0.15 ] )
-        lower_stat = np.array( [ 0.53,   0.18,   0.38,   0.22,  0.20,   0.15 ] )
-        upper_syst = np.array( [ 0.85,   0.36,   0.62,   0.37,  0.39,   0.28 ] )
-        lower_syst = np.array( [ 0.88,   0.32,   0.59,   0.35,  0.34,   0.25 ] )
-        
+        #                        FH16+17                           SL16+17                           DL16+17                           comb16                    comb17                    comb16+17
+        mu    =      np.array( [ res["2016p2017_fh"]["r_nom"],     res["2016p2017_sl"]["r_nom"],     res["2016p2017_dl"]["r_nom"],     res["2016"]["r_nom"],     res["2017"]["r_nom"],     res["2016p2017"]["r_nom"]     ] )
+        upper =      np.array( [ res["2016p2017_fh"]["r_tot_up"],  res["2016p2017_sl"]["r_tot_up"],  res["2016p2017_dl"]["r_tot_up"],  res["2016"]["r_tot_up"],  res["2017"]["r_tot_up"],  res["2016p2017"]["r_tot_up"]  ] )
+        lower =      np.array( [ res["2016p2017_fh"]["r_tot_dn"],  res["2016p2017_sl"]["r_tot_dn"],  res["2016p2017_dl"]["r_tot_dn"],  res["2016"]["r_tot_dn"],  res["2017"]["r_tot_dn"],  res["2016p2017"]["r_tot_dn"]  ] )
+        upper_stat = np.array( [ res["2016p2017_fh"]["r_stat_up"], res["2016p2017_sl"]["r_stat_up"], res["2016p2017_dl"]["r_stat_up"], res["2016"]["r_stat_up"], res["2017"]["r_stat_up"], res["2016p2017"]["r_stat_up"] ] )
+        lower_stat = np.array( [ res["2016p2017_fh"]["r_stat_dn"], res["2016p2017_sl"]["r_stat_dn"], res["2016p2017_dl"]["r_stat_dn"], res["2016"]["r_stat_dn"], res["2017"]["r_stat_dn"], res["2016p2017"]["r_stat_dn"] ] )
+        upper_syst = np.array( [ res["2016p2017_fh"]["r_syst_up"], res["2016p2017_sl"]["r_syst_up"], res["2016p2017_dl"]["r_syst_up"], res["2016"]["r_syst_up"], res["2017"]["r_syst_up"], res["2016p2017"]["r_syst_up"] ] )
+        lower_syst = np.array( [ res["2016p2017_fh"]["r_syst_dn"], res["2016p2017_sl"]["r_syst_dn"], res["2016p2017_dl"]["r_syst_dn"], res["2016"]["r_syst_dn"], res["2017"]["r_syst_dn"], res["2016p2017"]["r_syst_dn"] ] )
         channels   = np.array( [ 16.5, 13.5, 10.5, 7.5, 4.5, 1.5 ] )
         zero       = np.zeros( nchannels )
 
@@ -211,4 +215,4 @@ def my_style():
 if __name__ == '__main__':
     my_style()
     #limits()
-    bestfit()
+    bestfit( results_json )
