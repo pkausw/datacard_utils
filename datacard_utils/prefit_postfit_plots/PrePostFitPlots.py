@@ -227,6 +227,10 @@ CHANNELS_COSMETICS_DICT = {
   # 2017 DL (baseline selection)
   'ttH_hbb_13TeV_2017_dl_baseline_Njets' : { 'titleX': 'Number of jets'         , 'labels': ['DL (#geq2 jets, #geq1 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e8, 'ymaxSF': 1, },
   'ttH_hbb_13TeV_2017_dl_baseline_Nbtags': { 'titleX': 'Number of b-tagged jets', 'labels': ['DL (#geq2 jets, #geq1 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e8, 'ymaxSF': 1, },
+
+  # 2017 SL (baseline selection)
+  'N_Jets'  : { 'titleX': 'Number of jets'         , 'labels': ['SL (#geq4 jets, #geq2 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e8, 'ymaxSF': 1, },
+  'N_BTagsM': { 'titleX': 'Number of b-tagged jets', 'labels': ['SL (#geq4 jets, #geq2 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e8, 'ymaxSF': 1, },
 }
 
 CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_baseline_Njets'] ['binLabelsX']  = ['2', '3', '4', '5', '6', '7', '8', '#geq9']
@@ -244,6 +248,7 @@ for i_cat in CHANNELS_COSMETICS_DICT:
 
     if   i_cat.startswith('ttH_hbb_13TeV_2016'): CHANNELS_COSMETICS_DICT[i_cat]['lumi'] = '35.9 fb^{-1} (13 TeV)'
     elif i_cat.startswith('ttH_hbb_13TeV_2017'): CHANNELS_COSMETICS_DICT[i_cat]['lumi'] = '41.5 fb^{-1} (13 TeV)'
+    elif i_cat.startswith('N_')                : CHANNELS_COSMETICS_DICT[i_cat]['lumi'] = '41.5 fb^{-1} (13 TeV)'
     else                                       : CHANNELS_COSMETICS_DICT[i_cat]['lumi'] = ''
 ## -----------------
 
@@ -1347,8 +1352,8 @@ def main(fitfile_,datacard_):
 #    Plot(fitfile_,ch_cat_dict,"shapes_fit_b",pubstatus="",blind=False,ymax=maxy)
 
     Plot(fitfile_, ch_cat_dict, "shapes_prefit", pubstatus=pubstatus, blind=False)
-    Plot(fitfile_, ch_cat_dict, "shapes_fit_s" , pubstatus=pubstatus, blind=False)
-    Plot(fitfile_, ch_cat_dict, "shapes_fit_b" , pubstatus=""       , blind=False)
+#    Plot(fitfile_, ch_cat_dict, "shapes_fit_s" , pubstatus=pubstatus, blind=False)
+#    Plot(fitfile_, ch_cat_dict, "shapes_fit_b" , pubstatus=""       , blind=False)
 
 if __name__ == "__main__":
     main(sys.argv[1],sys.argv[2])

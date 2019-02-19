@@ -3,7 +3,7 @@ from ROOT import TH2F, TCanvas, gStyle, TLatex, TAxis, TLine, TGraphErrors, TGra
 
 # Which result? Options: "17", "16p17"
 result_version = "17" 
-#result_version = "16p17" 
+result_version = "16p17" 
 
 fontsize = 0.04
 
@@ -16,13 +16,13 @@ def bestfit():
     if result_version == "17":
         nchannels = 4
         #                        FH17    SL17    DL17   comb17
-        mu    =      np.array( [ 1.00,   1.00,   1.00,   1.00 ] )
-        upper =      np.array( [ 1.23,   0.46,   0.83,   0.38 ] )
-        lower =      np.array( [ 1.30,   0.43,   0.79,   0.36 ] )
-        upper_stat = np.array( [ 0.74,   0.22,   0.47,   0.19 ] )
-        lower_stat = np.array( [ 0.74,   0.21,   0.46,   0.19 ] )
-        upper_syst = np.array( [ 0.99,   0.40,   0.68,   0.33 ] )
-        lower_syst = np.array( [ 1.07,   0.37,   0.65,   0.30 ] )
+        mu    =      np.array( [-1.53,   1.90,   1.57,   1.53 ] )
+        upper =      np.array( [ 1.37,   0.61,   0.89,   0.44 ] )
+        lower =      np.array( [ 1.48,   0.55,   0.84,   0.40 ] )
+        upper_stat = np.array( [ 0.80,   0.25,   0.49,   0.20 ] )
+        lower_stat = np.array( [ 0.80,   0.25,   0.47,   0.20 ] )
+        upper_syst = np.array( [ 1.11,   0.56,   0.74,   0.39 ] )
+        lower_syst = np.array( [ 1.25,   0.49,   0.69,   0.34 ] )
 
         channels   = np.array( [ 10.5, 7.5, 4.5, 1.5 ] )
         zero       = np.zeros( nchannels )
@@ -30,19 +30,19 @@ def bestfit():
     elif result_version == "16p17":
         nchannels = 6
         #                       FH16+17 SL16+17 DL16+17 comb16 comb17 comb16+17
-        mu    =      np.array( [ 1.00,   1.00,   1.00,   1.00,  1.00,   1.00 ] )
-        upper =      np.array( [ 0.00,   0.00,   0.00,   0.50,  0.38,   0.31 ] )
-        lower =      np.array( [ 0.00,   0.00,   0.00,   0.47,  0.36,   0.29 ] )
-        upper_stat = np.array( [ 0.00,   0.00,   0.00,   0.00,  0.19,   0.15 ] )
-        lower_stat = np.array( [ 0.00,   0.00,   0.00,   0.00,  0.19,   0.15 ] )
-        upper_syst = np.array( [ 0.00,   0.00,   0.00,   0.00,  0.33,   0.28 ] )
-        lower_syst = np.array( [ 0.00,   0.00,   0.00,   0.00,  0.30,   0.25 ] )
+        mu    =      np.array( [-0.33,   1.26,   1.02,   0.85,  1.53,   1.18 ] )
+        upper =      np.array( [ 1.01,   0.41,   0.73,   0.43,  0.44,   0.32 ] )
+        lower =      np.array( [ 1.03,   0.37,   0.70,   0.41,  0.40,   0.29 ] )
+        upper_stat = np.array( [ 0.53,   0.18,   0.39,   0.22,  0.20,   0.15 ] )
+        lower_stat = np.array( [ 0.53,   0.18,   0.38,   0.22,  0.20,   0.15 ] )
+        upper_syst = np.array( [ 0.85,   0.36,   0.62,   0.37,  0.39,   0.28 ] )
+        lower_syst = np.array( [ 0.88,   0.32,   0.59,   0.35,  0.34,   0.25 ] )
         
         channels   = np.array( [ 16.5, 13.5, 10.5, 7.5, 4.5, 1.5 ] )
         zero       = np.zeros( nchannels )
 
-    xmin = -1.0
-    xmax = 7
+    xmin = -4.0
+    xmax = 11
 
     c,h = draw_canvas_histo( nchannels, xmin, xmax, "#hat{#mu} = #hat{#sigma}/#sigma_{SM}" )
 
@@ -71,14 +71,14 @@ def bestfit():
     leg.SetTextFont( 42 )
     leg.SetTextSize( 0.035 )
     leg.SetTextAlign( 11 )
-    leg.DrawLatex( 3.5, 3.1*nchannels, "#mu      #color[4]{tot}    #color[2]{stat}    syst" )
+    leg.DrawLatex( 4.5, 3.1*nchannels, "#mu      #color[4]{tot}    #color[2]{stat}    syst" )
 
     for ich,channel in enumerate(channels):
         res = TLatex();
         res.SetTextFont( 42 )
         res.SetTextSize( 0.045 )
         res.SetTextAlign( 31 )
-        res.DrawLatex( 6.75, channel-0.2,
+        res.DrawLatex( 10.5, channel-0.2,
                        ("%.2f #color[4]{{}^{+%.2f}_{ -%.2f}} #color[2]{{}^{+%.2f}_{ -%.2f}} {}^{+%.2f}_{ -%.2f}"
                         %
                         (mu[ich],upper[ich],lower[ich],

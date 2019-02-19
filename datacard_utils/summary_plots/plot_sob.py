@@ -69,8 +69,8 @@ def add_entry(h,ibin,val,err):
     val_orig = h.GetBinContent(ibin)
     h.SetBinContent( ibin, val_orig + val )
     err_orig = h.GetBinError(ibin)
-    h.SetBinError( ibin, math.sqrt( err_orig*err_orig + err*err ) )
-    #h.SetBinError( ibin, err_orig + err )
+    #h.SetBinError( ibin, math.sqrt( err_orig*err_orig + err*err ) )
+    h.SetBinError( ibin, err_orig + err )
 
 
 def create_sob_hist(name):
@@ -238,9 +238,9 @@ def get_lumi_label():
         1.-ROOT.gStyle.GetPadRightMargin(), 1.,
         "NDC"
     )
-    #label.AddText("41.5 fb^{-1} (13 TeV)")
+    label.AddText("41.5 fb^{-1} (13 TeV)")
     #label.AddText("77.4 fb^{-1} (13 TeV)")
-    label.AddText("35.9 fb^{-1} (2016) + 41.5 fb^{-1} (2017) (13 TeV)")
+    #label.AddText("35.9 fb^{-1} (2016) + 41.5 fb^{-1} (2017) (13 TeV)")
     label.SetFillColor(0)
     label.SetFillStyle(0)
     label.SetBorderSize(0)
@@ -302,7 +302,8 @@ def set_gStyle():
     
     
 if __name__ == "__main__":
-    tf = ROOT.TFile("fitDiagnostics_2016p2017.root","READ")
+    #tf = ROOT.TFile("fitDiagnostics_2016p2017.root","READ")
+    tf = ROOT.TFile("fitDiagnostics_2017.root","READ")
 
     set_gStyle()
 
@@ -378,7 +379,8 @@ if __name__ == "__main__":
     leg = get_legend()
     leg.AddEntry(h_data,"Data","P")
     leg.AddEntry(h_bkg_s,"Background","L")
-    leg.AddEntry(h_sig_s,"Signal (#mu = 1.00)","F")
+    #leg.AddEntry(h_sig_s,"Signal (#mu = 1.18)","F")
+    leg.AddEntry(h_sig_s,"Signal (#mu = 1.53)","F")
     leg.AddEntry(h_tot_sm,"SM (#mu = 1)","l")
     leg.Draw("same")
     
@@ -390,8 +392,8 @@ if __name__ == "__main__":
     ratio_pad.cd()
 
     ratio_f.Draw("HIST][")
-    ratio_sm.Draw("HISTsame][")
     ratio_sb.Draw("HISTsame][")
+    ratio_sm.Draw("HISTsame][")
     ratio_f.Draw("HISTsame][")
     ratio_eb.Draw("E2same][")
     ratio_db.Draw("PEsame")
