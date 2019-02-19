@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os, sys, re, array, ROOT
 
-import CMS_lumi
+#import CMS_lumi
 
 ROOT.gROOT.SetBatch(True)
 
@@ -229,8 +229,8 @@ CHANNELS_COSMETICS_DICT = {
   'ttH_hbb_13TeV_2017_dl_baseline_Nbtags': { 'titleX': 'Number of b-tagged jets', 'labels': ['DL (#geq2 jets, #geq1 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e8, 'ymaxSF': 1, },
 
   # 2017 SL (baseline selection)
-  'N_Jets'  : { 'titleX': 'Number of jets'         , 'labels': ['SL (#geq4 jets, #geq2 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e8, 'ymaxSF': 1, },
-  'N_BTagsM': { 'titleX': 'Number of b-tagged jets', 'labels': ['SL (#geq4 jets, #geq2 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e8, 'ymaxSF': 1, },
+  'N_Jets'  : { 'titleX': 'Number of jets'         , 'labels': ['SL (#geq4 jets, #geq2 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e9, 'ymaxSF': 1, },
+  'N_BTagsM': { 'titleX': 'Number of b-tagged jets', 'labels': ['SL (#geq4 jets, #geq2 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e9, 'ymaxSF': 1, },
 }
 
 CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_baseline_Njets'] ['binLabelsX']  = ['2', '3', '4', '5', '6', '7', '8', '#geq9']
@@ -242,6 +242,17 @@ CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_baseline_Nbtags']['binLabelsX']  
 CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_baseline_Nbtags']['Ndivisions']  = -414
 CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_baseline_Nbtags']['titleY']      = 'Events'
 CHANNELS_COSMETICS_DICT['ttH_hbb_13TeV_2017_dl_baseline_Nbtags']['addFitLabel'] = False
+
+CHANNELS_COSMETICS_DICT['N_Jets'] ['binLabelsX']  = ['4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '#geq14']
+CHANNELS_COSMETICS_DICT['N_Jets'] ['Ndivisions']  = -414
+CHANNELS_COSMETICS_DICT['N_Jets'] ['titleY']      = 'Events'
+CHANNELS_COSMETICS_DICT['N_Jets'] ['addFitLabel'] = False
+
+CHANNELS_COSMETICS_DICT['N_BTagsM']['binLabelsX']  = ['2', '3', '4', '#geq5']
+CHANNELS_COSMETICS_DICT['N_BTagsM']['Ndivisions']  = -414
+CHANNELS_COSMETICS_DICT['N_BTagsM']['titleY']      = 'Events'
+CHANNELS_COSMETICS_DICT['N_BTagsM']['addFitLabel'] = False
+
 
 ## luminosity string
 for i_cat in CHANNELS_COSMETICS_DICT:
@@ -1105,7 +1116,11 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
            templateRootFile = ROOT.TFile.Open(templateRootFilePath, "READ")
            if not templateRootFile: raise SystemExit(1)
 
+           print ">>>>>>"
+           print templateHistoExpression
+           print "<<<<<<"
            templateHisto = templateRootFile.Get(templateHistoExpression.replace("$PROCESS","ttbarOther"))
+           print templateHisto
 
            stack,ymax_this_channel,legend,error_band,data,ratio_data_prediction,signal,ratio_error_band = GetPlots(categories_processes_histos_dict,channel,dir_,templateHisto,blind,ymax_per_channel[channel])
 
