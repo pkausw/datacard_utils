@@ -16,6 +16,8 @@ SOB_BIN_EDGES = [
   -0.20,
 ]
 
+FIXED_CORRELATION_FACTOR = None
+
 def get_mu_value(tf, tree_key='tree_fit_sb'):
 
     _mu = None
@@ -183,8 +185,7 @@ def fill_sob_hist(th1, fit_bins, val_str, err_str, correlation_matrix=None):
                 corr_fact = None
 
                 if correlation_matrix == None:
-                   corr_fact = (1. if (_tmp_idx1 == _tmp_idx2) else  0.) # uncorrelated
-#                   corr_fact = (1. if (_tmp_idx1 == _tmp_idx2) else +1.) # fully correlated
+                   corr_fact = (1. if (_tmp_idx1 == _tmp_idx2) else  FIXED_CORRELATION_FACTOR)
 
                 else:
                    corr_fact = correlation_matrix[sob_bin_containers[i_sobbin][_tmp_idx1].index-1][sob_bin_containers[i_sobbin][_tmp_idx2].index-1]
@@ -426,6 +427,12 @@ if __name__ == '__main__':
     parser.add_argument('--fit-dir', dest='fit_dir', action='store', choices=['shapes_fit_b', 'shapes_fit_s'], default='shapes_fit_s',
                         help='name of input directory with postfit shapes (must be "shapes_fit_b" or "shapes_fit_s")')
 
+    parser.add_argument('--no-corr-matrix', dest='no_corr_matrix', action='store_true', default=False,
+                        help='disable usage of bin-by-bin correlation matrix for error propagation')
+
+    parser.add_argument('--fixed-corr-factor', dest='fixed_corr_factor', action='store', type=float, choices=[0., 1.], default=None,
+                        help='fixed correlation factor for bin errors (0 = uncorrelated, 1 = fully-correlated) [used only if --no-corr-matrix is specified]')
+
     parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', default=False,
                         help='enable verbose mode')
 
@@ -447,6 +454,18 @@ if __name__ == '__main__':
     elif os.path.exists(opts.output):
        KILL(log_prx+'target path to output .root file already exists [-o]: '+opts.output)
 
+    if not opts.no_corr_matrix:
+
+       if opts.fixed_corr_factor != None:
+          WARNING(log_prx+'option --fixed-corr-factor='+str(opts.fixed_corr_factor)+' will not be used (enable it with --no-corr-matrix)')
+
+    else:
+
+       if opts.fixed_corr_factor == None:
+          KILL(log_prx+'input error -> enabled --no-corr-matrix without specifying --fixed-corr-factor')
+
+       FIXED_CORRELATION_FACTOR = opts.fixed_corr_factor
+
     tf = ROOT.TFile.Open(opts.input)
     if not tf: raise SystemExit(1)
 
@@ -458,7 +477,9 @@ if __name__ == '__main__':
     bins_prefit  = get_fitBins(tf, 'shapes_prefit')
     bins_postfit = get_fitBins(tf, opts.fit_dir)
 
-    corr_matrix = get_correlation_matrix(tf, opts.fit_dir)
+    corr_matrix = None
+    if not opts.no_corr_matrix:
+       corr_matrix = get_correlation_matrix(tf, opts.fit_dir)
 
     h_sig_p, h_bkg_p, _      , _      = fitBins_to_hist(bins_prefit , corr_matrix)
     h_sig_s, h_bkg_s, h_tot_s, h_data = fitBins_to_hist(bins_postfit, corr_matrix)
