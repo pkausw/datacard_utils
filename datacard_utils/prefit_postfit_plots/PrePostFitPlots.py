@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 import os, sys, re, array, ROOT
 
-#import CMS_lumi
+# usage: python PrePostFitPlots.py mlfitfile.root corresponding_datacard.txt
+
+import CMS_lumi
 
 ROOT.gROOT.SetBatch(True)
 
@@ -1116,11 +1118,13 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
            templateRootFile = ROOT.TFile.Open(templateRootFilePath, "READ")
            if not templateRootFile: raise SystemExit(1)
 
-           print ">>>>>>"
-           print templateHistoExpression
-           print "<<<<<<"
            templateHisto = templateRootFile.Get(templateHistoExpression.replace("$PROCESS","ttbarOther"))
-           print templateHisto
+
+           if VERBOSE:
+              print ">>>>>>"
+              print templateHistoExpression
+              print "<<<<<<"
+              print templateHisto
 
            stack,ymax_this_channel,legend,error_band,data,ratio_data_prediction,signal,ratio_error_band = GetPlots(categories_processes_histos_dict,channel,dir_,templateHisto,blind,ymax_per_channel[channel])
 
@@ -1267,7 +1271,9 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
     return ymax_per_channel
 
 def ReadDatacard(datacard):
-    print "reading datacard"
+
+    if VERBOSE: print "reading datacard"
+
     buzzwords_in_relevant_lines = []
     shapeLines=[]
     categoryLine=""
@@ -1348,8 +1354,8 @@ def ReadDatacard(datacard):
 
 ################################################################################# main function #################################################################################
 
-def main(fitfile_,datacard_):
-    
+def main(fitfile_, datacard_):
+
     #print datacard_
     ch_cat_dict = ReadDatacard(datacard_)
 
@@ -1367,10 +1373,14 @@ def main(fitfile_,datacard_):
 #    Plot(fitfile_,ch_cat_dict,"shapes_fit_b",pubstatus="",blind=False,ymax=maxy)
 
     Plot(fitfile_, ch_cat_dict, "shapes_prefit", pubstatus=pubstatus, blind=False)
-#    Plot(fitfile_, ch_cat_dict, "shapes_fit_s" , pubstatus=pubstatus, blind=False)
-#    Plot(fitfile_, ch_cat_dict, "shapes_fit_b" , pubstatus=""       , blind=False)
+    Plot(fitfile_, ch_cat_dict, "shapes_fit_s" , pubstatus=pubstatus, blind=False)
+    Plot(fitfile_, ch_cat_dict, "shapes_fit_b" , pubstatus=""       , blind=False)
 
 if __name__ == "__main__":
-    main(sys.argv[1],sys.argv[2])
 
-# usage: python PrePostFitPlots.py mlfitfile.root corresponding_datacard.txt
+   input_fitDiagnostics = sys.argv[1]
+   input_txtDatacard    = sys.argv[2]
+
+   print '[input]', input_fitDiagnostics
+
+   main(input_fitDiagnostics, input_txtDatacard)
