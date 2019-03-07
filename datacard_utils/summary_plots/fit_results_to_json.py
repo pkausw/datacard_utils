@@ -2,13 +2,13 @@ import os
 import sys
 import json
 
-unblinded = False
+unblinded = True
 
-fit_version      = "v8108"
-fit_version_date = "v8108_190213"
+fit_version_philip = "v8108" # messy version naming; it is HIG18030_v01
+fit_version_marino = "HIG18030_v01"
 
-path_fitDiagnostics = "/nfs/dust/cms/user/missirol/ttHbb_2017/combination_outputs/test_"+fit_version_date+"/outputs/"
-path_systSplittings = "/nfs/dust/cms/user/pkeicher/ttH_2018/datacards/HIG-18-030/groupsplitting_"+fit_version+"/"
+path_fitDiagnostics = "/nfs/dust/cms/user/missirol/ttHbb_2017/combination_outputs/"+fit_version_marino+"/outputs/"
+path_systSplittings = "/nfs/dust/cms/user/pkeicher/ttH_2018/datacards/HIG-18-030/results_HIG18030_v02/groupsplittings/" # messy version naming; it is HIG18030_v01
 
 
 channels = [
@@ -102,9 +102,9 @@ def main():
                 
 
                 # get uncertainties on mu from splittings
-                systSplittings_json_file = path_systSplittings+"blinded/substracted_breakdowns_"+fit_version+"_blinded_ttH_hbb_13TeV_"+channel+".json"
+                systSplittings_json_file = path_systSplittings+"blinded/substracted_breakdowns_"+fit_version_philip+"_blinded_ttH_hbb_13TeV_"+channel+".json"
                 if unblinded:
-                        systSplittings_json_file = path_systSplittings+"unblinded/substracted_breakdowns_"+fit_version+"_unblinded_ttH_hbb_13TeV_"+channel+".json"
+                        systSplittings_json_file = path_systSplittings+"unblinded/substracted_breakdowns_"+fit_version_philip+"_unblinded_ttH_hbb_13TeV_"+channel+".json"
                 dic = get_r_uncertainty_groups(systSplittings_json_file)
                 r_tot_dn = dic["Total"][0]
                 r_tot_up = dic["Total"][1]                
@@ -128,7 +128,7 @@ def main():
                 }
         
         #print results_per_channel
-        out_name = "HIG-18-030_"+fit_version_date+"_results_blinded.json"
+        out_name = "HIG-18-030_"+fit_version_marino+"_results_blinded.json"
         if unblinded:
                 out_name = out_name.replace("blinded","unblinded")
         
