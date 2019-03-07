@@ -2,11 +2,11 @@ import numpy as np
 from ROOT import TH2F, TCanvas, gStyle, TLatex, TAxis, TLine, TGraphErrors, TGraphAsymmErrors, TLegend, kGreen, kYellow, TPaveText
 import json
 
-results_json = "HIG-18-030_v8108_190213_results_unblinded.json"
+results_json = "HIG-18-030_HIG18030_v01_results_unblinded.json"
 
 # Which result? Options: "17", "16p17"
 result_version = "17" 
-result_version = "16p17" 
+#result_version = "16p17" 
 
 fontsize = 0.04
 
