@@ -355,7 +355,7 @@ def GetSortedProcesses(processes_histos_dict):
         'ttH_hww',
         'ttH_nonhbb',
         'total_signal',
-        
+
         'data',
         'total',
     ]
@@ -1098,8 +1098,6 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
 
             if catname not in CHANNELS_COSMETICS_DICT:
                raise RuntimeError('Plot -- invalid key for CHANNELS_COSMETICS_DICT: key="'+catname+'"')
-
-            catname = ch_cat_dict_[channel]["catname"]
 
             ymaxsf = CHANNELS_COSMETICS_DICT[catname].get('ymaxSF', 1.0)
 
