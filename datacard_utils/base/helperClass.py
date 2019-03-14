@@ -11,6 +11,8 @@ class helperClass(object):
     def __init__(self):
         print "initializing helperClass"
         self._debug = 0
+	if not ("CMSSW_BASE" in os.environ or "SCRAM_ARCH" in os.environ):
+            exit("You need to setup CMSSW")
         self._JOB_PREFIX = """#!/bin/sh
 ulimit -s unlimited
 set -e
@@ -101,3 +103,107 @@ cd -
             print "could not find", workspacePath
             workspacePath = ""
         return workspacePath
+
+    def dump_json(self, outname, allvals):
+        if len(allvals) > 0:
+            print "opening file", outname
+            with open(outname, "w") as outfile:
+                json.dump(allvals, outfile, indent = 4, separators = (',', ': '))
+        else:
+            print "given dictionary is empty, will not create '%s'" % outname
+
+    def is_number(self, s):
+        s.replace("p", ".")
+        try:
+            float(s)
+            return True
+        except ValueError:
+            print "{0} is not a number!".format(s)
+            return False
+
+    def intact_root_file(self, f):
+
+        if f and isinstance(f, ROOT.TFile):
+            if f.IsOpen():
+                if not f.IsZombie():
+                    if not f.TestBit(ROOT.TFile.kRecovered):
+                        return True
+                    else:
+                        if self._debug >= 99: 
+                            print "ERROR: file '%s' is recovered!" % f.GetName()
+                else:
+                    if self._debug >= 99:
+                        print "ERROR: file '%s' is zombie!" % f.GetName()
+            else:
+                if self._debug >= 99:
+                    print "ERROR: file '%s' is not open" % f.GetName()
+        return False
+    
+    def is_good_fit(self, result):
+        if result.status() == 0 and result.covQual() == 3:
+            return True
+        print "WARNING: This is not a good fit!"
+        print "\tStatus: {0}\tQuality: {1}".format(result.status(), result.covQual())
+        return True #DANGERZONE!
+
+    def load_roofitresult(self, rfile, fitres = "fit_s"):
+        result = rfile.Get(fitres)
+        if not isinstance(result, ROOT.RooFitResult):
+            result = rfile.Get("fit_mdf")
+            if not isinstance(result, ROOT.RooFitResult):
+                result = None
+        if result and not self.is_good_fit(result):
+            result = None
+        
+        return result
+
+
+    def load_variable(self, result, parname):
+        var = result.floatParsFinal().find(parname)
+        if isinstance(var, ROOT.RooRealVar):
+            return var
+
+    def load_postfit_uncert_from_variable(self, filename, parname, fitres = "fit_s"):
+        f = ROOT.TFile(filename)
+        error = None
+        if self.intact_root_file(f):
+            result = self.load_roofitresult(rfile = f, fitres = fitres)
+            if result:
+                var = self.load_variable(result = result, parname = parname)
+                if var:
+                    error = var.getError()
+        if f.IsOpen(): f.Close()
+        return error
+
+    def load_postfit_uncert(self, filename, parname, fitres = "fit_s"):
+        vals = self.load_asym_postfit(filename = filename, parname = parname, fitres = fitres)
+        # vals = None
+        if vals:
+            value = (vals[1] + vals[2])/2
+            value = 0
+            if value != 0:
+                return value
+            else:
+                return self.load_postfit_uncert_from_variable(filename = filename, parname = parname, fitres = fitres)
+
+
+    def load_asym_postfit(self, filename, parname, fitres = "fit_s"):
+        f = ROOT.TFile.Open(filename)
+        if self.intact_root_file(f):
+            result = self.load_roofitresult(rfile = f, fitres = fitres)
+            if result:
+                var = self.load_variable(result = result, parname = parname)
+                if var:
+                    value = var.getVal()
+                    errorhi = var.getErrorHi()
+                    errorlo = var.getErrorLo()
+                    f.Close()
+                    return value, errorhi, abs(errorlo)
+                else:
+                    print "Could not load RooRealVar %s from %s" % (parname, filename)
+            else:
+                print "Could not load RooFitResult from %s" % (filename)
+        else:
+            print "File %s is not intact!" % filename
+        if f.IsOpen(): f.Close()
+        return None
