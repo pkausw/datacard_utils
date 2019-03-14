@@ -1,0 +1,47 @@
+{
+	"r"											:	"#mu",
+	"QCDscale_ttH"								:	"t#bar{t}H (renorm./fact. scales)",
+	"pdf_Higgs_ttH"								: 	"PDF (gg t#bar{t}H)",
+	"CMS_ttHbb_bgnorm_ttbarPlusBBbar_2017"		:	"t#bar{t}+b#bar{b} cross section (50%) (2017)",
+	"CMS_ttHbb_bgnorm_ttbarPlusCCbar_2017"		:	"t#bar{t}+c#bar{c} cross section (50%) (2017)",
+
+	"CMS_ttHbb_bgnorm_ttbarPlusBBbar"			:	"t#bar{t}+b#bar{b} cross section (50%) (2016)",
+	"CMS_ttHbb_bgnorm_ttbarPlus2B"				:	"t#bar{t}+2b cross section (50%) (2016)",
+
+	"CMS_ttHbb_bgnorm_ddQCD_fh_j7_t3_2017"		:	"QCD bkg (norm) 7 Jets, 3 b tags (2017)",
+	"CMS_ttHbb_bgnorm_ddQCD_fh_j7_t4_2017"		:	"QCD bkg (norm) 7 Jets, #geq 4 b tags (2017)",
+	"CMS_ttHbb_bgnorm_ddQCD_fh_j8_t3_2017"		:	"QCD bkg (norm) 8 Jets, 3 b tags (2017)",
+	"CMS_ttHbb_bgnorm_ddQCD_fh_j8_t4_2017"		:	"QCD bkg (norm) 8 Jets, #geq 4 b tags (2017)",
+	"CMS_ttHbb_bgnorm_ddQCD_fh_j9_t3_2017"		:	"QCD bkg (norm) 9 Jets, 3 b tags (2017)",
+	"CMS_ttHbb_bgnorm_ddQCD_fh_j9_t4_2017"		:	"QCD bkg (norm) 9 Jets, #geq 4 b tags (2017)",
+
+	"bgnorm_ddQCD_fh_j7_t3"		:	"QCD bkg (norm) 7 Jets, 3 b tags (2016)",
+	"bgnorm_ddQCD_fh_j7_t4"		:	"QCD bkg (norm) 7 Jets, #geq 4 b tags (2016)",
+	"bgnorm_ddQCD_fh_j8_t3"		:	"QCD bkg (norm) 8 Jets, 3 b tags (2016)",
+	"bgnorm_ddQCD_fh_j8_t4"		:	"QCD bkg (norm) 8 Jets, #geq 4 b tags (2016)",
+	"bgnorm_ddQCD_fh_j9_t3"		:	"QCD bkg (norm) 9 Jets, 3 b tags (2016)",
+	"bgnorm_ddQCD_fh_j9_t4"		:	"QCD bkg (norm) 9 Jets, #geq 4 b tags (2016)",
+
+
+	"CMS_ttHbb_UE_ttbarPlusBBbar_2017"			:	"underlying event (t#bar{t}+b#bar{b}) (2017)",
+	"CMS_ttHbb_UE_ttbarPlus2B_2017"				:	"underlying event (t#bar{t}+2b) (2017)",
+	"CMS_ttHbb_UE_ttbarOther_2017"				:	"underlying event (t#bar{t}+lf) (2017)",
+
+	"CMS_ttHbb_HDAMP_ttbarPlus2B_2017"			:	"ME-PS matching (t#bar{t}+2b) (2017)",
+
+	"CMS_ttHbb_ISR_ttbarOther_2017"				:	"PS scale: ISR (t#bar{t}+lf) (2017)" ,
+	"CMS_ttHbb_ISR_ttbarPlusBBbar_2017"			:	"PS scale: ISR (t#bar{t}+b#bar{b}) (2017)" ,
+
+	"CMS_ttHbb_HTreweight4b_2017"				:	"QCD bkg (H_{T} reweighting #geq 4 b tags) (2017)",
+
+	"CMS_btag_cferr1_2017"						:	"b tag charm (linear) (2017)",
+	"CMS_btag_cferr1"							:	"b tag charm (linear) (2016)",
+
+	"CMS_scalePileUpPtEC1_j"					:	"jet energy scale (1)",
+	"CMS_scaleTimePtEta_j_2017"					:	"jet energy scale (2) (2017)",
+
+	"prop_binttH_hbb_13TeV_2017_sl_6j3b_DNN_ttH_bin12" : "MC uncert. t#bar{t}H(b#bar{b}) SL #geq 6, 3 b tags, ttH node (bin 12) (2017)",
+
+	"CMS_res_j_2017"							:	"jet energy resolution (2017)"
+
+}
