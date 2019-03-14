@@ -230,6 +230,13 @@ CHANNELS_COSMETICS_DICT = {
   'ttH_hbb_13TeV_2017_dl_baseline_Njets' : { 'titleX': 'Number of jets'         , 'labels': ['DL (#geq2 jets, #geq1 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e8, 'ymaxSF': 1, },
   'ttH_hbb_13TeV_2017_dl_baseline_Nbtags': { 'titleX': 'Number of b-tagged jets', 'labels': ['DL (#geq2 jets, #geq1 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e8, 'ymaxSF': 1, },
 
+  # 2017 DL (BDT inputs)
+  'ttH_hbb_13TeV_2017_dl_4j3b_MEM'                             : { 'titleX': 'MEM'                           , 'labels': ['DL (#geq4 jets, ' +'3 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 1e5, },
+  'ttH_hbb_13TeV_2017_dl_4j3b_btagDiscriminatorAverage_tagged' : { 'titleX': 'average DeepCSV value (b-jets)', 'labels': ['DL (#geq4 jets, ' +'3 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 1e6, },
+
+  'ttH_hbb_13TeV_2017_dl_4j4b_MEM'                             : { 'titleX': 'MEM'                           , 'labels': ['DL (#geq4 jets, #geq4 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 4e4, },
+  'ttH_hbb_13TeV_2017_dl_4j4b_maxDeltaEta_tag_tag'             : { 'titleX': '#Delta#eta^{max}_{bb}'         , 'labels': ['DL (#geq4 jets, #geq4 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 4e4, },
+
   # 2017 SL (baseline selection)
   'N_Jets'  : { 'titleX': 'Number of jets'         , 'labels': ['SL (#geq4 jets, #geq2 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e9, 'ymaxSF': 1, },
   'N_BTagsM': { 'titleX': 'Number of b-tagged jets', 'labels': ['SL (#geq4 jets, #geq2 b tags)'], 'logY': True, 'ymin': 1.0, 'ymax': 5e9, 'ymaxSF': 1, },
@@ -254,7 +261,6 @@ CHANNELS_COSMETICS_DICT['N_BTagsM']['binLabelsX']  = ['2', '3', '4', '#geq5']
 CHANNELS_COSMETICS_DICT['N_BTagsM']['Ndivisions']  = -414
 CHANNELS_COSMETICS_DICT['N_BTagsM']['titleY']      = 'Events'
 CHANNELS_COSMETICS_DICT['N_BTagsM']['addFitLabel'] = False
-
 
 ## luminosity string
 for i_cat in CHANNELS_COSMETICS_DICT:
@@ -349,7 +355,7 @@ def GetSortedProcesses(processes_histos_dict):
         'ttH_hww',
         'ttH_nonhbb',
         'total_signal',
-        
+
         'data',
         'total',
     ]
@@ -1093,9 +1099,7 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
             if catname not in CHANNELS_COSMETICS_DICT:
                raise RuntimeError('Plot -- invalid key for CHANNELS_COSMETICS_DICT: key="'+catname+'"')
 
-            catname = ch_cat_dict_[channel]["catname"]
-
-            ymaxsf = CHANNELS_COSMETICS_DICT[catname]['ymaxSF']
+            ymaxsf = CHANNELS_COSMETICS_DICT[catname].get('ymaxSF', 1.0)
 
             ymax_per_channel[channel] = -1. * ymaxsf
 
