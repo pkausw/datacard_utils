@@ -271,6 +271,19 @@ for i_cat in CHANNELS_COSMETICS_DICT:
     else                                       : CHANNELS_COSMETICS_DICT[i_cat]['lumi'] = ''
 ## -----------------
 
+## range of ratio plot
+for i_cat in CHANNELS_COSMETICS_DICT:
+
+    if ('baseline' in i_cat) or i_cat.startswith('N_'): continue
+
+    if   i_cat.startswith('ttH_hbb_13TeV_2016_fh'): CHANNELS_COSMETICS_DICT[i_cat].update({ 'ratio_range' : { 'shapes_prefit': [0.01, 1.99], 'shapes_fit_b': [0.71, 1.29], 'shapes_fit_s': [0.71, 1.29], }, })
+    elif i_cat.startswith('ttH_hbb_13TeV_2016_sl'): CHANNELS_COSMETICS_DICT[i_cat].update({ 'ratio_range' : { 'shapes_prefit': [0.01, 1.99], 'shapes_fit_b': [0.51, 1.49], 'shapes_fit_s': [0.51, 1.49], }, })
+    elif i_cat.startswith('ttH_hbb_13TeV_2016_dl'): CHANNELS_COSMETICS_DICT[i_cat].update({ 'ratio_range' : { 'shapes_prefit': [0.01, 1.99], 'shapes_fit_b': [0.51, 1.49], 'shapes_fit_s': [0.51, 1.49], }, })
+    elif i_cat.startswith('ttH_hbb_13TeV_2017_fh'): CHANNELS_COSMETICS_DICT[i_cat].update({ 'ratio_range' : { 'shapes_prefit': [0.01, 1.99], 'shapes_fit_b': [0.71, 1.29], 'shapes_fit_s': [0.71, 1.29], }, })
+    elif i_cat.startswith('ttH_hbb_13TeV_2017_sl'): CHANNELS_COSMETICS_DICT[i_cat].update({ 'ratio_range' : { 'shapes_prefit': [0.01, 1.99], 'shapes_fit_b': [0.51, 1.49], 'shapes_fit_s': [0.51, 1.49], }, })
+    elif i_cat.startswith('ttH_hbb_13TeV_2017_dl'): CHANNELS_COSMETICS_DICT[i_cat].update({ 'ratio_range' : { 'shapes_prefit': [0.01, 1.99], 'shapes_fit_b': [0.51, 1.49], 'shapes_fit_s': [0.51, 1.49], }, })
+## -----------------
+
 ################################################################
 ################################################################
 ################################################################
@@ -733,7 +746,7 @@ def GetRatioGraph(nominator,denominator,templateHisto=None):
     ratio.SetMarkerSize(1.2)
     #ratio.SetLineWidth(2)
 
-    ratio.GetYaxis().SetRangeUser(0.01,1.99)
+    ratio.GetYaxis().SetRangeUser(0.01, 1.99)
     ratio.GetXaxis().SetLimits(lowerx,upperx)
 
     ratio.SetTitle('')
@@ -1135,7 +1148,7 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
         # if y-axis range has not been provided, fill dict to return  
         if ymax_per_channel[channel] < 0:
            ymax_per_channel[channel] = ymax_this_channel
-
+        print ch_cat_dict_[channel]["catname"]
         titleX_label = CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]["catname"]]['titleX']
 
         logy = CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]["catname"]].get('logY', False)
@@ -1215,6 +1228,11 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
 
            if 'Ndivisions' in CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]['catname']]:
                ratio_data_prediction.GetXaxis().SetNdivisions(CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]['catname']]['Ndivisions'])
+
+           if 'ratio_range' in CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]['catname']]:
+               if prepostfitflag in CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]['catname']]['ratio_range']:
+                  ratio_range = CHANNELS_COSMETICS_DICT[ch_cat_dict_[channel]['catname']]['ratio_range'][prepostfitflag]
+                  ratio_data_prediction.GetYaxis().SetRangeUser(ratio_range[0], ratio_range[1])
 
            ratio_data_prediction.Draw('APZE0')
 
