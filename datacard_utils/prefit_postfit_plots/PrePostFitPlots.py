@@ -1378,6 +1378,14 @@ def ReadDatacard(datacard):
 
 def main(fitfile_, datacard_):
 
+    if not os.path.isfile(fitfile_):
+       print ' >>> WARNING -- invalid path to input TFile (will not produce plots):', fitfile_
+       return
+
+    if not os.path.isfile(datacard_):
+       print ' >>> WARNING -- invalid path to input datacard (will not produce plots):', datacard_
+       return
+
     #print datacard_
     ch_cat_dict = ReadDatacard(datacard_)
 
