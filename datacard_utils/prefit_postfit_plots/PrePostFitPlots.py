@@ -163,26 +163,26 @@ CHANNELS_COSMETICS_DICT = {
   'ttH_hbb_13TeV_2016_fh_9j4b_MEM': { 'titleX': 'MEM discriminant', 'labels': ['FH (#geq9 jets, #geq4 b tags)'], 'logY': True, 'ymin': 1.4, 'ymax': 3e5, 'ymaxSF': 1, },
 
   # 2016 SL
-  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttlf': { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e5, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttcc': { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_tt2b': { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttb' : { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttbb': { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttH' : { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttlf': { 'titleX': 'ANN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttcc': { 'titleX': 'ANN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_tt2b': { 'titleX': 'ANN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttb' : { 'titleX': 'ANN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttbb': { 'titleX': 'ANN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_4j3b_DNN_ttH' : { 'titleX': 'ANN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
 
-  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttlf': { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttcc': { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_tt2b': { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttb' : { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttbb': { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttH' : { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttlf': { 'titleX': 'ANN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttcc': { 'titleX': 'ANN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_tt2b': { 'titleX': 'ANN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttb' : { 'titleX': 'ANN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttbb': { 'titleX': 'ANN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_5j3b_DNN_ttH' : { 'titleX': 'ANN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
 
-  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttlf': { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttcc': { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_tt2b': { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttb' : { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttbb': { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttH' : { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttlf': { 'titleX': 'ANN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttcc': { 'titleX': 'ANN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_tt2b': { 'titleX': 'ANN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttb' : { 'titleX': 'ANN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e4, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttbb': { 'titleX': 'ANN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2016_sl_6j3b_DNN_ttH' : { 'titleX': 'ANN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
 
   # 2016 DL
   'ttH_hbb_13TeV_2016_dl_4j3b_BDT'      : { 'titleX': 'BDT discriminant', 'labels': ['DL (#geq4 jets, 3 b tags)']                , 'logY': True , 'ymin': 1.0, 'ymax': 2e5, 'ymaxSF': 1, },
@@ -198,26 +198,26 @@ CHANNELS_COSMETICS_DICT = {
   'ttH_hbb_13TeV_2017_fh_9j4b_MEM': { 'titleX': 'MEM discriminant', 'labels': ['FH (#geq9 jets, #geq4 b tags)'], 'logY': True, 'ymin': 1.4, 'ymax': 3e5, 'ymaxSF': 1, },
 
   # 2017 SL
-  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttlf': { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e6, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttcc': { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e5, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_tt2b': { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttb' : { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttbb': { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttH' : { 'titleX': 'DNN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttlf': { 'titleX': 'ANN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e6, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttcc': { 'titleX': 'ANN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_tt2b': { 'titleX': 'ANN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttb' : { 'titleX': 'ANN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttbb': { 'titleX': 'ANN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_4j3b_DNN_ttH' : { 'titleX': 'ANN discriminant', 'labels': ['SL (4 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
 
-  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttlf': { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e6, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttcc': { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e5, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_tt2b': { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttb' : { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttbb': { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttH' : { 'titleX': 'DNN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttlf': { 'titleX': 'ANN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e6, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttcc': { 'titleX': 'ANN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_tt2b': { 'titleX': 'ANN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttb' : { 'titleX': 'ANN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttbb': { 'titleX': 'ANN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_5j3b_DNN_ttH' : { 'titleX': 'ANN discriminant', 'labels': ['SL (5 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
 
-  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttlf': { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e5, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttcc': { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 2e5, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_tt2b': { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttb' : { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttbb': { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
-  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttH' : { 'titleX': 'DNN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttlf': { 'titleX': 'ANN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+lf'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 5e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttcc': { 'titleX': 'ANN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+c#bar{c}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 2e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_tt2b': { 'titleX': 'ANN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+2b'      +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttb' : { 'titleX': 'ANN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+b'       +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttbb': { 'titleX': 'ANN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}+b#bar{b}'+' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
+  'ttH_hbb_13TeV_2017_sl_6j3b_DNN_ttH' : { 'titleX': 'ANN discriminant', 'labels': ['SL (#geq6 jets, #geq3 b tags)', 't#bar{t}H'        +' node'], 'logY': True, 'ymin': 1.4, 'ymax': 1e5, 'ymaxSF': 1, },
 
   # 2017 DL
   'ttH_hbb_13TeV_2017_dl_3j2b_BDT': { 'titleX': 'BDT discriminant', 'labels': ['DL (3 jets, 2 b tags)']        , 'logY': True, 'ymin': 0.5, 'ymax': 5e6, 'ymaxSF': 1, },
@@ -886,19 +886,6 @@ def GetFitLabel(catname, prepostfitflag):
        label.SetNDC()
 
     return label
-
-#def GetDiscriminantLabel(cat,prepostfitflag):
-#    if "controlplots" in prepostfitflag:
-#       return controlplots_variable_label[prepostfitflag]
-#
-#    if cat.find("DNN")>0:
-#       return "DNN discriminant"
-#
-#    help_array = cat.split("_")
-#    if "loBDT_MEM" in help_array or "hiBDT_MEM" in help_array:
-#       return "MEM discriminant"
-#
-#    return "BDT discriminant"
 
 def GetCatLabels(cat,prepostfitflag):
 
