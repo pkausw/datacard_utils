@@ -328,7 +328,8 @@ def get_cms_label():
     )
 
 #    label.AddText('#scale[1.5]{#bf{CMS}}')
-    label.AddText('#scale[1.5]{#bf{CMS}} #scale[1.1]{#it{Preliminary}}')
+#    label.AddText('#scale[1.5]{#bf{CMS}} #scale[1.1]{#it{Preliminary}}')
+    label.AddText('#scale[1.5]{#bf{CMS}} #scale[1.1]{#it{Supplementary}}')
 
     label.SetFillColor(0)
     label.SetFillStyle(0)
@@ -346,8 +347,8 @@ def get_lumi_label():
 
 #    label.AddText('35.9 fb^{-1} (13 TeV)')
 #    label.AddText('41.5 fb^{-1} (13 TeV)')
-    label.AddText('77.4 fb^{-1} (13 TeV)')
-#    label.AddText('35.9 fb^{-1} (2016) + 41.5 fb^{-1} (2017) (13 TeV)')
+#    label.AddText('77.4 fb^{-1} (13 TeV)')
+    label.AddText('35.9 fb^{-1} (2016) + 41.5 fb^{-1} (2017) (13 TeV)')
 #    label.AddText('35.9 + 41.5 fb^{-1} (13 TeV)')
 
     label.SetFillColor(0)
@@ -419,10 +420,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-i', '--input', dest='input', required=True, action='store', default=None,
-                        help='path to input ROOT file')
+                        help='path to input ROOT file (combine output)')
 
     parser.add_argument('-o', '--output', dest='output', required=True, action='store', default='',
-                        help='path to output ROOT file')
+                        help='path to output file')
 
     parser.add_argument('--fit-dir', dest='fit_dir', action='store', choices=['shapes_fit_b', 'shapes_fit_s'], default='shapes_fit_s',
                         help='name of input directory with postfit shapes (must be "shapes_fit_b" or "shapes_fit_s")')
