@@ -276,10 +276,10 @@ for i_cat in CHANNELS_COSMETICS_DICT:
 
     if ('baseline' in i_cat) or i_cat.startswith('N_'): continue
 
-    if   i_cat.startswith('ttH_hbb_13TeV_2016_fh'): CHANNELS_COSMETICS_DICT[i_cat].update({ 'ratio_range' : { 'shapes_prefit': [0.01, 1.99], 'shapes_fit_b': [0.71, 1.29], 'shapes_fit_s': [0.71, 1.29], }, })
+    if   i_cat.startswith('ttH_hbb_13TeV_2016_fh'): CHANNELS_COSMETICS_DICT[i_cat].update({ 'ratio_range' : { 'shapes_prefit': [0.01, 1.99], 'shapes_fit_b': [0.51, 1.49], 'shapes_fit_s': [0.51, 1.49], }, })
     elif i_cat.startswith('ttH_hbb_13TeV_2016_sl'): CHANNELS_COSMETICS_DICT[i_cat].update({ 'ratio_range' : { 'shapes_prefit': [0.01, 1.99], 'shapes_fit_b': [0.51, 1.49], 'shapes_fit_s': [0.51, 1.49], }, })
     elif i_cat.startswith('ttH_hbb_13TeV_2016_dl'): CHANNELS_COSMETICS_DICT[i_cat].update({ 'ratio_range' : { 'shapes_prefit': [0.01, 1.99], 'shapes_fit_b': [0.51, 1.49], 'shapes_fit_s': [0.51, 1.49], }, })
-    elif i_cat.startswith('ttH_hbb_13TeV_2017_fh'): CHANNELS_COSMETICS_DICT[i_cat].update({ 'ratio_range' : { 'shapes_prefit': [0.01, 1.99], 'shapes_fit_b': [0.71, 1.29], 'shapes_fit_s': [0.71, 1.29], }, })
+    elif i_cat.startswith('ttH_hbb_13TeV_2017_fh'): CHANNELS_COSMETICS_DICT[i_cat].update({ 'ratio_range' : { 'shapes_prefit': [0.01, 1.99], 'shapes_fit_b': [0.51, 1.49], 'shapes_fit_s': [0.51, 1.49], }, })
     elif i_cat.startswith('ttH_hbb_13TeV_2017_sl'): CHANNELS_COSMETICS_DICT[i_cat].update({ 'ratio_range' : { 'shapes_prefit': [0.01, 1.99], 'shapes_fit_b': [0.51, 1.49], 'shapes_fit_s': [0.51, 1.49], }, })
     elif i_cat.startswith('ttH_hbb_13TeV_2017_dl'): CHANNELS_COSMETICS_DICT[i_cat].update({ 'ratio_range' : { 'shapes_prefit': [0.01, 1.99], 'shapes_fit_b': [0.51, 1.49], 'shapes_fit_s': [0.51, 1.49], }, })
 ## -----------------
