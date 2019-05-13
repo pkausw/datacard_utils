@@ -1178,12 +1178,12 @@ def Plot(fitfile_,ch_cat_dict_,prepostfitflag,pubstatus="",blind=False,ymax=None
            signal.Draw("histsame][")
 
         if data != None:
-           data.Draw("histPEX0same")
+           data.Draw("hist,P,E0,X0,same")
 
         error_band.Draw("2same")
 
         ROOT.gPad.RedrawAxis()
-        
+
         legend.Draw("same")
 
         catlabel1, catlabel2 = GetCatLabels(ch_cat_dict_[channel]["catname"],prepostfitflag)
