@@ -1,0 +1,12 @@
+{
+    "info": [
+        {
+            "path": "/nfs/dust/cms/user/pkeicher/ttH_2018/datacards/HIG-18-030/impacts_v8108/marino_blinded/impacts_v8108_marino.tex",
+            "label": "\\texttt{--robustHesse 1}"
+        },
+        {
+            "path": "/nfs/dust/cms/user/pkeicher/ttH_2018/datacards/HIG-18-030/impacts_v8108/blinded/impacts_v8108_blinded.tex",
+            "label": "\\texttt{--robustFit 1}"
+        }
+    ]
+}
