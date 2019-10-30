@@ -119,7 +119,7 @@ def find_missing_scripts(rootfiles, scriptList):
 		if not len(valid_output_keys) == len(lines):
 			print "WARNING: output for some commands is missing, will resubmit!"
 		# print lines
-		scripts += [x[0] for x in lines if not any(key in x[1] for key in valid_output_keys)]
+		scripts += [x[0] for x in lines if not any("-n {} ".format(key) in x[1] for key in valid_output_keys)]
 	# print "commands without root files:"
 	# print scripts_without_rootfiles
 	# scripts += scripts_without_rootfiles
@@ -214,8 +214,12 @@ def check_for_resubmit(folder):
 				else:
 					batch_config.submitJobToBatch(scripts)
 			else:
+				print os.getcwd()
 				for script in scripts:
-					subprocess.call([script], shell=True)
+					print script
+					cmd = "source {}".format(os.path.join(os.getcwd(), script.replace("'","")))
+					print cmd
+					subprocess.call([cmd], shell=True)
 		else:
 			print "all root files are intact"
 
