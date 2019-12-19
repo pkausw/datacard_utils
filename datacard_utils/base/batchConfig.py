@@ -42,7 +42,7 @@ class batchConfig(object):
     subopts_ = ["universe = vanilla"]
     subopts_.append("should_transfer_files = IF_NEEDED")
     subopts_.append("notification = Never")
-    subopts_.append("priority = 0")
+    # subopts_.append("priority = 0")
     subopts_.append("run_as_owner = true")
     subopts_.append("max_retries = 3")
     subopts_.append("retry_until = ExitCode == 0")

@@ -60,9 +60,9 @@ class batchConfig:
         submitCode+="notification = Never\n"
         submitCode+="priority = 0\n"
         # submitCode+="request_memory = "+self.memory+"\n"
-        submitCode += "+RequestRuntime = 86400\n" #24 hours
-        submitCode += "RequestMemory = 2500\n"
-        submitCode += "RequestDisk = 2000000\n"
+        #submitCode += "+RequestRuntime = 86400\n" #24 hours
+        #submitCode += "RequestMemory = 2500\n"
+        #submitCode += "RequestDisk = 2000000\n"
         submitCode += "run_as_owner = true\n"
         #submitCode+="request_dist = 5800M\n"
         if hold:
