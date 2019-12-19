@@ -6,22 +6,60 @@ import imp
 
 
 def parse_arguments():
-	parser = OptionParser()
+	usage = """
+	python %prog [options] path/to/input/files
+
+	Small function to create latex slides with navigation for impacts,
+	pulls and result tables. The inputs are the following
+
+	- impacts: 	path to directories containing the list of missing variables 
+				and the .tex file with code to display impact plot
+
+	- pulls:	path to .pdf files of pull plots
+
+	- results: 	path to .tex files containing the tables with fit results
+
+	The name config contains the information about how to display a given 
+	result and must contain 
+
+	- keyword_dict:		a dictionary with the combination name as key 
+						and the items 'label' and clearname
+	- order:			list with the order in which the results are to be displayed
+
+	The config 'config' must contain the slide_template and can contain prefixes for
+	the label and the clearname
+	"""
+	parser = OptionParser(usage = usage)
 
 	parser.add_option( "-m", "--mode",
 						choices = [
 						"i", "impacts",
-						"p", "pulls"
+						"p", "pulls",
+						"r", "results"
 						],
 						dest = "mode",
-						help = "choose the sort of slides you'd like to produce"
+						help = " ".join("""
+						choose the sort of slides you'd like to produce.
+						Choices are 'i' (impacts), 'p' (pulls), 'r' (results)
+						""".split())
 					)
 	parser.add_option( "-c", "--config",
 						dest = "config",
-						help = """path to config file containing 
-								slide_template
-								keyword_dict (with translations to clearname and label for slides)
-								""",
+						help = " ".join("""
+							path to config file containing slide_template
+							""".split()),
+						type = "str",
+						default = "dummypath"
+					)
+	parser.add_option( "-n", "--nameconfig",
+						dest = "nameconfig",
+						help = " ".join("""
+							path to config file containing 
+							keyword_dict (with translations to clearname 
+							and label for slides) as well as the 
+							list 'order' (order in which to display
+							the slides)
+							""".split()),
 						type = "str",
 						default = "dummypath"
 					)
@@ -76,117 +114,164 @@ def create_navigation_lines(navigation):
 	navlines += end
 	return navlines
 
-def create_slide(path, config):
-	slide_template = config.slide_template
-	keyword_dict = config.keyword_dict
+def create_slide(slide_template, **kwargs):	
 	startdir = os.getcwd()
 	lines = None
 	navigation_entry = None
-	print "checking", path
-	path = os.path.abspath(path)
+	label = kwargs.get("label", None)
+	clearname = kwargs.get("clearname", None)
 
-	dirname = os.path.basename(path)
-	if not dirname in keyword_dict:
-		print "No information about '%s' provided in keyword_dict of config file!" % dirname
-		print "Skipping"
-		os.chdir(startdir)
-		return lines, navigation_entry
-	os.chdir(path)
-	missing_variables = load_missing_vars(logfile = config.logfile)
-	missing_var_string = "all"
-
-	texpath = config.texfile % dirname
-	if not os.path.exists(texpath):
-		texpath = "NONE"
-
-	if not texpath == "NONE":
-		if not missing_variables is None:
-			if len(missing_variables) == 0:
-				missing_var_string = "none"
-			else:
-				missing_var_string = ",\n".join([x.replace("_", "\\_") for x in missing_variables])
-
-	lines = slide_template % ({
-			"LABEL": keyword_dict[dirname]["label"],
-			"CLEARNAME": keyword_dict[dirname]["clearname"],
-			"MISSING_VARS": missing_var_string,
-			"IMPACTSLIDETEX" : texpath
-		})
-	navigation_entry = [keyword_dict[dirname]["label"], keyword_dict[dirname]["clearname"].replace("\\\\", "")]
-	os.chdir(startdir)
+	if not (label is None or clearname is None):
+		lines = slide_template.format(**kwargs)
+		navigation_entry = [label, clearname.replace("\\\\", "")]
+	else:
+		print "ERROR, could not load label/clearname information!"
 	return lines, navigation_entry
 
-def create_impact_slides(filepaths, config):
+def load_prefixes(config):
+	prefix_label = None
+	prefix_clearname = None
+	try:
+		prefix_label = config.prefix_label
+	except:
+		print "could not load prefix label"
+
+	try:
+		prefix_clearname = config.prefix_clearname
+	except:
+		print "could not load prefix clearname"
+		
+	return prefix_label, prefix_clearname
+
+def create_results_slides(current_name, path, config, keyword_dict):
 	
-	order = config.order
-
-	lines = []
-	navigation = []
-	paths = []
-	for w in filepaths:
-		paths += glob(w)
-	print paths
-	print order
-	for key in order:
-		for path in paths:
-			
-
-			if not os.path.isdir(path):
-				print "'%s' is not a directory, skipping" % path
-				os.chdir(startdir)
-				continue
-			if path == "ttH_hbb_13TeV_2017_sl/": print "HERE"
-			if path.endswith("/"): path = path[:-1]
-
-
-			if path == key:
-				slide, navigation_entry = create_slide(path = path, config = config)
-				print slide, navigation_entry
-				if not (slide is None or navigation_entry is None):
-					lines.append(slide)
-					navigation.append(navigation_entry)
-	
-			
-	if len(navigation) > 0:
-		navlines = create_navigation_lines(navigation)
-		lines.insert(0, navlines)
-	else:
-		print "WARNING: Could not generate navigation slide"
-	return lines
-
-def create_pullplot_slides(filepaths, config):
 	slide_template = config.slide_template
-	label_template = config.label_template
-	startdir = os.getcwd()
-	lines = []
-	navigation = []
-	for w in filepaths:
-		for path in glob(w):
-			print "checking", path
-			if not os.path.isfile(path):
-				print "'%s' is not a file, skipping" % path
-				os.chdir(startdir)
-				continue
-			path = os.path.abspath(path)
-			filename = os.path.basename(path)
-			parname = ".".join(filename.split(".")[:-1])
-			parname = parname.replace("_pulls", "")
-			parlabel = label_template % parname
-			clearname = parname.replace("_", "\\_")
-			lines.append(slide_template % ({
-					"CLEARNAME" : clearname,
-					"LABEL" : parlabel,
-					"PLOTNAME" : filename
 
-				}))
-			navigation.append([parlabel, clearname])
-	if len(navigation) > 0:
-		navlines = create_navigation_lines(navigation)
-		lines.insert(0, navlines)
+	prefix_label, prefix_clearname = load_prefixes(config)
+
+	label = keyword_dict["label"]
+	if not prefix_label is None:
+		label = label.format(prefix_label)
+
+	clearname = keyword_dict["clearname"]
+	if not prefix_clearname is None:
+		clearname = clearname.format(prefix_clearname)
+
+	lines = None
+	navigation = None
+
+	if path.endswith(".tex"):
+		if path.endswith(current_name+".tex"):
+			lines, navigation = create_slide(
+									slide_template = slide_template,
+									label = label,
+									clearname = clearname,
+									filename = os.path.basename(path)
+									)
 	else:
-		print "WARNING: Could not generate navigation slide"
-	return lines
+		print "'%s' is not a .tex file, skipping" % path
 
+	return lines, navigation
+
+def create_impact_slides(current_name, path, config, keyword_dict):
+	
+	slide_template = config.slide_template
+
+	prefix_label, prefix_clearname = load_prefixes(config)
+
+	label = keyword_dict["label"]
+	if not prefix_label is None:
+		label = label.format(prefix_label)
+
+	clearname = keyword_dict["clearname"]
+	if not prefix_clearname is None:
+		clearname = clearname.format(prefix_clearname)
+
+	path = os.path.abspath(path)
+	lines = None
+	navigation = None
+	startdir = os.getcwd()
+	if not os.path.isdir(path):
+		print "'%s' is not a directory, skipping" % path
+	else:
+		if path == "ttH_hbb_13TeV_2017_sl/": print "HERE"
+		if path.endswith("/"): path = path[:-1]
+		
+		dirname = os.path.basename(path)
+
+		if dirname == current_name:
+			print "checking", path
+			os.chdir(path)
+			missing_variables = load_missing_vars(logfile = config.logfile)
+			missing_var_string = "all"
+			
+			texpath = config.texfile % dirname
+			if not os.path.exists(texpath):
+				texpath = "NONE"
+
+			if not texpath == "NONE":
+				if not missing_variables is None:
+					if len(missing_variables) == 0:
+						missing_var_string = "none"
+					else:
+						missing_var_string = ",\n".join([x.replace("_", "\\_") for x in missing_variables])
+		
+			
+			lines, navigation = create_slide(
+											slide_template = slide_template,
+											label = label,
+											clearname = clearname,
+											filename = texpath,
+											missing_vars = missing_var_string
+											)
+	os.chdir(startdir)
+	return lines, navigation
+
+def create_pullplot_slides(current_name, path, config, keyword_dict):
+	slide_template = config.slide_template
+
+	prefix_label, prefix_clearname = load_prefixes(config)
+
+	label = keyword_dict["label"]
+	if not prefix_label is None:
+		label = label.format(prefix_label)
+
+	clearname = keyword_dict["clearname"]
+	if not prefix_clearname is None:
+		clearname = clearname.format(prefix_clearname)
+
+	lines = None
+	navigation = None
+
+	if not (os.path.isfile(path) and path.endswith(".pdf")):
+		print "'%s' is not a .pdf file, skipping" % path
+	else:
+		path = os.path.abspath(path)
+		# filename = os.path.basename(path)
+		# # parname = ".".join(filename.split(".")[:-1])
+		# # parname = parname.replace("pulls_", "")
+		# # parname = parname.replace("fitDiagnostics_asimov_sig1_", "")
+
+		if path.endswith(current_name+".pdf"):
+			lines, navigation = create_slide(
+									slide_template = slide_template,
+									label = label,
+									clearname = clearname,
+									filename = os.path.basename(path)
+									)
+
+	return lines, navigation		
+
+def create_file(slidelines, outputpath):
+	for i, l in enumerate(slidelines):
+		sublines = l.splitlines()
+		for j, sl in enumerate(sublines):
+			if "NONE" in sl:
+				sublines[j] = "%" + sl
+		slidelines[i] = "\n".join(sublines)
+
+	with open(outputpath, "w") as f:
+		f.write("\n".join(slidelines))
 
 def main(options, filepaths):
 
@@ -194,27 +279,51 @@ def main(options, filepaths):
 	configpath = options.config
 	config = imp.load_source('config', configpath)
 
-	if mode == "i" or mode == "impacts":
-		slidelines = create_impact_slides(filepaths, config)
-	elif mode == "p" or mode == "pulls":
-		slidelines = create_pullplot_slides(filepaths, config)
+	name_cfgpath = options.nameconfig
+	name_cfg = imp.load_source('name_cfg', name_cfgpath) 
+
+	order = name_cfg.order
+	keyword_dict = name_cfg.keyword_dict
+
+	outputpath = options.output
+
+	slidelines = []
+	navigation = []
+	paths = []
+	for w in filepaths:
+		paths += glob(w)
+	print paths
+	print order
+
+	for name in order:
+		for p in paths:
+
+			if mode == "i" or mode == "impacts":
+				lines, nav_entry = create_impact_slides(current_name = name,
+														path = p, config = config,
+														keyword_dict = keyword_dict[name])
+			elif mode == "p" or mode == "pulls":
+				lines, nav_entry = create_pullplot_slides(current_name = name,
+														path = p, config = config,
+														keyword_dict = keyword_dict[name])
+			elif mode == "r" or mode == "results":
+				lines, nav_entry = create_results_slides(current_name = name,
+														path = p, config = config,
+														keyword_dict = keyword_dict[name])
+
+			if not (lines is None or nav_entry is None):
+				navigation.append(nav_entry)
+				slidelines.append(lines)
+				break
+
+	if len(navigation) > 0:
+		navlines = create_navigation_lines(navigation)
+		slidelines.insert(0, navlines)
 	else:
-		print "Did not recognize mode!"
-		sys.exit(0)
+		print "WARNING: Could not generate navigation slide"
 
 	if not slidelines is None and len(slidelines) > 0:
-		for i, l in enumerate(slidelines):
-			sublines = l.splitlines()
-			for j, sl in enumerate(sublines):
-				if "NONE" in sl:
-					sublines[j] = "%" + sl
-			slidelines[i] = "\n".join(sublines)
-
-		outputpath = options.output
-		with open(outputpath, "w") as f:
-			f.write("\n".join(slidelines))
-
-
+		create_file(slidelines, outputpath)
 
 
 if __name__ == '__main__':
