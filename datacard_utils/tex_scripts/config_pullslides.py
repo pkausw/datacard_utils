@@ -1,9 +1,11 @@
-slide_template = """\\subsection*{%(CLEARNAME)s}
-\\begin{frame}{%(CLEARNAME)s}
-\label{%(LABEL)s}
-	\\begin{center}
-		\includegraphics[width=\\textwidth]{\pathToPulls/%(PLOTNAME)s}
-	\end{center}
-\end{frame}
-	"""
-label_template = "blinded_pulls::%s"
+slide_template = """\\subsection*{{ {clearname} }}
+\\begin{{frame}}{{ {clearname} }}
+\\label{{ {label} }}
+	\\begin{{center}}
+		\\includegraphics[width=\\textwidth]{{\\pathToPulls/{filename}}}
+	\\end{{center}}
+\\end{{frame}}
+"""
+
+prefix_label = "blinded_pulls_2017"
+prefix_clearname = "2017"
