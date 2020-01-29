@@ -138,32 +138,6 @@ def print_table_line(yield_map_prefit, yield_map_postfit, njet_category,
                                    values = " & ".join(entries))
     return l
 
-
-# def print_table_line_prefit(yield_map_prefit,njet_category,sub_categories,process,print_error):
-#     print "{:10}".format(process_commands[process]),
-#         #yield_val_postfit, yield_err_postfit = get_yield_string(category_yield_map_postfit,category(njet_category,sub_category),process,mu_s)
-#     if process == data:
-#         for sub_category in sub_categories:
-#             yield_val_prefit, yield_err_prefit = get_yield_string(category_yield_map_prefit,category(njet_category,sub_category),process)
-#             print "& $",yield_val_prefit,"$",
-#         print " \\\\"    
-#     else:
-#             if print_error and process != data:
-#                 #print "{:10}".format("$\\pm$ tot unc."),
-#                 for sub_category in sub_categories:
-#                     yield_val_prefit, yield_err_prefit = get_yield_string(category_yield_map_prefit,category(njet_category,sub_category),process)
-#                     #yield_val_postfit, yield_err_postfit = get_yield_string(category_yield_map_postfit,category(njet_category,sub_category),process)
-#                     print "& $",yield_val_prefit," \\pm",yield_err_prefit,"$ ",
-#                 print " \\\\"
-#             else:
-#                 #print "{:10}".format("$\\pm$ tot unc."),
-#                 for sub_category in sub_categories:
-#                     yield_val_prefit, yield_err_prefit = get_yield_string(category_yield_map_prefit,category(njet_category,sub_category),process)
-#                     #yield_val_postfit, yield_err_postfit = get_yield_string(category_yield_map_postfit,category(njet_category,sub_category),process)
-#                     print "& $",yield_val_prefit,"$ ",
-#                 print " \\\\"
-                 
-
 def create_header(sub_categories, sub_category_cmds, postfit = False):
     ncols = len(sub_categories) if not postfit else 2*len(sub_categories)
     s = """
