@@ -11,7 +11,9 @@ slide_template = """\\subsection*{{{clearname}}}
 	\\end{{scriptsize}}
 \\end{{frame}}
 \\begin{{frame}}{{ {clearname} }}
-	\\input{{\\pathToResultTex/{filename} }}
+	\\begin{{scriptsize}}
+		\\input{{\\pathToResultTex/{filename} }}
+	\\end{{scriptsize}}
 \\end{{frame}}
 	"""
 
