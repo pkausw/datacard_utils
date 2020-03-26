@@ -13,6 +13,20 @@ def category(njet_category,sub_category):
 def get_sum_of_hists(in_file,dir_name,name1,name2,new_name):
     hist1 = get_hist(in_file,dir_name,name1)
     hist2 = get_hist(in_file,dir_name,name2)
+    if not isinstance(hist1, ROOT.TH1):
+        if isinstance(hist2, ROOT.TH1):
+            print("Will return {} for {}".format(name2, new_name))
+            return hist2
+        else:
+            print("Cannot add {} and {}! Skipping {}".format(name1, name2, new_name))
+            return None
+    if not isinstance(hist2, ROOT.TH1):
+        if isinstance(hist1, ROOT.TH1):
+            print("Will return {} for {}".format(name1, new_name))
+            return hist1
+        else:
+            print("Cannot add {} and {}! Skipping {}".format(name1, name2, new_name))
+            return None
     hist = hist1.Clone(new_name)
     hist.Add(hist2)
     return hist
@@ -71,6 +85,9 @@ def get_yield_string(category_yield_map,category,process,sig_scale=1, total_sig 
         ye = obj.GetErrorYhigh(0)
         ye += obj.GetErrorYlow(0)
         ye /= 2.
+    else:
+        print("WARNING: could not read object at [{}][{}]".format(category,process))
+    ye = 0
     # because signal is not scaled by fitted mu, but mu = 1
     if process == total_sig:
         y  = sig_scale * y
@@ -146,16 +163,18 @@ def create_header(sub_categories, sub_category_cmds, postfit = False):
     s += "r"*ncols + "}"
     if not postfit:
         header_text = "pre-fit yields $\\pm$ tot unc."
+        categories = [sub_category_cmds.get(x,x) for x in sub_categories]
     else:
         header_text = "pre-fit (post-fit) yields"
+        categories = ["\\multicolumn{{2}}{{c}}{{ {} }}".format(sub_category_cmds.get(x,x)) 
+                                                            for x in sub_categories]
     sub = """
     \\hline\\hline
     & \\multicolumn{{ {length} }}{{c}}{{ {header_text} }} \\\\
     Process & {categories} \\\\
     \\hline\n""".format(  length = ncols,
                     header_text = header_text,
-                    categories = " & ".join([sub_category_cmds.get(x,x) 
-                                for x in sub_categories])
+                    categories = " & ".join(categories)
                     )
     return "\n".join([s, sub])
 
@@ -171,12 +190,15 @@ def print_table(yield_map_prefit, njet_category, cfg_module, yield_map_postfit =
     print "print_table: ", njet_category
 
     sub_categories = []
-    if "SL" in njet_category:
-        for sub_category in cfg_module.sub_categories_sl:
-            sub_categories.append( sub_category )
-    elif "DL" in njet_category:
-        for sub_category in cfg_module.sub_categories_dl:
-            sub_categories.append( sub_category )
+    # if "SL" in njet_category:
+    #     for sub_category in cfg_module.sub_categories_sl:
+    #         sub_categories.append( sub_category )
+    # elif "DL" in njet_category:
+    #     for sub_category in cfg_module.sub_categories_dl:
+    #         sub_categories.append( sub_category )
+
+    for sub_category in cfg_module.sub_categories:
+        sub_categories.append( sub_category )
 
     header = create_header( sub_categories = sub_categories, 
                             sub_category_cmds = cfg_module.sub_category_commands,
@@ -235,12 +257,14 @@ def main(**kwargs):
     cfg_module = init_module(cfg_path)
     categories = []
     for njet_category in cfg_module.njet_categories:
-        if "SL" in njet_category:
-            for sub_category in cfg_module.sub_categories_sl:
-                categories.append( category( njet_category, sub_category ) )
-        elif "DL" in njet_category:
-            for sub_category in cfg_module.sub_categories_dl:
-                categories.append( category( njet_category, sub_category ) )
+        # if "SL" in njet_category:
+        #     for sub_category in cfg_module.sub_categories_sl:
+        #         categories.append( category( njet_category, sub_category ) )
+        # elif "DL" in njet_category:
+        #     for sub_category in cfg_module.sub_categories_dl:
+        #         categories.append( category( njet_category, sub_category ) )
+        for sub_category in cfg_module.sub_categories:
+            categories.append( category( njet_category, sub_category ) )
                 
     
     yield_map_prefit = get_yields(in_file, categories, "prefit" , cfg_module)
@@ -250,6 +274,9 @@ def main(**kwargs):
         yield_map_postfit = get_yields(in_file, categories, mode , cfg_module)
 
     #print category_yield_map_prefit
+    outname = kwargs.get("outfile")
+    if outname is None:
+        outname = ".".join(inpath.split(".")[:-1])
 
     for njet_category in cfg_module.njet_categories:
         print
@@ -259,6 +286,14 @@ def main(**kwargs):
                         cfg_module = cfg_module,
                         yield_map_postfit = yield_map_postfit)
         print(s)
+
+        pathname = njet_category.replace("\\", "")
+        pathname = pathname.replace(" ", "_")
+        outpath = "{}_{}.tex".format(outname, pathname)
+        print("Will save table in '{}'".format(outpath))
+        with open(outpath, "w") as f:
+            f.write(s)
+        
    
     in_file.Close()
 
@@ -297,6 +332,15 @@ def parse_arguments():
                         """.split()),
                         dest = "mode",
                         choices = ["prefit", "fit_s", "fit_b"]
+                    )
+
+    parser.add_option(  "-o", "--outputfile",
+                        help = " ".join("""
+                        save table string in this file
+                        """.split()),
+                        dest = "outfile",
+                        metavar = "path/to/output.tex",
+                        type = "str"
                     )
 
     options, args = parser.parse_args()
