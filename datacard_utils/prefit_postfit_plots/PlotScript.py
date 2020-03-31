@@ -120,6 +120,8 @@ plotOptions.add_option("--combineDatacard", dest = "datacard", default=None,
 
 plotOptions.add_option("--statErr", dest="addStatErrorband", default = None,
         help="add statistics errorband")
+plotOptions.add_option("--skipErrorbands", dest = "skipErrorbands", default = False, action = "store_true", 
+        help = "don't draw error bands (not recommended)")
 parser.add_option_group(plotOptions)
 
 """
@@ -426,6 +428,9 @@ if combineflag:
         background = Plots.updateBinEdges(background, binEdges)
     errorband = Plots.GetErrorGraph(background)
 else:
+    errorband = None
+
+if options.skipErrorbands:
     errorband = None
 
 """
