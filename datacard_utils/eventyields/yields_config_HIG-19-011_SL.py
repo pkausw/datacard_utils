@@ -18,14 +18,14 @@ sub_categories = [
                     "tt2b", 
                     "ttcc", 
                     "ttlf", 
-                    # "tHq", 
-                    # "tHW" 
+                    "tHq", 
+                    "tHW" 
                 ]
 
 category_channel_map = {
     "SL \\geq 4j 3t ttH" : "ljets_top10_ge4j_3t_ttH_node",
     "SL \\geq 4j 3t tHq" : "ljets_top10_ge4j_3t_tHq_node",
-    "SL \\geq 4j 3t tHW" : "ljets_top10_ge4_3t_tHW_node",
+    "SL \\geq 4j 3t tHW" : "ljets_top10_ge4j_3t_tHW_node",
     "SL \\geq 4j 3t ttmb" : "ljets_top10_ge4j_3t_ttmb_node",
     "SL \\geq 4j 3t tt2b" : "ljets_top10_ge4j_3t_tt2b_node",
     "SL \\geq 4j 3t ttcc" : "ljets_top10_ge4j_3t_ttcc_node",

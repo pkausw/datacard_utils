@@ -87,7 +87,7 @@ def get_yield_string(category_yield_map,category,process,sig_scale=1, total_sig 
         ye /= 2.
     else:
         print("WARNING: could not read object at [{}][{}]".format(category,process))
-    ye = 0
+    # ye = 0
     # because signal is not scaled by fitted mu, but mu = 1
     if process == total_sig:
         y  = sig_scale * y
@@ -186,7 +186,8 @@ def create_footer():
     """
     return s
 
-def print_table(yield_map_prefit, njet_category, cfg_module, yield_map_postfit = None):
+def print_table(yield_map_prefit, njet_category, cfg_module, 
+                    yield_map_postfit = None, print_errors = True):
     print "print_table: ", njet_category
 
     sub_categories = []
@@ -219,10 +220,10 @@ def print_table(yield_map_prefit, njet_category, cfg_module, yield_map_postfit =
                                             print_error = False, **opts)
                         )
     bodylines.append(print_table_line(process = cfg_module.total_bkg, 
-                                        print_error = True, **opts)
+                                        print_error = print_errors, **opts)
                     )
     bodylines.append(print_table_line(process = cfg_module.total_sig, 
-                                        print_error = True, **opts)
+                                        print_error = print_errors, **opts)
                     )
     bodylines.append(print_table_line(process = cfg_module.data, 
                                         print_error = False, **opts)
@@ -284,7 +285,8 @@ def main(**kwargs):
         s = print_table(    yield_map_prefit = yield_map_prefit,
                         njet_category = njet_category,
                         cfg_module = cfg_module,
-                        yield_map_postfit = yield_map_postfit)
+                        yield_map_postfit = yield_map_postfit,
+                        print_errors = not options.skipErrors)
         print(s)
 
         pathname = njet_category.replace("\\", "")
@@ -341,6 +343,15 @@ def parse_arguments():
                         dest = "outfile",
                         metavar = "path/to/output.tex",
                         type = "str"
+                    )
+    parser.add_option(  "--skipErrors",
+                        help = " ".join("""
+                        skip errors on processes. Recommended if you didn't produce templates
+                        with only one bin.
+                        """.split()),
+                        dest = "skipErrors",
+                        action = "store_true",
+                        default = False
                     )
 
     options, args = parser.parse_args()
