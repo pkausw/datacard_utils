@@ -342,6 +342,7 @@ addStatErrorband = getParserConfigDefaultValue(
 # load samples
 print "start loading  samples" 
 for sample in samples:
+    print(sample)
     color   = samples[sample]["info"]['color']
     typ     = samples[sample]["info"]['typ']
     label   = samples[sample]["info"]['label']
@@ -426,12 +427,15 @@ if combineflag:
     background = rootFile.Get(bkgKey)
     if not binEdges is None:
         background = Plots.updateBinEdges(background, binEdges)
-    errorband = Plots.GetErrorGraph(background)
+
+
+    if options.skipErrorbands:
+        errorband = None
+    else:
+        errorband = Plots.GetErrorGraph(background)
 else:
     errorband = None
 
-if options.skipErrorbands:
-    errorband = None
 
 """
 load data if avaliable and move under and overflow bin
@@ -442,6 +446,7 @@ data        = getParserConfigDefaultValue(parser=options.data,config="data",
 datalabel   = getParserConfigDefaultValue(parser=options.datalabel,config="datalabel",
                                             plotoptions=plotoptions,defaultvalue="data")
 if data:
+    print("loading data")
     dataKey     = nominalKey.replace(procIden, data)
     dataHist    = rootFile.Get(dataKey)
     print("    type of data hist is: "+str(type(dataHist)) )
@@ -461,7 +466,6 @@ if data:
 else:
         print "ATTENTION: Not using data!"
         dataHist=None
-
 
 print '''
 # ========================================================
