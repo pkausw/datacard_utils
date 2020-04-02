@@ -111,7 +111,7 @@ def generate_plots(file, options):
                                     pdfname = channel,
                                     **base_options)
             print(cmd)
-            call([cmd], shell = True)
+            #call([cmd], shell = True)
 
 def main(options, files):
     for fpath in files:
