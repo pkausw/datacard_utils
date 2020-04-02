@@ -73,7 +73,7 @@ def parse_results(file):
         else:
             stat_only_text = "--"
         if "significance" in subdict:
-            signi_text = str(round(subdict["significance"], 3))
+            signi_text = str(round(subdict["significance"], 1))
         else:
             signi_text = "--"
         lines.append(line.format(
