@@ -464,10 +464,10 @@ class DrawHistograms:
         get the integral of the hists to sort it by event yield for plotting
         sort it by Event Yield, lowest to highest
         """
-        #c = ROOT.TCanvas()
-        #self.data.Draw()
-        #c.SaveAs("test.pdf")
-        #c.Clear()        
+        c = ROOT.TCanvas()
+        self.data.Draw()
+        c.SaveAs("test.pdf")
+        c.Clear()        
 
 
         self.sortPlots()
@@ -617,7 +617,7 @@ class DrawHistograms:
         """
         if self.ratio:
             self.canvas.cd(2)
-            if self.errorband:
+            if self.combineflag:
                 self.drawRatioCombine(title = "", canvaslabel=canvaslabel)
             else:
                 self.drawRatio(stackhist = firstHist, canvaslabel = canvaslabel)
@@ -811,17 +811,18 @@ class DrawHistograms:
         self.canvas.cd(1)
 
     def drawRatioCombine(self,title="",canvaslabel = ""):
-        self.drawRatioLine(canvaslabel)    
-        self.ratio_error_graph = self.errorband.Clone()
-        for i in range(0,self.errorband.GetN(),1):
-            self.ratio_error_graph.SetPoint(i,self.errorband.GetX()[i],1)
-            self.ratio_error_graph.SetPointEYhigh(i,self.errorband.GetErrorYhigh(i)/self.errorband.GetY()[i])
-            self.ratio_error_graph.SetPointEYlow(i,self.errorband.GetErrorYlow(i)/self.errorband.GetY()[i])
-        self.ratio_error_graph.Draw("same2")
+        self.drawRatioLine(canvaslabel)
+        if not self.errorband is None:
+            self.ratio_error_graph = self.errorband.Clone()
+            for i in range(0,self.errorband.GetN(),1):
+                self.ratio_error_graph.SetPoint(i,self.errorband.GetX()[i],1)
+                self.ratio_error_graph.SetPointEYhigh(i,self.errorband.GetErrorYhigh(i)/self.errorband.GetY()[i])
+                self.ratio_error_graph.SetPointEYlow(i,self.errorband.GetErrorYlow(i)/self.errorband.GetY()[i])
+            self.ratio_error_graph.Draw("same2")
 
         self.ratioPlot = ROOT.TGraphAsymmErrors(self.data.Clone())
         for i in range(1,self.data.GetNbinsX()+1,1):
-            self.ratioPlot.SetPoint(i-1,self.errorband.GetX()[i-1],self.data.GetBinContent(i)/self.background.GetBinContent(i))
+            self.ratioPlot.SetPoint(i-1,self.data.GetBinCenter(i),self.data.GetBinContent(i)/self.background.GetBinContent(i))
             self.ratioPlot.SetPointError(i-1,0.,0.,
                 (self.data.GetBinErrorLow(i))/self.background.GetBinContent(i),(self.data.GetBinErrorUp(i))/self.background.GetBinContent(i))
         self.ratioPlot.SetMarkerStyle(20)
