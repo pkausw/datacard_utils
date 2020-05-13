@@ -2,7 +2,7 @@
 
 Repository based on work by Philip
 
-These tools use the CombineHarvester. For more information see [here](https://twiki.cern.ch/twiki/bin/view/CMS/HiggsWG/SWGuideNonStandardCombineUses#Nuisance_parameter_impacts)
+These tools use the CombineHarvester. For more information see [here](https://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/part3/nonstandard/#nuisance-parameter-impacts)
 
 Please set the CMSSW environment before using the tools.
 
@@ -11,13 +11,13 @@ Please set the CMSSW environment before using the tools.
 #### Step 1: submitImpactFits.py
 
   * First parameter is a string wildcard to the datacards/workspaces that are to be analyzed (uses python module `glob`)
-  * All following parameters are additional combine options
-  * Example for fitting to asimov data with #mu = 1: `python submitImpactFits.py "wildcard/to/data" -t -1 --expectSignal 1 --cminDefaultMinimizerStrategy 0 --cminDefaultMinimizerTolerance 0.00001 --setRobustFitTolerance 0.001 --setCrossingTolerance 0.001`
+  * All following parameters are additional combine options. You should make sure that these options are as close as possible to the list of options you use during a standard fit (e.g. with `FitDiagnostics` or `MultiDimFit`) in order to ensure that the results are comparable.
+  * Example for fitting to asimov data with #mu = 1: `python submitImpactFits.py "wildcard/to/data" -t -1 --expectSignal 1 --cminDefaultMinimizerStrategy 0 --cminDefaultMinimizerTolerance 1e-2 --robustFit 1 --rMin -10 --rMax 10`
   * The script will generate a folder based on the datacard name in the current working directory.
    If the input file is not a .root file (-> workspace) it will call `text2workspace.py` to generate a workspace in the datacard directory.
    The computing time can be significantly reduced if the input is a workspace.
    First, the script will perform an initial fit of the datacard. Afterwards, a fit for each parameter will be performed via the batch system, respectively.
-   You can configure the submit options in the [batchConfig class](https://gitlab.cern.ch/kit-cn-cms/impactPlots/blob/b76e641f30d4731ac1969ffb5a320339ecc9dc55/base/batchConfig.py).
+   You can configure the submit options in the [batchConfig class](https://gitlab.cern.ch/ttH/datacards/-/blob/master/utilities/impact_scripts/base/batchConfig.py).
    There will be a `commands.txt` file in each folder containing the commands used to generate the present files.
    A .json file containing the list of datacards, the list of generated folders and the list of additional commands is generated in the current working directory. 
    
@@ -27,7 +27,7 @@ Please set the CMSSW environment before using the tools.
     * First parameter is string wildcard to folders with impact fits that are to be checked
     * Second parameter is string wildcard to datacards or workspaces for which there should be impact plots
     * All following parameters are additional combine options. These should be the same as in step 1 in order to generate consistent impacts
-  * Example: `python autoResubmitImpactFits.py "wildcard/to/impact/folders" "wildcard/to/data" -t -1 --expectSignal 1 --cminDefaultMinimizerStrategy 0 --cminDefaultMinimizerTolerance 0.00001 --setRobustFitTolerance 0.001 --setCrossingTolerance 0.001`
+  * Example: `python autoResubmitImpactFits.py "wildcard/to/impact/folders" "wildcard/to/data" -t -1 --expectSignal 1 --cminDefaultMinimizerStrategy 0 --cminDefaultMinimizerTolerance 1e-2 --robustFit 1 --rMin -10 --rMax 10`
   * The script will first check for .sh files and then compare the number of shell scripts with the number of rootfile in the corresponding directory.
    If these numbers are not equal, it will call the corresponding CombineHarvester command to regenerate the shell scripts.
    If the numbers are equal the script will loop over all .root files to check whether they are intact or broken.
@@ -38,9 +38,10 @@ Please set the CMSSW environment before using the tools.
    
 #### Step 3: drawImpactPlots.py
   
-  * First parameter is the path containing the workspaces corresponding to the impact fit folders
-  * Second parameter is wildcard to folders with impact fits that are to be checked
-  * Example: `python drawImpactPlots.py path/containing/datacards wildcard/to/impact/folders`
+  * First parameter: options to parse to the `plotImpacts.py` script of CombineHarvester. You can use this e.g. to parse a json file with clear names for the respective parameters or to set the label size on the impact plot 
+  * Second parameter is the path containing the workspaces corresponding to the impact fit folders
+  * Third parameter is wildcard to folders with impact fits that are to be checked
+  * Example: `python drawImpactPlots.py "optional options" path/containing/datacards wildcard/to/impact/folders`
   * The script will try to find the workspace based on the impact folder name á la `datacard_dirname/impact_folder_name.root`
    If the workspace was found the script will create a .json file containing the impact values and the impact plots.
    Each page of the output .pdf file shows 30 parameters.
