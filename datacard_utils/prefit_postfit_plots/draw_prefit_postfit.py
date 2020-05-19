@@ -16,7 +16,7 @@ cmd_base_parts += "--combineflag {flag} -r {rootfile}".split()
 cmd_base_parts += "--channelname {channel}".split()
 cmd_base_parts += "--combineDatacard {datacard}".split()
 cmd_base_parts += "--pdfname {pdfname}".split()
-cmd_base_parts += "--skipErrorbands --pdftag noError".split()
+#cmd_base_parts += "--skipErrorbands --pdftag noError".split()
 
 cmd_base = " ".join(cmd_base_parts)
 
@@ -111,7 +111,7 @@ def generate_plots(file, options):
                                     pdfname = channel,
                                     **base_options)
             print(cmd)
-            #call([cmd], shell = True)
+            call([cmd], shell = True)
 
 def main(options, files):
     for fpath in files:
