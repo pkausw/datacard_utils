@@ -1,0 +1,102 @@
+{
+    "ljets_ge4j_ge4t_ttmb_node": {
+        "top": "SL \\geq 4 jets \\geq 4 tags",
+        "bottom": "ttmb node"
+    },
+    "ljets_ge4j_ge4t_ttlf_node": {
+        "top": "SL \\geq 4 jets \\geq 4 tags",
+        "bottom": "ttlf node"
+    },
+    "ljets_ge4j_3t_tt2b_node": {
+        "top": "SL \\geq 4 jets 3 tags",
+        "bottom": "tt2b node"
+    },
+    "fh_j9_t4_DNN_Node0": {
+        "top": "FH \\geq 9 jets \\geq 4 tags",
+        "bottom": "binary ANN"
+    },
+    "ljets_ge4j_ge4t_tHq_node": {
+        "top": "SL \\geq 4 jets \\geq 4 tags",
+        "bottom": "tHq node"
+    },
+    "ljets_ge4j_3t_ttcc_node": {
+        "top": "SL \\geq 4 jets 3 tags",
+        "bottom": "ttcc node"
+    },
+    "ttH_hbb_13TeV_2017_dl_3j2b_ttHbb": {
+        "top": "DL 3 jets 2 tags",
+        "bottom": "binary ANN"
+    },
+    "ttH_hbb_13TeV_2017_dl_4j3b_DNN_ttlf": {
+        "top": "DL \\geq 4 jets \\geq 3 tags",
+        "bottom": "ttlf node"
+    },
+    "ljets_ge4j_3t_ttlf_node": {
+        "top": "SL \\geq 4 jets 3 tags",
+        "bottom": "ttlf node"
+    },
+    "ljets_ge4j_3t_tHq_node": {
+        "top": "SL \\geq 4 jets 3 tags",
+        "bottom": "tHq node"
+    },
+    "ttH_hbb_13TeV_2017_dl_4j3b_DNN_ttbb": {
+        "top": "SL \\geq 4 jets \\geq 3 tags",
+        "bottom": "ttbb node"
+    },
+    "ttH_hbb_13TeV_2017_dl_4j3b_DNN_ttHbb": {
+        "top": "DL \\geq 4 jets \\geq 3 tags",
+        "bottom": "ttH node"
+    },
+    "ljets_ge4j_ge4t_ttH_node": {
+        "top": "SL \\geq 4 jets \\geq 4 tags",
+        "bottom": "ttH node"
+    },
+    "ttbbCR": {
+        "top": "ttbb Control Region",
+        "bottom": ""
+    },
+    "ljets_ge4j_3t_ttH_node": {
+        "top": "SL \\geq 4 jets 3 tags",
+        "bottom": "ttH node"
+    },
+    "ttH_hbb_13TeV_2017_dl_4j2b_ttHbb": {
+        "top": "DL \\geq 4 jets 2 tags",
+        "bottom": "binary ANN"
+    },
+    "ttH_hbb_13TeV_2017_dl_3j3b_ttHbb": {
+        "top": "DL 3 jets 3 tags",
+        "bottom": "binary ANN"
+    },
+    "ljets_ge4j_ge4t_tt2b_node": {
+        "top": "SL \\geq 4 jets \\geq 4 tags",
+        "bottom": "tt2b node"
+    },
+    "ljets_ge4j_3t_tHW_node": {
+        "top": "SL \\geq 4 jets 3 tags",
+        "bottom": "tHW node"
+    },
+    "ljets_ge4j_ge4t_tHW_node": {
+        "top": "SL \\geq 4 jets \\geq 4 tags",
+        "bottom": "tHW node"
+    },
+    "ljets_ge4j_ge4t_ttcc_node": {
+        "top": "SL \\geq 4 jets \\geq 4 tags",
+        "bottom": "ttcc node"
+    },
+    "fh_j8_t4_DNN_Node0": {
+        "top": "FH 8 jets \\geq 4 tags",
+        "bottom": "binary ANN"
+    },
+    "ljets_ge4j_3t_ttmb_node": {
+        "top": "SL \\geq 4 jets 3 tags",
+        "bottom": "ttmb node"
+    },
+    "fh_j7_t4_DNN_Node0": {
+        "top": "FH 7 jets \\geq 4 tags",
+        "bottom": "binary ANN"
+    },
+    "ttH_hbb_13TeV_2017_dl_4j3b_DNN_ttcc": {
+        "top": "DL \\geq 4 jets \\geq 3 tags",
+        "bottom": "ttcc node"
+    }
+}
