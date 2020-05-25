@@ -10,25 +10,18 @@ def category(njet_category,sub_category):
     return njet_category+" "+sub_category
 
 
-def get_sum_of_hists(in_file,dir_name,name1,name2,new_name):
-    hist1 = get_hist(in_file,dir_name,name1)
-    hist2 = get_hist(in_file,dir_name,name2)
-    if not isinstance(hist1, ROOT.TH1):
-        if isinstance(hist2, ROOT.TH1):
-            print("Will return {} for {}".format(name2, new_name))
-            return hist2
-        else:
-            print("Cannot add {} and {}! Skipping {}".format(name1, name2, new_name))
-            return None
-    if not isinstance(hist2, ROOT.TH1):
-        if isinstance(hist1, ROOT.TH1):
-            print("Will return {} for {}".format(name1, new_name))
-            return hist1
-        else:
-            print("Cannot add {} and {}! Skipping {}".format(name1, name2, new_name))
-            return None
-    hist = hist1.Clone(new_name)
-    hist.Add(hist2)
+def get_sum_of_hists(in_file,dir_name,new_name, to_merge):
+    hist = None
+    for name in to_merge:
+       h = get_hist(in_file,dir_name,name)
+       if not isinstance(h, ROOT.TH1):
+            print("Could not find histogram! Skipping {}".format(name))
+            continue
+       print("Will return {} for {}".format(name, new_name))
+       if hist is None:
+           hist = h.Clone(new_name)
+       else:
+           hist.Add(h)
     return hist
 
 def get_hist(in_file,dir_name,process):
@@ -36,9 +29,13 @@ def get_hist(in_file,dir_name,process):
     print("searching for '{}'".format(histpath))
     outhist=None
     if process == "ttbarV":
-        outhist= get_sum_of_hists(in_file,dir_name,"ttbarW","ttbarZ","ttbarV")
+        outhist= get_sum_of_hists(in_file,dir_name,"ttbarV",["ttbarW","ttbarZ"])
     elif process == "vjets":
-        outhist= get_sum_of_hists(in_file,dir_name,"wjets","zjets","vjets")
+        outhist= get_sum_of_hists(in_file,dir_name,"vjets",["wjets","zjets"])
+    elif process == "tH":
+        outhist= get_sum_of_hists(in_file,dir_name,"tH", ["tHq_hbb","tHW_hbb"])
+    elif process == "multijet":
+        outhist= get_sum_of_hists(in_file,dir_name,"multijet", ["data_CR", "ttbb_CR", "ttcc_CR", "ttlf_CR", "singlet_CR", "ttbarW_CR", "ttbarZ_CR", "wjets_CR", "zjets_CR", "diboson_CR"])
     else:
         outhist= in_file.Get(histpath)
     if outhist!=None:
