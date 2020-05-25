@@ -6,7 +6,7 @@ from optparse import OptionParser
 
 header = """\\begin{tabular}{lccc}
 \\toprule
-Parameter & Bestfit & Stat-Only & Significance \\\\"""
+Parameter & Stat+Syst & Stat-Only & Significance \\\\"""
 line = """{parameter} & {bestfit} & {statonly} & {signi}\\\\"""
 footer = """\\bottomrule
 \\end{tabular}"""
