@@ -1,11 +1,13 @@
 bkg_processes = [
     "ttlf",
     "ttcc",
-    "ttbb",
+    "ttbb_5FS",
+    "ttb_5FS", 
+    "tt2b_5FS",
     "singlet",
-#    "vjets",
+    "vjets",
     "ttbarV",
-#    "diboson",
+    "diboson",
     "tH",
 ]
 total_bkg = "total_background"
@@ -19,8 +21,8 @@ sub_categories = [
                     "tt2b", 
                     "ttcc", 
                     "ttlf", 
-                    "tHq", 
-                    "tHW" 
+#                    "tHq", 
+#                    "tHW" 
                 ]
 
 category_channel_map = {
@@ -45,7 +47,9 @@ category_channel_map = {
 process_commands = {
     "ttlf"           : "\\ttlf",
     "ttcc"           : "\\ttcc",
-    "ttbb"           : "\\ttbb",
+    "ttbb_5FS"           : "\\ttbb (5FS)",
+    "ttb_5FS"        : "\\ttb (5FS)",
+    "tt2b_5FS"       : "\\ttTwob (5FS)",
     "singlet"        : "\\singlet",
     "vjets"          : "\\Vjets",
     "ttbarV"         : "\\ttV",

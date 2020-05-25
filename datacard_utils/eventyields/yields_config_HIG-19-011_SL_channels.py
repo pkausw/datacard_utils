@@ -19,8 +19,8 @@ sub_categories = [
                     "tt2b", 
                     "ttcc", 
                     "ttlf", 
-                    "tHq", 
-                    "tHW" 
+#                    "tHq", 
+#                    "tHW" 
                 ]
 
 category_channel_map = {

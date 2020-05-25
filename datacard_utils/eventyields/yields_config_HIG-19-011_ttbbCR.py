@@ -6,6 +6,9 @@ bkg_processes = [
     "vjets",
     "ttbarV",
     "diboson",
+    "tH",
+    "ttbarGamma",
+    "VH_hbb"
 ]
 total_bkg = "total_background"
 total_sig = "total_signal"
@@ -28,8 +31,11 @@ process_commands = {
     "vjets"          : "\\Vjets",
     "ttbarV"         : "\\ttV",
     "diboson"        : "\\diboson",
+    "tH"             : "\\tH",
+    "ttbarGamma"     : "\\ttGamma",
+    "VH_hbb"         : "\\VHbb",
     "total_background"       : "Total\\;bkg.",
-    "total_signal"       : "\\ttH + \\tH",
+    "total_signal"       : "\\ttH",
     "data"       : "Data",
 }
 

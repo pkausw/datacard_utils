@@ -3,12 +3,14 @@ bkg_processes = [
     "ttcc",
     "ttbb",
     "singlet",
-    "vjets",
+#    "vjets",
     "ttbarV",
-    "diboson",
+#    "diboson",
+    "tH",
+    "multijet"
 ]
-bkg_processes += [x+"CR" for x in bkg_processes]
-bkg_processes += ["dataCR"]
+#bkg_processes += [x+"CR" for x in bkg_processes]
+#bkg_processes += ["dataCR"]
 total_bkg = "total_background"
 total_sig = "total_signal"
 data      = "data"
@@ -34,18 +36,19 @@ process_commands = {
     "vjets"          : "\\Vjets",
     "ttbarV"         : "\\ttV",
     "diboson"        : "\\diboson",
+    "tH"             : "\\tH",
 
-    "ttlfCR"           : "\\ttlf CR",
-    "ttccCR"           : "\\ttcc CR",
-    "ttbbCR"           : "\\ttbb CR",
-    "singletCR"        : "\\singlet CR",
-    "vjetsCR"          : "\\Vjets CR",
-    "ttbarVCR"         : "\\ttV CR",
-    "dibosonCR"        : "\\diboson CR",
-    "dataCR"           : "Data CR"
-
+#    "ttlf_CR"           : "\\ttlf CR",
+#    "ttcc_CR"           : "\\ttcc CR",
+#    "ttbb_CR"           : "\\ttbb CR",
+#    "singlet_CR"        : "\\singlet CR",
+#    "vjets_CR"          : "\\Vjets CR",
+#    "ttbarV_CR"         : "\\ttV CR",
+#    "diboson_CR"        : "\\diboson CR",
+#    "data_CR"           : "Data CR",
+    "multijet"         : "Multijet Bkg",
     "total_background"       : "Total\\;bkg.",
-    "total_signal"       : "\\ttH + \\tH",
+    "total_signal"       : "\\ttH",
     "data"       : "Data",
 }
 
