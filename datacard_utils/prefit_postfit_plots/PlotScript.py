@@ -417,6 +417,7 @@ if combineflag:
         bkgKey = nominalKey.replace(procIden, "total")
         PlotList["total_signal"] = Plots.Plot(totalsignal,"total_signal",label=signallabel,
                                         typ="bkg", OverUnderFlowInc=True)
+        options.ratio = "#frac{data}{total MC}"
     else:
         bkgKey = nominalKey.replace(procIden, "total_background")
         PlotList["total_signal"] = Plots.Plot(totalsignal,"total_signal",label=signallabel,
