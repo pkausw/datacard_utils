@@ -1,6 +1,6 @@
 slide_template = """\\subsection*{{{clearname}}}
 \\begin{{frame}}
-\label{{ {label} }}
+\label{{{label}}}
 	\\begin{{center}}
 		\\begin{{Huge}}
 			{clearname}
