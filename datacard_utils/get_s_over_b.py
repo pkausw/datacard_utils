@@ -30,7 +30,7 @@ def open_file(path):
         raise ValueError(msg)
     return f
 
-def combine_histos(file, hlist, key):
+def combine_histos(file, hlist, key, bin_edges = None):
     h = None
     
     for name in hlist:
@@ -48,22 +48,27 @@ def combine_histos(file, hlist, key):
             print("adding histogram '{}'".format(tmp.GetName()))
             h.Add(tmp)
             # h.Print("range")
+    if h and bin_edges:
+        h = updateBinEdges(h, bin_edges)
     return h
 
-def get_values(file, signals, backgrounds, key, name_template, mode):
+def get_values(file, signals, backgrounds, key, name_template, mode, \
+                bin_edges = None):
     values = {}
     print("key: {}".format(key))
     print("="*130)
     print("loading signal")
     print("="*130)
-    h_signal = combine_histos(file = file, hlist = signals, key = key)
+    h_signal = combine_histos(file = file, hlist = signals, key = key,\
+                                bin_edges = bin_edges)
     if h_signal is None:
         print("Error: Could not load signal with key '{}'".format(key))
         return values
     print("="*130)
     print("loading background")
     print("="*130)
-    h_background = combine_histos(file = file, hlist = backgrounds, key = key)
+    h_background = combine_histos(file = file, hlist = backgrounds, key = key,\
+                                bin_edges = bin_edges)
 
     if h_background is None:
         print("Error: Could not load background with key '{}'".format(key))
@@ -78,17 +83,22 @@ def get_values(file, signals, backgrounds, key, name_template, mode):
                 value = sig/bkg
             elif mode == "s_o_sqrtb":
                 value = sig/sqrt(bkg)
-            tmp_name = name_template.format(BINNUMBER = i)
-            values[tmp_name] = value
         else:
             print("ERROR: Background stack is zero")
             print("\tbin {}".format(i))
             print("\tsignals: {}".format(",".join(signals)))
             print("\tbackgrounds: {}".format(",".join(backgrounds)))
+        tmp_name = name_template.format(BINNUMBER = i)
+        values[tmp_name] = {
+            "value": value,
+            "signal": sig,
+            "background" : bkg
+        }
         
     return values
 
-def create_value_dict(file, signals, backgrounds, channels, key, mode):
+def create_value_dict(file, signals, backgrounds, channels, key, mode,\
+                        datacardpath = None):
     final_dict = {}
     print("base key: {}".format(key))
     metavar = {
@@ -102,12 +112,14 @@ def create_value_dict(file, signals, backgrounds, channels, key, mode):
     values = {}
     for ch in channels:
         thiskey = key.replace("CHANNEL", ch)
+        bin_edges = load_original_binedges(datacardpath, ch)
         values.update(get_values(file = file, signals = signals,
                                  backgrounds=backgrounds, key = thiskey,
                                  name_template=ch + "_bin_{BINNUMBER}",
-                                 mode = mode))
+                                 mode = mode, bin_edges = bin_edges))
     
-    values = OrderedDict(sorted(values.iteritems(), key = lambda x: x[1]))
+    values = OrderedDict(sorted(values.iteritems(), \
+                                key = lambda x: x[1]["value"]))
     print(values)
     final_dict["values"] = values
     return final_dict
@@ -120,13 +132,14 @@ def main(*args,**kwargs):
     channels = kwargs.get("channels")
     nomkey = kwargs.get("nomkey")
     mode = kwargs.get("mode")
+    datacard = kwargs.get("datacard")
     if len(channels) == 0:
         channels = load_channels(file = file, key = nomkey)
     
     values = create_value_dict(file = file, signals = signals,
                         backgrounds = backgrounds, 
                         channels = channels,
-                        key = nomkey, mode = mode)
+                        key = nomkey, mode = mode, datacardpath = datacard)
     file.Close()
     outname = kwargs.get("outfile")
     if not outname.endswith(".json"):
@@ -153,6 +166,45 @@ def parse_list(hlist):
     for entry in hlist:
         final_list += entry.split(",")
     return final_list
+
+def updateBinEdges(hist, edges):
+    newHist = ROOT.TH1F(hist.GetName(), hist.GetTitle(), len(edges)-1, array("f", edges))
+    for i in range(len(edges)+1):
+        newHist.SetBinContent(i, hist.GetBinContent(i))
+        newHist.SetBinError(i, hist.GetBinError(i))
+    
+    return newHist
+
+def load_original_binedges(datacardpath, channelName):
+    binEdges = None
+    if datacardpath:
+        if not os.path.exists(datacardpath):
+            print("ERROR: could not load datacard from '{}'".format(datacardpath))
+        datacard_dir = os.path.dirname(os.path.abspath(datacardpath))
+        with open(datacardpath, "r") as card:
+            lines = card.readlines()
+        lines = [l for l in lines if l.startswith("shapes")]
+        channelLine = False
+        for l in lines:
+            line = l.split(" ")
+            if channelName in line:
+                channelLine = line
+                break
+        if channelLine is None: sys.exit("no channel {} found in datacard".format(channelName))
+        channelLine = [elem for elem in channelLine if not elem == ""]
+        binFileName = channelLine[3]
+        binFileName = binFileName if os.path.isabs(binFileName) else os.path.join(datacard_dir, binFileName)
+        binKey = channelLine[4].replace("$PROCESS","data_obs")
+        binKey = binKey.replace("$CHANNEL", channelName)
+        
+        binFile = ROOT.TFile(binFileName)
+        print("loading " + binKey)
+        binHist = binFile.Get(binKey)
+        binEdges = []
+        for i in range(binHist.GetNbinsX()+1):
+            binEdges.append( binHist.GetBinLowEdge(i+1) )
+    return binEdges
+
 def parse_arguments():
     parser = OptionParser()
     
@@ -235,6 +287,20 @@ def parse_arguments():
                         ),
                       dest = "rootfile",
                       metavar = "path/to/file.root"
+                      )
+    parser.add_option("-d", "--datacard",
+                      help = " ".join(
+                          """
+                          path to datacard belonging to the root file 
+                          (option r).
+                          Will be used to load original binning of
+                          templates.
+                          Use this to avoid zero-padded bins in combine
+                          histograms.                          
+                          """.split()
+                        ),
+                      dest = "datacard",
+                      metavar = "path/to/datacard.txt"
                       )
     parser.add_option("-o", "--outfile",
                       help = " ".join(
