@@ -5,6 +5,7 @@ import ROOT
 from optparse import OptionParser
 from collections import OrderedDict
 from math import sqrt
+from array import array
 
 def load_channels(file, key):
     channels = []
