@@ -66,6 +66,11 @@ def parse_arguments():
                         metavar = "path/to/datacard.txt",
                         type = "str"
                     )
+    parser.add_option( "--lumiLabel",
+                       help = "overwrite lumi label with this string",
+                       dest = "lumiLabel",
+                       type = "str"
+                    )
     
     options, files = parser.parse_args()
     if not os.path.exists(options.labelconfig):
@@ -110,6 +115,8 @@ def generate_plots(file, options):
                                     flag = flag,
                                     pdfname = channel,
                                     **base_options)
+            if options.lumiLabel:
+                cmd += ' --lumilabel "{}"'.format(options.lumiLabel)
             print(cmd)
             call([cmd], shell = True)
 
