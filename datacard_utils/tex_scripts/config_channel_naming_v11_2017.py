@@ -131,8 +131,11 @@ keyword_dict = {
 	}, 
 
 }
-
-
+newdict = {}
+for k in keyword_dict:
+    newkey = "No_minor_"+k
+    newdict[newkey] = keyword_dict[k]
+keyword_dict.update(newdict)
 
 order = [
     "combined_full_2017_baseline_v01",
@@ -176,3 +179,4 @@ order = [
     "ttH_hbb_13TeV_2017_dl_4j4b_HT_jets", 
 
 ]
+order += ["No_minor_"+x for x in order]
