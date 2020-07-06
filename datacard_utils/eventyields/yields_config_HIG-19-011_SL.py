@@ -3,9 +3,9 @@ bkg_processes = [
     "ttcc",
     "ttbb",
     "singlet",
-#    "vjets",
+    "vjets",
     "ttbarV",
-#    "diboson",
+    "diboson",
     "tH",
 ]
 total_bkg = "total_background"
