@@ -24,7 +24,7 @@ def create_workspace(datacard):
 		print "calling text2workspace.py to create workspace from", datacard
 		datacardOld = datacard
 		datacard = ".".join(parts[:len(parts)-1]) + ".root" 
-		cmd = "text2workspace.py -m 125 " + datacardOld + " -o " + datacard
+		cmd = "text2workspace.py -m 125.38 " + datacardOld + " -o " + datacard
 		print cmd
 		subprocess.call([cmd], shell=True)
 	
@@ -56,7 +56,7 @@ def create_impacts(outputPath, datacard, impactList):
 		print "doing initial fit"
 		taskname = os.path.basename(datacard).replace(".root", "")
 		
-		cmd = "combineTool.py -M Impacts -m 125 --doInitialFit -d " + datacard
+		cmd = "combineTool.py -M Impacts -m 125.38 --doInitialFit -d " + datacard
 		additionalCmd = ""
 		if additionalCmds:
 		    additionalCmd = " ".join(additionalCmds)
@@ -76,7 +76,7 @@ def create_impacts(outputPath, datacard, impactList):
 		print "starting nuisance parameter fits"
 		taskname = os.path.basename(datacard).replace(".root", "")
 		
-		cmd = "combineTool.py -M Impacts -m 125 --doFits"
+		cmd = "combineTool.py -M Impacts -m 125.38 --doFits"
 		cmd += " -d " + datacard
 		cmd += " " + additionalCmd
 		cmd += " --job-mode {0}".format(config.jobmode)

@@ -51,7 +51,7 @@ for wildcard in wildcards:
             taskname = os.path.basename(workspace).replace(".root", "")
             #taskname = taskname.replace("ttH_hbb_13TeV", "")
             impactName = os.path.basename(directory) + "_impacts"
-            cmd = "combineTool.py -M Impacts -m 125"
+            cmd = "combineTool.py -M Impacts -m 125.38"
             cmd += " -o " + impactName +".json"
             cmd += " -d " + workspace
             cmd += " -n " + taskname
