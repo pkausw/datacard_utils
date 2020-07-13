@@ -23,72 +23,10 @@ except:
             Are you sure you installed it?""".split())
     raise ImportError(msg)
 
-
-def GenerateScalingLine(objects, ws_name, path, source, wildcard):
-    lines = []
-    for e in objects:
-        line = " ".join([e, "extArg", ":".join(["\\"+path, ws_name])])
-        line = "\n"+line
-        lines.append(line)
-        baseval = source.function(e).getVal()
-        new_parname = e+"_rescale"
-        line=' '.join([new_parname,'rateParam',"*",wildcard.format(e.replace("_13TeV", "")),"@0/%f"%baseval,e])
-        lines.append(line)
-        # line = "nuisance edit freeze {} ifexists".format(new_parname)
-        # lines.append(line)
-    return lines
-        
-
-def MassScaling(productions, decays, basemass):
-    ''' return a list of fully formed rateParameter with the xs*br scaling over the 125'''
-    xs_path = '$CMSSW_BASE/src/HiggsAnalysis/CombinedLimit/data/lhc-hxswg/sm/sm_yr4_13TeV.root'
-    br_path = '$CMSSW_BASE/src/HiggsAnalysis/CombinedLimit/data/lhc-hxswg/sm/sm_br_yr4.root'
-    fXS=ROOT.TFile.Open(xs_path)
-    fBR=ROOT.TFile.Open(br_path)
+class MassManipulator(object):
     
-    wBR=fBR.Get("br")
-    wXS=fXS.Get("xs_13TeV")
-    
-    wBR.var("MH").setVal(basemass)
-    wXS.var("MH").setVal(basemass)
-    xs_procs=[x+"_13TeV" for x in productions]
-    lines = GenerateScalingLine( objects = xs_procs, ws_name = "xs_13TeV",
-                                 path = xs_path, source = wXS, wildcard = "{}_*")
-    lines += GenerateScalingLine( objects = decays, ws_name = "br",
-                                 path = br_path, source = wBR, wildcard = "*_{}")
-    return lines
-
-
-def main(*args, **kwargs):
-    processes = kwargs.get("procs", [])
-    basemass = kwargs.get("base_mass", 125)
-    productions = []
-    decays = []
-    for p in processes:
-        if "_" in p:
-            prod, decay = p.split("_")
-            productions.append(prod)
-            decays.append(decay)
-    
-    productions = list(set(productions))
-    decays = list(set(decays))
-    
-    lines = MassScaling(productions = productions, decays = decays, 
-                        basemass = basemass)
-    print("\n".join(lines))
-    apply = kwargs.get("apply", False)
-    if apply:
-        for f in args:
-            if not os.path.exists(f):
-                print("ERROR: file '{}' does not exist".format(f))
-                continue
-            for l in lines:
-                cmd = 'echo "{}" >> {}'.format(l, f)
-                print(cmd)
-                call([cmd], shell = True)
-
-def parse_arguments():
-    procs = [   'ttH_hbb',
+    def __init__(self):
+        self.processes = [   'ttH_hbb',
                 'ttH_hcc',
                 'ttH_htt',
                 'ttH_hgg',
@@ -97,6 +35,107 @@ def parse_arguments():
                 'ttH_hzz',
                 'ttH_hzg'
             ]
+        self.basemass = 125
+        self.apply = False
+        self.xs_path = '$CMSSW_BASE/src/HiggsAnalysis/CombinedLimit/data/lhc-hxswg/sm/sm_yr4_13TeV.root'
+        self.br_path = '$CMSSW_BASE/src/HiggsAnalysis/CombinedLimit/data/lhc-hxswg/sm/sm_br_yr4.root'
+    
+    def GenerateScalingLine(self, objects, ws_name, path, source, wildcard):
+        lines = []
+        for e in objects:
+            line = " ".join([e, "extArg", ":".join([path, ws_name])])
+            line = "\n"+line
+            lines.append(line)
+            baseval = source.function(e).getVal()
+            new_parname = e+"_rescale"
+            line=' '.join([new_parname,'rateParam',"*",wildcard.format(e.replace("_13TeV", "")),"@0/%f"%baseval,e])
+            lines.append(line)
+            # line = "nuisance edit freeze {} ifexists".format(new_parname)
+            # lines.append(line)
+        return lines
+            
+
+    def MassScaling(self, productions, decays, basemass):
+        ''' return a list of fully formed rateParameter with the xs*br scaling over the 125'''
+        
+        fXS=ROOT.TFile.Open(self.xs_path)
+        fBR=ROOT.TFile.Open(self.br_path)
+        
+        wBR=fBR.Get("br")
+        wXS=fXS.Get("xs_13TeV")
+        
+        wBR.var("MH").setVal(basemass)
+        wXS.var("MH").setVal(basemass)
+        xs_procs=[x+"_13TeV" for x in productions]
+        print("xs_procs: {}".format(xs_procs))
+        lines = self.GenerateScalingLine( objects = xs_procs, ws_name = "xs_13TeV",
+                                    path = self.xs_path, source = wXS, wildcard = "{}_*")
+        lines += self.GenerateScalingLine( objects = decays, ws_name = "br",
+                                    path = self.br_path, source = wBR, wildcard = "*_{}")
+        return lines
+
+
+    def ScaleMasses(self, *args):
+        """
+        Function that generates lines to scale the production 
+        cross section (XS) and branching ratios (BR) for
+        the processes of this class.
+        
+        Inputs:
+        
+        args ([list]) --    list of files or CombineHarvester instances
+                            If self.apply is True, the generated lines
+                            are added to the files or the CombineHarvester
+                            instances 
+        """
+        productions = []
+        decays = []
+        for p in self.processes:
+            if "_" in p:
+                prod, decay = p.split("_")
+                productions.append(prod)
+                decays.append(decay)
+        
+        productions = list(set(productions))
+        decays = list(set(decays))
+        
+        lines = self.MassScaling(productions = productions, decays = decays, 
+                            basemass = self.basemass)
+        print("\n".join(lines))
+        if self.apply:
+            for f in args:
+                if isinstance(f, str):
+                    if not os.path.exists(f):
+                        print("ERROR: file '{}' does not exist".format(f))
+                        continue
+                    elif os.path.isfile(f):
+                        for l in lines:
+                            cmd = 'echo "{}" >> {}'.format(
+                                                l.replace("$", "\\$"), f)
+                            print(cmd)
+                            call([cmd], shell = True)
+                elif isinstance(f, ch.CombineHarvester):
+                    param_list = f.cp().syst_type(["rateParam", "extArg"]).syst_name_set()
+                    for l in lines:
+                        if not any(l.startswith(x) for x in param_list):
+                            f.AddDatacardLineAtEnd(l)
+
+def main(*args, **kwargs):
+    processes = kwargs.get("procs", [])
+    basemass = kwargs.get("base_mass", 125)
+    apply = kwargs.get("apply", False)
+    mass_scaler = kwargs.get("mass_scaler", None)
+    if not mass_scaler:
+        raise ValueError("Could not load object 'mass_scaler'!")
+    mass_scaler.processes = processes
+    mass_scaler.basemass = basemass
+    mass_scaler.apply = apply
+    
+    mass_scaler.ScaleMasses(*args)
+
+
+def parse_arguments(mass_scaler):
+    procs = mass_scaler.processes
     usage = " ".join("""
     Tool that generates lines to introde rate factors
     that scale the XS and BR according to
@@ -150,5 +189,6 @@ def parse_arguments():
     return options, files
 
 if __name__ == "__main__":
-    options, files = parse_arguments()
-    main(*files, **vars(options))
+    mass_scaler = MassManipulator()
+    options, files = parse_arguments(mass_scaler)
+    main(*files, mass_scaler = mass_scaler, **vars(options))
