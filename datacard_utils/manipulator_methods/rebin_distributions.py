@@ -22,38 +22,51 @@ except:
             Are you sure you installed it?""".split())
     raise ImportError(msg)
 
-bin_edges = []
-def load_edges(proc):
-    h = proc.ShapeAsTH1F()
-    nbins = h.GetNbinsX()
-    global bin_edges
-    bin_edges = [h.GetBinLowEdge(i) for i in range(1, nbins+2)]
-    print(bin_edges)
+class BinManipulator(object):
+    choices = "left right all".split()
+    def __init__(self):
+        self.bin_edges = []
+        
+    def load_edges(self, proc):
+        h = proc.ShapeAsTH1F()
+        nbins = h.GetNbinsX()
+        self.bin_edges = [h.GetBinLowEdge(i) for i in range(1, nbins+2)]
+        print(self.bin_edges)
 
-def apply_scheme(bin_edges, scheme):
-    edges = []
-    if scheme == "all":
-        edges = bin_edges[::2]
-    
-    if not bin_edges[-1] in edges:
-        edges.append(bin_edges[-1])
-    return edges
+    def apply_scheme(self):
+        edges = []
+        if self.scheme == "all":
+            edges = self.bin_edges[::2]
+        elif self.scheme == "right":
+            middle = int(len(self.bin_edges)/2.)
+            edges = self.bin_edges[:middle+1]
+        elif self.scheme == "left":
+            middle = int(len(self.bin_edges)/2.)
+            edges = [self.bin_edges[0]] + self.bin_edges[middle:]
+        if not self.bin_edges[-1] in edges:
+            edges.append(self.bin_edges[-1])
+        return edges
 
-def rebin_shapes(harvester, scheme):
-    bins = harvester.bin_set()
-    for b in bins:
-        global bin_edges
-        bin_edges = []
-        p = harvester.cp().bin([b]).process_set()[-1]
-        harvester.cp().bin([b]).process([p]).ForEachProc(\
-            lambda x: load_edges(x))
-        print(b)
-        print("\n".join(["\t{}".format(x) for x in bin_edges]))
-        bin_edges = apply_scheme(bin_edges, scheme)
-        print("after applying scheme {}".format(scheme))
-        print("\n".join(["\t{}".format(x) for x in bin_edges]))
-        harvester.cp().bin([b]).VariableRebin(bin_edges)
-    return harvester
+    def rebin_shapes(self, harvester):
+        bins = harvester.bin_set()
+        for b in bins:
+            self.bin_edges = []
+            p = harvester.cp().bin([b]).process_set()[-1]
+            harvester.cp().bin([b]).process([p]).ForEachProc(\
+                lambda x: self.load_edges(x))
+            print(b)
+            print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
+            self.bin_edges = self.apply_scheme()
+            print("after applying scheme {}".format(self.scheme))
+            print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
+            harvester.cp().bin([b]).VariableRebin(self.bin_edges)
+        return harvester
+
+def WriteCards(harvester, newpath, output_rootfile, bins):
+    writer = ch.CardWriter(newpath, output_rootfile)
+    writer.SetWildcardMasses([])
+    writer.SetVerbosity(1)
+    writer.WriteCards("cmb", harvester.cp().bin(bins))
 
 def main(*args, **kwargs):
 
@@ -72,7 +85,9 @@ def main(*args, **kwargs):
     if not scheme:
         msg = "Could not find rebin scheme, abort!"
         raise ValueError(msg)
-    harvester = rebin_shapes(harvester = harvester, scheme = scheme)
+    bin_manipulator = BinManipulator()
+    bin_manipulator.scheme = scheme
+    harvester = bin_manipulator.rebin_shapes(harvester = harvester)
 
     
 
@@ -90,14 +105,45 @@ def main(*args, **kwargs):
     output_rootfile = os.path.join(outdir, output_rootfile)
 
     # harvester.WriteDatacard(newpath)
-    writer = ch.CardWriter(newpath, output_rootfile)
-    writer.SetWildcardMasses([])
-    writer.SetVerbosity(1)
     bins = harvester.bin_set()
-    for b in bins:
-        writer.WriteCards("cmb", harvester.cp().bin([b]))
-
-
+    # for b in bins:
+    #     WriteCards(harvester = harvester, newpath = newpath, 
+    #                output_rootfile = output_rootfile, bins = [b])
+    # current_bins = [b for b in bins if any(x in b for x in ["ljets"])]
+    # comb_path = newpath.replace("$BIN", "combined_SL_DNN")
+    # comb_rootpath = output_rootfile.replace("$BIN", "combined_SL_DNN")
+    # WriteCards(harvester = harvester, newpath = comb_path, 
+    #                output_rootfile = comb_rootpath, bins = current_bins)
+    
+    # current_bins = [b for b in bins if any(x in b for x in ["dl"])]
+    # comb_path = newpath.replace("$BIN", "combined_DL_DNN")
+    # comb_rootpath = output_rootfile.replace("$BIN", "combined_DL_DNN")
+    # WriteCards(harvester = harvester, newpath = comb_path, 
+    #                output_rootfile = comb_rootpath, bins = current_bins)
+    
+    # current_bins = [b for b in bins if any(x in b for x in ["fh"])]
+    # comb_path = newpath.replace("$BIN", "combined_FH_DNN")
+    # comb_rootpath = output_rootfile.replace("$BIN", "combined_FH_DNN")
+    # WriteCards(harvester = harvester, newpath = comb_path, 
+    #                output_rootfile = comb_rootpath, bins = current_bins)
+    
+    # current_bins = [b for b in bins if any(x in b for x in ["ljets", "dl"])]
+    # comb_path = newpath.replace("$BIN", "combined_DLSL_DNN")
+    # comb_rootpath = output_rootfile.replace("$BIN", "combined_DLSL_DNN")
+    # WriteCards(harvester = harvester, newpath = comb_path, 
+    #                output_rootfile = comb_rootpath, bins = current_bins)
+    
+    # current_bins = [b for b in bins if any(x in b for x in ["ljets", "dl", "fh"])]
+    # comb_path = newpath.replace("$BIN", "combined_DLFHSL_DNN")
+    # comb_rootpath = output_rootfile.replace("$BIN", "combined_DLFHSL_DNN")
+    # WriteCards(harvester = harvester, newpath = comb_path, 
+    #                output_rootfile = comb_rootpath, bins = current_bins)
+    
+    comb_path = newpath.replace("$BIN", "combined_full_2016_baseline_v01")
+    comb_rootpath = output_rootfile.replace("$BIN", "combined_full_2016_baseline_v01")
+    WriteCards(harvester = harvester, newpath = comb_path, 
+                   output_rootfile = comb_rootpath, bins = bins)
+    
 def parse_arguments():
     usage = " ".join("""
     Tool to change inputs for combine based on output of
@@ -130,18 +176,18 @@ def parse_arguments():
                         # default = ".",
                         type = "str"
                     )
-    choices = "left right all".split()
+    
     parser.add_option("-s", "--rebin-scheme",
                         help = " ".join(
                             """
                             rebin the shapes in the different channels
                             according to this scheme. Current choices:
                             {}
-                            """.format(",".join(choices)).split()
+                            """.format(",".join(BinManipulator.choices)).split()
                         ),
                         dest = "scheme",
                         metavar = "scheme",
-                        choices = choices,
+                        choices = BinManipulator.choices,
                         default = "all",
                         # type = "str"
                     )
