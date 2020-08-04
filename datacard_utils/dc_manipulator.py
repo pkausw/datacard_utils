@@ -22,14 +22,14 @@ except:
             Are you sure you installed it?""".split())
     raise ImportError(msg)
 thisdir = os.path.dirname(os.path.realpath(__file__))
-manipulator_dir = os.path.join(thisdir, "manipulator_methods")
-if not manipulator_dir in sys.path:
-    sys.path.append(manipulator_dir)
+# manipulator_dir = os.path.join(thisdir, "manipulator_methods")
+# if not manipulator_dir in sys.path:
+#     sys.path.append(manipulator_dir)
 
-from group_manipulator import GroupManipulator
-from scale_higgs_mass import MassManipulator
-from rebin_distributions import BinManipulator
-from apply_validation import ValidationInterface
+from manipulator_methods.group_manipulator import GroupManipulator
+from manipulator_methods.scale_higgs_mass import MassManipulator
+from manipulator_methods.rebin_distributions import BinManipulator
+from manipulator_methods.apply_validation import ValidationInterface
 
 def freeze_nuisances(harvester):
     to_freeze = "kfactor_wjets kfactor_zjets CMS_ttHbb_bgscale_MCCR".split()
