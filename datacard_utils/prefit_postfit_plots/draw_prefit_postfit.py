@@ -71,6 +71,12 @@ def parse_arguments():
                        dest = "lumiLabel",
                        type = "str"
                     )
+    parser.add_option( "--drawFromHarvester", 
+                        dest="drawFromHarvester", 
+                        default = False,
+                        action = "store_true", 
+                        help = "use output of 'PostFitShapesFromWorkspace' in CombineHarvester package as input"
+                    )
     
     options, files = parser.parse_args()
     if not os.path.exists(options.labelconfig):
@@ -117,6 +123,8 @@ def generate_plots(file, options):
                                     **base_options)
             if options.lumiLabel:
                 cmd += ' --lumilabel "{}"'.format(options.lumiLabel)
+            if options.drawFromHarvester:
+                cmd += " --drawFromHarvester"
             print(cmd)
             call([cmd], shell = True)
 

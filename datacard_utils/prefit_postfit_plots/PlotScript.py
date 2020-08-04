@@ -111,6 +111,8 @@ plotOptions.add_option("--shape", dest="shape",  default=None,
         help="drawing shape plot, default normalize and no data")
 plotOptions.add_option("--combineflag", dest="combineflag", default=None,
         help="NAME of the combine plot,  use for combine plots, use shapes_prefit for prefit and shapes_fit_s for post fit, ATTENTION only uses total signal and does not split signal processes,")
+plotOptions.add_option("--drawFromHarvester", dest="drawFromHarvester", default = False,
+        action = "store_true", help = "use output of 'PostFitShapesFromWorkspace' in CombineHarvester package as input")
 plotOptions.add_option("--ratio", dest="ratio",  default=None,
         help="make ratio plot", metavar="ratio")
 plotOptions.add_option("--logarithmic", dest="logarithmic", default=None,
@@ -282,9 +284,16 @@ outputName              = None
 xLabel                  = ""
 if combineflag:
     options.nominalKey  = "$FLAG/$CHANNEL/$PROCESS"
+    if options.drawFromHarvester:
+        options.nominalKey = "$CHANNEL_$FLAG/$PROCESS"
     #options.data        = getParserConfigDefaultValue(parser=options.data,config="data",
     #                                        plotoptions=plotoptions,defaultvalue=False)
     options.data        = "data"
+    if options.drawFromHarvester:
+        flag = "prefit" if options.combineflag == "shapes_prefit" else "postfit"
+        options.nominalKey = "$CHANNEL_{FLAG}/$PROCESS".format(FLAG = flag)
+
+        options.data = "data_obs"
     options.nominalKey  = options.nominalKey.replace(combineIden, combineflag)
     
     if options.datacard:
@@ -402,7 +411,12 @@ else no signal
 
 background = None
 if combineflag:
-    totalsignalkey  = nominalKey.replace(procIden, "total_signal")
+    str_total = "total" if not options.drawFromHarvester else "TotalProcs"
+    str_total_bkg = "total_background" if not options.drawFromHarvester\
+                     else "TotalBkg"
+    str_total_sig = "total_signal" if not options.drawFromHarvester\
+                     else "TotalSig"
+    totalsignalkey  = nominalKey.replace(procIden, str_total_sig)
     totalsignal     = rootFile.Get(totalsignalkey)
     if not binEdges is None:
         totalsignal = Plots.updateBinEdges(totalsignal, binEdges)
@@ -414,12 +428,12 @@ if combineflag:
     else keep as shape plot
     """
     if combineflag=="shapes_fit_s":
-        bkgKey = nominalKey.replace(procIden, "total")
+        bkgKey = nominalKey.replace(procIden, str_total)
         PlotList["total_signal"] = Plots.Plot(totalsignal,"total_signal",label=signallabel,
                                         typ="bkg", OverUnderFlowInc=True)
         options.ratio = "#frac{data}{total MC}"
     else:
-        bkgKey = nominalKey.replace(procIden, "total_background")
+        bkgKey = nominalKey.replace(procIden, str_total_bkg)
         PlotList["total_signal"] = Plots.Plot(totalsignal,"total_signal",label=signallabel,
                                         typ="signal", OverUnderFlowInc=True)
     # from total background or total background+signal prediction histogram in mlfit file, get the error band
