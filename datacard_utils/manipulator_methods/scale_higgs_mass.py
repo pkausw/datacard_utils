@@ -12,6 +12,7 @@ if not os.path.exists(cmssw_base):
 
 from optparse import OptionParser, OptionGroup
 from subprocess import call
+from fnmatch import filter
 
 ROOT.TH1.AddDirectory(False)
 try:
@@ -117,8 +118,22 @@ class MassManipulator(object):
                 elif isinstance(f, ch.CombineHarvester):
                     param_list = f.cp().syst_type(["rateParam", "extArg"]).syst_name_set()
                     for l in lines:
-                        if not any(l.startswith(x) for x in param_list):
-                            f.AddDatacardLineAtEnd(l)
+                        if not any(l.startswith(x) for x in param_list) and not l=="":
+                            parts = l.split()
+                            bins = f.bin_set()
+                            param_type = parts[1]
+                            print(parts)
+                            print(tuple(parts[:-1]))
+                            print(parts[-1])
+                            if param_type == "extArg":
+                                # f.cp().bin(bins).AddSyst(f, parts[0], parts[1], ch.SystMap()(parts[-1], ""))
+                                f.AddDatacardLineAtEnd(l)
+                            elif param_type == "rateParam":
+                                current_bins = filter(bins, parts[2])
+                                current_procs = filter(f.cp().bin(current_bins).process_set(), parts[3])
+                                if len(current_procs) > 0:
+                                    f.AddDatacardLineAtEnd(l)
+                                
 
 def main(*args, **kwargs):
     processes = kwargs.get("procs", [])
