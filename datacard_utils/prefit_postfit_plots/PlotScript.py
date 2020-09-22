@@ -467,6 +467,7 @@ if data:
     print("    type of data hist is: "+str(type(dataHist)) )
     if isinstance(dataHist, ROOT.TH1):
         dataHist.SetStats(False)
+        dataHist = Plots.updateBinEdges(dataHist, binEdges)
         Plots.moveOverUnderFlow(dataHist)
         print "using data: %s" % (dataKey)
     # data in combine in TGraphAsymmErrors, get TH1 out of it
