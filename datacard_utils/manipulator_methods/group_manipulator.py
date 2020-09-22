@@ -25,16 +25,18 @@ class GroupManipulator(object):
                 ".*pdf_Higgs_ttH$",
                 ".*ISR_ttH$",
                 ".*FSR_ttH$", 
+                ".*scaleMu.*_ttH$"
             ], 
             "thy" : [
                 ".*QCDscale.*", 
                 ".*pdf.*", 
-                "^CMS_ttHbb_bgnorm.*", 
+                #"^CMS_ttHbb_bgnorm.*", 
                 ".*ISR.*", 
                 ".*FSR.*", 
                 ".*HDAMP.*", 
                 ".*PDF.*", 
-                ".*scaleMu.*"
+                ".*scaleMu.*",
+                ".*UE.*"
             ], 
             "exp" : [
                 "^CMS_btag.*", 
@@ -43,8 +45,6 @@ class GroupManipulator(object):
                 "^CMS_scale.*j.*", 
                 "^CMS_ttHbb_PU", 
                 ".*L1PreFiring.*", 
-                ".*UE.*"
-
             ], 
             "ps": [
                 ".*ISR.*", 
