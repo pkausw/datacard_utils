@@ -23,11 +23,11 @@
         "top": "SL \\geq 4 jets 3 tags",
         "bottom": "ttcc node"
     },
-    "ttH_hbb_13TeV_2017_dl_3j2b_ttHbb": {
+    "ttH_hbb_13TeV_dl_3j2b_ttHbb": {
         "top": "DL 3 jets 2 tags",
         "bottom": "binary ANN"
     },
-    "ttH_hbb_13TeV_2017_dl_4j3b_DNN_ttlf": {
+    "ttH_hbb_13TeV_dl_4j3b_DNN_ttlf": {
         "top": "DL \\geq 4 jets \\geq 3 tags",
         "bottom": "ttlf node"
     },
@@ -39,11 +39,11 @@
         "top": "SL \\geq 4 jets 3 tags",
         "bottom": "tHq node"
     },
-    "ttH_hbb_13TeV_2017_dl_4j3b_DNN_ttbb": {
+    "ttH_hbb_13TeV_dl_4j3b_DNN_ttbb": {
         "top": "SL \\geq 4 jets \\geq 3 tags",
         "bottom": "ttbb node"
     },
-    "ttH_hbb_13TeV_2017_dl_4j3b_DNN_ttHbb": {
+    "ttH_hbb_13TeV_dl_4j3b_DNN_ttHbb": {
         "top": "DL \\geq 4 jets \\geq 3 tags",
         "bottom": "ttH node"
     },
@@ -59,11 +59,11 @@
         "top": "SL \\geq 4 jets 3 tags",
         "bottom": "ttH node"
     },
-    "ttH_hbb_13TeV_2017_dl_4j2b_ttHbb": {
+    "ttH_hbb_13TeV_dl_4j2b_ttHbb": {
         "top": "DL \\geq 4 jets 2 tags",
         "bottom": "binary ANN"
     },
-    "ttH_hbb_13TeV_2017_dl_3j3b_ttHbb": {
+    "ttH_hbb_13TeV_dl_3j3b_ttHbb": {
         "top": "DL 3 jets 3 tags",
         "bottom": "binary ANN"
     },
@@ -95,7 +95,7 @@
         "top": "FH 7 jets \\geq 4 tags",
         "bottom": "binary ANN"
     },
-    "ttH_hbb_13TeV_2017_dl_4j3b_DNN_ttcc": {
+    "ttH_hbb_13TeV_dl_4j3b_DNN_ttcc": {
         "top": "DL \\geq 4 jets \\geq 3 tags",
         "bottom": "ttcc node"
     }
