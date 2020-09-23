@@ -110,9 +110,20 @@ class MassManipulator(object):
                         print("ERROR: file '{}' does not exist".format(f))
                         continue
                     elif os.path.isfile(f):
+                        cardlines = []
+                        with open(f) as cardfile:
+                            cardlines = cardfile.read().splitlines()
                         for l in lines:
                             cmd = 'echo "{}" >> {}'.format(
                                                 l.replace("$", "\\$"), f)
+                            if "rateParam" in l:
+                                parts = l.split()
+                                wildcard = parts[3]
+                                if not any(wildcard.replace("*", "") in x for x in cardlines):
+                                    print("Did not find anything matching {}".format(wildcard))
+                                    print("Skipping line")
+                                    print(l)
+                                    continue
                             print(cmd)
                             call([cmd], shell = True)
                 elif isinstance(f, ch.CombineHarvester):
