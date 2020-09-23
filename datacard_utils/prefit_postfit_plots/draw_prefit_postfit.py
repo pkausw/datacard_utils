@@ -83,6 +83,15 @@ def parse_arguments():
                         action = "store_true", 
                         help = "draw multiple signals"
                     )
+    parser.add_option( "--prefix",
+                        help = " ".join("""
+                        prepend this prefix to the individual channel names
+                        specified in the label config, e.g. ttH_2016 etc.
+                        """.split()),
+                        dest = "prefix",
+                        type = "str",
+                        default = ""
+                    )
     
     options, files = parser.parse_args()
     if not os.path.exists(options.labelconfig):
@@ -114,18 +123,20 @@ def generate_plots(file, options):
         "shapes_prefit": "prefit",
         "shapes_fit_s" : "postfit"
     }
+    prefix = options.prefix
     for channel in labels:
         top = labels[channel].get("top", "")
         bottom = labels[channel].get("bottom", "")
-
+        final_channel = channel if prefix == "" \
+                            else "_".join([prefix, channel])
         for flag in flags:
             # pdfname = "{}_{}.pdf".format(channel, flag)
             final_bottom = " ".join([bottom, flags[flag]])
             label = label_base.format(top = top, bottom = final_bottom)
-            cmd = cmd_base.format( channel = channel,
+            cmd = cmd_base.format( channel = final_channel,
                                     label = label,
                                     flag = flag,
-                                    pdfname = channel,
+                                    pdfname = final_channel,
                                     **base_options)
             if options.lumiLabel:
                 cmd += ' --lumilabel "{}"'.format(options.lumiLabel)

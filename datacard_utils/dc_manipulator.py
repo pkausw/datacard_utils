@@ -22,6 +22,8 @@ except:
             Are you sure you installed it?""".split())
     raise ImportError(msg)
 thisdir = os.path.dirname(os.path.realpath(__file__))
+if not thisdir in sys.path:
+    sys.path.append(os.path.abspath(thisdir))
 # manipulator_dir = os.path.join(thisdir, "manipulator_methods")
 # if not manipulator_dir in sys.path:
 #     sys.path.append(manipulator_dir)

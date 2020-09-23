@@ -72,7 +72,7 @@ class ValidationInterface(object):
         harvester.cp().bin([str(channel)]).process([str(process)]).\
             syst_name([str(uncertainty)]).ForEachSyst(\
                 lambda x: vals.append([x.value_u(), x.value_d()]))
-        print(vals)
+        # print(vals)
         vals = vals[0]
         if all(v <= 1. for v in vals):
             print("Found purely down fluctuation!")
@@ -97,15 +97,15 @@ class ValidationInterface(object):
             print("Uncertainty: {}".format(unc))
             dict_unc = change_dict[unc]
             for channel in dict_unc:
-                print("Channel: {}".format(channel))
+                print("\tChannel: {}".format(channel))
                 dict_chan = dict_unc[channel]
                 for process in dict_chan:
-                    print("Process: {}".format(process))
+                    print("\t\tProcess: {}".format(process))
                     vals = self.load_rate_values(    harvester = harvester, 
                                                 uncertainty = unc,
                                                 channel = channel,
                                                 process = process)
-                    print(vals)
+                    # print(vals)
                     # harvester.bin([str(channel)]).process([str(process)]).syst_name([str(unc)], False)
                     # harvester.PrintAll()
                     harvester.cp().bin([str(channel)]).process([str(process)]).\
