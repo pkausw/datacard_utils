@@ -77,6 +77,12 @@ def parse_arguments():
                         action = "store_true", 
                         help = "use output of 'PostFitShapesFromWorkspace' in CombineHarvester package as input"
                     )
+    parser.add_option( "--multisignal", 
+                        dest="multisignal", 
+                        default = False,
+                        action = "store_true", 
+                        help = "draw multiple signals"
+                    )
     parser.add_option( "--prefix",
                         help = " ".join("""
                         prepend this prefix to the individual channel names
@@ -136,6 +142,8 @@ def generate_plots(file, options):
                 cmd += ' --lumilabel "{}"'.format(options.lumiLabel)
             if options.drawFromHarvester:
                 cmd += " --drawFromHarvester"
+            if options.multisignal:
+                cmd += " --multisignal"
             print(cmd)
             call([cmd], shell = True)
 

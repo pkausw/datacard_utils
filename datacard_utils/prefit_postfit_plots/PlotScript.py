@@ -124,6 +124,8 @@ plotOptions.add_option("--statErr", dest="addStatErrorband", default = None,
         help="add statistics errorband")
 plotOptions.add_option("--skipErrorbands", dest = "skipErrorbands", default = False, action = "store_true", 
         help = "don't draw error bands (not recommended)")
+plotOptions.add_option("--multisignal", dest = "multisignal", default = False, action = "store_true", 
+        help = "plot multiple signals")
 parser.add_option_group(plotOptions)
 
 """
@@ -350,6 +352,8 @@ addStatErrorband = getParserConfigDefaultValue(
 
 # load samples
 print "start loading  samples" 
+multisignal = options.multisignal
+
 for sample in samples:
     print(sample)
     color   = samples[sample]["info"]['color']
@@ -359,8 +363,19 @@ for sample in samples:
     if samples[sample]['plot'] == False:
         continue
     if combineflag:
-        if typ=="signal":
+        if typ=="signal" and not multisignal:
             continue
+        elif typ == "signal":
+            if combineflag=="shapes_fit_s":
+               entry = Plots.getHistogramAndErrorband(rootFile=rootFile,sample=sample,
+                                                color=color,typ="bkg",label=label,
+                                                nominalKey=nominalKey,procIden=procIden,
+                                                binEdges=binEdges,newTitle=xLabel)
+            else:
+               entry = Plots.getHistogramAndErrorband(rootFile=rootFile,sample=sample,
+                                                color=color,typ=typ,label=label,
+                                                nominalKey=nominalKey,procIden=procIden,
+                                                binEdges=binEdges,newTitle=xLabel)                
         else:
             entry = Plots.getHistogramAndErrorband(rootFile=rootFile,sample=sample,
                                                         color=color,typ=typ,label=label,
@@ -429,15 +444,17 @@ if combineflag:
     """
     if combineflag=="shapes_fit_s":
         bkgKey = nominalKey.replace(procIden, str_total)
-        PlotList["total_signal"] = Plots.Plot(totalsignal,"total_signal",label=signallabel,
+        if not multisignal:
+            PlotList["total_signal"] = Plots.Plot(totalsignal,"total_signal",label=signallabel,
                                         typ="bkg", OverUnderFlowInc=True)
         options.ratio = "#frac{data}{total MC}"
     else:
         bkgKey = nominalKey.replace(procIden, str_total_bkg)
-        PlotList["total_signal"] = Plots.Plot(totalsignal,"total_signal",label=signallabel,
+        if not multisignal:
+            PlotList["total_signal"] = Plots.Plot(totalsignal,"total_signal",label=signallabel,
                                         typ="signal", OverUnderFlowInc=True)
     # from total background or total background+signal prediction histogram in mlfit file, get the error band
-    if not xLabel == "":
+    if not xLabel == "" and not multisignal:
         PlotList["total_signal"].hist.SetTitle(xLabel)
     background = rootFile.Get(bkgKey)
     if not binEdges is None:
