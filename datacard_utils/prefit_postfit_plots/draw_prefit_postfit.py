@@ -77,6 +77,12 @@ def parse_arguments():
                         action = "store_true", 
                         help = "use output of 'PostFitShapesFromWorkspace' in CombineHarvester package as input"
                     )
+    parser.add_option( "--multisignal", 
+                        dest="multisignal", 
+                        default = False,
+                        action = "store_true", 
+                        help = "draw multiple signals"
+                    )
     
     options, files = parser.parse_args()
     if not os.path.exists(options.labelconfig):
@@ -125,6 +131,8 @@ def generate_plots(file, options):
                 cmd += ' --lumilabel "{}"'.format(options.lumiLabel)
             if options.drawFromHarvester:
                 cmd += " --drawFromHarvester"
+            if options.multisignal:
+                cmd += " --multisignal"
             print(cmd)
             call([cmd], shell = True)
 
