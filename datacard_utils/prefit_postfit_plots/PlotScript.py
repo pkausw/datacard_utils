@@ -126,6 +126,8 @@ plotOptions.add_option("--skipErrorbands", dest = "skipErrorbands", default = Fa
         help = "don't draw error bands (not recommended)")
 plotOptions.add_option("--multisignal", dest = "multisignal", default = False, action = "store_true", 
         help = "plot multiple signals")
+plotOptions.add_option("--divideByBinWidth", dest = "divideByBinWidth", default = False, action = "store_true", 
+        help = "divide content by bin width")
 parser.add_option_group(plotOptions)
 
 """
@@ -189,6 +191,8 @@ if not tooldir:
 
 plotconfig  = options.plotconfig
 workdir     = options.workdir
+
+divideByBinWidth = options.divideByBinWidth
 
 """
 import plot class
@@ -457,14 +461,17 @@ if combineflag:
     if not xLabel == "" and not multisignal:
         PlotList["total_signal"].hist.SetTitle(xLabel)
     background = rootFile.Get(bkgKey)
+
     if not binEdges is None:
         background = Plots.updateBinEdges(background, binEdges)
 
-
+    if divideByBinWidth:
+        background.Scale(1., "width")
     if options.skipErrorbands:
         errorband = None
     else:
         errorband = Plots.GetErrorGraph(background)
+
 else:
     errorband = None
 
@@ -493,6 +500,8 @@ if data:
         dataHist = Plots.GetHistoFromTGraphAE(dataHist, data, n_bins, binEdges)
         #Plots.moveOverUnderFlow(dataHist)
         dataHist.SetStats(False)
+        if divideByBinWidth:
+            dataHist.Scale(1., "width")
     else:
         print "ATTENTION: Not using data!"
         dataHist=None
@@ -539,6 +548,13 @@ else:
 """
 
 """
+if divideByBinWidth:
+    yLabel = yLabel+" /(bin width)"
+    for p in PlotList:
+        if isinstance(PlotList[p], str):
+            continue
+        if isinstance(PlotList[p].hist, ROOT.TH1F):
+            PlotList[p].hist.Scale(1.,"width")
 
 DrawHistogramObject = Plots.DrawHistograms(PlotList,options.channelName,
                                 data=dataHist, datalabel = datalabel,

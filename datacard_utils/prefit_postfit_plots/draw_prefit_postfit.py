@@ -83,6 +83,8 @@ def parse_arguments():
                         action = "store_true", 
                         help = "draw multiple signals"
                     )
+    parser.add_option("--divideByBinWidth", dest = "divideByBinWidth", default = False, action = "store_true", 
+        help = "divide content by bin width")
     parser.add_option( "--prefix",
                         help = " ".join("""
                         prepend this prefix to the individual channel names
@@ -144,6 +146,8 @@ def generate_plots(file, options):
                 cmd += " --drawFromHarvester"
             if options.multisignal:
                 cmd += " --multisignal"
+            if options.divideByBinWidth:
+                cmd += " --divideByBinWidth"
             print(cmd)
             call([cmd], shell = True)
 
