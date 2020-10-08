@@ -34,6 +34,8 @@ def get_hist(in_file,dir_name,process):
         outhist= get_sum_of_hists(in_file,dir_name,"vjets",["wjets","zjets"])
     elif process == "tH":
         outhist= get_sum_of_hists(in_file,dir_name,"tH", ["tHq_hbb","tHW_hbb"])
+        if not outhist:
+            outhist= get_sum_of_hists(in_file,dir_name,"tH", ["tHq","tHW"])
     elif process == "multijet":
         outhist= get_sum_of_hists(in_file,dir_name,"multijet", ["data_CR", "ttbb_CR", "ttcc_CR", "ttlf_CR", "singlet_CR", "ttbarW_CR", "ttbarZ_CR", "wjets_CR", "zjets_CR", "diboson_CR"])
     else:
@@ -44,7 +46,7 @@ def get_hist(in_file,dir_name,process):
         print("did not find '{}'".format(histpath))
     return outhist    
 
-def get_yields(in_file, categories, prepostfit, cfg_module):
+def get_yields(in_file, categories, prepostfit, cfg_module, prefix = ""):
     category_yield_map = {}
 
     processes = []
@@ -56,7 +58,10 @@ def get_yields(in_file, categories, prepostfit, cfg_module):
     
     for category in categories:
         dir_name = "shapes_"+prepostfit
-        dir_name = os.path.join(dir_name, cfg_module.category_channel_map[category])
+        final_name = cfg_module.category_channel_map[category]
+        if not prefix == "":
+            final_name = "_".join([prefix, final_name])
+        dir_name = os.path.join(dir_name, final_name)
         #dir_name = "shapes_"+prepostfit+"/"+category_channel_map[category]+"_"+prepostfit
 
         process_hist_map = {}
@@ -264,12 +269,12 @@ def main(**kwargs):
         for sub_category in cfg_module.sub_categories:
             categories.append( category( njet_category, sub_category ) )
                 
-    
-    yield_map_prefit = get_yields(in_file, categories, "prefit" , cfg_module)
+    prefix = kwargs.get("prefix", "")
+    yield_map_prefit = get_yields(in_file, categories, "prefit" , cfg_module, prefix)
     mode = load_keyword(kwargs, "mode")
     yield_map_postfit = None
     if not mode == "prefit":
-        yield_map_postfit = get_yields(in_file, categories, mode , cfg_module)
+        yield_map_postfit = get_yields(in_file, categories, mode , cfg_module, prefix)
 
     #print category_yield_map_prefit
     outname = kwargs.get("outfile")
@@ -349,6 +354,16 @@ def parse_arguments():
                         dest = "skipErrors",
                         action = "store_true",
                         default = False
+                    )
+
+    parser.add_option( "--prefix",
+                        help = " ".join("""
+                        prepend this prefix to the individual channel names
+                        specified in the label config, e.g. ttH_2016 etc.
+                        """.split()),
+                        dest = "prefix",
+                        type = "str",
+                        default = ""
                     )
 
     options, args = parser.parse_args()
