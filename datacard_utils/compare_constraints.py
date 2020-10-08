@@ -86,7 +86,7 @@ def get_differences(basevals, othervals):
     for pardict in basevals:
         parname = pardict.get("name", "")
         # if not (parname.endswith("_j") or "_j_" in parname):
-            # continue 
+        #     continue 
         if "prop_bin" in parname:
             continue
         for valdict in othervals:
