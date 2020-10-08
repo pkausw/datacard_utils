@@ -1,69 +1,132 @@
+import os
 import numpy as np
-from ROOT import TH2F, TCanvas, gStyle, TLatex, TAxis, TLine, TGraphErrors, TGraphAsymmErrors, TLegend, kGreen, kYellow, TPaveText
+import ROOT
 import json
+ROOT.gROOT.SetBatch(True)
 
 results_json = "HIG-18-030_HIG18030_v01_results_unblinded.json"
 
+from optparse import OptionParser, OptionGroup
+ROOT.PyConfig.IgnoreCommandLineOptions = True
+
 # Which result? Options: "17", "16p17"
-result_version = "17" 
+result_version = "STXS" 
 #result_version = "16p17" 
 
 fontsize = 0.04
 
+def load_values(result_dict, result_set, value_keyword, order):
+    values = []
+    for name in order:
+        subdict = result_dict.get(name, {})
+        set_dict = subdict.get(result_set, {})
+        val = None
+        if isinstance(set_dict, float):
+            val = set_dict
+        else:
+            val = set_dict.get(value_keyword, None)
+        if val:
+            print("For result '{}', saving value {} ({}/{})".\
+                format(name, val, result_set, value_keyword))
+            values.append(val)
+    return np.array(values)
 
-    
+def bestfit( **kwargs ):
 
-def bestfit( results_json ):
+    results_json = kwargs.get("results_json", "")
 
+    if results_json == "" or not os.path.exists(results_json):
+        raise ImportError("json file '{}' does not exist!".format(results_json))
     with open( results_json, "r" ) as in_file:
         res = json.load(in_file)
 
-    nchannels = 0
-    if result_version == "17":
-        nchannels = 4
-        #                        FH17                         SL17                         DL17                         comb17
-        mu    =      np.array( [ res["2017_fh"]["r_nom"],     res["2017_sl"]["r_nom"],     res["2017_dl"]["r_nom"],     res["2017"]["r_nom"]     ] )
-        upper =      np.array( [ res["2017_fh"]["r_tot_up"],  res["2017_sl"]["r_tot_up"],  res["2017_dl"]["r_tot_up"],  res["2017"]["r_tot_up"]  ] )
-        lower =      np.array( [ res["2017_fh"]["r_tot_dn"],  res["2017_sl"]["r_tot_dn"],  res["2017_dl"]["r_tot_dn"],  res["2017"]["r_tot_dn"]  ] )
-        upper_stat = np.array( [ res["2017_fh"]["r_stat_up"], res["2017_sl"]["r_stat_up"], res["2017_dl"]["r_stat_up"], res["2017"]["r_stat_up"] ] )
-        lower_stat = np.array( [ res["2017_fh"]["r_stat_dn"], res["2017_sl"]["r_stat_dn"], res["2017_dl"]["r_stat_dn"], res["2017"]["r_stat_dn"] ] )
-        upper_syst = np.array( [ res["2017_fh"]["r_syst_up"], res["2017_sl"]["r_syst_up"], res["2017_dl"]["r_syst_up"], res["2017"]["r_syst_up"] ] )
-        lower_syst = np.array( [ res["2017_fh"]["r_syst_dn"], res["2017_sl"]["r_syst_dn"], res["2017_dl"]["r_syst_dn"], res["2017"]["r_syst_dn"] ] )
-        channels   = np.array( [ 10.5, 7.5, 4.5, 1.5 ] )
-        zero       = np.zeros( nchannels )
+    values = res.get("results", {})
+    order = res.get("order")
+    if not order:
+        order = values.keys()
+    
+    mu = load_values(   result_dict = values, 
+                        result_set = "bestfit", 
+                        value_keyword = "value", 
+                        order = order)
+    print(mu)
+    upper = load_values(   result_dict = values, 
+                        result_set = "bestfit", 
+                        value_keyword = "up", 
+                        order = order)
+    lower = load_values(   result_dict = values, 
+                        result_set = "bestfit", 
+                        value_keyword = "down", 
+                        order = order)
+    print(mu)
+    upper_stat = load_values(   result_dict = values, 
+                        result_set = "stat_only", 
+                        value_keyword = "up", 
+                        order = order)
+    lower_stat = load_values(   result_dict = values, 
+                        result_set = "stat_only", 
+                        value_keyword = "down", 
+                        order = order)
+    significance = load_values(   result_dict = values, 
+                        result_set = "significance", 
+                        value_keyword = None, 
+                        order = order)
 
-    elif result_version == "16p17":
-        nchannels = 6
-        #                        FH16+17                           SL16+17                           DL16+17                           comb16                    comb17                    comb16+17
-        mu    =      np.array( [ res["2016p2017_fh"]["r_nom"],     res["2016p2017_sl"]["r_nom"],     res["2016p2017_dl"]["r_nom"],     res["2016"]["r_nom"],     res["2017"]["r_nom"],     res["2016p2017"]["r_nom"]     ] )
-        upper =      np.array( [ res["2016p2017_fh"]["r_tot_up"],  res["2016p2017_sl"]["r_tot_up"],  res["2016p2017_dl"]["r_tot_up"],  res["2016"]["r_tot_up"],  res["2017"]["r_tot_up"],  res["2016p2017"]["r_tot_up"]  ] )
-        lower =      np.array( [ res["2016p2017_fh"]["r_tot_dn"],  res["2016p2017_sl"]["r_tot_dn"],  res["2016p2017_dl"]["r_tot_dn"],  res["2016"]["r_tot_dn"],  res["2017"]["r_tot_dn"],  res["2016p2017"]["r_tot_dn"]  ] )
-        upper_stat = np.array( [ res["2016p2017_fh"]["r_stat_up"], res["2016p2017_sl"]["r_stat_up"], res["2016p2017_dl"]["r_stat_up"], res["2016"]["r_stat_up"], res["2017"]["r_stat_up"], res["2016p2017"]["r_stat_up"] ] )
-        lower_stat = np.array( [ res["2016p2017_fh"]["r_stat_dn"], res["2016p2017_sl"]["r_stat_dn"], res["2016p2017_dl"]["r_stat_dn"], res["2016"]["r_stat_dn"], res["2017"]["r_stat_dn"], res["2016p2017"]["r_stat_dn"] ] )
-        upper_syst = np.array( [ res["2016p2017_fh"]["r_syst_up"], res["2016p2017_sl"]["r_syst_up"], res["2016p2017_dl"]["r_syst_up"], res["2016"]["r_syst_up"], res["2017"]["r_syst_up"], res["2016p2017"]["r_syst_up"] ] )
-        lower_syst = np.array( [ res["2016p2017_fh"]["r_syst_dn"], res["2016p2017_sl"]["r_syst_dn"], res["2016p2017_dl"]["r_syst_dn"], res["2016"]["r_syst_dn"], res["2017"]["r_syst_dn"], res["2016p2017"]["r_syst_dn"] ] )
-        channels   = np.array( [ 16.5, 13.5, 10.5, 7.5, 4.5, 1.5 ] )
-        zero       = np.zeros( nchannels )
+    
+    assert(len(upper) == len(upper_stat))
+    assert(len(lower) == len(lower_stat))
+    assert(len(mu) == len(upper))
+    assert(len(significance) == len(mu))
+    assert(len(upper) == len(lower))
+    
+    upper_syst = np.sqrt(upper**2 - upper_stat**2)
+    lower_syst = np.sqrt(lower**2 - lower_stat**2)
+    print(upper)
+    print(upper_stat)
+    print(upper_syst)
+    print("="*130)
+    print(lower)
+    print(lower_stat)
+    print(lower_syst)
 
-    xmin = -4.0
-    xmax = 11
+    nchannels = mu.size
+    print(nchannels)
 
-    c,h = draw_canvas_histo( nchannels, xmin, xmax, "#hat{#mu} = #hat{#sigma}/#sigma_{SM}" )
+    # calculate coordinates
+    stepsize = kwargs.get("stepsize", 2)
+    coordinates = [ 1.5*i for i in range(1, nchannels*stepsize, stepsize)]
+    channels = np.array(list(reversed(coordinates)))
+    print(channels)
+    zero = np.zeros(nchannels)
+
+    xmin = np.min(mu - np.abs(lower))
+    xmax = np.max(mu + np.abs(upper))
+    print(xmin)
+    print(xmax)
+
+    c,h = draw_canvas_histo(    nchannels = nchannels, 
+                                xmin = xmin-4, xmax = xmax+12, 
+                                title = "#hat{#mu} = #hat{#sigma}/#sigma_{SM}",
+                                positions = channels,
+                                entry_names = [x for x in order if x in values.keys() or x == "LINE"] ,
+                                lumilabel = kwargs.get("lumilabel", ""))
 
     # line at SM expectation of mu = 1
-    l = TLine()
+    l = ROOT.TLine()
     l.SetLineStyle( 2 )
     l.DrawLine( 1.0, 0, 1.0, 3*nchannels+0.5 )
 
-    gmu_tot = TGraphAsymmErrors( nchannels, mu, channels, lower, upper, zero, zero )
+    print(mu)
+    gmu_tot = ROOT.TGraphAsymmErrors( nchannels, mu, channels, np.abs(lower), np.abs(upper), zero, zero )
     gmu_tot.SetMarkerStyle( 1 )
     gmu_tot.SetMarkerSize( 1 )
     gmu_tot.SetMarkerColor( 4 )
     gmu_tot.SetLineColor( 4 )
     gmu_tot.SetLineWidth( 2 )
     gmu_tot.Draw( "p" )
+    gmu_tot.Print("range")
 
-    gmu = TGraphAsymmErrors( nchannels, mu, channels, lower_stat, upper_stat, zero, zero )
+    gmu = ROOT.TGraphAsymmErrors( nchannels, mu, channels, np.abs(lower_stat), np.abs(upper_stat), zero, zero )
     gmu.SetMarkerStyle( 21 )
     gmu.SetMarkerSize( 1.5 )
     gmu.SetMarkerColor( 1 )
@@ -71,23 +134,37 @@ def bestfit( results_json ):
     gmu.SetLineWidth( 2 )
     gmu.Draw( "pe1same" )
 
-    leg = TLatex();
+    leg = ROOT.TLatex()
     leg.SetTextFont( 42 )
     leg.SetTextSize( 0.035 )
     leg.SetTextAlign( 11 )
-    leg.DrawLatex( 4.5, 3.1*nchannels, "#mu      #color[4]{tot}    #color[2]{stat}    syst" )
+    latex_parts = "#mu       #color[4]{tot}      #color[2]{stat}    syst"
+    include_signi = kwargs.get("include_signi", False)
+    if include_signi:
+        latex_parts += "       "
+    leg.DrawLatex( 5.5, 3.1*nchannels, latex_parts)
 
     for ich,channel in enumerate(channels):
-        res = TLatex();
+        res = ROOT.TLatex()
         res.SetTextFont( 42 )
         res.SetTextSize( 0.045 )
         res.SetTextAlign( 31 )
-        res.DrawLatex( 10.5, channel-0.2,
-                       ("%.2f #color[4]{{}^{+%.2f}_{ -%.2f}} #color[2]{{}^{+%.2f}_{ -%.2f}} {}^{+%.2f}_{ -%.2f}"
-                        %
-                        (mu[ich],upper[ich],lower[ich],
-                         upper_stat[ich],lower_stat[ich],
-                         upper_syst[ich],lower_syst[ich])) )
+        uncertainty_template = "{{}}^{{{:+.2f}}}_{{{:-.2f}}}"
+        uncertainties = uncertainty_template.format(upper[ich],lower[ich])
+        latex_parts = ["{:+.2f} #color[4]{{ {} }}".\
+                        format(mu[ich],uncertainties)]
+        uncertainties = uncertainty_template.\
+                        format(upper_stat[ich],lower_stat[ich])
+        latex_parts = ["#color[2]{{ {} }}".\
+                        format(uncertainties)]
+        uncertainties = uncertainty_template.\
+                        format(upper_syst[ich],lower_syst[ich])
+        latex_parts = ["{}".\
+                        format(uncertainties)]
+        if include_signi:
+            latex_parts += ["{:.1f} #sigma".format(significance[ich])]
+        
+        res.DrawLatex( xmax+11, channel-0.2, " ".join(latex_parts))
 
   
     
@@ -96,123 +173,217 @@ def bestfit( results_json ):
     c.RedrawAxis()    
     c.Modified()
     c.Update()
-    if result_version == "17":
-        c.SaveAs( "HIG-18-030_bestfit_2017.pdf" )
-    elif result_version == "16p17":
-        c.SaveAs( "HIG-18-030_bestfit_2016p2017.pdf" )
+    outname = kwargs.get("outname", "test")
+    exts = ["pdf", "png"]
+    for ext in exts:
+        c.SaveAs(".".join([outname, ext]), ext)
+        
                 
         #c.SaveAs( "HIG-18-030_bestfit.png" ) 
 
-def draw_canvas_histo( nchannels, xmin, xmax, title ):
-    c = TCanvas( "c", "Canvas",800,750)
+def draw_canvas_histo( nchannels, xmin, xmax, title, entry_names, positions, \
+    lumilabel):
+    c = ROOT.TCanvas( "c", "Canvas",800,750)
     c.Draw()
     
-    #h = TH2F( "h", "", 10, xmin, xmax, 3*nchannels+2, 0, 3*nchannels+2 )
-    h = TH2F( "h", "", 10, xmin, xmax, int(3.5*nchannels), 0, int(3.5*nchannels) )
+    #h = ROOT.TH2F( "h", "", 10, xmin, xmax, 3*nchannels+2, 0, 3*nchannels+2 )
+    h = ROOT.TH2F( "h", "", 10, xmin, xmax, int(3.5*nchannels), 0, int(3.5*nchannels) )
     h.Draw()
     h.SetStats( 0 )
     h.SetXTitle( title )
 
     yaxis = h.GetYaxis()
     yaxis.SetLabelSize( 0.065 )
-    if result_version == "17":
-        yaxis.SetBinLabel( 11, "Fully-hadronic" )
-        yaxis.SetBinLabel(  8, "Single-lepton" )
-        yaxis.SetBinLabel(  5, "Dilepton" )
-        yaxis.SetBinLabel(  2, "Combined" )
-    elif result_version == "16p17":
-        yaxis.SetBinLabel( 17, "Fully-hadronic" )
-        yaxis.SetBinLabel( 14, "Single-lepton" )
-        yaxis.SetBinLabel( 11, "Dilepton" )
-        yaxis.SetBinLabel(  8, "2016" )
-        yaxis.SetBinLabel(  5, "2017" )
-        yaxis.SetBinLabel(  2, "Combined" )
+    n_entry = 0
+    l = ROOT.TLine()
+    l.SetLineStyle(1)
+    print(entry_names)
+    for name in entry_names:
+        if n_entry > nchannels:
+            raise ValueError("Number of entries is larger than \
+                number of channels!")
+        if name == "LINE":
+            if not n_entry == 0:
+                y_pos = (positions[n_entry-1] - positions[n_entry])/2.
+                y_pos += positions[n_entry]
+                print("drawing line at y = {}".format(y_pos))
+                l.DrawLine(xmin, y_pos, xmax, y_pos)
+            continue
+        nbin = yaxis.FindBin(positions[n_entry])
+        print("Setting label for bin {} to '{}'".format(nbin, name))
+        yaxis.SetBinLabel(nbin, name)
+        n_entry += 1
 
-    # separating combined result
-    l1 = TLine()
-    l1.SetLineStyle( 1 )
-    l1.DrawLine( xmin, 3, xmax, 3 )
-    if result_version == "16p17":
-        l2 = TLine()
-        l2.SetLineStyle( 1 )
-        l2.DrawLine( xmin, 9, xmax, 9 )
 
-    pub = TLatex();
+    pub = ROOT.TLatex()
     pub.SetNDC()
     pub.SetTextFont( 42 )
     pub.SetTextSize( 0.05 )
     pub.SetTextAlign( 13 )
-    pub.DrawLatex( gStyle.GetPadLeftMargin()+0.03,
-                   1.-gStyle.GetPadTopMargin()-0.033,
-                   #"#bf{CMS}" )
-                   "#bf{CMS} #it{Preliminary}")
+    pub.DrawLatex( ROOT.gStyle.GetPadLeftMargin()+0.03,
+                   1.-ROOT.gStyle.GetPadTopMargin()-0.033,
+                   "#bf{CMS}" )
+                #    "#bf{CMS} #it{Preliminary}")
 
-    lumi = TLatex();
+    lumi = ROOT.TLatex()
     lumi.SetNDC()
     lumi.SetTextFont( 42 )
     lumi.SetTextSize( 0.035 )
     lumi.SetTextAlign( 31 )
-    if result_version == "17":
-        lumi.DrawLatex( 1-gStyle.GetPadRightMargin(), 0.965, "41.5 fb^{-1} (13 TeV)" )
-    elif result_version == "16p17":
-        lumi.DrawLatex( 1-gStyle.GetPadRightMargin(), 0.965, "35.9 fb^{-1} (2016) + 41.5 fb^{-1} (2017) (13 TeV)" )
-
+    lumi.DrawLatex( 1-ROOT.gStyle.GetPadRightMargin(), 0.965, "{} fb^{{-1}} (13 TeV)".format(lumilabel) )
 
     return c,h
 
 
 def my_style():
     
-#    gStyle.SetLabelSize( fontsize, "x" );
-#    gStyle.SetLabelSize( fontsize, "y" );
-#    gStyle.SetLabelSize( fontsize, "z" );
-#
-#    gStyle.SetTitleSize( fontsize, "x" );
-#    gStyle.SetTitleSize( fontsize, "y" );
-#    gStyle.SetTitleSize( fontsize, "z" );
-#
-    gStyle.SetTitleOffset( 1.5, "xy" );
-    gStyle.SetTitleFont( 62, "bla" );
+    ROOT.gStyle.SetTitleOffset( 1.5, "xy" )
+    ROOT.gStyle.SetTitleFont( 62, "bla" )
 
-    gStyle.SetFrameLineWidth(2)
-    gStyle.SetPadLeftMargin(0.26);
-    gStyle.SetPadBottomMargin(0.14)
-    gStyle.SetPadTopMargin(0.05)
-    gStyle.SetPadRightMargin(0.02)
+    ROOT.gStyle.SetFrameLineWidth(2)
+    ROOT.gStyle.SetPadLeftMargin(0.26)
+    ROOT.gStyle.SetPadBottomMargin(0.14)
+    ROOT.gStyle.SetPadTopMargin(0.05)
+    ROOT.gStyle.SetPadRightMargin(0.02)
 
-    gStyle.SetTitleColor(1,"XYZ")
-    gStyle.SetLabelColor(1,"XYZ")
-    gStyle.SetLabelFont(42,"XYZ")
-    gStyle.SetLabelOffset(0.007,"XYZ")
-    gStyle.SetLabelSize(0.038,"XYZ")
-    gStyle.SetTitleFont(42,"XYZ")
-    gStyle.SetTitleSize(0.05,"XYZ")
-    gStyle.SetTitleXOffset(1.3)
-    gStyle.SetTitleYOffset(1.3)
+    ROOT.gStyle.SetTitleColor(1,"XYZ")
+    ROOT.gStyle.SetLabelColor(1,"XYZ")
+    ROOT.gStyle.SetLabelFont(42,"XYZ")
+    ROOT.gStyle.SetLabelOffset(0.007,"XYZ")
+    ROOT.gStyle.SetLabelSize(0.038,"XYZ")
+    ROOT.gStyle.SetTitleFont(42,"XYZ")
+    ROOT.gStyle.SetTitleSize(0.05,"XYZ")
+    ROOT.gStyle.SetTitleXOffset(1.3)
+    ROOT.gStyle.SetTitleYOffset(1.3)
 
-    gStyle.SetStatX( 0.88 );
-    gStyle.SetStatY( 0.87 );
-    gStyle.SetNdivisions( 505 );
-    gStyle.SetTickLength(0.04,"XZ")
-    gStyle.SetTickLength(0,"Y");
-    gStyle.SetPadTickX(1)
-    gStyle.SetEndErrorSize(6)
+    ROOT.gStyle.SetStatX( 0.88 )
+    ROOT.gStyle.SetStatY( 0.87 )
+    ROOT.gStyle.SetNdivisions( 505 )
+    ROOT.gStyle.SetTickLength(0.04,"XZ")
+    ROOT.gStyle.SetTickLength(0,"Y")
+    ROOT.gStyle.SetPadTickX(1)
+    ROOT.gStyle.SetEndErrorSize(6)
 
-    gStyle.SetCanvasColor(-1); 
-    gStyle.SetPadColor(-1); 
-    gStyle.SetFrameFillColor(-1); 
-    gStyle.SetTitleFillColor(-1); 
-    gStyle.SetFillColor(-1); 
-    gStyle.SetFillStyle(4000); 
-    gStyle.SetStatStyle(0); 
-    gStyle.SetTitleStyle(0); 
-    gStyle.SetCanvasBorderSize(0); 
-    gStyle.SetFrameBorderSize(0); 
-    gStyle.SetLegendBorderSize(0); 
-    gStyle.SetStatBorderSize(0); 
-    gStyle.SetTitleBorderSize(0); 
+    ROOT.gStyle.SetCanvasColor(-1) 
+    ROOT.gStyle.SetPadColor(-1) 
+    ROOT.gStyle.SetFrameFillColor(-1) 
+    ROOT.gStyle.SetTitleFillColor(-1) 
+    ROOT.gStyle.SetFillColor(-1) 
+    ROOT.gStyle.SetFillStyle(4000) 
+    ROOT.gStyle.SetStatStyle(0) 
+    ROOT.gStyle.SetTitleStyle(0) 
+    ROOT.gStyle.SetCanvasBorderSize(0) 
+    ROOT.gStyle.SetFrameBorderSize(0) 
+    ROOT.gStyle.SetLegendBorderSize(0) 
+    ROOT.gStyle.SetStatBorderSize(0) 
+    ROOT.gStyle.SetTitleBorderSize(0) 
     
+
+def parse_arguments():
+    usage = """
+    Script to generate mu summary plots. Required input is a json file
+    containing the fit results for syst+stat and stat-only.
+    Additionally, you can provide a list 'order' in which these keys 
+    are to be displayed. The file should be structured as follows:
+    {
+        "results": {
+            NAME1: {
+                "bestfit": {
+                    "down": val, 
+                    "up": val, 
+                    "value": val
+                }, 
+                "stat_only": {
+                    "down": val, 
+                    "up": val, 
+                    "value": val
+                }
+            },
+            ...
+        },
+        "order": [
+            NAME1,
+            NAME2,
+            NAME3,
+            ...
+        ]
+    }
+    The key 'NAME' will be used in the plot. 
+    python %prog [options]
+    """
+    parser = OptionParser(usage = usage)
+
+    required_group = OptionGroup(parser, "Required options")
+    required_group.add_option("-j", "--jsonfile",
+                        help = " ".join("""
+                        path to the json file containing the values to plot
+                        """.split()),
+                        dest = "results_json",
+                        metavar = "path/to/file.json",
+                        type = "str"
+                    )
+    required_group.add_option("-o", "--outname",
+                        help = " ".join("""
+                            name of the output file
+                        """.split()),
+                        dest = "outname",
+                        metavar = "path/to/outfile",
+                        type = "str"
+                    )
+    parser.add_option_group(required_group)
+    
+    style_group = OptionGroup(parser, "Style Options")
+    style_group.add_option("-s", "--stepsize",
+                        help = " ".join("""
+                            change this number to adjust the space between
+                            the entries. The distance between entries is 
+                            calculated with 
+                            '1.5*i for i in range(0, nentires, stepsize)'
+                            Default: 2
+                        """.split()),
+                        dest = "stepsize",
+                        default = 2,
+                        type = "int"
+                    )
+    style_group.add_option("-f", "--fontsize",
+                        help = " ".join("""
+                            use this font size in the plot.
+                            Default: 0.04
+                        """.split()),
+                        dest = "fontsize",
+                        default = 0.04,
+                        type = "float"
+                    )
+    style_group.add_option("-l", "--lumi-label",
+                        help = " ".join("""
+                            use this string as lumi label.
+                            Output will look 'LUMILABEL fb^-1 (13 TeV)
+                            Default: 137.1
+                        """.split()),
+                        dest = "lumilabel",
+                        default = "137.1",
+                        type = "str"
+                    )
+    style_group.add_option("--significance",
+                        help = " ".join("""
+                            add the signficance to each row.
+                            Default is false
+                        """.split()),
+                        dest = "include_signi",
+                        action = "store_true",
+                        default = False,
+                    )
+
+    parser.add_option_group(style_group)
+
+    options, args = parser.parse_args()
+    global fontsize
+    fontsize = options.fontsize
+
+    return options, args
+
 if __name__ == '__main__':
+    options, args = parse_arguments()
     my_style()
     #limits()
-    bestfit( results_json )
+    bestfit( **vars(options) )
