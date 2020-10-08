@@ -15,9 +15,9 @@ data      = "data"
 
 njet_categories = [ "DL"]
 sub_categories = [  
-                    # "3j 2t", 
-                    # "3j 3t", 
-                    # "4j 2t", 
+                    "3j 2t", 
+                    "3j 3t", 
+                    "4j 2t", 
                     "4j \\geq 3t ttHbb", 
                     "4j \\geq 3t ttbb",
                     "4j \\geq 3t ttcc",
@@ -54,7 +54,7 @@ sub_category_commands = {
     "4j \\geq 3t ttbb" : "$4j \\geq 3t$ \\ttbb",
     "4j \\geq 3t ttcc" : "$4j \\geq 3t$ \\ttcc",
     "4j \\geq 3t ttlf" : "$4j \\geq 3t$ \\ttlf",
-    #"3t"   : "\\dlFourThree",
-    #"4tl"  : "\\dlFourFour BDT-low",
-    #"4th"  : "\\dlFourFour BDT-high",
+    "3t"   : "\\dlFourThree",
+    "4tl"  : "\\dlFourFour BDT-low",
+    "4th"  : "\\dlFourFour BDT-high",
 }
