@@ -166,7 +166,7 @@ def create_fit_cmd( mdfout, paramgroup, outfolder, suffix,
     if not fast:
         cmd = "combine -M MultiDimFit".split()
         cmd.append(mdfout)
-        cmd += "--algo grid --points 50 -m 125".split()
+        cmd += "--algo grid --points 50 -m 125.38".split()
         cmd = helpfulFuncs.insert_values(cmds= cmd, keyword = "--floatOtherPOIs", toinsert = str(1), joinwith = "insert")
         if cmdbase:
             cmd += cmdbase
@@ -325,7 +325,7 @@ def submit_fit_cmds(ws, paramgroups = ["all"], mu = None, cmdbase = None, murang
         scripts = []
         mdfout = "higgsCombine"
         mdfout += cmd[cmd.index("-n")+1]
-        mdfout += ".MultiDimFit.mH120.root"
+        mdfout += ".MultiDimFit.mH125.38.root"
         mdfout = os.path.abspath(mdfout)
         #start scancs with frozen np groups
         for group in paramgroups:
