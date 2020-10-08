@@ -51,6 +51,22 @@ class ValidationInterface(object):
             print("ERROR: path to validation json has to be a string!")
     
     @property
+    def remove_small_signals(self):
+        return self.__do_smallSigCut
+
+    @remove_small_signals.setter
+    def remove_small_signals(self, val):
+        if isinstance(val, bool):
+            if val:
+                print("Will drop small signals")
+            else:
+                print("Will keep small signals")
+            self.__do_smallSigCut = val
+        else:
+            print("Could not set 'remove_small_signals' to '{}'".format(val))
+            print("Value has to be bool")
+
+    @property
     def validation_dict(self):
         return self.__validation_dict
     

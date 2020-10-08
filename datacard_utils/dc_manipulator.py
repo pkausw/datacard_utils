@@ -32,6 +32,7 @@ from manipulator_methods.group_manipulator import GroupManipulator
 from manipulator_methods.scale_higgs_mass import MassManipulator
 from manipulator_methods.rebin_distributions import BinManipulator
 from manipulator_methods.apply_validation import ValidationInterface
+from manipulator_methods.nuisance_manipulator import NuisanceManipulator
 
 def freeze_nuisances(harvester):
     to_freeze = "kfactor_wjets kfactor_zjets CMS_ttHbb_bgscale_MCCR".split()
@@ -47,6 +48,56 @@ def scale_higgs_mass(harvester, base_mass = 125):
     
     mass_scaler.ScaleMasses(harvester)
 
+def remove_minor_JEC(harvester):
+    processes = """ttbarZ ttbarW zjets wjets diboson tHq_hbb tHW_hbb 
+                tHW tHq ttbarGamma VH_hbb""".split()
+    
+    params = """CMS_res_j*
+        CMS_scaleAbsolute_j
+        CMS_scaleAbsolute_j_*
+        CMS_scaleBBEC1_j
+        CMS_scaleBBEC1_j_*
+        CMS_scaleEC2_j
+        CMS_scaleEC2_j_*
+        CMS_scaleFlavorQCD_j
+        CMS_scaleHF_j
+        CMS_scaleHF_j_*
+        CMS_scaleRelativeBal_j
+        CMS_scaleRelativeSample_j_*""".split()
+    
+    np_manipulator = NuisanceManipulator()
+    bins = harvester.bin_set()
+    if any(x.endswith("ttbbCR") for x in bins):
+        print("This is the ttbbCR channel!")
+        ttbbCR = [x for x in bins if x.endswith("ttbbCR")]
+        to_remove = {}
+        ttbbCR_processes = """ttbarZ ttbarW wjets tHq_hbb tHW_hbb 
+                tHW tHq ttbarGamma VH_hbb""".split()
+        for p in params:
+            to_remove[p] = ttbbCR_processes
+        np_manipulator.to_remove = to_remove
+        np_manipulator.remove_nuisances_from_procs(harvester = harvester,
+                                                bins = ttbbCR)
+        bins = [x for x in bins if not x in ttbbCR]
+    if not len(bins)== 0:
+        to_remove = {}
+        for p in params:
+            to_remove[p] = processes
+        np_manipulator.to_remove = to_remove
+
+        np_manipulator.remove_nuisances_from_procs(harvester = harvester,
+                                                    bins = bins)
+
+def do_validation(harvester, cardpath, jsonpath):
+    val_interface = ValidationInterface()
+    val_interface.remove_small_signals = False
+    if not jsonpath:
+        val_interface.generate_validation_output(cardpath)
+    else:
+        val_interface.jsonpath = jsonpath
+    
+    val_interface.apply_validation(harvester)
+
 def main(**kwargs):
 
     harvester = ch.CombineHarvester()
@@ -61,27 +112,28 @@ def main(**kwargs):
         bin_manipulator = BinManipulator()
         bin_manipulator.scheme = rebin_scheme
         harvester = bin_manipulator.rebin_shapes(harvester = harvester)
-        
+    
+    freeze_nuisances(harvester)
+    scale_higgs_mass(harvester)
+
+    remove_minor_jec = kwargs.get("remove_minor_jec", False)
+    if remove_minor_jec:
+        remove_minor_JEC(harvester)
+
     apply_validation = kwargs.get("apply_validation")
     if apply_validation:
-        val_interface = ValidationInterface()
         jsonpath = kwargs.get("validation_jsonpath")
-        if not jsonpath:
-            val_interface.generate_validation_output(cardpath)
-        else:
-            val_interface.jsonpath = jsonpath
-        
-        val_interface.apply_validation(harvester)
+
+        do_validation(  harvester = harvester,
+                        cardpath = cardpath,
+                        jsonpath = jsonpath )
     
     
     group_manipulator = GroupManipulator()
     
     print(group_manipulator)
     group_manipulator.add_groups_to_harvester(harvester)
-    
-    freeze_nuisances(harvester)
-    scale_higgs_mass(harvester)
-    
+       
     outdir = kwargs.get("outdir")
     if not os.path.exists(outdir):
         os.mkdir(outdir)
@@ -94,7 +146,7 @@ def main(**kwargs):
         output_rootfile = ".".join(basename.split(".")[:-1] + ["root"])
     output_rootfile = "{}_{}".format(prefix, output_rootfile) \
                         if prefix else output_rootfile
-    output_rootfile = os.path.join(outdir, output_rootfile)
+    output_rootfile = os.path.join(outdir, "rootfiles", output_rootfile)
 
     # harvester.WriteDatacard(newpath)
     writer = ch.CardWriter(newpath, output_rootfile)
@@ -105,11 +157,21 @@ def main(**kwargs):
 
 def parse_arguments():
     usage = " ".join("""
-    Tool to change inputs for combine based on output of
-    'ValidateDatacards.py'. This tool employs functions
-    from the CombineHarvester package. Please make sure
-    that you have installed it!
+    This tool combines multiple manipulator methods.
+    Current list of implemented methods:
+    apply_validation, group_manipulator, nuisance_manipulator, 
+    rebin_distributions, scale_higgs_mass. 
+    This tool employs functions from the CombineHarvester package. 
+    Please make sure that you have installed it!
+
+    The script will first scale the higgs mass and will then proceed
+    with other manipulations.
     """.split())
+
+    usage += """
+
+    python %prog [options]
+    """
     parser = OptionParser(usage = usage)
     parser.add_option("-d", "--datacard",
                         help = " ".join(
@@ -193,6 +255,20 @@ def parse_arguments():
                         ),
                         dest = "validation_jsonpath",
                         type = "str"
+                    )
+    optional_group.add_option("--remove-minor-jec",
+                        help = " ".join(
+                            """
+                            remove JEC uncertainties from minor backgrounds.
+                            Default: False
+                            Minor backgrounds are:
+                            "ttbarZ ttbarW zjets wjets diboson tHq_hbb 
+                            tHW_hbb ttbarGamma VH_hbb"
+                            """.split()
+                        ),
+                        dest = "remove_minor_jec",
+                        action = "store_true",
+                        default = False
                     )
     parser.add_option_group(optional_group)
     options, files = parser.parse_args()
