@@ -40,7 +40,7 @@
         "bottom": "tHq node"
     },
     "ttH_hbb_13TeV_dl_4j3b_DNN_ttbb": {
-        "top": "SL \\geq 4 jets \\geq 3 tags",
+        "top": "DL \\geq 4 jets \\geq 3 tags",
         "bottom": "ttbb node"
     },
     "ttH_hbb_13TeV_dl_4j3b_DNN_ttHbb": {
