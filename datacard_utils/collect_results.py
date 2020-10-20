@@ -6,6 +6,7 @@ import json
 from fnmatch import filter
 from optparse import OptionParser
 
+skip_fit_status = False
 def parse_arguments():
     
     parser = OptionParser()
@@ -69,6 +70,20 @@ def parse_arguments():
                       action = "append",
                       dest = "parameters"
                       )
+    parser.add_option("--skip-fit-status",
+                      help = " ".join("""
+                        skipt the check for the fit status.
+                        WARNING: if you read out parameters
+                        that are not POIs and there were 
+                        problems in calculating the uncertainties
+                        for all parameters, the uncertainties
+                        are likely not trustworthy!
+                        Default: False
+                      """.split()),
+                      action = "store_true",
+                      dest = "skip_fit_status",
+                      default = False
+                      )
     
     options, files = parser.parse_args()
     if options.outfile is None:
@@ -82,6 +97,10 @@ def parse_arguments():
         if isinstance(options.parameters, list) and len(options.parameters) == 0:
             options.parameters = ["r"]
     else: options.parameters = ["r"]
+    if options.skip_fit_status is True:
+        print("WARNING: will skip the check for the fit status!")
+    global skip_fit_status
+    skip_fit_status = options.skip_fit_status
     return options, files
 
 def is_good_fit(result):
@@ -89,7 +108,10 @@ def is_good_fit(result):
         return True
     print "WARNING: This is not a good fit!"
     print "\tStatus: {0}\tQuality: {1}".format(result.status(), result.covQual())
-    return False #DANGERZONE!
+    if skip_fit_status:
+        print "skipping fit status is active, will ignore warning"
+    print "skip_fit_status: ", skip_fit_status
+    return skip_fit_status #DANGERZONE!
 
 def load_roofitresult(rfile, fitres = "fit_s"):
     result = rfile.Get(fitres)
