@@ -15,6 +15,40 @@ result_version = "STXS"
 
 fontsize = 0.04
 
+def parse_results(mu, upper, lower, upper_stat, lower_stat,\
+                    order, significance):
+    
+    lines = []
+    fitresult_template = "{val:+.2f}  {up:+.2f}/{down:+.2f}"
+    line = """{parameter} & {bestfit} & {statonly} & {signi}\\\\"""
+    counter = 0
+    for name in order:
+        if name == "LINE":
+            lines.append("\\hline")
+            continue
+        bestfit_text = fitresult_template.format(
+                val = mu[counter],
+                up = upper[counter],
+                down = lower[counter]
+            )
+        stat_only_text = fitresult_template.format(
+                val = mu[counter],
+                up = upper_stat[counter],
+                down = lower_stat[counter]
+            )
+        signi_text = str(round(significance[counter], 1))
+        name = name.replace("#", "\\")
+        if any(x in name for x in "[ ]".split()):
+            name = "${}$".format(name)
+        lines.append(line.format(
+            parameter = name.replace("_", "\\_"),
+            bestfit = bestfit_text,
+            statonly = stat_only_text,
+            signi = signi_text
+        ))
+        counter += 1
+    return lines
+
 def load_values(result_dict, result_set, value_keyword, order):
     values = []
     for name in order:
@@ -30,6 +64,28 @@ def load_values(result_dict, result_set, value_keyword, order):
                 format(name, val, result_set, value_keyword))
             values.append(val)
     return np.array(values)
+
+
+def create_table(mu, upper, lower, upper_stat, lower_stat,\
+                    entry_names, significance, outname):
+
+    header = """\\begin{tabular}{lccc}
+    \\hline\\hline
+    Parameter & Stat+Syst & Stat-Only & Significance \\\\
+    \\hline"""
+    
+    footer = """\\hline\\hline
+    \\end{tabular}"""
+
+    lines = [header]
+    lines += parse_results(mu = mu, upper = upper, lower = lower,
+                            upper_stat = upper_stat, lower_stat = lower_stat,\
+                            order = entry_names, significance = significance)
+    lines.append(footer)
+    outpath = outname + ".tex"
+    print("writing table to {}".format(outpath))
+    with open(outpath, "w") as f:
+        f.write("\n".join(lines))
 
 def bestfit( **kwargs ):
 
@@ -80,7 +136,7 @@ def bestfit( **kwargs ):
     assert(len(upper) == len(lower))
     
     upper_syst = np.sqrt(upper**2 - upper_stat**2)
-    lower_syst = np.sqrt(lower**2 - lower_stat**2)
+    lower_syst = -np.sqrt(lower**2 - lower_stat**2)
     print(upper)
     print(upper_stat)
     print(upper_syst)
@@ -88,12 +144,34 @@ def bestfit( **kwargs ):
     print(lower)
     print(lower_stat)
     print(lower_syst)
+    include_signi = kwargs.get("include_signi", False)
+    outname = kwargs.get("outname", "test")
+
+
+    entry_names = [x for x in order if x in values.keys() or x == "LINE"]
+
+    create_plot(mu = mu, upper = upper, lower = lower,
+                upper_stat = upper_stat, lower_stat = lower_stat,
+                upper_syst = upper_syst, lower_syst = lower_syst, 
+                entry_names = entry_names, outname = outname,
+                include_signi = include_signi, style = kwargs)
+
+    skip_table = kwargs.get("skip_table", False)
+
+    if not skip_table:
+        create_table(mu = mu, upper = upper, lower = lower,
+                upper_stat = upper_stat, lower_stat = lower_stat,
+                entry_names = entry_names, outname = outname,
+                significance = significance)
+
+def create_plot(mu, upper, lower, upper_stat, lower_stat,\
+    upper_syst, lower_syst , entry_names, outname, style, include_signi = False):
 
     nchannels = mu.size
     print(nchannels)
 
     # calculate coordinates
-    stepsize = kwargs.get("stepsize", 2)
+    stepsize = style.get("stepsize", 2)
     coordinates = [ 1.5*i for i in range(1, nchannels*stepsize, stepsize)]
     channels = np.array(list(reversed(coordinates)))
     print(channels)
@@ -108,8 +186,8 @@ def bestfit( **kwargs ):
                                 xmin = xmin-4, xmax = xmax+12, 
                                 title = "#hat{#mu} = #hat{#sigma}/#sigma_{SM}",
                                 positions = channels,
-                                entry_names = [x for x in order if x in values.keys() or x == "LINE"] ,
-                                lumilabel = kwargs.get("lumilabel", ""))
+                                entry_names = entry_names ,
+                                lumilabel = style.get("lumilabel", ""))
 
     # line at SM expectation of mu = 1
     l = ROOT.TLine()
@@ -138,11 +216,14 @@ def bestfit( **kwargs ):
     leg.SetTextFont( 42 )
     leg.SetTextSize( 0.035 )
     leg.SetTextAlign( 11 )
-    latex_parts = "#mu       #color[4]{tot}      #color[2]{stat}    syst"
-    include_signi = kwargs.get("include_signi", False)
+    headers = "#mu       #color[4]{tot}      #color[2]{stat}    syst".split()
+    print(headers)
+    latex_parts = ["{value: ^{width}}".format(value = x, width = str(len(x)+6)) for x in headers]
+    print(latex_parts)
+    print(" ".join(latex_parts))
     if include_signi:
         latex_parts += "       "
-    leg.DrawLatex( 5.5, 3.1*nchannels, latex_parts)
+    leg.DrawLatex( 4.2, 3.1*nchannels, "".join(latex_parts))
 
     for ich,channel in enumerate(channels):
         res = ROOT.TLatex()
@@ -151,20 +232,20 @@ def bestfit( **kwargs ):
         res.SetTextAlign( 31 )
         uncertainty_template = "{{}}^{{{:+.2f}}}_{{{:-.2f}}}"
         uncertainties = uncertainty_template.format(upper[ich],lower[ich])
-        latex_parts = ["{:+.2f} #color[4]{{ {} }}".\
+        latex_parts = ["{:+.2f} #color[4]{{ {: ^16} }}".\
                         format(mu[ich],uncertainties)]
         uncertainties = uncertainty_template.\
                         format(upper_stat[ich],lower_stat[ich])
-        latex_parts = ["#color[2]{{ {} }}".\
+        latex_parts += ["#color[2]{{ {: ^16} }}".\
                         format(uncertainties)]
         uncertainties = uncertainty_template.\
                         format(upper_syst[ich],lower_syst[ich])
-        latex_parts = ["{}".\
+        latex_parts += ["{: ^16}".\
                         format(uncertainties)]
         if include_signi:
             latex_parts += ["{:.1f} #sigma".format(significance[ich])]
         
-        res.DrawLatex( xmax+11, channel-0.2, " ".join(latex_parts))
+        res.DrawLatex( xmax+11.5, channel-0.2, " ".join(latex_parts))
 
   
     
@@ -173,13 +254,9 @@ def bestfit( **kwargs ):
     c.RedrawAxis()    
     c.Modified()
     c.Update()
-    outname = kwargs.get("outname", "test")
     exts = ["pdf", "png"]
     for ext in exts:
         c.SaveAs(".".join([outname, ext]), ext)
-        
-                
-        #c.SaveAs( "HIG-18-030_bestfit.png" ) 
 
 def draw_canvas_histo( nchannels, xmin, xmax, title, entry_names, positions, \
     lumilabel):
