@@ -2,15 +2,56 @@ import os
 import sys
 import json
 import pprint
+import ROOT
 from collections import OrderedDict
 from optparse import OptionParser
+ROOT.PyConfig.IgnoreCommandLineOptions = True
+ROOT.gROOT.SetBatch(True)
 
+
+def translate_fitresult_to_dict(f):
+    params = f.floatParsFinal().contentsString().split(",")
+    return_list = []
+    for p in params:
+        var = f.floatParsFinal().find(p)
+        vallist = [
+            var.getErrorLo() + var.getVal(),
+            var.getVal(),
+            var.getErrorHi() + var.getVal(),
+        ]
+        return_list.append({
+            "name": p,
+            "fit": vallist
+        })
+        # print(vallist)
+        # print({
+        #     "name": p,
+        #     "fit": vallist
+        # })
+    return return_list
+def load_fitresult_object(path, fitobject = "fit_s"):
+    r = ROOT.TFile.Open(path)
+    if r.IsOpen() and not r.IsZombie() and not r.TestBit(ROOT.TFile.kRecovered):
+        f = r.Get(fitobject)
+        if not isinstance(f, ROOT.RooFitResult):
+            f = r.Get("fit_mdf")
+            if not isinstance(f, ROOT.RooFitResult):
+                raise ValueError("Could not load fit results from '{}'".\
+                    format(path))
+    else:
+        raise ValueError("Could not load fit results from '{}'".\
+                    format(path))
+    
+    return translate_fitresult_to_dict(f)
 
 def load_json(path):
     return_dict = {}
-    with open(path) as f:
-        return_dict = json.load(f)
-    return return_dict.get("params", {})
+    if path.endswith(".json"):
+        with open(path) as f:
+            return_dict = json.load(f)
+        return return_dict.get("params", {})
+    elif path.endswith(".root"):
+        return load_fitresult_object(path)
 
 def construct_difference_dict(basevals, othervals):
     default_val = -999999
@@ -105,8 +146,8 @@ def get_differences(basevals, othervals):
 def main(basevals, othervals, outpath):
 
     results = {}
-    params1 = load_json(fpath1)
-    params2 = load_json(fpath2)
+    params1 = load_json(basevals)
+    params2 = load_json(othervals)
     results = get_differences(basevals = params1, othervals = params2)
 
     values = OrderedDict(reversed(sorted(results.iteritems(), \
@@ -122,7 +163,7 @@ def main(basevals, othervals, outpath):
 def check_path(inpath):
     if not os.path.exists(inpath):
         raise ValueError("file {} does not exist!".format(inpath))
-    if not inpath.endswith(".json"):
+    if not inpath.endswith(".json") and not inpath.endswith(".root"):
         raise ValueError("file {} is not a json file!".format(inpath))
     return inpath
 
