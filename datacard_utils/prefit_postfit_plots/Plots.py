@@ -434,10 +434,11 @@ class DrawHistograms:
         self.canvasName     = canvasName
         self.data           = data 
         self.datalabel      = datalabel
-        if self.data:
-            self.ratio      = ratio 
-        else:
-            self.ratio      = False
+        self.ratio          = ratio
+        # if self.data:
+        #     self.ratio      = ratio 
+        # else:
+        #     self.ratio      = False
         self.signalscaling  = signalscaling
         self.errorband      = errorband 
         self.background     = background
@@ -464,10 +465,10 @@ class DrawHistograms:
         get the integral of the hists to sort it by event yield for plotting
         sort it by Event Yield, lowest to highest
         """
-        c = ROOT.TCanvas()
-        self.data.Draw()
-        c.SaveAs("test.pdf")
-        c.Clear()        
+        # c = ROOT.TCanvas()
+        # self.data.Draw()
+        # c.SaveAs("test.pdf")
+        # c.Clear()        
 
 
         self.sortPlots()
@@ -603,6 +604,9 @@ class DrawHistograms:
             shape.DrawCopy(option+" same")
 
         # draw data
+        print("="*130)
+        print("data: {}".format(self.data))
+        print("="*130)
         if self.data:
             self.data.SetLineColor(ROOT.kBlack)
             self.data.SetMarkerStyle(20)
@@ -770,8 +774,9 @@ class DrawHistograms:
         Draws the ratio plot, scales the background, signal and errorband to the background
         """
         
-        line = self.data.Clone()
-        line.Divide(self.data)
+        line = self.stackPlots[0].Clone()
+        line.Divide(line)
+        line.SetFillStyle(0)
         #line.GetYaxis().SetRangeUser(0.5,1.5)
         line.GetYaxis().SetRangeUser(0.3,1.7)
         line.GetYaxis().SetTitle(self.ratio)
@@ -820,13 +825,14 @@ class DrawHistograms:
                 self.ratio_error_graph.SetPointEYlow(i,self.errorband.GetErrorYlow(i)/self.errorband.GetY()[i])
             self.ratio_error_graph.Draw("same2")
 
-        self.ratioPlot = ROOT.TGraphAsymmErrors(self.data.Clone())
-        for i in range(1,self.data.GetNbinsX()+1,1):
-            self.ratioPlot.SetPoint(i-1,self.data.GetBinCenter(i),self.data.GetBinContent(i)/self.background.GetBinContent(i))
-            self.ratioPlot.SetPointError(i-1,0.,0.,
-                (self.data.GetBinErrorLow(i))/self.background.GetBinContent(i),(self.data.GetBinErrorUp(i))/self.background.GetBinContent(i))
-        self.ratioPlot.SetMarkerStyle(20)
-        self.ratioPlot.Draw("P2 same")
+        if self.data:
+            self.ratioPlot = ROOT.TGraphAsymmErrors(self.data.Clone())
+            for i in range(1,self.data.GetNbinsX()+1,1):
+                self.ratioPlot.SetPoint(i-1,self.data.GetBinCenter(i),self.data.GetBinContent(i)/self.background.GetBinContent(i))
+                self.ratioPlot.SetPointError(i-1,0.,0.,
+                    (self.data.GetBinErrorLow(i))/self.background.GetBinContent(i),(self.data.GetBinErrorUp(i))/self.background.GetBinContent(i))
+            self.ratioPlot.SetMarkerStyle(20)
+            self.ratioPlot.Draw("P2 same")
         self.canvas.cd(1)
 
     # scales the Errorband for the ratio plot

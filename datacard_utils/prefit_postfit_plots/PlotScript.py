@@ -539,7 +539,8 @@ if shape:
     dataHist        = None
     ratio           = False
     normalize       = True
-
+if options.drawFromHarvester:
+    dataHist = None
 if options.sortedprocesses:     
     sortedProcesses = [x.strip() for x in options.sortedprocesses.split(",")]
 else:
@@ -555,7 +556,9 @@ if divideByBinWidth:
             continue
         if isinstance(PlotList[p].hist, ROOT.TH1F):
             PlotList[p].hist.Scale(1.,"width")
-
+print("="*130)
+print("ratio: {}".format(ratio))
+print("="*130)
 DrawHistogramObject = Plots.DrawHistograms(PlotList,options.channelName,
                                 data=dataHist, datalabel = datalabel,
                                 ratio=ratio, 
