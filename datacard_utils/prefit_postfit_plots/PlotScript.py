@@ -148,6 +148,8 @@ styleOptions.add_option("--lumilabel", dest="lumilabel", default=None,
         help="print luminosity label on canvas")
 styleOptions.add_option("--yLabel", dest="yLabel", default=None,
         help="axis label of y-axis")
+styleOptions.add_option("--xLabel", dest="xLabel", default=None,
+        help="axis label of x-axis (inferred from histogram if None)")
 styleOptions.add_option("--cmslabel", dest="cmslabel", default=None,
         help="print CMS label on canvas")
 styleOptions.add_option("--splitlegend", dest="splitlegend",  default=None,
@@ -296,7 +298,7 @@ if combineflag:
     #                                        plotoptions=plotoptions,defaultvalue=False)
     options.data        = "data"
     if options.drawFromHarvester:
-        flag = "prefit" if options.combineflag == "shapes_prefit" else "postfit"
+        flag = "prefit" if combineflag == "shapes_prefit" else "postfit"
         options.nominalKey = "$CHANNEL_{FLAG}/$PROCESS".format(FLAG = flag)
 
         options.data = "data_obs"
@@ -491,7 +493,8 @@ if data:
     print("    type of data hist is: "+str(type(dataHist)) )
     if isinstance(dataHist, ROOT.TH1):
         dataHist.SetStats(False)
-        dataHist = Plots.updateBinEdges(dataHist, binEdges)
+        if not binEdges is None:
+            dataHist = Plots.updateBinEdges(dataHist, binEdges)
         Plots.moveOverUnderFlow(dataHist)
         print "using data: %s" % (dataKey)
     # data in combine in TGraphAsymmErrors, get TH1 out of it
@@ -526,6 +529,8 @@ cmslabel        = getParserConfigDefaultValue(parser=options.cmslabel,config="cm
                                             plotoptions=plotoptions,defaultvalue=False)
 yLabel          = getParserConfigDefaultValue(parser=options.yLabel,config="yLabel",
                                             plotoptions=plotoptions,defaultvalue="Events expected")
+xLabel          = getParserConfigDefaultValue(parser=options.xLabel,config="xLabel",
+                                            plotoptions=plotoptions,defaultvalue=None)
 logarithmic     = getParserConfigDefaultBool(parser=options.logarithmic,config="logarithmic",
                                             plotoptions=plotoptions,defaultbool=False)
 splitlegend     = getParserConfigDefaultBool(parser=options.splitlegend,config="splitLegend",
@@ -565,7 +570,7 @@ DrawHistogramObject = Plots.DrawHistograms(PlotList,options.channelName,
                                 normalize=normalize,splitlegend=splitlegend,
                                 combineflag=combineflag,shape=shape,
                                 sortedProcesses=sortedProcesses,
-                                yLabel=yLabel)
+                                yLabel=yLabel, xLabel = xLabel)
 
 DrawHistogramObject.drawHistsOnCanvas()
 
