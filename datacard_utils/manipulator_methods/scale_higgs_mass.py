@@ -34,7 +34,9 @@ class MassManipulator(object):
                 'ttH_hgluglu',
                 'ttH_hww',
                 'ttH_hzz',
-                'ttH_hzg'
+                'ttH_hzg',
+                'tHq',
+                'tHW'
             ]
         self.basemass = 125
         self.apply = False
@@ -96,6 +98,8 @@ class MassManipulator(object):
                 prod, decay = p.split("_")
                 productions.append(prod)
                 decays.append(decay)
+            else:
+                productions.append(p)
         
         productions = list(set(productions))
         decays = list(set(decays))
