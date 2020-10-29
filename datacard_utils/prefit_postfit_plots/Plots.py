@@ -274,6 +274,7 @@ def buildHistogramAndErrorBand(rootFile,sample,color,typ,label,systematics,nomin
 
 
 def updateBinEdges(hist, edges):
+    print(hist, edges)
     newHist = ROOT.TH1F(hist.GetName(), hist.GetTitle(), len(edges)-1, array("f", edges))
     for i in range(len(edges)+1):
         newHist.SetBinContent(i, hist.GetBinContent(i))
@@ -309,6 +310,12 @@ def getHistogramAndErrorband(rootFile,sample,color,typ,label,nominalKey,procIden
 
 def GetErrorGraph(histo):
     error_graph = ROOT.TGraphAsymmErrors(histo)
+    print("binki sagt bu")
+    for iBin in range(error_graph.GetN()):
+        if error_graph.GetY()[iBin] == 0. or error_graph.GetErrorY(iBin) < 1e-8:
+            print("zero bin")
+            error_graph.SetPointEYhigh(iBin, 0.)
+            error_graph.SetPointEYlow(iBin, 0.)
     error_graph.SetFillStyle(3005)
     error_graph.SetFillColor(ROOT.kBlack)
     return error_graph
@@ -429,7 +436,7 @@ class DrawHistograms:
     def __init__(self, PlotList, canvasName, data=None, ratio=False, signalscaling=1, 
                     errorband=None, background=None, displayname=None, logoption=False, shape=False,
                     normalize=False, combineflag=False, splitlegend=False, datalabel="data",
-                    sortedProcesses=False, yLabel="Events expected"):
+                    sortedProcesses=False, yLabel="Events expected", xLabel = None):
         self.PlotList       = PlotList
         self.canvasName     = canvasName
         self.data           = data 
@@ -455,6 +462,7 @@ class DrawHistograms:
             self.sortedProcesses = ["total_signal"]
 
         self.yLabel          = yLabel
+        self.xLabel          = xLabel
     # ===============================================
     # DRAW HISTOGRAMS ON CANVAS
     # ===============================================
@@ -541,7 +549,10 @@ class DrawHistograms:
         """
         firstHist.GetYaxis().SetTitle(self.GetyTitle())
         firstHist.GetYaxis().SetTitleSize(firstHist.GetYaxis().GetTitleSize()*1.2)
-        canvaslabel=firstHist.GetTitle()
+        if self.xLabel is None:
+            canvaslabel=firstHist.GetTitle()
+        else:
+            canvaslabel = self.xLabel
 
 
         if self.ratio:
