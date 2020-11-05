@@ -89,23 +89,24 @@ class ValidationInterface(object):
             syst_name([str(uncertainty)]).ForEachSyst(\
                 lambda x: vals.append([x.value_u(), x.value_d()]))
         # print(vals)
-        vals = vals[0]
-        if all(v <= 1. for v in vals):
-            print("Found purely down fluctuation!")
-            val_u = vals[0]
-            val_d = vals[1]
+        if len(vals) > 0:
+            vals = vals[0]
+            if all(v <= 1. for v in vals):
+                print("Found purely down fluctuation!")
+                val_u = vals[0]
+                val_d = vals[1]
 
-            vals[0] = 1.
-            vals[1] = (val_u + val_d)/2.
-            vals[0] = vals[1]
-        elif all(v >= 1. for v in vals):
-            print("Found purely up fluctuation!")
-            val_u = vals[0]
-            val_d = vals[1]
+                vals[0] = 1.
+                vals[1] = (val_u + val_d)/2.
+                vals[0] = vals[1]
+            elif all(v >= 1. for v in vals):
+                print("Found purely up fluctuation!")
+                val_u = vals[0]
+                val_d = vals[1]
 
-            vals[1] = 1.
-            vals[0] = (val_u + val_d)/2.
-            vals[1] = vals[0]
+                vals[1] = 1.
+                vals[0] = (val_u + val_d)/2.
+                vals[1] = vals[0]
         return vals
 
     def ratify(self, harvester, change_dict):
@@ -124,13 +125,14 @@ class ValidationInterface(object):
                     # print(vals)
                     # harvester.bin([str(channel)]).process([str(process)]).syst_name([str(unc)], False)
                     # harvester.PrintAll()
-                    harvester.cp().bin([str(channel)]).process([str(process)]).\
-                        syst_name([str(unc)]).ForEachSyst(lambda x: x.set_type("lnN"))
+                    if len(vals) > 0:
+                        harvester.cp().bin([str(channel)]).process([str(process)]).\
+                            syst_name([str(unc)]).ForEachSyst(lambda x: x.set_type("lnN"))
 
-                    harvester.cp().bin([str(channel)]).process([str(process)]).\
-                        syst_name([str(unc)]).ForEachSyst(lambda x: x.set_value_u(vals[0]))
-                    harvester.cp().bin([str(channel)]).process([str(process)]).\
-                        syst_name([str(unc)]).ForEachSyst(lambda x: x.set_value_d(vals[1]))
+                        harvester.cp().bin([str(channel)]).process([str(process)]).\
+                            syst_name([str(unc)]).ForEachSyst(lambda x: x.set_value_u(vals[0]))
+                        harvester.cp().bin([str(channel)]).process([str(process)]).\
+                            syst_name([str(unc)]).ForEachSyst(lambda x: x.set_value_d(vals[1]))
 
                     # harvester.PrintSysts()
                     # sys.exit()

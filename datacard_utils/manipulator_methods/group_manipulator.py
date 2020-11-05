@@ -55,8 +55,8 @@ class GroupManipulator(object):
             "jes": ["^CMS_scale.*j.*"], 
             "btag": ["^CMS_btag.*"], 
             "bgn": [".*bgnorm.*"], 
-            "tthf_bgn": [".*bgnorm_tt.*"], 
-            "tthf_model": [".*_tt.*"], 
+            "tthf_bgn": [".*bgnorm_ttbb.*"], 
+            "tthf_model": [".*_ttbb", ".*_ttbbNLO"], 
             "ddQCD": [".*ddQCD.*", ".*TFLoose.*"], 
             "syst" : [".*"]
         }
