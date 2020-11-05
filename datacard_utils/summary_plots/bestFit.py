@@ -36,7 +36,9 @@ def parse_results(mu, upper, lower, upper_stat, lower_stat,\
                 up = upper_stat[counter],
                 down = lower_stat[counter]
             )
-        signi_text = str(round(significance[counter], 1))
+        signi_text = str(round(significance[counter], 1)) \
+                        if isinstance(significance[counter], float) \
+                            else significance[counter]
         name = name.replace("#", "\\")
         if any(x in name for x in "[ ]".split()):
             name = "${}$".format(name)
@@ -55,7 +57,7 @@ def load_values(result_dict, result_set, value_keyword, order):
         subdict = result_dict.get(name, {})
         set_dict = subdict.get(result_set, {})
         val = None
-        if isinstance(set_dict, float):
+        if not isinstance(set_dict, dict):
             val = set_dict
         else:
             val = set_dict.get(value_keyword, None)
