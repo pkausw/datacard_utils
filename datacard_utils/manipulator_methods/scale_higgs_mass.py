@@ -55,6 +55,10 @@ class MassManipulator(object):
                     print("hack for VH processes")
                     par = "vbfH_13TeV"
                     baseval = source.function(par).getVal()
+                if e.startswith("TTH"):
+                    print("hack for TTH STXS processes")
+                    par = "ttH_13TeV"
+                    baseval = source.function(par).getVal()       
             line = " ".join([par, "extArg", ":".join([path, ws_name])])
             line = "\n"+line
             lines.append(line)
@@ -98,7 +102,7 @@ class MassManipulator(object):
         for p in processes:
             print(p)
             if "_" in p:
-                prod, decay = p.split("_")
+                prod, decay = p.split("_",1)
                 if "H" in prod:
                     productions.append(prod)
                 if decay.startswith("h"):
