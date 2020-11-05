@@ -46,19 +46,26 @@ class MassManipulator(object):
     def GenerateScalingLine(self, objects, ws_name, path, source, wildcard):
         lines = []
         for e in objects:
-            line = " ".join([e, "extArg", ":".join([path, ws_name])])
+            par = ""
+            try:
+                baseval = source.function(e).getVal()
+                par = e
+            except:
+                if e.startswith("VH"):
+                    print("hack for VH processes")
+                    par = "vbfH_13TeV"
+                    baseval = source.function(par).getVal()
+            line = " ".join([par, "extArg", ":".join([path, ws_name])])
             line = "\n"+line
             lines.append(line)
-            baseval = source.function(e).getVal()
+            
             new_parname = e+"_rescale"
-            line=' '.join([new_parname,'rateParam',"*",wildcard.format(e.replace("_13TeV", "")),"@0/%f"%baseval,e])
+            line=' '.join([new_parname,'rateParam',"*",wildcard.format(e.replace("_13TeV", "")),"@0/%f"%baseval,par])
             lines.append(line)
-            # line = "nuisance edit freeze {} ifexists".format(new_parname)
-            # lines.append(line)
         return lines
             
 
-    def MassScaling(self, productions, decays, basemass):
+    def MassScaling(self, basemass):
         ''' return a list of fully formed rateParameter with the xs*br scaling over the 125'''
         
         fXS=ROOT.TFile.Open(self.xs_path)
@@ -69,14 +76,39 @@ class MassManipulator(object):
         
         wBR.var("MH").setVal(basemass)
         wXS.var("MH").setVal(basemass)
-        xs_procs=[x+"_13TeV" for x in productions]
+        xs_procs=[x+"_13TeV" for x in self.productions]
         print("xs_procs: {}".format(xs_procs))
         lines = self.GenerateScalingLine( objects = xs_procs, ws_name = "xs_13TeV",
                                     path = self.xs_path, source = wXS, wildcard = "{}_*")
-        lines += self.GenerateScalingLine( objects = decays, ws_name = "br",
+        xs_procs=[x+"_13TeV" for x in self.productions_no_decays]
+        print("xs_procs: {}".format(xs_procs))
+        lines += self.GenerateScalingLine( objects = xs_procs, ws_name = "xs_13TeV",
+                                    path = self.xs_path, source = wXS, wildcard = "{}*")
+        lines += self.GenerateScalingLine( objects = self.decays, ws_name = "br",
                                     path = self.br_path, source = wBR, wildcard = "*_{}")
         return lines
 
+    def load_decays_and_procs(self, input_object):
+        
+        
+        processes = input_object.process_set()
+        productions = []
+        productions_no_decays= []
+        decays = []
+        for p in processes:
+            print(p)
+            if "_" in p:
+                prod, decay = p.split("_")
+                if "H" in prod:
+                    productions.append(prod)
+                if decay.startswith("h"):
+                    decays.append(decay)
+            else:
+                if "H" in p:
+                    productions_no_decays.append(p)
+        self.productions = list(set(productions))
+        self.decays = list(set(decays))
+        self.productions_no_decays = list(set(productions_no_decays))
 
     def ScaleMasses(self, *args):
         """
@@ -90,64 +122,36 @@ class MassManipulator(object):
                             If self.apply is True, the generated lines
                             are added to the files or the CombineHarvester
                             instances 
-        """
-        productions = []
-        decays = []
-        for p in self.processes:
-            if "_" in p:
-                prod, decay = p.split("_")
-                productions.append(prod)
-                decays.append(decay)
-            else:
-                productions.append(p)
-        
-        productions = list(set(productions))
-        decays = list(set(decays))
-        
-        lines = self.MassScaling(productions = productions, decays = decays, 
-                            basemass = self.basemass)
-        print("\n".join(lines))
-        if self.apply:
-            for f in args:
-                if isinstance(f, str):
-                    if not os.path.exists(f):
-                        print("ERROR: file '{}' does not exist".format(f))
-                        continue
-                    elif os.path.isfile(f):
-                        cardlines = []
-                        with open(f) as cardfile:
-                            cardlines = cardfile.read().splitlines()
-                        for l in lines:
-                            cmd = 'echo "{}" >> {}'.format(
-                                                l.replace("$", "\\$"), f)
-                            if "rateParam" in l:
-                                parts = l.split()
-                                wildcard = parts[3]
-                                if not any(wildcard.replace("*", "") in x for x in cardlines):
-                                    print("Did not find anything matching {}".format(wildcard))
-                                    print("Skipping line")
-                                    print(l)
-                                    continue
-                            print(cmd)
-                            call([cmd], shell = True)
-                elif isinstance(f, ch.CombineHarvester):
-                    param_list = f.cp().syst_type(["rateParam", "extArg"]).syst_name_set()
-                    for l in lines:
-                        if not any(l.startswith(x) for x in param_list) and not l=="":
-                            parts = l.split()
-                            bins = f.bin_set()
-                            param_type = parts[1]
-                            print(parts)
-                            print(tuple(parts[:-1]))
-                            print(parts[-1])
-                            if param_type == "extArg":
-                                # f.cp().bin(bins).AddSyst(f, parts[0], parts[1], ch.SystMap()(parts[-1], ""))
-                                f.AddDatacardLineAtEnd(l)
-                            elif param_type == "rateParam":
-                                current_bins = filter(bins, parts[2])
-                                current_procs = filter(f.cp().bin(current_bins).process_set(), parts[3])
-                                if len(current_procs) > 0:
-                                    f.AddDatacardLineAtEnd(l)
+        """        
+        for f in args:
+            harvester = None
+            if isinstance(f, str):
+                if os.path.exists(f):
+                    print(f)
+                    harvester = ch.CombineHarvester()
+                    harvester.SetFlag("allow-missing-shapes", False)
+                    harvester.ParseDatacard(f, "test", "13TeV", "")
+                    # harvester.ParseDatacard(card = f, analysis = "", era = "", channel = "", bin_id = int(0))
+                else:
+                    raise ValueError("File '{}' does not exist!".format(f))
+            elif isinstance(f, ch.CombineHarvester):
+                harvester = f
+            self.load_decays_and_procs(harvester)
+            lines = self.MassScaling(basemass = self.basemass)
+            print("\n".join(lines))
+            if self.apply:
+                param_list = harvester.cp().syst_type(["rateParam", "extArg"]).syst_name_set()
+                print(param_list)
+                for l in lines:
+                    if not any(l.startswith(x) for x in param_list) and not l=="":
+                        if isinstance(f, str):
+                            if os.path.isfile(f):
+                                cmd = 'echo "{}" >> {}'.format(
+                                                    l.replace("$", "\\$"), f)
+                                print(cmd)
+                                call([cmd], shell = True)
+                        elif isinstance(f, ch.CombineHarvester):
+                            f.AddDatacardLineAtEnd(l)
                                 
 
 def main(*args, **kwargs):
