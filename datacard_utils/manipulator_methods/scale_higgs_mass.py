@@ -55,6 +55,12 @@ class MassManipulator(object):
                     print("hack for VH processes")
                     par = "vbfH_13TeV"
                     baseval = source.function(par).getVal()
+                else:
+                    print("Could not find '{}' in file '{}:{}'"\
+                        .format(e, path, ws_name))
+                    print("Will not generate lines for object '{}'"\
+                        .format(e))
+                    continue
             line = " ".join([par, "extArg", ":".join([path, ws_name])])
             line = "\n"+line
             lines.append(line)
