@@ -44,8 +44,8 @@ category_channel_map = {
 
 process_commands = {
     "ttlf"           : "\\ttlf",
-    "ttcc"           : "\\ttcc",
-    "ttbb"           : "\\ttbb",
+    "ttcc"           : "\\ttC",
+    "ttbb"           : "\\ttB",
     "singlet"        : "\\singlet",
     "vjets"          : "\\Vjets",
     "ttbarV"         : "\\ttV",
@@ -59,7 +59,7 @@ process_commands = {
 sub_category_commands = {
     "ttH"  : "\\ttH",
     "ttlf" : "\\ttlf",
-    "ttcc" : "\\ttcc",
+    "ttcc" : "\\ttC",
     "ttmb" : "\\ttbb",
     "tt2b" : "\\ttTwob",
     "tHq"  : "\\tHq",
