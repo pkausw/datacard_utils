@@ -17,10 +17,6 @@ njet_categories = [ "DL"]
 sub_categories = [  "3j 2t", 
                     "3j 3t", 
                     "4j 2t", 
-                    # "4j \\geq 3t ttHbb", 
-                    # "4j \\geq 3t ttbb",
-                    # "4j \\geq 3t ttcc",
-                    # "4j \\geq 3t ttlf" 
                 ]
 
 category_channel_map = {
@@ -35,8 +31,8 @@ category_channel_map = {
 
 process_commands = {
     "ttlf"           : "\\ttlf",
-    "ttcc"           : "\\ttcc",
-    "ttbb"           : "\\ttbb",
+    "ttcc"           : "\\ttC",
+    "ttbb"           : "\\ttB",
     "singlet"        : "\\singlet",
     "vjets"          : "\\Vjets",
     "ttbarV"         : "\\ttV",
@@ -50,8 +46,8 @@ process_commands = {
 
 sub_category_commands = {
     "4j \\geq 3t ttHbb" : "$4j \\geq 3t$ \\ttH", 
-    "4j \\geq 3t ttbb" : "$4j \\geq 3t$ \\ttbb",
-    "4j \\geq 3t ttcc" : "$4j \\geq 3t$ \\ttcc",
+    "4j \\geq 3t ttbb" : "$4j \\geq 3t$ \\ttB",
+    "4j \\geq 3t ttcc" : "$4j \\geq 3t$ \\ttC",
     "4j \\geq 3t ttlf" : "$4j \\geq 3t$ \\ttlf",
     #"3t"   : "\\dlFourThree",
     #"4tl"  : "\\dlFourFour BDT-low",
