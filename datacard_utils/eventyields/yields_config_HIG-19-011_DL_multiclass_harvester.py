@@ -9,14 +9,19 @@ bkg_processes = [
    "diboson",
     "tH",
 ]
-total_bkg = "total_background"
-total_sig = "total_signal"
+total_bkg = "TotalBkg"
+total_sig = "TotalSig"
 data      = "data"
 
 njet_categories = [ "DL"]
-sub_categories = [  "3j 2t", 
-                    "3j 3t", 
-                    "4j 2t", 
+sub_categories = [  
+                    # "3j 2t", 
+                    # "3j 3t", 
+                    # "4j 2t", 
+                    "4j \\geq 3t ttHbb", 
+                    "4j \\geq 3t ttbb",
+                    "4j \\geq 3t ttcc",
+                    "4j \\geq 3t ttlf" 
                 ]
 
 category_channel_map = {
@@ -36,18 +41,18 @@ process_commands = {
     "singlet"        : "\\singlet",
     "vjets"          : "\\Vjets",
     "ttbarV"         : "\\ttV",
+    "ttbarGamma"     : "\\ttGamma",
     "diboson"        : "\\diboson",
     "tH"	     : "\\tH",
-    "ttbarGamma"     : "\\ttGamma",
-    "total_background"       : "Total\\;bkg.",
-    "total_signal"       : "\\ttH + \\tH",
-    "data"       : "Data",
+    total_bkg       : "Total\\;bkg.",
+    total_sig       : "\\ttH",
+    data       : "Data",
 }
 
 sub_category_commands = {
     "4j \\geq 3t ttHbb" : "$4j \\geq 3t$ \\ttH", 
-    "4j \\geq 3t ttbb" : "$4j \\geq 3t$ \\ttB",
-    "4j \\geq 3t ttcc" : "$4j \\geq 3t$ \\ttC",
+    "4j \\geq 3t ttbb" : "$4j \\geq 3t$ \\ttbb",
+    "4j \\geq 3t ttcc" : "$4j \\geq 3t$ \\ttcc",
     "4j \\geq 3t ttlf" : "$4j \\geq 3t$ \\ttlf",
     #"3t"   : "\\dlFourThree",
     #"4tl"  : "\\dlFourFour BDT-low",

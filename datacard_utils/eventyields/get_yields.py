@@ -17,7 +17,7 @@ def get_sum_of_hists(in_file,dir_name,new_name, to_merge):
        if not isinstance(h, ROOT.TH1):
             print("Could not find histogram! Skipping {}".format(name))
             continue
-       print("Will return {} for {}".format(name, new_name))
+       print("Will add {} to {}".format(name, new_name))
        if hist is None:
            hist = h.Clone(new_name)
        else:
@@ -46,7 +46,8 @@ def get_hist(in_file,dir_name,process):
         print("did not find '{}'".format(histpath))
     return outhist    
 
-def get_yields(in_file, categories, prepostfit, cfg_module, prefix = ""):
+def get_yields(in_file, categories, prepostfit, cfg_module, prefix = "",\
+                 is_harvester = False):
     category_yield_map = {}
 
     processes = []
@@ -57,11 +58,15 @@ def get_yields(in_file, categories, prepostfit, cfg_module, prefix = ""):
     processes.append(cfg_module.data)
     
     for category in categories:
-        dir_name = "shapes_"+prepostfit
         final_name = cfg_module.category_channel_map[category]
         if not prefix == "":
             final_name = "_".join([prefix, final_name])
-        dir_name = os.path.join(dir_name, final_name)
+        if is_harvester:
+            dir_name = "_".join([final_name, "prefit"]) if prepostfit == "prefit"\
+                else "_".join([final_name, "postfit"])
+        else:
+            dir_name = "shapes_"+prepostfit
+            dir_name = os.path.join(dir_name, final_name)
         #dir_name = "shapes_"+prepostfit+"/"+category_channel_map[category]+"_"+prepostfit
 
         process_hist_map = {}
@@ -101,13 +106,20 @@ def get_yield_string(category_yield_map,category,process,sig_scale=1, total_sig 
         return "{:10.0f}".format(y), "{:5.0f}".format(ye)
 
 def fill_template_line( template, sub_categories, njet_category, 
-                        process, yield_map_prefit, yield_map_postfit):
+                        process, yield_map_prefit, yield_map_postfit, total_sig):
     entries = []
     for sub_category in sub_categories:
         cat_string = category(njet_category,sub_category)
-        val_prefit, err_prefit = get_yield_string(yield_map_prefit, cat_string, process)
-        val_postfit, err_postfit = get_yield_string(yield_map_postfit, 
-                                                    cat_string, process, mu_s)
+        val_prefit, err_prefit = get_yield_string(category_yield_map = yield_map_prefit, 
+                                                    category = cat_string, 
+                                                    process = process,
+                                                    total_sig = total_sig
+                                                    )
+        val_postfit, err_postfit = get_yield_string(category_yield_map = yield_map_postfit, 
+                                                    category = cat_string, 
+                                                    process = process,
+                                                    total_sig = total_sig,
+                                                    sig_scale = mu_s)
 
         entries.append(template.format( prefit_val = val_prefit, 
                                         postfit_val = val_postfit,
@@ -136,7 +148,8 @@ def print_table_line(yield_map_prefit, yield_map_postfit, njet_category,
                                     njet_category = njet_category,
                                     yield_map_prefit = yield_map_prefit,
                                     yield_map_postfit = yield_map_postfit,
-                                    process = process
+                                    process = process,
+                                    total_sig = cfg_module.total_sig
                                 )
     print("entries for process '{}'".format(process))
     print(entries)
@@ -151,7 +164,8 @@ def print_table_line(yield_map_prefit, yield_map_postfit, njet_category,
                                     njet_category = njet_category,
                                     yield_map_prefit = yield_map_prefit,
                                     yield_map_postfit = yield_map_postfit,
-                                    process = process
+                                    process = process,
+                                    total_sig = cfg_module.total_sig
                                 ) 
         l += line_template.format(  process = "{:10}".format("$\\pm$ tot unc."),
                                    values = " & ".join(entries))
@@ -270,11 +284,14 @@ def main(**kwargs):
             categories.append( category( njet_category, sub_category ) )
                 
     prefix = kwargs.get("prefix", "")
-    yield_map_prefit = get_yields(in_file, categories, "prefit" , cfg_module, prefix)
+    is_harvester = kwargs.get("is_harvester", False)
+    yield_map_prefit = get_yields(in_file, categories, "prefit" , cfg_module,\
+                                 prefix, is_harvester)
     mode = load_keyword(kwargs, "mode")
     yield_map_postfit = None
     if not mode == "prefit":
-        yield_map_postfit = get_yields(in_file, categories, mode , cfg_module, prefix)
+        yield_map_postfit = get_yields(in_file, categories, mode , cfg_module,\
+                                        prefix, is_harvester)
 
     #print category_yield_map_prefit
     outname = kwargs.get("outfile")
@@ -364,6 +381,16 @@ def parse_arguments():
                         dest = "prefix",
                         type = "str",
                         default = ""
+                    )
+    parser.add_option(  "--use-harvester",
+                        help = " ".join("""
+                        use this option if the shapes were generated using
+                        the PostFitShapesFromWorkspace script in the 
+                        CombineHarvester
+                        """.split()),
+                        dest = "is_harvester",
+                        action = "store_true",
+                        default = False
                     )
 
     options, args = parser.parse_args()

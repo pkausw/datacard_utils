@@ -9,8 +9,8 @@ bkg_processes = [
    "diboson",
     "tH",
 ]
-total_bkg = "total_background"
-total_sig = "total_signal"
+total_bkg = "TotalBkg"
+total_sig = "TotalSig"
 data      = "data"
 
 njet_categories = [ "DL"]
@@ -39,9 +39,9 @@ process_commands = {
     "diboson"        : "\\diboson",
     "tH"	     : "\\tH",
     "ttbarGamma"     : "\\ttGamma",
-    "total_background"       : "Total\\;bkg.",
-    "total_signal"       : "\\ttH + \\tH",
-    "data"       : "Data",
+    total_bkg       : "Total\\;bkg.",
+    total_sig       : "\\ttH",
+    data       : "Data",
 }
 
 sub_category_commands = {

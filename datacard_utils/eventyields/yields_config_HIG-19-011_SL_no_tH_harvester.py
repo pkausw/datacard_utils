@@ -8,8 +8,8 @@ bkg_processes = [
 #    "diboson",
     "tH",
 ]
-total_bkg = "total_background"
-total_sig = "total_signal"
+total_bkg = "TotalBkg"
+total_sig = "TotalSig"
 data      = "data"
 
 njet_categories = [ "SL \\geq 4j 3t", "SL \\geq 4j \\geq 4t"]
@@ -44,16 +44,16 @@ category_channel_map = {
 
 process_commands = {
     "ttlf"           : "\\ttlf",
-    "ttcc"           : "\\ttcc",
-    "ttbb"           : "\\ttbb",
+    "ttcc"           : "\\ttC",
+    "ttbb"           : "\\ttB",
     "singlet"        : "\\singlet",
     "vjets"          : "\\Vjets",
     "ttbarV"         : "\\ttV",
     "diboson"        : "\\diboson",
     "tH"             : "\\tH",
-    "total_background"       : "Total\\;bkg.",
-    "total_signal"       : "\\ttH",
-    "data"       : "Data",
+        total_bkg       : "Total\\;bkg.",
+    total_sig       : "\\ttH",
+    data       : "Data",
 }
 
 sub_category_commands = {
