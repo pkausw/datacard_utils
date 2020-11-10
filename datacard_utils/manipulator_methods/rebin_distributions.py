@@ -36,7 +36,7 @@ class BinManipulator(object):
     def apply_scheme(self):
         edges = []
         if self.scheme == "all":
-            edges = self.bin_edges[::2]
+            edges = [self.bin_edges[0]]
         elif self.scheme == "right":
             middle = int(len(self.bin_edges)/2.)
             edges = self.bin_edges[:middle+1]

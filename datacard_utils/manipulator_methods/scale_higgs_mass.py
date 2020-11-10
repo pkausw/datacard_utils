@@ -58,7 +58,14 @@ class MassManipulator(object):
                 if e.startswith("TTH"):
                     print("hack for TTH STXS processes")
                     par = "ttH_13TeV"
-                    baseval = source.function(par).getVal()       
+                    baseval = source.function(par).getVal()   
+                else:
+                    print("Could not find '{}' in file '{}:{}'"\
+                        .format(e, path, ws_name))
+                    print("Will not generate lines for object '{}'"\
+                        .format(e))
+                    continue
+    
             line = " ".join([par, "extArg", ":".join([path, ws_name])])
             line = "\n"+line
             lines.append(line)
