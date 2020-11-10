@@ -382,7 +382,7 @@ def parse_arguments():
                         type = "str",
                         default = ""
                     )
-    parser.add_option(  "--drawFromHarvester",
+    parser.add_option(  "--use-harvester",
                         help = " ".join("""
                         use this option if the shapes were generated using
                         the PostFitShapesFromWorkspace script in the 
