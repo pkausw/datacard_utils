@@ -28,3 +28,16 @@ To scale ttbb by 30%, add `--setParameters CMS_ttHbb_bgnorm_ttbb=1.3`.
 
 If you want to generate toys from a different workspace, e.g. for a different ttbb model, you can use the `--scaledDatacard` option.
 Please read the help function for more information!
+
+# Evaluate results
+
+In order to evaluate the bias tests, you can use `plotResults.C`. 
+It's recommended to use the wrapper `runPlotResults.sh` to call this function, e.g. with
+
+```
+./runPlotResults.sh OUTPUT/PATH
+```
+, where `OUTPUT/PATH` is the folder you specified as the output before.
+The script will automatically figure out which signal strengths you generated.
+It will read the results from all toys, provided that the fit actually converged, and will generate distributions for all parameters.
+Please note that this can take a while, depending on the number of toys you generated and the number of parameters in the workspace.
