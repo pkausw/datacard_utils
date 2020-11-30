@@ -16,8 +16,9 @@ cmd_base_parts += "--combineflag {flag} -r {rootfile}".split()
 cmd_base_parts += "--channelname {channel}".split()
 cmd_base_parts += "--combineDatacard {datacard}".split()
 cmd_base_parts += "--pdfname {pdfname}".split()
-cmd_base_parts += '--xLabel "ANN discriminant"'.split()
-# cmd_base_parts += "--skipErrorbands --pdftag noError".split()
+cmd_base_parts += '--xLabel "ANN Discriminant"'.split()
+cmd_base_parts += ["--plot-blind"]
+#cmd_base_parts += "--skipErrorbands --pdftag noError".split()
 # cmd_base_parts += "--dontScaleSignal".split()
 
 cmd_base = " ".join(cmd_base_parts)

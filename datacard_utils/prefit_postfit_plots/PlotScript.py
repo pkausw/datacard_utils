@@ -132,7 +132,12 @@ plotOptions.add_option("--dontScaleSignal", dest = "dontScaleSignal", default = 
         help = "dont Scale Signals")
 
 
+plotOptions.add_option("--plot-blind", dest = "plot_blind", default = False, action = "store_true", 
+        help = "do not draw the data points")
+plotOptions.add_option("--hide-signal", dest = "hide_signal", default = False, action = "store_true", 
+        help = "do not draw the total signal template")
 parser.add_option_group(plotOptions)
+
 
 """
 Aesthetic options
@@ -296,8 +301,6 @@ outputName              = None
 xLabel                  = ""
 if combineflag:
     options.nominalKey  = "$FLAG/$CHANNEL/$PROCESS"
-    if options.drawFromHarvester:
-        options.nominalKey = "$CHANNEL_$FLAG/$PROCESS"
     #options.data        = getParserConfigDefaultValue(parser=options.data,config="data",
     #                                        plotoptions=plotoptions,defaultvalue=False)
     options.data        = "data"
@@ -564,8 +567,11 @@ if shape:
     dataHist        = None
     ratio           = False
     normalize       = True
-if options.drawFromHarvester:
+if options.plot_blind:
     dataHist = None
+if options.hide_signal:
+    print("Will hide the total signal contribution")
+    PlotList["total_signal"] = "ERROR"
 if options.sortedprocesses:     
     sortedProcesses = [x.strip() for x in options.sortedprocesses.split(",")]
 else:
@@ -581,6 +587,8 @@ if divideByBinWidth:
             continue
         if isinstance(PlotList[p].hist, ROOT.TH1F):
             PlotList[p].hist.Scale(1.,"width")
+    if dataHist:
+        dataHist.Scale(1., "width")
 print("="*130)
 print("ratio: {}".format(ratio))
 print("="*130)

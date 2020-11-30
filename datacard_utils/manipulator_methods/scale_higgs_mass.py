@@ -51,10 +51,10 @@ class MassManipulator(object):
                 baseval = source.function(e).getVal()
                 par = e
             except:
-                if e.startswith("VH"):
-                    print("hack for VH processes")
-                    par = "vbfH_13TeV"
-                    baseval = source.function(par).getVal()
+                # if e.startswith("VH"):
+                #     print("hack for VH processes")
+                #     par = "vbfH_13TeV"
+                #     baseval = source.function(par).getVal()
                 if e.startswith("TTH"):
                     print("hack for TTH STXS processes")
                     par = "ttH_13TeV"
