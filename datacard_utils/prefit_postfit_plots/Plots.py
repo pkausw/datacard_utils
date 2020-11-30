@@ -436,7 +436,7 @@ class DrawHistograms:
     def __init__(self, PlotList, canvasName, data=None, ratio=False, signalscaling=1, 
                     errorband=None, background=None, displayname=None, logoption=False, shape=False,
                     normalize=False, combineflag=False, splitlegend=False, datalabel="data",
-                    sortedProcesses=False, yLabel="Events expected", xLabel = None):
+                    sortedProcesses=False, yLabel="Events expected", xLabel = None, dontScaleSignal=False):
         self.PlotList       = PlotList
         self.canvasName     = canvasName
         self.data           = data 
@@ -463,6 +463,7 @@ class DrawHistograms:
 
         self.yLabel          = yLabel
         self.xLabel          = xLabel
+        self.dontScaleSignal = dontScaleSignal
     # ===============================================
     # DRAW HISTOGRAMS ON CANVAS
     # ===============================================
@@ -512,6 +513,9 @@ class DrawHistograms:
             self.ratio      = False
             self.data       = False
             self.normalize  = True
+            if self.dontScaleSignal:
+                self.normalize  = False
+
         else:
             firstHist = self.stackPlots[0]
 
@@ -608,8 +612,9 @@ class DrawHistograms:
                 scalefactor=firstHistIntegral/shape.Integral()
             else:
                 scalefactor=self.signalscaling
-            shape.Scale(scalefactor)
-            if scalefactor != 1 and not self.normalize and not self.shape:
+            if not self.dontScaleSignal:
+                shape.Scale(scalefactor)
+            if scalefactor != 1 and not self.normalize and not self.shape and not self.dontScaleSignal:
                 self.PlotList[self.sortedShapes[n]].label += " x "+str(int(scalefactor))
             # draw signal histogram
             shape.DrawCopy(option+" same")
