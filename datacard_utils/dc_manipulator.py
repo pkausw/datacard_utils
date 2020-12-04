@@ -90,7 +90,7 @@ def remove_minor_JEC(harvester):
 
 def do_validation(harvester, cardpath, jsonpath):
     val_interface = ValidationInterface()
-    val_interface.remove_small_signals = False
+    val_interface.remove_small_signals = True
     if not jsonpath:
         val_interface.generate_validation_output(cardpath)
     else:
@@ -102,6 +102,8 @@ def main(**kwargs):
 
     harvester = ch.CombineHarvester()
     harvester.SetFlag("allow-missing-shapes", False)
+    harvester.SetFlag("workspaces-use-clone", True)
+
     cardpath = kwargs.get("datacard")
     
     print(cardpath)
@@ -113,8 +115,6 @@ def main(**kwargs):
         bin_manipulator.scheme = rebin_scheme
         harvester = bin_manipulator.rebin_shapes(harvester = harvester)
     
-    freeze_nuisances(harvester)
-    scale_higgs_mass(harvester)
 
     remove_minor_jec = kwargs.get("remove_minor_jec", False)
     if remove_minor_jec:
@@ -129,6 +129,8 @@ def main(**kwargs):
                         jsonpath = jsonpath )
     
     
+    scale_higgs_mass(harvester)
+    freeze_nuisances(harvester)
     group_manipulator = GroupManipulator()
     
     print(group_manipulator)
