@@ -133,6 +133,10 @@ class ValidationInterface(object):
                             syst_name([str(unc)]).ForEachSyst(lambda x: x.set_value_u(vals[0]))
                         harvester.cp().bin([str(channel)]).process([str(process)]).\
                             syst_name([str(unc)]).ForEachSyst(lambda x: x.set_value_d(vals[1]))
+                    else:
+                        print("="*130)
+                        print("Could not find uncertainty '{}' in '{}/{}'".\
+                                format(unc, channel, process))
 
                     # harvester.PrintSysts()
                     # sys.exit()
