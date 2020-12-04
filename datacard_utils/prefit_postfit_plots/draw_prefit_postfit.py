@@ -19,6 +19,7 @@ cmd_base_parts += "--pdfname {pdfname}".split()
 cmd_base_parts += '--xLabel "ANN Discriminant"'.split()
 cmd_base_parts += ["--plot-blind"]
 #cmd_base_parts += "--skipErrorbands --pdftag noError".split()
+# cmd_base_parts += "--dontScaleSignal".split()
 
 cmd_base = " ".join(cmd_base_parts)
 

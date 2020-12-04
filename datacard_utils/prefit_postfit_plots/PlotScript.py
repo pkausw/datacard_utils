@@ -128,6 +128,10 @@ plotOptions.add_option("--multisignal", dest = "multisignal", default = False, a
         help = "plot multiple signals")
 plotOptions.add_option("--divideByBinWidth", dest = "divideByBinWidth", default = False, action = "store_true", 
         help = "divide content by bin width")
+plotOptions.add_option("--dontScaleSignal", dest = "dontScaleSignal", default = False, action = "store_true", 
+        help = "dont Scale Signals")
+
+
 plotOptions.add_option("--plot-blind", dest = "plot_blind", default = False, action = "store_true", 
         help = "do not draw the data points")
 plotOptions.add_option("--hide-signal", dest = "hide_signal", default = False, action = "store_true", 
@@ -408,14 +412,30 @@ Combine Histograms and errorbands for combined plot channels
 for sample in plottingsamples:
     color       = plottingsamples[sample]['color']
     typ         = plottingsamples[sample]['typ']
-    if combineflag and typ=="signal":
-        continue
-    label       = plottingsamples[sample]['label']
-    addsamples  = plottingsamples[sample].get('addSamples', [])
-    print(PlotList)
-    PlotList = Plots.addSamples(sample=sample,color=color,typ=typ,label=label,
-                                    addsamples=addsamples,PlotList=PlotList,combineflag=combineflag)
-    entry = PlotList.get(sample, "ERROR")
+    if combineflag:
+        if typ=="signal" and not multisignal:
+            continue
+        elif typ == "signal":
+            if combineflag=="shapes_fit_s":
+                label       = plottingsamples[sample]['label']
+                addsamples  = plottingsamples[sample].get('addSamples', [])
+                print(PlotList)
+                PlotList = Plots.addSamples(sample=sample,color=color,typ="bkg",label=label,
+                                                addsamples=addsamples,PlotList=PlotList,combineflag=combineflag)
+            else:
+                label       = plottingsamples[sample]['label']
+                addsamples  = plottingsamples[sample].get('addSamples', [])
+                print(PlotList)
+                PlotList = Plots.addSamples(sample=sample,color=color,typ="signal",label=label,
+                                        addsamples=addsamples,PlotList=PlotList,combineflag=combineflag)
+        elif typ == "bkg":
+            label       = plottingsamples[sample]['label']
+            addsamples  = plottingsamples[sample].get('addSamples', [])
+            print(PlotList)
+            PlotList = Plots.addSamples(sample=sample,color=color,typ="bkg",label=label,   
+                                        addsamples=addsamples,PlotList=PlotList,combineflag=combineflag)
+
+        entry = PlotList.get(sample, "ERROR")
     if not entry == "ERROR":
         addedHist = PlotList[sample].hist
         if isinstance(addedHist, ROOT.TH1F):
@@ -581,7 +601,7 @@ DrawHistogramObject = Plots.DrawHistograms(PlotList,options.channelName,
                                 normalize=normalize,splitlegend=splitlegend,
                                 combineflag=combineflag,shape=shape,
                                 sortedProcesses=sortedProcesses,
-                                yLabel=yLabel, xLabel = xLabel)
+                                yLabel=yLabel, xLabel = xLabel, dontScaleSignal=options.dontScaleSignal)
 
 DrawHistogramObject.drawHistsOnCanvas()
 
@@ -624,6 +644,6 @@ if logarithmic:
     path +="_log.pdf"
 else:
     path += ".pdf"
-
+print(normalize)
 DrawHistogramObject.saveCanvas(path=path)
 

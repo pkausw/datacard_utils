@@ -58,7 +58,10 @@ class GroupManipulator(object):
             "tthf_bgn": [".*bgnorm_ttbb.*"], 
             "tthf_model": [".*_ttbb", ".*_ttbbNLO"], 
             "ddQCD": [".*ddQCD.*", ".*TFLoose.*"], 
-            "syst" : [".*"]
+            "syst" : [".*"],
+            "mig" : ["d60","d120","d200","d300","d450","dy"],
+            "acc" : ["ttH_scale_lowpt","ttH_scale_highpt"],
+            "STXS" : ["d60","d120","d200","d300","d450","dy","ttH_scale_lowpt","ttH_scale_highpt"]
         }
     
     
