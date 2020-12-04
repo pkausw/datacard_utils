@@ -23,7 +23,7 @@ except:
     raise ImportError(msg)
 
 class BinManipulator(object):
-    choices = "left right all".split()
+    choices = "left right all mem".split()
     def __init__(self):
         self.bin_edges = []
         
@@ -43,6 +43,13 @@ class BinManipulator(object):
         elif self.scheme == "left":
             middle = int(len(self.bin_edges)/2.)
             edges = [self.bin_edges[0]] + self.bin_edges[middle:]
+        elif self.scheme == "mem":
+            # drop first bin for tests with SL MEM
+            edges = self.bin_edges[1:]
+        else:
+            print("ERROR: did not recognice scheme '{}'".format(self.scheme))
+            print("Will not rebin")
+            edges = self.bin_edges
         if not self.bin_edges[-1] in edges:
             edges.append(self.bin_edges[-1])
         return edges
@@ -74,11 +81,10 @@ def main(*args, **kwargs):
     #harvester.SetFlag("check-negative-bins-on-import", False)
     harvester.SetFlag("allow-missing-shapes", False)
     
-    # print(cardpath)
-    # harvester.ParseDatacard(cardpath, "$ANALYSIS_$CHANNEL_hdecay.txt")
-    for f in args:
-        print(f)
-        harvester.ParseDatacard(f, "ttH")
+    cardpath = kwargs.get("datacard")
+    
+    print(cardpath)
+    harvester.ParseDatacard(cardpath, "test", "13TeV", "")
 
     # harvester.PrintAll()
     scheme = kwargs.get("scheme", None)
@@ -95,54 +101,22 @@ def main(*args, **kwargs):
     outdir = kwargs.get("outdir")
     if not os.path.exists(outdir):
         os.mkdir(outdir)
-    # basename = os.path.basename(cardpath)
+    basename = os.path.basename(cardpath)
     prefix = kwargs.get("prefix", None)
-    # basename = "{}_{}".format(prefix, basename) if prefix else basename
-    newpath = os.path.join(outdir, "datacards", "$BIN.txt")
+    basename = "{}_{}".format(prefix, basename) if prefix else basename
+    newpath = os.path.join(outdir, "datacards", basename)
     output_rootfile = kwargs.get("output_rootpath")
-    output_rootfile = "{}_{}".format(prefix, output_rootfile) if prefix else output_rootfile
-    output_rootfile = output_rootfile.replace(".root", "_$BIN.root")
-    output_rootfile = os.path.join(outdir, output_rootfile)
+    if output_rootfile is None:
+        output_rootfile = ".".join(basename.split(".")[:-1] + ["root"])
+    output_rootfile = "{}_{}".format(prefix, output_rootfile) \
+                        if prefix else output_rootfile
+    output_rootfile = os.path.join(outdir, "rootfiles", output_rootfile)
 
     # harvester.WriteDatacard(newpath)
-    bins = harvester.bin_set()
-    # for b in bins:
-    #     WriteCards(harvester = harvester, newpath = newpath, 
-    #                output_rootfile = output_rootfile, bins = [b])
-    # current_bins = [b for b in bins if any(x in b for x in ["ljets"])]
-    # comb_path = newpath.replace("$BIN", "combined_SL_DNN")
-    # comb_rootpath = output_rootfile.replace("$BIN", "combined_SL_DNN")
-    # WriteCards(harvester = harvester, newpath = comb_path, 
-    #                output_rootfile = comb_rootpath, bins = current_bins)
-    
-    # current_bins = [b for b in bins if any(x in b for x in ["dl"])]
-    # comb_path = newpath.replace("$BIN", "combined_DL_DNN")
-    # comb_rootpath = output_rootfile.replace("$BIN", "combined_DL_DNN")
-    # WriteCards(harvester = harvester, newpath = comb_path, 
-    #                output_rootfile = comb_rootpath, bins = current_bins)
-    
-    # current_bins = [b for b in bins if any(x in b for x in ["fh"])]
-    # comb_path = newpath.replace("$BIN", "combined_FH_DNN")
-    # comb_rootpath = output_rootfile.replace("$BIN", "combined_FH_DNN")
-    # WriteCards(harvester = harvester, newpath = comb_path, 
-    #                output_rootfile = comb_rootpath, bins = current_bins)
-    
-    # current_bins = [b for b in bins if any(x in b for x in ["ljets", "dl"])]
-    # comb_path = newpath.replace("$BIN", "combined_DLSL_DNN")
-    # comb_rootpath = output_rootfile.replace("$BIN", "combined_DLSL_DNN")
-    # WriteCards(harvester = harvester, newpath = comb_path, 
-    #                output_rootfile = comb_rootpath, bins = current_bins)
-    
-    # current_bins = [b for b in bins if any(x in b for x in ["ljets", "dl", "fh"])]
-    # comb_path = newpath.replace("$BIN", "combined_DLFHSL_DNN")
-    # comb_rootpath = output_rootfile.replace("$BIN", "combined_DLFHSL_DNN")
-    # WriteCards(harvester = harvester, newpath = comb_path, 
-    #                output_rootfile = comb_rootpath, bins = current_bins)
-    
-    comb_path = newpath.replace("$BIN", "combined_full_2016_baseline_v01")
-    comb_rootpath = output_rootfile.replace("$BIN", "combined_full_2016_baseline_v01")
-    WriteCards(harvester = harvester, newpath = comb_path, 
-                   output_rootfile = comb_rootpath, bins = bins)
+    writer = ch.CardWriter(newpath, output_rootfile)
+    writer.SetWildcardMasses([])
+    writer.SetVerbosity(1)
+    writer.WriteCards("cmb", harvester)
     
 def parse_arguments():
     usage = " ".join("""
@@ -152,16 +126,16 @@ def parse_arguments():
     that you have installed it!
     """.split())
     parser = OptionParser(usage = usage)
-    # parser.add_option("-d", "--datacard",
-    #                     help = " ".join(
-    #                         """
-    #                         path to datacard to change
-    #                         """.split()
-    #                     ),
-    #                     dest = "datacard",
-    #                     metavar = "path/to/datacard",
-    #                     type = "str"
-    #                 )
+    parser.add_option("-d", "--datacard",
+                        help = " ".join(
+                            """
+                            path to datacard to change
+                            """.split()
+                        ),
+                        dest = "datacard",
+                        metavar = "path/to/datacard",
+                        type = "str"
+                    )
 
     parser.add_option("-o", "--outputrootfile",
                         help = " ".join(
