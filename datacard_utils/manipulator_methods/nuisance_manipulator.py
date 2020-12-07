@@ -23,6 +23,9 @@ except:
             Are you sure you installed it?""".split())
     raise ImportError(msg)
 
+from common_manipulations import CommonManipulations
+
+
 class NuisanceManipulator(object):
 
     def __init__(self):
@@ -113,6 +116,8 @@ def main(*args, **kwargs):
     #                 .process([p])\
     #                 .RenameSystematic(harvester, "_".join([new_parname, p]), ultisplit)
     harvester.PrintSysts()
+    common_manipulations = CommonManipulations()
+    common_manipulations.apply_common_manipulations(harvester)
     outdir = kwargs.get("outdir")
     if not os.path.exists(outdir):
         os.mkdir(outdir)
