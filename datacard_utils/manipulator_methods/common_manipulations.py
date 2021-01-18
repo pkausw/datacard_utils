@@ -28,6 +28,8 @@ if not thisdir in sys.path:
 # if not manipulator_dir in sys.path:
 #     sys.path.append(manipulator_dir)
 
+from nuisance_manipulator import NuisanceManipulator
+
 class CommonManipulations(object):
 
     def __init__(self):
@@ -84,8 +86,8 @@ class CommonManipulations(object):
 
         if len(eras) == 0:
             raise ValueError("Harvester instance does not contain an era!")
-        elif len(eras) == 1:
-            lumi_uncertainties = self.__lumi_uncertainties
+        # elif len(eras) == 1:
+        #     lumi_uncertainties = self.__lumi_uncertainties
         else:
             lumi_uncertainties = self.__lumi_uncertainties_all_years
         
@@ -102,12 +104,28 @@ class CommonManipulations(object):
             if len(uncertainties) == 0:
                 print("WARNING: did not find uncertainties for era '{}'"\
                         .format(e))
-        
+    
+    def remove_see_saw(self, harvester):
+
+        manipulator = NuisanceManipulator()
+        manipulator.to_remove = {
+            "CMS_ttHbb_FSR_ttbb": "ttcc ttlf".split(),
+            "CMS_ttHbb_FSR_ttcc": "ttbb ttlf".split(),
+            "CMS_ttHbb_FSR_ttlf": "ttbb ttcc".split(),
+            "CMS_ttHbb_ISR_ttbb": "ttcc ttlf".split(),
+            "CMS_ttHbb_ISR_ttcc": "ttbb ttlf".split(),
+            "CMS_ttHbb_ISR_ttlf": "ttbb ttcc".split(),
+            "CMS_ttHbb_scaleMuR_ttbbNLO": "ttcc ttlf".split(),
+            "CMS_ttHbb_scaleMuR": ["ttbb"],
+            "CMS_ttHbb_scaleMuF_ttbbNLO": "ttcc ttlf".split(),
+            "CMS_ttHbb_scaleMuF": ["ttbb"],
+        }
+        manipulator.remove_nuisances_from_procs(harvester)
+
     def apply_common_manipulations(self, harvester):
         self.freeze_nuisances(harvester)
         self.add_lumi_uncertainties(harvester)
-
-
+        self.remove_see_saw(harvester)
 
 
 def main(**kwargs):
