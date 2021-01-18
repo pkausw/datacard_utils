@@ -44,9 +44,11 @@ def scale_higgs_mass(harvester, base_mass = 125):
     mass_scaler.ScaleMasses(harvester)
 
 def remove_minor_JEC(harvester):
-    processes = """ttbarZ ttbarW zjets wjets diboson tHq_hbb tHW_hbb 
+    processes = """ttbarZ ttbarW zjets wjets diboson 
                 tHW tHq ttbarGamma VH_hbb""".split()
-    
+    for decay in "hbb hcc hzg hgluglu hgg hww htt hzz".split():
+        for proc in "tHq tHW".split():
+            processes.append("{}_{}".format(proc, decay))
     params = """CMS_res_j*
         CMS_scaleAbsolute_j
         CMS_scaleAbsolute_j_*
@@ -83,18 +85,21 @@ def remove_minor_JEC(harvester):
         np_manipulator.remove_nuisances_from_procs(harvester = harvester,
                                                     bins = bins)
 
-def do_validation(harvester, cardpath, jsonpath):
+def do_validation(harvester, cardpaths, jsonpath):
     val_interface = ValidationInterface()
     val_interface.remove_small_signals = True
-    if not jsonpath:
-        val_interface.generate_validation_output(cardpath)
-    else:
-        val_interface.jsonpath = jsonpath
-    
-    val_interface.apply_validation(harvester)
+    for era in cardpaths:
+        for cardpath in cardpaths[era]:
+            if not jsonpath:
+                val_interface.generate_validation_output(cardpath)
+            else:
+                val_interface.jsonpath = jsonpath
+            
+            val_interface.apply_validation(harvester.cp().era([era]))
 
 def load_datacards(groups, harvester):
 
+    cardpaths = {}
     for group in groups:
         template, wildcard = group.split(":")
         cards = glob(wildcard)
@@ -102,8 +107,17 @@ def load_datacards(groups, harvester):
         for f in cards:
             print("loading '{}'".format(f))
             harvester.QuickParseDatacard(f, template)
+            eras = harvester.era_set()
+            for e in eras:
+                if e in f:
+                    if not e in cards:
+                        cardpaths[e] = []
+                    print("saving path '{}' for era '{}'".format(f, e))
+                    cardpaths[e].append(f)
+    return cardpaths
 
-def write_datacards(harvester, outdir, prefix, rootfilename, era):
+def write_datacards(harvester, outdir, prefix, rootfilename, era, \
+                    combine_cards = True):
     
     common_manipulations = CommonManipulations()
     common_manipulations.apply_common_manipulations(harvester)
@@ -127,16 +141,23 @@ def write_datacards(harvester, outdir, prefix, rootfilename, era):
     
     outfile = ROOT.TFile.Open(output_rootfile, "RECREATE")
 
-    for chan in channels:
-        cardname = os.path.join(card_dir, "combined_{}_{}.txt".format(chan, era))
-        harvester.cp().channel([chan]).WriteDatacard(cardname, outfile)
-    
-    if "SL" in channels and "DL" in channels:
-        cardname = os.path.join(card_dir, "combined_{}_{}.txt".format("DLSL", era))
-        harvester.cp().channel("SL DL".split()).WriteDatacard(cardname, outfile)
+    if combine_cards:
+        for chan in channels:
+            cardname = os.path.join(card_dir, "combined_{}_{}.txt".format(chan, era))
+            harvester.cp().channel([chan]).WriteDatacard(cardname, outfile)
+        
+        if "SL" in channels and "DL" in channels:
+            cardname = os.path.join(card_dir, "combined_{}_{}.txt".format("DLSL", era))
+            harvester.cp().channel("SL DL".split()).WriteDatacard(cardname, outfile)
 
-    cardname = os.path.join(card_dir, "combined_{}_{}.txt".format("full", era))
-    harvester.cp().WriteDatacard(cardname, outfile)
+        cardname = os.path.join(card_dir, "combined_{}_{}.txt".format("full", era))
+        harvester.cp().WriteDatacard(cardname, outfile)
+    else:
+        bins = harvester.bin_set()
+        for b in bins:
+            cardname = os.path.join(card_dir, "{}.txt".format(b))
+            print("writing card for bin '{}' in dir '{}'".format(b, cardname))
+            harvester.cp().bin([b]).WriteDatacard(cardname, outfile)
     
 def main(**kwargs):
 
@@ -147,7 +168,7 @@ def main(**kwargs):
     groups = kwargs.get("input_groups", [])
     
     # harvester.ParseDatacard(cardpath, "test", "13TeV", "")
-    load_datacards(groups, harvester)
+    cardpaths = load_datacards(groups, harvester)
 
     harvester.PrintAll()
 
@@ -168,7 +189,7 @@ def main(**kwargs):
         jsonpath = kwargs.get("validation_jsonpath")
 
         do_validation(  harvester = harvester,
-                        cardpath = cardpath,
+                        cardpaths = cardpaths,
                         jsonpath = jsonpath )
     
     
@@ -181,12 +202,23 @@ def main(**kwargs):
     if output_rootfile is None:
         output_rootfile = "all_shapes.root"
     eras = harvester.era_set()
-    for e in eras:
-        write_datacards(harvester = harvester.cp().era([e]), outdir = outdir, 
-                        rootfilename = output_rootfile, prefix = prefix, era = e)
-    
-    write_datacards(harvester = harvester, outdir = outdir, rootfilename = output_rootfile, 
-                    prefix = prefix, era = "all_years")
+    combine_cards = kwargs.get("combine_cards", False)
+    if combine_cards:
+        for e in eras:
+            write_datacards(harvester = harvester.cp().era([e]), outdir = outdir, 
+                            rootfilename = output_rootfile, prefix = prefix, era = e)
+        
+        write_datacards(harvester = harvester, outdir = outdir, rootfilename = output_rootfile, 
+                        prefix = prefix, era = "all_years")
+    else:
+        for e in eras:
+            era_dir = os.path.join(outdir, e)
+            if not os.path.exists(era_dir):
+                os.mkdir(era_dir)
+            write_datacards(harvester = harvester.cp().era([e]), outdir = era_dir, 
+                            rootfilename = output_rootfile, prefix = prefix, era = e,
+                            combine_cards = False)
+
 
 def parse_arguments():
     usage = " ".join("""
@@ -302,6 +334,19 @@ def parse_arguments():
                             """.split()
                         ),
                         dest = "remove_minor_jec",
+                        action = "store_true",
+                        default = False
+                    )
+    optional_group.add_option("--combine-cards",
+                        help = " ".join(
+                            """
+                            combine datacards across channels.
+                            If False, the script will create
+                            a datacard for each of the input
+                            categories. Default: False
+                            """.split()
+                        ),
+                        dest = "combine_cards",
                         action = "store_true",
                         default = False
                     )
