@@ -88,14 +88,23 @@ def remove_minor_JEC(harvester):
 def do_validation(harvester, cardpaths, jsonpath):
     val_interface = ValidationInterface()
     val_interface.remove_small_signals = True
+    val_interface.verbosity = 80
     for era in cardpaths:
+        cards = cardpaths[era]
+        print("applying validation to paths")
+        print("\n".join(cards))
         for cardpath in cardpaths[era]:
             if not jsonpath:
                 val_interface.generate_validation_output(cardpath)
             else:
                 val_interface.jsonpath = jsonpath
             
-            val_interface.apply_validation(harvester.cp().era([era]))
+            val_interface.apply_validation(harvester, eras = [era])
+            print("="*130)
+            print("after validation interface")
+            harvester.cp().era([era]).PrintProcs()
+            print("="*130)
+
 
 def load_datacards(groups, harvester):
 
@@ -110,10 +119,12 @@ def load_datacards(groups, harvester):
             eras = harvester.era_set()
             for e in eras:
                 if e in f:
-                    if not e in cards:
+                    if not e in cardpaths:
                         cardpaths[e] = []
                     print("saving path '{}' for era '{}'".format(f, e))
                     cardpaths[e].append(f)
+    print(json.dumps(cardpaths, indent = 4))
+    # exit()
     return cardpaths
 
 def write_datacards(harvester, outdir, prefix, rootfilename, era, \
@@ -121,7 +132,7 @@ def write_datacards(harvester, outdir, prefix, rootfilename, era, \
     
     common_manipulations = CommonManipulations()
     common_manipulations.apply_common_manipulations(harvester)
-    harvester.PrintSysts()
+    # harvester.PrintSysts()
     group_manipulator = GroupManipulator()
     
     print(group_manipulator)
@@ -170,7 +181,7 @@ def main(**kwargs):
     # harvester.ParseDatacard(cardpath, "test", "13TeV", "")
     cardpaths = load_datacards(groups, harvester)
 
-    harvester.PrintAll()
+    # harvester.PrintAll()
 
     
     rebin_scheme = kwargs.get("scheme", None)
@@ -192,7 +203,9 @@ def main(**kwargs):
                         cardpaths = cardpaths,
                         jsonpath = jsonpath )
     
-    
+    print("="*130)
+    print("back in dc_manipulator::main")
+    harvester.PrintProcs()
     scale_higgs_mass(harvester)
     prefix = kwargs.get("prefix")
     outdir = kwargs.get("outdir")
