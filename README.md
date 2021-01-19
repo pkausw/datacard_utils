@@ -26,6 +26,7 @@ It relies on the functions in the CombineHarvester package to parse multiple dat
 
 Assume that the datacards for a given channel `CHANNEL` are ordered in the following structure:
 
+```
 CHANNEL
 |
 |
@@ -40,6 +41,7 @@ CHANNEL
 |           |
 |           |----- card1.txt ...
 | ...
+```
 
 You can define an `INPUT_GROUP` like this: `'$CHANNEL/$ERA/datacards/.*.txt:CHANNEL/201?/datacards/*.txt'`.
 The first part (before the `:`) is the template after which the CombineHarvester will try to extract additional information, in this case the `$CHANNEL` and the `$ERA`, i.e. the year.
