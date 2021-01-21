@@ -127,16 +127,24 @@ def load_datacards(groups, harvester):
     # exit()
     return cardpaths
 
+def write_harvester(harvester, cardname, outfile):
+    scale_higgs_mass(harvester)
+    group_manipulator = GroupManipulator()
+    
+    print(group_manipulator)
+    group_manipulator.add_groups_to_harvester(harvester)
+    print("writing card '{}'".format(cardname))
+
+    harvester.WriteDatacard(cardname, outfile)
+
+
+
 def write_datacards(harvester, outdir, prefix, rootfilename, era, \
                     combine_cards = True):
     
     common_manipulations = CommonManipulations()
     common_manipulations.apply_common_manipulations(harvester)
     # harvester.PrintSysts()
-    group_manipulator = GroupManipulator()
-    
-    print(group_manipulator)
-    group_manipulator.add_groups_to_harvester(harvester)
 
     channels = harvester.channel_set()
     card_dir = os.path.join(outdir, "datacards")
@@ -154,21 +162,27 @@ def write_datacards(harvester, outdir, prefix, rootfilename, era, \
 
     if combine_cards:
         for chan in channels:
+            current_harvester = harvester.cp().channel([chan])
             cardname = os.path.join(card_dir, "combined_{}_{}.txt".format(chan, era))
-            harvester.cp().channel([chan]).WriteDatacard(cardname, outfile)
+            write_harvester(harvester = current_harvester,
+                            cardname = cardname, outfile = outfile)
         
         if "SL" in channels and "DL" in channels:
+            current_harvester = harvester.cp().channel("SL DL".split())
             cardname = os.path.join(card_dir, "combined_{}_{}.txt".format("DLSL", era))
-            harvester.cp().channel("SL DL".split()).WriteDatacard(cardname, outfile)
+            write_harvester(harvester = current_harvester,
+                            cardname = cardname, outfile = outfile)
 
         cardname = os.path.join(card_dir, "combined_{}_{}.txt".format("full", era))
-        harvester.cp().WriteDatacard(cardname, outfile)
+        write_harvester(harvester = harvester,
+                            cardname = cardname, outfile = outfile)
     else:
         bins = harvester.bin_set()
         for b in bins:
+            current_harvester = harvester.cp().bin([b])
             cardname = os.path.join(card_dir, "{}.txt".format(b))
-            print("writing card for bin '{}' in dir '{}'".format(b, cardname))
-            harvester.cp().bin([b]).WriteDatacard(cardname, outfile)
+            write_harvester(harvester = current_harvester,
+                            cardname = cardname, outfile = outfile)
     
 def main(**kwargs):
 
@@ -206,7 +220,6 @@ def main(**kwargs):
     print("="*130)
     print("back in dc_manipulator::main")
     harvester.PrintProcs()
-    scale_higgs_mass(harvester)
     prefix = kwargs.get("prefix")
     outdir = kwargs.get("outdir")
     if not os.path.exists(outdir):
