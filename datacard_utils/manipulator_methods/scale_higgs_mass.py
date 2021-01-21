@@ -24,6 +24,9 @@ except:
             Are you sure you installed it?""".split())
     raise ImportError(msg)
 
+from common_manipulations import CommonManipulations
+
+
 class MassManipulator(object):
     
     def __init__(self):
@@ -175,6 +178,9 @@ def main(*args, **kwargs):
     mass_scaler.processes = processes
     mass_scaler.basemass = basemass
     mass_scaler.apply = apply
+
+    common_manipulations = CommonManipulations()
+    common_manipulations.apply_common_manipulations(harvester)
     
     mass_scaler.ScaleMasses(*args)
 

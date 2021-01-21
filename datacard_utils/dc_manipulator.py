@@ -11,7 +11,7 @@ if not os.path.exists(cmssw_base):
 # import CombineHarvester.CombineTools.ch as ch
 
 from optparse import OptionParser, OptionGroup
-
+from glob import glob
 ROOT.TH1.AddDirectory(False)
 try:
     print("importing CombineHarvester")
@@ -33,13 +33,8 @@ from manipulator_methods.scale_higgs_mass import MassManipulator
 from manipulator_methods.rebin_distributions import BinManipulator
 from manipulator_methods.apply_validation import ValidationInterface
 from manipulator_methods.nuisance_manipulator import NuisanceManipulator
+from manipulator_methods.common_manipulations import CommonManipulations
 
-def freeze_nuisances(harvester):
-    to_freeze = "kfactor_wjets kfactor_zjets CMS_ttHbb_bgscale_MCCR".split()
-    systs = harvester.syst_name_set()
-    for p in to_freeze:
-        if p in systs:
-            harvester.GetParameter(p).set_frozen(True)
 
 def scale_higgs_mass(harvester, base_mass = 125):
     mass_scaler = MassManipulator()
@@ -49,9 +44,11 @@ def scale_higgs_mass(harvester, base_mass = 125):
     mass_scaler.ScaleMasses(harvester)
 
 def remove_minor_JEC(harvester):
-    processes = """ttbarZ ttbarW zjets wjets diboson tHq_hbb tHW_hbb 
+    processes = """ttbarZ ttbarW zjets wjets diboson 
                 tHW tHq ttbarGamma VH_hbb""".split()
-    
+    for decay in "hbb hcc hzg hgluglu hgg hww htt hzz".split():
+        for proc in "tHq tHW".split():
+            processes.append("{}_{}".format(proc, decay))
     params = """CMS_res_j*
         CMS_scaleAbsolute_j
         CMS_scaleAbsolute_j_*
@@ -88,26 +85,104 @@ def remove_minor_JEC(harvester):
         np_manipulator.remove_nuisances_from_procs(harvester = harvester,
                                                     bins = bins)
 
-def do_validation(harvester, cardpath, jsonpath):
+def do_validation(harvester, cardpaths, jsonpath):
     val_interface = ValidationInterface()
     val_interface.remove_small_signals = True
-    if not jsonpath:
-        val_interface.generate_validation_output(cardpath)
-    else:
-        val_interface.jsonpath = jsonpath
-    
-    val_interface.apply_validation(harvester)
+    val_interface.verbosity = 80
+    for era in cardpaths:
+        cards = cardpaths[era]
+        print("applying validation to paths")
+        print("\n".join(cards))
+        for cardpath in cardpaths[era]:
+            if not jsonpath:
+                val_interface.generate_validation_output(cardpath)
+            else:
+                val_interface.jsonpath = jsonpath
+            
+            val_interface.apply_validation(harvester, eras = [era])
+            print("="*130)
+            print("after validation interface")
+            harvester.cp().era([era]).PrintProcs()
+            print("="*130)
 
+
+def load_datacards(groups, harvester):
+
+    cardpaths = {}
+    for group in groups:
+        template, wildcard = group.split(":")
+        cards = glob(wildcard)
+        print("template: {}".format(template))
+        for f in cards:
+            print("loading '{}'".format(f))
+            harvester.QuickParseDatacard(f, template)
+            eras = harvester.era_set()
+            for e in eras:
+                if e in f:
+                    if not e in cardpaths:
+                        cardpaths[e] = []
+                    print("saving path '{}' for era '{}'".format(f, e))
+                    cardpaths[e].append(f)
+    print(json.dumps(cardpaths, indent = 4))
+    # exit()
+    return cardpaths
+
+def write_datacards(harvester, outdir, prefix, rootfilename, era, \
+                    combine_cards = True):
+    
+    common_manipulations = CommonManipulations()
+    common_manipulations.apply_common_manipulations(harvester)
+    # harvester.PrintSysts()
+    group_manipulator = GroupManipulator()
+    
+    print(group_manipulator)
+    group_manipulator.add_groups_to_harvester(harvester)
+
+    channels = harvester.channel_set()
+    card_dir = os.path.join(outdir, "datacards")
+    if not os.path.exists(card_dir):
+        os.mkdir(card_dir)
+    
+    output_rootfile = "{}_{}".format(prefix, rootfilename) \
+                        if prefix else rootfilename
+    output_rootdir = os.path.join(outdir, "rootfiles")
+    if not os.path.exists(output_rootdir):
+        os.mkdir(output_rootdir)
+    output_rootfile = os.path.join(output_rootdir, output_rootfile.replace(".root", "{}.root".format(era)))
+    
+    outfile = ROOT.TFile.Open(output_rootfile, "RECREATE")
+
+    if combine_cards:
+        for chan in channels:
+            cardname = os.path.join(card_dir, "combined_{}_{}.txt".format(chan, era))
+            harvester.cp().channel([chan]).WriteDatacard(cardname, outfile)
+        
+        if "SL" in channels and "DL" in channels:
+            cardname = os.path.join(card_dir, "combined_{}_{}.txt".format("DLSL", era))
+            harvester.cp().channel("SL DL".split()).WriteDatacard(cardname, outfile)
+
+        cardname = os.path.join(card_dir, "combined_{}_{}.txt".format("full", era))
+        harvester.cp().WriteDatacard(cardname, outfile)
+    else:
+        bins = harvester.bin_set()
+        for b in bins:
+            cardname = os.path.join(card_dir, "{}.txt".format(b))
+            print("writing card for bin '{}' in dir '{}'".format(b, cardname))
+            harvester.cp().bin([b]).WriteDatacard(cardname, outfile)
+    
 def main(**kwargs):
 
     harvester = ch.CombineHarvester()
     harvester.SetFlag("allow-missing-shapes", False)
     harvester.SetFlag("workspaces-use-clone", True)
 
-    cardpath = kwargs.get("datacard")
+    groups = kwargs.get("input_groups", [])
     
-    print(cardpath)
-    harvester.ParseDatacard(cardpath, "test", "13TeV", "")
+    # harvester.ParseDatacard(cardpath, "test", "13TeV", "")
+    cardpaths = load_datacards(groups, harvester)
+
+    # harvester.PrintAll()
+
     
     rebin_scheme = kwargs.get("scheme", None)
     if rebin_scheme:
@@ -125,36 +200,37 @@ def main(**kwargs):
         jsonpath = kwargs.get("validation_jsonpath")
 
         do_validation(  harvester = harvester,
-                        cardpath = cardpath,
+                        cardpaths = cardpaths,
                         jsonpath = jsonpath )
     
-    
+    print("="*130)
+    print("back in dc_manipulator::main")
+    harvester.PrintProcs()
     scale_higgs_mass(harvester)
-    freeze_nuisances(harvester)
-    group_manipulator = GroupManipulator()
-    
-    print(group_manipulator)
-    group_manipulator.add_groups_to_harvester(harvester)
-       
+    prefix = kwargs.get("prefix")
     outdir = kwargs.get("outdir")
     if not os.path.exists(outdir):
         os.mkdir(outdir)
-    basename = os.path.basename(cardpath)
-    prefix = kwargs.get("prefix", None)
-    basename = "{}_{}".format(prefix, basename) if prefix else basename
-    newpath = os.path.join(outdir, "datacards", basename)
     output_rootfile = kwargs.get("output_rootpath")
     if output_rootfile is None:
-        output_rootfile = ".".join(basename.split(".")[:-1] + ["root"])
-    output_rootfile = "{}_{}".format(prefix, output_rootfile) \
-                        if prefix else output_rootfile
-    output_rootfile = os.path.join(outdir, "rootfiles", output_rootfile)
-
-    # harvester.WriteDatacard(newpath)
-    writer = ch.CardWriter(newpath, output_rootfile)
-    writer.SetWildcardMasses([])
-    writer.SetVerbosity(1)
-    writer.WriteCards("cmb", harvester)
+        output_rootfile = "all_shapes.root"
+    eras = harvester.era_set()
+    combine_cards = kwargs.get("combine_cards", False)
+    if combine_cards:
+        for e in eras:
+            write_datacards(harvester = harvester.cp().era([e]), outdir = outdir, 
+                            rootfilename = output_rootfile, prefix = prefix, era = e)
+        
+        write_datacards(harvester = harvester, outdir = outdir, rootfilename = output_rootfile, 
+                        prefix = prefix, era = "all_years")
+    else:
+        for e in eras:
+            era_dir = os.path.join(outdir, e)
+            if not os.path.exists(era_dir):
+                os.mkdir(era_dir)
+            write_datacards(harvester = harvester.cp().era([e]), outdir = era_dir, 
+                            rootfilename = output_rootfile, prefix = prefix, era = e,
+                            combine_cards = False)
 
 
 def parse_arguments():
@@ -175,15 +251,17 @@ def parse_arguments():
     python %prog [options]
     """
     parser = OptionParser(usage = usage)
-    parser.add_option("-d", "--datacard",
+    parser.add_option("-i", "--input",
                         help = " ".join(
                             """
-                            path to datacard to change
+                            define groups of inputs. The format should be like
+                            'SCHEME:wildcard/to/input/files*.txt'
                             """.split()
                         ),
-                        dest = "datacard",
-                        metavar = "path/to/datacard",
-                        type = "str"
+                        dest = "input_groups",
+                        metavar = "SCHEME:path/to/datacard",
+                        type = "str",
+                        action = "append"
                     )
 
     parser.add_option("-o", "--outputrootfile",
@@ -272,14 +350,27 @@ def parse_arguments():
                         action = "store_true",
                         default = False
                     )
+    optional_group.add_option("--combine-cards",
+                        help = " ".join(
+                            """
+                            combine datacards across channels.
+                            If False, the script will create
+                            a datacard for each of the input
+                            categories. Default: False
+                            """.split()
+                        ),
+                        dest = "combine_cards",
+                        action = "store_true",
+                        default = False
+                    )
     parser.add_option_group(optional_group)
     options, files = parser.parse_args()
 
-    cardpath = options.datacard
-    if not cardpath:
-        parser.error("You need to provide the path to a datacard!")
-    elif not os.path.exists(cardpath):
-        parser.error("Could not find datacard in '{}'".format(cardpath))
+    # cardpath = options.datacard
+    # if not cardpath:
+    #     parser.error("You need to provide the path to a datacard!")
+    # elif not os.path.exists(cardpath):
+    #     parser.error("Could not find datacard in '{}'".format(cardpath))
     
     return options, files
 

@@ -21,6 +21,7 @@ except:
     msg = " ".join("""Could not find package 'CombineHarvester'. 
             Are you sure you installed it?""".split())
     raise ImportError(msg)
+from common_manipulations import CommonManipulations
 
 class BinManipulator(object):
     choices = "left right all mem".split()
@@ -95,6 +96,8 @@ def main(*args, **kwargs):
     bin_manipulator.scheme = scheme
     harvester = bin_manipulator.rebin_shapes(harvester = harvester)
 
+    common_manipulations = CommonManipulations()
+    common_manipulations.apply_common_manipulations(harvester)
     
 
     # harvester.PrintSysts()

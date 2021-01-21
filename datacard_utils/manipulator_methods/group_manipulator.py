@@ -5,6 +5,8 @@ cmssw_base = os.environ["CMSSW_BASE"]
 ROOT.gROOT.SetBatch(True)
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
+from common_manipulations import CommonManipulations
+
 if not os.path.exists(cmssw_base):
     raise ValueError("Could not find CMSSW base!")
 
@@ -45,6 +47,7 @@ class GroupManipulator(object):
                 "^CMS_scale.*j.*", 
                 "^CMS_ttHbb_PU", 
                 ".*L1PreFiring.*", 
+                "lumi.*",
             ], 
             "ps": [
                 ".*ISR.*", 
