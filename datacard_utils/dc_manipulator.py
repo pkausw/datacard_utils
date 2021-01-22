@@ -34,6 +34,7 @@ from manipulator_methods.rebin_distributions import BinManipulator
 from manipulator_methods.apply_validation import ValidationInterface
 from manipulator_methods.nuisance_manipulator import NuisanceManipulator
 from manipulator_methods.common_manipulations import CommonManipulations
+from manipulator_methods.stxs_modifications import STXSModifications
 
 
 def scale_higgs_mass(harvester, base_mass = 125):
@@ -127,9 +128,8 @@ def load_datacards(groups, harvester):
     # exit()
     return cardpaths
 
-def write_harvester(harvester, cardname, outfile):
+def write_harvester(harvester, cardname, outfile, group_manipulator):
     scale_higgs_mass(harvester)
-    group_manipulator = GroupManipulator()
     
     print(group_manipulator)
     group_manipulator.add_groups_to_harvester(harvester)
@@ -140,7 +140,7 @@ def write_harvester(harvester, cardname, outfile):
 
 
 def write_datacards(harvester, outdir, prefix, rootfilename, era, \
-                    combine_cards = True):
+                    group_manipulator, combine_cards = True):
     
     common_manipulations = CommonManipulations()
     common_manipulations.apply_common_manipulations(harvester)
@@ -165,24 +165,28 @@ def write_datacards(harvester, outdir, prefix, rootfilename, era, \
             current_harvester = harvester.cp().channel([chan])
             cardname = os.path.join(card_dir, "combined_{}_{}.txt".format(chan, era))
             write_harvester(harvester = current_harvester,
-                            cardname = cardname, outfile = outfile)
+                            cardname = cardname, outfile = outfile, 
+                            group_manipulator = group_manipulator)
         
         if "SL" in channels and "DL" in channels:
             current_harvester = harvester.cp().channel("SL DL".split())
             cardname = os.path.join(card_dir, "combined_{}_{}.txt".format("DLSL", era))
             write_harvester(harvester = current_harvester,
-                            cardname = cardname, outfile = outfile)
+                            cardname = cardname, outfile = outfile, 
+                            group_manipulator = group_manipulator)
 
         cardname = os.path.join(card_dir, "combined_{}_{}.txt".format("full", era))
         write_harvester(harvester = harvester,
-                            cardname = cardname, outfile = outfile)
+                            cardname = cardname, outfile = outfile, 
+                            group_manipulator = group_manipulator)
     else:
         bins = harvester.bin_set()
         for b in bins:
             current_harvester = harvester.cp().bin([b])
             cardname = os.path.join(card_dir, "{}.txt".format(b))
             write_harvester(harvester = current_harvester,
-                            cardname = cardname, outfile = outfile)
+                            cardname = cardname, outfile = outfile, 
+                            group_manipulator = group_manipulator)
     
 def main(**kwargs):
 
@@ -229,13 +233,24 @@ def main(**kwargs):
         output_rootfile = "all_shapes.root"
     eras = harvester.era_set()
     combine_cards = kwargs.get("combine_cards", False)
+
+    group_manipulator = GroupManipulator()
+
+    stxs = kwargs.get("stxs", False)
+    if stxs:
+        stxs_interface = STXSModifications()
+        stxs_interface.do_stxs_modifications(harvester)
+
+
     if combine_cards:
         for e in eras:
             write_datacards(harvester = harvester.cp().era([e]), outdir = outdir, 
-                            rootfilename = output_rootfile, prefix = prefix, era = e)
+                            rootfilename = output_rootfile, prefix = prefix, era = e, 
+                            group_manipulator = group_manipulator)
         
         write_datacards(harvester = harvester, outdir = outdir, rootfilename = output_rootfile, 
-                        prefix = prefix, era = "all_years")
+                        prefix = prefix, era = "all_years", 
+                            group_manipulator = group_manipulator)
     else:
         for e in eras:
             era_dir = os.path.join(outdir, e)
@@ -243,7 +258,8 @@ def main(**kwargs):
                 os.mkdir(era_dir)
             write_datacards(harvester = harvester.cp().era([e]), outdir = era_dir, 
                             rootfilename = output_rootfile, prefix = prefix, era = e,
-                            combine_cards = False)
+                            combine_cards = False, 
+                            group_manipulator = group_manipulator)
 
 
 def parse_arguments():
@@ -360,6 +376,17 @@ def parse_arguments():
                             """.split()
                         ),
                         dest = "remove_minor_jec",
+                        action = "store_true",
+                        default = False
+                    )
+    optional_group.add_option("--stxs",
+                        help = " ".join(
+                            """
+                            apply stxs-specific modifications.
+                            Default: False
+                            """.split()
+                        ),
+                        dest = "stxs",
                         action = "store_true",
                         default = False
                     )

@@ -63,8 +63,11 @@ class GroupManipulator(object):
             "ddQCD": [".*ddQCD.*", ".*TFLoose.*"], 
             "syst" : [".*"],
             "mig" : ["d60","d120","d200","d300","d450","dy"],
-            "acc" : ["ttH_scale_lowpt","ttH_scale_highpt"],
-            "STXS" : ["d60","d120","d200","d300","d450","dy","ttH_scale_lowpt","ttH_scale_highpt"]
+            "acc" : [".*_lowpt",".*_highpt"],
+            "STXS" : ["d60","d120","d200","d300","d450","dy",
+                        "ttH_scale_lowpt","ttH_scale_highpt",
+                        "ttH_ISR_highpt", "ttH_ISR_lowpt",
+                        "ttH_FSR_highpt", "ttH_FSR_lowpt"]
         }
     
     
