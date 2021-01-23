@@ -16,11 +16,15 @@ class batchConfig:
         
         if "lxplus" in hostname:
             print "lxplus system detected!"
-            self.jobmode = "lxbatch"
-            self.subname = "bsub"
-            self.subopts = "-q 8nh"
-            self.arraysubmit = False
-            self.arraysubopts = None
+            #self.jobmode = "lxbatch"
+            #self.subname = "bsub"
+            #self.subopts = "-q 8nh"
+            #self.arraysubmit = False
+            #self.arraysubopts = None
+	    self.jobmode = "condor"
+            self.subname = "condor_submit"
+            self.memory = "2000M"
+            self.arraysubmit = True
 
         elif "naf-cms" in hostname:
             print "NAF HTCondor system detected!"

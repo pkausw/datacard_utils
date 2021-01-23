@@ -128,7 +128,10 @@ class batchConfig(object):
         if attribute == "diskspace":
             attribute = "RequestDisk"
         elif attribute == "runtime":
-            attribute = "+RequestRunTime"
+            if self.jobmode_ == "lxplus_HTC":
+                attribute = "+MaxRunTime"
+            else:
+                attribute = "+RequestRunTime"
         elif attribute == "memory":
             attribute = "RequestMemory"
         index = self.get_index_for_attribute(attribute)
@@ -225,14 +228,17 @@ class batchConfig(object):
     @property
     def runtime(self):
         """
-        Return value for '+RequestRuntime' keyword in 'subopts' if it's available
+        Return value for '+RequestRuntime' or '+MaxRuntime' keyword in 'subopts' if it's available
         """
-        index = self.get_index_for_attribute("+RequestRuntime")
+        if self.jobmode_ == "lxplus_HTC":
+            index = self.get_index_for_attribute("+MaxRuntime")
+        else:
+            index = self.get_index_for_attribute("+RequestRuntime")
         return self.subopts_[index].split(" = ")[-1]
     @runtime.setter
     def runtime(self, value):
         """
-        First check if 'value' can be a float. Then call 'self.setoption' with the attribute '+RequestRuntime'
+        First check if 'value' can be a float. Then call 'self.setoption' with the attribute '+RequestRuntime' or '+MaxRuntime'
         """
         test = None
         if isinstance(value, float) or isinstance(value, int):
@@ -244,7 +250,10 @@ class batchConfig(object):
             print "Input value is not a number, could not set runtime!"
 
         if not test == None:
-            self.setoption(attribute = "+RequestRuntime", optionsstring = str(value))
+            if self.jobmode_ == "lxplus_HTC":
+                self.setoption(attribute = "+MaxRuntime", optionsstring = str(value))
+            else:
+                self.setoption(attribute = "+RequestRuntime", optionsstring = str(value))
     def __str__(self):
         """overload print(batchConfig_base) here"""
         slist = ["options for this batchConfig:"]
