@@ -126,7 +126,7 @@ class STXSModifications(object):
                 print("Adding uncertainty '{}' to processes '{}'"\
                         .format(unc, proc_wildcard))
                 harvester.cp().process([proc_wildcard])\
-                    .AddSyst(harvester, str(unc), "lnN", ch.SystMap()(value))
+                    .AddSyst(harvester, str(unc), "lnN", ch.SystMap()(round(1+value, 2)))
 
     def do_stxs_modifications(self, harvester):
         harvester.SetFlag("filters-use-regex", True)
