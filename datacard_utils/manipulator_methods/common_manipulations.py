@@ -35,7 +35,7 @@ class CommonManipulations(object):
     def __init__(self):
         super(CommonManipulations, self).__init__()
         self.__to_freeze = """kfactor_wjets kfactor_zjets
-                                CMS_ttHbb_bgscale_MCCR""".split()
+                                .*bgscale_MCCR.*""".split()
 
         self.__lumi_uncertainties={
             "2016": {
@@ -76,9 +76,10 @@ class CommonManipulations(object):
 
 
     def freeze_nuisances(self, harvester):
-        systs = harvester.syst_name_set()
-        for p in self.__to_freeze:
-            if p in systs:
+        harvester.SetFlag("filters-use-regex", True)
+        for par in self.__to_freeze:
+            systs = harvester.cp().syst_name([par]).syst_name_set()
+            for p in systs:
                 harvester.GetParameter(p).set_frozen(True)
 
     def add_lumi_uncertainties(self, harvester):
