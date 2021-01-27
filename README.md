@@ -1,3 +1,17 @@
+# Usage of `collect_all_results.py`
+
+`collect_all_results.py` is a wrapper script to easily collect the best-fit, stat-only fit and significance results.
+Before you start, you should
+- check the list of combinations that the script will look for
+- check the wild card expressions to load the correct files
+
+You can then call the script like this:
+```bash
+python path/to/collect_all_results.py path/to/results
+```
+, where `path/to/results` is the top level directory containing the files that you want to reach with the wild cards.
+The script will generate .json and .tex files for each combination separately, which you can use in other steps.
+
 # Usage of the `dc_manipulator`
 
 The `dc_manipulator` is a wrapper for the CombineHarvester package.
