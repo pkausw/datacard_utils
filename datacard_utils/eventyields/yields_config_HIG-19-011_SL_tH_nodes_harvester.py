@@ -54,6 +54,7 @@ process_commands = {
     total_bkg       : "Total\\;bkg.",
     total_sig       : "\\ttH",
     data       : "Data",
+}
 
 sub_category_commands = {
     "ttH"  : "\\ttH",
