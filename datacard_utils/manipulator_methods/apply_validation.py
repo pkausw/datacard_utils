@@ -18,6 +18,7 @@ except:
 
 from optparse import OptionParser, OptionGroup
 from subprocess import call
+from nuisance_manipulator import NuisanceManipulator
 
 ROOT.TH1.AddDirectory(False)
 
@@ -31,6 +32,7 @@ class ValidationInterface(object):
         self.__do_smallSigCut = True
         self.__cmd_template = " ".join("ValidateDatacards.py -p 3 \
             --mass 125.38 --jsonFile {outpath} {input_path}".split())
+        self.__np_manipulator = NuisanceManipulator()
     
     @property
     def verbosity(self):
@@ -119,24 +121,27 @@ class ValidationInterface(object):
         # print(vals)
         if len(vals) > 0:
             vals = vals[0]
+            vals = [round(x, 3) for x in vals]
+            val_u = vals[0]
+            val_d = vals[1]
             if all(v <= 1. for v in vals):
                 if self.verbosity > 10:
                     print("Found purely down fluctuation!")
-                val_u = vals[0]
-                val_d = vals[1]
 
                 vals[0] = 1.
                 vals[1] = (val_u + val_d)/2.
-                vals[0] = vals[1]
+                vals[0] = 1./vals[1]
             elif all(v >= 1. for v in vals):
                 if self.verbosity > 10:
                     print("Found purely up fluctuation!")
-                val_u = vals[0]
-                val_d = vals[1]
 
                 vals[1] = 1.
                 vals[0] = (val_u + val_d)/2.
-                vals[1] = vals[0]
+                vals[1] = 1./vals[0]
+            elif not val_u == 1. and val_d == 1.:
+                vals[1] = 1./val_u
+            elif not val_d == 1. and val_u == 1.:
+                vals[0] = 1./val_d
         return vals
 
     def ratify(self, harvester, change_dict, eras = [".*"]):
@@ -160,22 +165,31 @@ class ValidationInterface(object):
                     # harvester.bin([str(channel)]).process([str(process)]).syst_name([str(unc)], False)
                     # harvester.PrintAll()
                     if len(vals) > 0:
-                        harvester.cp().era(eras).\
-                            bin([str(channel)]).\
-                            process([str(process)]).\
-                            syst_name([str(unc)]).\
-                            ForEachSyst(lambda x: x.set_type("lnN"))
+                        if any(abs(1.-x)>= 1e-3 for x in vals):
+                            harvester.cp().era(eras).\
+                                bin([str(channel)]).\
+                                process([str(process)]).\
+                                syst_name([str(unc)]).\
+                                ForEachSyst(lambda x: x.set_type("lnN"))
 
-                        harvester.cp().era(eras).\
-                            bin([str(channel)]).\
-                            process([str(process)]).\
-                            syst_name([str(unc)]).\
-                            ForEachSyst(lambda x: x.set_value_u(vals[0]))
-                        harvester.cp().era(eras).\
-                            bin([str(channel)]).\
-                            process([str(process)]).\
-                            syst_name([str(unc)]).\
-                            ForEachSyst(lambda x: x.set_value_d(vals[1]))
+                            harvester.cp().era(eras).\
+                                bin([str(channel)]).\
+                                process([str(process)]).\
+                                syst_name([str(unc)]).\
+                                ForEachSyst(lambda x: x.set_value_u(vals[0]))
+                            harvester.cp().era(eras).\
+                                bin([str(channel)]).\
+                                process([str(process)]).\
+                                syst_name([str(unc)]).\
+                                ForEachSyst(lambda x: x.set_value_d(vals[1]))
+                        else:
+                            print("Detected uncertainty with less than 0.1% yield effect!")
+                            print("will drop")
+                            # self.__np_manipulator.debug = 3
+                            self.__np_manipulator.to_remove = {unc: [str(process)]}
+                            self.__np_manipulator.remove_nuisances_from_procs(
+                                                    harvester = harvester,
+                                                    bins = [str(channel)])
                     else:
                         print("="*130)
                         print("Could not find uncertainty '{}' in '{}/{}'".\
@@ -217,7 +231,6 @@ class ValidationInterface(object):
                                                         else False
                                         )
                             )
-        
         
     def apply_validation(self, harvester,  eras = [".*"], \
                             channels = [".*"], bins = [".*"]):
