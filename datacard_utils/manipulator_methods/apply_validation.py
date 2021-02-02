@@ -33,6 +33,8 @@ class ValidationInterface(object):
         self.__cmd_template = " ".join("ValidateDatacards.py -p 3 \
             --mass 125.38 --jsonFile {outpath} {input_path}".split())
         self.__np_manipulator = NuisanceManipulator()
+        self.__bkg_threshold = 0.001
+        self.__do_smallBkgCut = True
     
     @property
     def verbosity(self):
@@ -82,6 +84,35 @@ class ValidationInterface(object):
             self.__do_smallSigCut = val
         else:
             print("Could not set 'remove_small_signals' to '{}'".format(val))
+            print("Value has to be bool")
+
+    @property
+    def background_threshold(self):
+        return self.__bkg_threshold
+    @background_threshold.setter
+    def background_threshold(self, value):
+        try:
+            fvalue = float(value)
+            self.__bkg_threshold = fvalue
+        except:
+            print("could not convert '{}' to float!".format(fvalue))
+            print("Background threshold will stay at '{}'"\
+                    .format(self.background_threshold))
+
+    @property
+    def remove_small_backgrounds(self):
+        return self.__do_smallBkgCut
+
+    @remove_small_backgrounds.setter
+    def remove_small_backgrounds(self, val):
+        if isinstance(val, bool):
+            if val:
+                print("Will drop small backgrounds")
+            else:
+                print("Will keep small backgrounds")
+            self.__do_smallBkgCut = val
+        else:
+            print("Could not set 'remove_small_backgrounds' to '{}'".format(val))
             print("Value has to be bool")
 
     @property
@@ -231,7 +262,68 @@ class ValidationInterface(object):
                                                         else False
                                         )
                             )
-        
+    
+    def drop_small_backgrounds(self, harvester, eras = [".*"], \
+                            channels = [".*"], bins = [".*"]):
+        if self.verbosity >= 50:
+            print("parameters for dropping processes:")
+            print("\teras: {}".format(", ".join(eras)))
+            print("\tchannels: {}".format(", ".join(channels)))
+            print("\tbins: {}".format(", ".join(bins)))
+        # first, collect the channels and eras present in the harvester
+        # instance to avoid double matching of bins later
+        channels = harvester.cp().channel(channels).channel_set()
+        if len(channels) == 0:
+            channels = [".*"]
+        eras = harvester.cp().era(eras).era_set()
+        if len(eras) == 0:
+            eras = [".*"]
+        # entries in list are unicode per default
+        # convert to 'normal' strings by hand
+        channels = [str(x) for x in channels]
+        eras = [str(x) for x in eras]
+        # for each bin in each channel and era
+        # check for minor backgrounds
+        for chan in channels:
+            for era in eras:
+                if self.verbosity >= 50:
+                    print("pruning bin '{}'".format(chan))
+                    print("to drop: [{}]".format(", ".join(to_drop)))
+                    print("harvester with era selection:")
+                    harvester.cp().era(eras).PrintProcs()
+                    print("="*130)
+                    print("harvester with bin selection")
+                    harvester.cp().era(eras).channel(channels).bin(bins).PrintProcs()
+                    print("="*130)
+                    print("harvester with channel selection")
+                    harvester.cp().era(eras).channel(channels).PrintProcs()
+                
+                    print("="*130)
+                bins = harvester.cp().channel([chan]).era([era]).bin_set()
+                for b in bins:
+                    b = str(b)
+                    bin_backgrounds = harvester.cp().channel([chan]).era([era]).bin([b]).backgrounds()
+                    total_rate = bin_backgrounds.GetRate()
+                    to_drop = []
+                    for p in bin_backgrounds.process_set():
+                        p = str(p)
+                        proc_rate = bin_backgrounds.cp().process([p]).GetRate() 
+                        if proc_rate < self.background_threshold*total_rate:
+                            print(" ".join("""
+                                Very small background process. 
+                                In bin {} background process {} has yield {}. 
+                                Total background rate in this bin is {}
+                                """.format(b, p, proc_rate, total_rate).split()))
+                            to_drop.append(p)
+                    harvester.cp().era(eras).channel(channels).bin(bins)\
+                        .ForEachProc(lambda x: \
+                            harvester.FilterProcs(lambda y: True if self.matching_proc(x, y) and \
+                                                                    self.drop_procs(harvester, x, 
+                                                                    b, to_drop)\
+                                                                else False
+                                                )
+                                    )
+
     def apply_validation(self, harvester,  eras = [".*"], \
                             channels = [".*"], bins = [".*"]):
         harvester.SetFlag("filters-use-regex", True)
@@ -260,6 +352,10 @@ class ValidationInterface(object):
             if self.verbosity > 15:
                 print("Processes after small signal pruning:")
                 harvester.PrintProcs()
+        if self.__do_smallBkgCut:
+            self.drop_small_backgrounds(harvester, eras = eras, 
+                                        channels = channels,
+                                        bins = bins)
 
     def generate_validation_output(self, dcpath):
         if isinstance(dcpath, str):
