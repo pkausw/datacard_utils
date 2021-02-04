@@ -19,4 +19,4 @@ prefix_clearname = "all_years"
 
 logfile = "json_creation.log"
 
-texfile = "%s_impacts.tex"
+texfile = "{}_impacts.tex"

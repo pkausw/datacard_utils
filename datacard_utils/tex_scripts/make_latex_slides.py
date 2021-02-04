@@ -120,6 +120,11 @@ def create_slide(slide_template, **kwargs):
 	navigation_entry = None
 	label = kwargs.get("label", None)
 	clearname = kwargs.get("clearname", None)
+	param = kwargs.get("param", None)
+	if not param == "" and param:
+		label += "_{}".format(param)
+		clearname += " \\\\({})".format(param)
+		kwargs.update({"label": label, "clearname": clearname})
 
 	if not (label is None or clearname is None):
 		lines = slide_template.format(**kwargs)
@@ -186,10 +191,10 @@ def create_impact_slides(current_name, path, config, keyword_dict):
 	clearname = keyword_dict["clearname"]
 	if not prefix_clearname is None:
 		clearname = clearname.format(prefix_clearname)
-
+	
 	path = os.path.abspath(path)
-	lines = None
-	navigation = None
+	lines = []
+	navigation = []
 	startdir = os.getcwd()
 	if not os.path.isdir(path):
 		print "'%s' is not a directory, skipping" % path
@@ -205,25 +210,46 @@ def create_impact_slides(current_name, path, config, keyword_dict):
 			missing_variables = load_missing_vars(logfile = config.logfile)
 			missing_var_string = "all"
 			
-			texpath = config.texfile % dirname
-			if not os.path.exists(texpath):
-				texpath = "NONE"
-
-			if not texpath == "NONE":
-				if not missing_variables is None:
-					if len(missing_variables) == 0:
-						missing_var_string = "none"
-					else:
-						missing_var_string = ",\n".join([x.replace("_", "\\_") for x in missing_variables])
-		
-			
-			lines, navigation = create_slide(
-											slide_template = slide_template,
-											label = label,
-											clearname = clearname,
-											filename = texpath,
-											missing_vars = missing_var_string
-											)
+			texpath_wildcard = config.texfile.format(dirname)
+			try:
+				params = config.parameters
+			except:
+				params = [""]
+			texpaths = glob(texpath_wildcard)
+			print(texpaths)
+			for param in params:
+				print("doing parameter '{}'".format(param))
+				for texpath in texpaths:
+					if not os.path.exists(texpath):
+						texpath = "NONE"
+					if not param in texpath:
+						continue
+					print("current texpath: {}".format(texpath))
+					if not texpath == "NONE":
+						if not missing_variables is None:
+							if len(missing_variables) == 0:
+								missing_var_string = "none"
+							else:
+								missing_var_string = ",\n".join(
+											[x.replace("_", "\\_") \
+												for x in missing_variables]
+												)
+				
+					
+					tmp_lines, tmp_navigation = create_slide(
+													slide_template = slide_template,
+													label = label,
+													clearname = clearname,
+													filename = texpath,
+													missing_vars = missing_var_string,
+													param = param
+													)
+					lines.append(tmp_lines)
+					navigation.append(tmp_navigation)
+	if len(lines) == 0:
+		lines = None
+	if len(navigation) == 0:
+		navigation = None
 	os.chdir(startdir)
 	return lines, navigation
 
@@ -312,8 +338,12 @@ def main(options, filepaths):
 														keyword_dict = keyword_dict[name])
 
 			if not (lines is None or nav_entry is None):
-				navigation.append(nav_entry)
-				slidelines.append(lines)
+				if isinstance(lines, list):
+					navigation += nav_entry
+					slidelines += lines
+				else:
+					navigation.append(nav_entry)
+					slidelines.append(lines)
 				break
 
 	if len(navigation) > 0:
