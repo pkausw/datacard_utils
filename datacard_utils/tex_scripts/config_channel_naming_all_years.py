@@ -1,25 +1,25 @@
 keyword_dict = {
     "combined_full_all_years_baseline_v01": {
 		"label"		: "{}::all_years_combination",
-		"clearname"	: "{}\\\\ FH (DNN)+ DL (MEM) + SL (DNN) \\\\ + ttbb CR Combined"
+		"clearname"	: "{}\\\\ FH (DNN)+ DL (DNN) + SL (DNN) \\\\ + ttbb CR Combined"
 	},
     "combined_full_all_years_baseline_v01_packaged_mus": {
 		"label"		: "{}::all_years_combination_split",
-		"clearname"	: "{}\\\\ FH (DNN)+ DL (MEM) + SL (DNN) \\\\ + ttbb CR Split"
+		"clearname"	: "{}\\\\ FH (DNN)+ DL (DNN) + SL (DNN) \\\\ + ttbb CR Split"
 	},
     "combined_full_all_years_baseline_v01_scalable": {
 		"label"		: "{}::all_years_combination_scaled",
-		"clearname"	: "{}\\\\ FH (DNN)+ DL (MEM) + SL (DNN) \\\\ + ttbb CR Combined @ 140\\,fb-1"
+		"clearname"	: "{}\\\\ FH (DNN)+ DL (DNN) + SL (DNN) \\\\ + ttbb CR Combined @ 140\\,fb-1"
 	},
     "combined_full_all_years_baseline_v01_scalable_packaged_mus": {
 		"label"		: "{}::all_years_combination_scaled_split",
-		"clearname"	: "{}\\\\ FH (DNN)+ DL (MEM) + SL (DNN) \\\\ + ttbb CR Split @ 140\\,fb-1"
+		"clearname"	: "{}\\\\ FH (DNN)+ DL (DNN) + SL (DNN) \\\\ + ttbb CR Split @ 140\\,fb-1"
 	},
     
 
 	"combined_DLFHSL_all_years_baseline_v01": {
 		"label"		: "{}::dlslfh_all_years_combination",
-		"clearname"	: "{}\\\\ FH (DNN)+ DL (MEM) + SL (DNN) Combined"
+		"clearname"	: "{}\\\\ FH (DNN)+ DL (DNN) + SL (DNN) Combined"
 	},
     "combined_DLSL_all_years_baseline_v01": {
 		"label"		: "{}::sldl_all_years_combination",
@@ -29,7 +29,7 @@ keyword_dict = {
 		"label"		: "{}::fh_all_years_combination",
 		"clearname"	: "{} FH"
 	},    
-	"combined_DL_all_years_MEM": {
+	"combined_DL_all_years_DNN": {
 		"label"		: "{}::dl_all_years_combination",
 		"clearname"	: "{} DL"
 	},    
@@ -42,12 +42,12 @@ keyword_dict = {
 		"clearname"	: "{} ttbb CR Split"
 	},
 
-    "ttH_hbb_13TeV_all_years_dl_4j3b_MEM": {
-		"label"		: "{}::dl_4j3b_MEM_all_years_combination",
+    "ttH_hbb_13TeV_all_years_dl_4j3b_DNN": {
+		"label"		: "{}::dl_4j3b_DNN_all_years_combination",
 		"clearname"	: "{} DL $\\geq 4$ jets, 3 tags"
 	}, 
-    "ttH_hbb_13TeV_all_years_dl_4j4b_MEM": {
-		"label"		: "{}::dl_4j4b_MEM_all_years_combination",
+    "ttH_hbb_13TeV_all_years_dl_4j4b_DNN": {
+		"label"		: "{}::dl_4j4b_DNN_all_years_combination",
 		"clearname"	: "{} DL $\\geq 4$ jets, $\\geq 4$ tags"
 	},    
 
@@ -143,12 +143,12 @@ order = [
 	"combined_DLFHSL_all_years_baseline_v01",
     "combined_DLSL_all_years_baseline_v01",
 	"combined_FH_all_years_DNN",    
-	"combined_DL_all_years_MEM",    
+	"combined_DL_all_years_DNN",    
     "combined_SL_all_years_DNN",
     "ttbb_CR_all_years",
 
-    "ttH_hbb_13TeV_all_years_dl_4j3b_MEM", 
-    "ttH_hbb_13TeV_all_years_dl_4j4b_MEM",    
+    "ttH_hbb_13TeV_all_years_dl_4j3b_DNN", 
+    "ttH_hbb_13TeV_all_years_dl_4j4b_DNN",    
 
     "combined_SL_all_years_DNN_ge4j_3t", 
     "combined_SL_all_years_DNN_ge4j_ge4t",   
