@@ -126,16 +126,16 @@ class ValidationInterface(object):
                 and (p.channel()==s.channel()) and (p.bin_id()==s.bin_id()) \
                 and (p.mass()==s.mass()))
     
-    def drop_procs(self, chob, proc, bin_name, drop_list):
+    def drop_procs(self, chob, proc, drop_list):
         if self.verbosity >= 50:
             print("="*130)
             print("checking process if it should be dropped:")
             print("\tname: {}".format(proc.process()))
             print("\tbin: {}".format(proc.bin()))
             print("\trate: {}".format(proc.rate()))
-            print("\tcurrent bin to prune: {}".format(bin_name))
+            # print("\tcurrent bin to prune: {}".format(bin_name))
             print("\tcurrent list to drop: {}".format(", ".join(drop_list)))
-        drop = (proc.process() in drop_list) and (proc.bin() == bin_name)
+        drop = proc.process() in drop_list
         drop = drop or proc.rate() == 0
         if(drop):
             if self.verbosity >= 10:
@@ -230,18 +230,11 @@ class ValidationInterface(object):
                     # sys.exit()
         return harvester
     
-    def drop_small_signals(self, harvester, change_dict, eras = [".*"], \
-                            channels = [".*"], bins = [".*"]):
+    def drop_all_processes(self, harvester, to_drop, \
+                            eras = [".*"], channels = [".*"],
+                            bins = [".*"]):
         if self.verbosity >= 50:
-            print("parameters for dropping processes:")
-            print("\teras: {}".format(", ".join(eras)))
-            print("\tchannels: {}".format(", ".join(channels)))
-            print("\tbins: {}".format(", ".join(bins)))
-            print("\tchange_dict: \n{}".format(json.dumps(change_dict, indent=4)))
-        for chan in change_dict:
-            to_drop = change_dict[chan].keys()
-            if self.verbosity >= 50:
-                print("pruning bin '{}'".format(chan))
+                print("pruning bins '{}'".format(", ".join(bins)))
                 print("to drop: [{}]".format(", ".join(to_drop)))
                 print("harvester with era selection:")
                 harvester.cp().era(eras).PrintProcs()
@@ -253,15 +246,30 @@ class ValidationInterface(object):
                 harvester.cp().era(eras).channel(channels).PrintProcs()
             
                 print("="*130)
+        harvester.cp().era(eras).channel(channels).bin(bins)\
+            .ForEachProc(lambda x: \
+                harvester.FilterProcs(lambda y: True if self.matching_proc(x, y) and \
+                                                        self.drop_procs(harvester, x,
+                                                        to_drop)\
+                                                    else False
+                                    )
+                        )
+
+    def drop_small_signals(self, harvester, change_dict, eras = [".*"], \
+                            channels = [".*"], bins = [".*"]):
+        if self.verbosity >= 50:
+            print("parameters for dropping processes:")
+            print("\teras: {}".format(", ".join(eras)))
+            print("\tchannels: {}".format(", ".join(channels)))
+            print("\tbins: {}".format(", ".join(bins)))
+            print("\tchange_dict: \n{}".format(json.dumps(change_dict, indent=4)))
+        for chan in change_dict:
+            to_drop = change_dict[chan].keys()
+            
             bins = [str(chan)]
-            harvester.cp().era(eras).channel(channels).bin(bins)\
-                .ForEachProc(lambda x: \
-                    harvester.FilterProcs(lambda y: True if self.matching_proc(x, y) and \
-                                                            self.drop_procs(harvester, x, 
-                                                            chan, to_drop)\
-                                                        else False
-                                        )
-                            )
+            self.drop_all_processes(harvester = harvester, to_drop = to_drop,
+                                    eras = eras, channels = channels, 
+                                    bins = bins)
     
     def drop_small_backgrounds(self, harvester, eras = [".*"], \
                             channels = [".*"], bins = [".*"]):
@@ -286,43 +294,28 @@ class ValidationInterface(object):
         # check for minor backgrounds
         for chan in channels:
             for era in eras:
-                if self.verbosity >= 50:
-                    print("pruning bin '{}'".format(chan))
-                    print("to drop: [{}]".format(", ".join(to_drop)))
-                    print("harvester with era selection:")
-                    harvester.cp().era(eras).PrintProcs()
-                    print("="*130)
-                    print("harvester with bin selection")
-                    harvester.cp().era(eras).channel(channels).bin(bins).PrintProcs()
-                    print("="*130)
-                    print("harvester with channel selection")
-                    harvester.cp().era(eras).channel(channels).PrintProcs()
-                
-                    print("="*130)
                 bins = harvester.cp().channel([chan]).era([era]).bin_set()
                 for b in bins:
                     b = str(b)
-                    bin_backgrounds = harvester.cp().channel([chan]).era([era]).bin([b]).backgrounds()
+                    bin_backgrounds = harvester.cp().channel([chan])\
+                                        .era([era]).bin([b]).backgrounds()
                     total_rate = bin_backgrounds.GetRate()
                     to_drop = []
                     for p in bin_backgrounds.process_set():
                         p = str(p)
-                        proc_rate = bin_backgrounds.cp().process([p]).GetRate() 
+                        proc_rate = bin_backgrounds.cp().process([p]).GetRate()
                         if proc_rate < self.background_threshold*total_rate:
                             print(" ".join("""
                                 Very small background process. 
                                 In bin {} background process {} has yield {}. 
                                 Total background rate in this bin is {}
-                                """.format(b, p, proc_rate, total_rate).split()))
+                                """.format(b, p, proc_rate, total_rate).split()
+                                ))
                             to_drop.append(p)
-                    harvester.cp().era(eras).channel(channels).bin(bins)\
-                        .ForEachProc(lambda x: \
-                            harvester.FilterProcs(lambda y: True if self.matching_proc(x, y) and \
-                                                                    self.drop_procs(harvester, x, 
-                                                                    b, to_drop)\
-                                                                else False
-                                                )
-                                    )
+                    if len(to_drop) > 0:
+                        self.drop_all_processes(harvester, to_drop = to_drop,
+                                                eras = [era], channels = [chan],
+                                                bins = [b])
 
     def apply_validation(self, harvester,  eras = [".*"], \
                             channels = [".*"], bins = [".*"]):
