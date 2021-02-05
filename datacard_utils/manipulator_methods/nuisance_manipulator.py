@@ -53,15 +53,21 @@ class NuisanceManipulator(object):
         harvester_params = harvester.syst_name_set()
         if not isinstance(bins, list):
             bins = harvester.bin_set()
-        print(harvester_params)
+        # print(harvester_params)
+        if self.debug >= 3: 
+            print("will remove nuisances based on following dictionary")
+            print(json.dumps(self.to_remove, indent=4))
         for wildcard_par in self.to_remove:
             print(wildcard_par)
             procs = self.to_remove[wildcard_par]
             these_pars = filter(harvester_params, wildcard_par)
             print(these_pars)
             for par in these_pars:
-                print(self.__debug)
+                # print(self.__debug)
                 if self.__debug >= 3:
+                    print(par)
+                    print(procs)
+                    print(bins)
                     print("removing param '{}' for procs '{}' in bins '{}'".\
                         format(par, ", ".join(procs), ", ".join(bins)))
                 harvester.cp().bin(bins).process(procs).\
