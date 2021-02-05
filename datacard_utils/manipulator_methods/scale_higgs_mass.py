@@ -112,7 +112,9 @@ class MassManipulator(object):
         for p in processes:
             print(p)
             if "_" in p:
-                prod, decay = p.split("_",1)
+                parts = p.split("_")
+                prod = parts[0] 
+                decay = parts[-1]
                 if "H" in prod:
                     productions.append(prod)
                 if decay.startswith("h"):
