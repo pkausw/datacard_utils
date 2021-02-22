@@ -21,7 +21,15 @@ keyword_dict = {
 		"label"		: "{}::dlslfh_all_years_combination",
 		"clearname"	: "{}\\\\ FH (DNN)+ DL (DNN) + SL (DNN) Combined"
 	},
+	"combined_DLFHSL_all_years": {
+		"label"		: "{}::dlslfh_all_years_combination",
+		"clearname"	: "{}\\\\ FH (DNN)+ DL (DNN) + SL (DNN) Combined"
+	},
     "combined_DLSL_all_years_baseline_v01": {
+		"label"		: "{}::sldl_all_years_combination",
+		"clearname"	: "{} SL+DL"
+	},
+    "combined_DLSL_all_years": {
 		"label"		: "{}::sldl_all_years_combination",
 		"clearname"	: "{} SL+DL"
 	},
@@ -141,7 +149,9 @@ order = [
     "combined_full_all_years_baseline_v01_scalable_packaged_mus",
 
 	"combined_DLFHSL_all_years_baseline_v01",
+	"combined_DLFHSL_all_years",
     "combined_DLSL_all_years_baseline_v01",
+    "combined_DLSL_all_years",
 	"combined_FH_all_years_DNN",    
 	"combined_DL_all_years_DNN",    
     "combined_SL_all_years_DNN",
