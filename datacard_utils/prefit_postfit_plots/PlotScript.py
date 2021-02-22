@@ -526,8 +526,8 @@ if data:
         dataHist = Plots.GetHistoFromTGraphAE(dataHist, data, n_bins, binEdges)
         #Plots.moveOverUnderFlow(dataHist)
         dataHist.SetStats(False)
-        if divideByBinWidth:
-            dataHist.Scale(1., "width")
+        # if divideByBinWidth:
+        #     dataHist.Scale(1., "width")
     else:
         print "ATTENTION: Not using data!"
         dataHist=None
