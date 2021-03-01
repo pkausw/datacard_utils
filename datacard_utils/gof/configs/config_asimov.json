@@ -1,0 +1,7 @@
+{
+	"variable_separator" 	: 	"_vs_",
+	"id_data"				:	"asimov",
+	"id_toys"				:	"toys",
+	"data_dir"				:	"gof_to_data",
+	"toy_dir"				:	"gof_to_toys"
+}
