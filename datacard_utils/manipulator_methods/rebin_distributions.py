@@ -27,6 +27,7 @@ class BinManipulator(object):
     choices = "left right all mem".split()
     def __init__(self):
         self.bin_edges = []
+        self.threshold = 15
         
     def load_edges(self, proc):
         h = proc.ShapeAsTH1F()
@@ -55,6 +56,104 @@ class BinManipulator(object):
             edges.append(self.bin_edges[-1])
         return edges
 
+    def get_statistical_binning(self, combinedHist):
+        """Determine binning based on MC statistics in each bin.
+        In statistical analyses, it is important to choose a binning
+        where each bin
+        - has data to compare against
+        - has a minimial amount of statistcs in the bin to ensure
+          proper behaviour (e.g. a minimal amount of background
+          events or some criterion based on the MC stat uncertainties)
+        
+        'combinedHist' is the total histogram of all processes
+        you want to take into account for the rebinning (e.g. all
+        background processes). The function will loop through all
+        bins and compare the bin entries agains the threshold.
+
+        If 'threshold' is > 1, the bin content is required to be 
+        >= threshold.
+
+        If 'threshold' is < 1, the bin error (i.e. the MC stat uncertainties)
+        is required to be smaller than threshold.
+
+        Bins are summed from right to left until the threshold criterion
+        is met. 
+
+        Args:
+            combinedHist (ROOT.TH1):    total histogram of all processes 
+                                        to be considered
+            threshold (float):          threshold to compare against. 
+                                        threshold > 1: compare bin contents
+                                        threshold < 1: compare bin errors
+
+        Returns:
+            list(floats):               bin edges after applying the criterion
+        """
+        squaredError = 0.
+        binContent = 0.
+        bin_edges = []
+        last_added_edge = 0
+        nbins = combinedHist.GetNbinsX()
+        for i in range(nbins, 0, -1):
+            if i == nbins:
+                last_added_edge = combinedHist.GetBinLowEdge(nbins+1)
+                bin_edges.append(last_added_edge)
+
+            # add together squared bin errors and bin contents
+            squaredError += combinedHist.GetBinError(i)**2
+            binContent += combinedHist.GetBinContent(i)
+            # print("bin (low edge): {} ({})".format(i, combinedHist.GetBinLowEdge(i)))
+            # print("bkg stack: {}".format(combinedHist.GetBinContent(i)))
+            # print("sum: {}".format(binContent))
+
+            # calculate relative error
+            relerror = squaredError**0.5/binContent if not binContent == 0 else squaredError**0.5
+            
+            if binContent == 0: continue
+            if self.threshold > 1:
+                # do rebinning based on the population of the bins enterly
+                # bins are ok if the bin content is larger than the threshold
+                if binContent >= self.threshold:
+                    # if relative error is smaller than threshold, start new bin
+                    last_added_edge = combinedHist.GetBinLowEdge(i)
+                    bin_edges.append(last_added_edge)
+                    squaredError = 0.
+                    binContent = 0.
+            else:
+                # if relative error is smaller than threshold, start new bin
+                if relerror <= self.threshold:
+                    last_added_edge = combinedHist.GetBinLowEdge(i)
+                    bin_edges.append(last_added_edge)
+                    squaredError = 0.
+                    binContent = 0.
+        
+        
+        # underflow_edge = combinedHist.GetBinLowEdge(1)
+        # if not underflow_edge in bin_edges:
+        #     # if underflow_edge is not in bin_edges list the relative
+        #     # error of the last bin is too small, so just merge the
+        #     # first two bins by replacing the last_added_edge with
+        #     # the underflow_edge 
+        #     bin_edges[-1] = underflow_edge
+        bin_edges = sorted(bin_edges)
+        print("\tnew bin edges: [{}]".format(",".join([str(round(b,4)) for b in bin_edges])))
+        return bin_edges
+
+    def do_statistical_rebinning(self, harvester):
+        bins = harvester.bin_set()
+        print("Rebinning based on MC Statistics with threshold '{}'".\
+                    format(self.threshold))
+        for b in bins:
+            self.bin_edges = []
+            hist = harvester.cp().bin([b]).backgrounds().AsTH1F()
+            hist.Scale(harvester.cp().bin([b]).backgrounds.GetRate())
+            print(b)
+            # print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
+            self.bin_edges = self.get_statistical_binning(hist)
+            print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
+            harvester.cp().bin([b]).VariableRebin(self.bin_edges)
+        return harvester
+    
     def rebin_shapes(self, harvester):
         bins = harvester.bin_set()
         for b in bins:
@@ -94,6 +193,7 @@ def main(*args, **kwargs):
         raise ValueError(msg)
     bin_manipulator = BinManipulator()
     bin_manipulator.scheme = scheme
+    harvester = bin_manipulator.do_statistical_rebinning(harvester)
     harvester = bin_manipulator.rebin_shapes(harvester = harvester)
 
     common_manipulations = CommonManipulations()

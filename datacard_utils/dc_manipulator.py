@@ -89,7 +89,8 @@ def remove_minor_JEC(harvester):
 def do_validation(harvester, cardpaths, jsonpath):
     val_interface = ValidationInterface()
     val_interface.remove_small_signals = True
-    val_interface.verbosity = 80
+    val_interface.remove_small_backgrounds = False
+    # val_interface.verbosity = 80
     for era in cardpaths:
         cards = cardpaths[era]
         print("applying validation to paths")
@@ -203,10 +204,14 @@ def main(**kwargs):
 
     
     rebin_scheme = kwargs.get("scheme", None)
-    if rebin_scheme:
+    check_mc = kwargs.get("check_mc", False)
+    if rebin_scheme or check_mc:
         bin_manipulator = BinManipulator()
-        bin_manipulator.scheme = rebin_scheme
-        harvester = bin_manipulator.rebin_shapes(harvester = harvester)
+        if check_mc:
+            harvester = bin_manipulator.do_statistical_rebinning(harvester)
+        if rebin_scheme:
+            bin_manipulator.scheme = rebin_scheme
+            harvester = bin_manipulator.rebin_shapes(harvester = harvester)
     
 
     remove_minor_jec = kwargs.get("remove_minor_jec", False)
@@ -344,6 +349,20 @@ def parse_arguments():
                         choices = BinManipulator.choices,
                         # type = "str"
                     )
+
+    optional_group.add_option("--check-mc-binning",
+                        help = " ".join(
+                            """
+                            rebin the shapes in the different channels
+                            according to the MC stats in each bin of the
+                            total background distributions. Default is False
+                            """.split()
+                        ),
+                        dest = "check_mc",
+                        action = "store_true",
+                        default = False
+                    )
+
     optional_group.add_option("--apply-validation",
                         help = " ".join(
                             """
