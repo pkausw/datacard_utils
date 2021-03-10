@@ -139,14 +139,20 @@ class BinManipulator(object):
         print("\tnew bin edges: [{}]".format(",".join([str(round(b,4)) for b in bin_edges])))
         return bin_edges
 
-    def do_statistical_rebinning(self, harvester):
-        bins = harvester.bin_set()
+    def do_statistical_rebinning(self, harvester, bins = [".*"], processes = []):
+        harvester.SetFlag("filters-use-regex", True)
+        these_bins = harvester.cp().bin(bins).bin_set()
         print("Rebinning based on MC Statistics with threshold '{}'".\
                     format(self.threshold))
-        for b in bins:
+        print("will perform rebinning for bins:")
+        print(these_bins)
+        for b in these_bins:
+            if len(processes) == 0:
+                relevant_process_harv = harvester.cp().bin([b]).backgrounds()
+            else:
+                relevant_process_harv = harvester.cp().bin([b]).process(processes)
             self.bin_edges = []
-            hist = harvester.cp().bin([b]).backgrounds().AsTH1F()
-            hist.Scale(harvester.cp().bin([b]).backgrounds.GetRate())
+            hist = relevant_process_harv.GetShape()
             print(b)
             # print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
             self.bin_edges = self.get_statistical_binning(hist)
