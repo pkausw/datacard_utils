@@ -51,17 +51,9 @@ def remove_minor_JEC(harvester):
         for proc in "tHq tHW".split():
             processes.append("{}_{}".format(proc, decay))
     params = """CMS_res_j*
-        CMS_scaleAbsolute_j
-        CMS_scaleAbsolute_j_*
-        CMS_scaleBBEC1_j
-        CMS_scaleBBEC1_j_*
-        CMS_scaleEC2_j
-        CMS_scaleEC2_j_*
-        CMS_scaleFlavorQCD_j
-        CMS_scaleHF_j
-        CMS_scaleHF_j_*
-        CMS_scaleRelativeBal_j
-        CMS_scaleRelativeSample_j_*""".split()
+        CMS_scale*_j
+        CMS_scale*_j_*
+        """.split()
     
     np_manipulator = NuisanceManipulator()
     bins = harvester.bin_set()
@@ -86,10 +78,11 @@ def remove_minor_JEC(harvester):
         np_manipulator.remove_nuisances_from_procs(harvester = harvester,
                                                     bins = bins)
 
-def do_validation(harvester, cardpaths, jsonpath):
+def do_validation(harvester, cardpaths, jsonpath, prune_backgrounds = False):
     val_interface = ValidationInterface()
     val_interface.remove_small_signals = True
     val_interface.remove_small_backgrounds = False
+    harvester.SetFlag("filters-use-regex", True)
     # val_interface.verbosity = 80
     for era in cardpaths:
         cards = cardpaths[era]
@@ -102,6 +95,34 @@ def do_validation(harvester, cardpaths, jsonpath):
                 val_interface.jsonpath = jsonpath
             
             val_interface.apply_validation(harvester, eras = [era])
+            if prune_backgrounds:
+                # drop minor processes for tHq
+                print("pruning tHq")
+                processes = harvester.cp().process(["tHq.*"]).process_set()
+                print("pruning processes: {}".format(", ".join(processes)))
+                val_interface.drop_small_processes(harvester = harvester,
+                                                    era = [era], 
+                                                    processes = processes)
+
+                # drop minor processes for tHW
+                print("pruning tHW")
+                processes = harvester.cp().process(["tHW.*"]).process_set()
+                print("pruning processes: {}".format(", ".join(processes)))
+                val_interface.drop_small_processes(harvester = harvester,
+                                                    era = [era], 
+                                                    processes = processes)
+
+                # drop minor backgrounds, but protect tH processes
+                # first, select all backgrounds that are not tH processes, 
+                # then do check with this set of processes
+                processes = harvester.cp().backgrounds()\
+                                    .process(["tH(q|W).*"], False)\
+                                    .process_set()
+                print("pruning processes: {}".format(", ".join(processes)))
+                val_interface.drop_small_processes(harvester = harvester,
+                                                    era = [era], 
+                                                    processes = processes)
+
             print("="*130)
             print("after validation interface")
             harvester.cp().era([era]).PrintProcs()
@@ -219,12 +240,14 @@ def main(**kwargs):
         remove_minor_JEC(harvester)
 
     apply_validation = kwargs.get("apply_validation")
+    prune_backgrounds = kwargs.get("remove_minor_bkgs", False)
     if apply_validation:
         jsonpath = kwargs.get("validation_jsonpath")
 
         do_validation(  harvester = harvester,
                         cardpaths = cardpaths,
-                        jsonpath = jsonpath )
+                        jsonpath = jsonpath ,
+                        prune_backgrounds=prune_backgrounds)
     
     print("="*130)
     print("back in dc_manipulator::main")
@@ -395,6 +418,20 @@ def parse_arguments():
                             """.split()
                         ),
                         dest = "remove_minor_jec",
+                        action = "store_true",
+                        default = False
+                    )
+    optional_group.add_option("--remove-minor-bkgs",
+                        help = " ".join(
+                            """
+                            remove backgrounds which contribute less than
+                            0.1% to the overall background yield.
+                            Note that the tH processes are protected and
+                            are not considered as background in this check.
+                            Default: False
+                            """.split()
+                        ),
+                        dest = "remove_minor_bkgs",
                         action = "store_true",
                         default = False
                     )

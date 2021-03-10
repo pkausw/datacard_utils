@@ -271,8 +271,65 @@ class ValidationInterface(object):
                                     eras = eras, channels = channels, 
                                     bins = bins)
     
+    def drop_small_processes(self, harvester, chan = [".*"], \
+                                era = [".*"], bins = [".*"], \
+                                processes = []):
+        """Function to drop processes from a set of process that do not
+        contribute to the set significantly. The decision is based on the
+        member variables 'background_threshold'.
+
+        The function loops through all processes in the set 'processes'
+        and compare the rate of the individual processes with the overall rate.
+
+
+        Args:
+            harvester (CombineHarvester): harvester instance that contains the processes
+            chan (list, optional): list of channels to check. Defaults to [".*"].
+            era (list, optional): list of eras to check. Defaults to [".*"].
+            bins (list, optional): list of bins to check. Defaults to [".*"].
+            processes (list, optional): list of bins to check. Defaults to [], in which case
+                                        the set of background processes is used.
+
+        Yields:
+            None
+        """       
+        # loop through all bins    
+        these_bins = harvester.cp().bin(bins).bin_set()                     
+        for b in these_bins:
+            b = str(b)
+            # load the relevant process set. If 'processes' is empty, use set of backgrounds
+            if len(processes)== 0:
+                all_procs = harvester.cp().channel(chan)\
+                                    .era(era).bin([b]).backgrounds()
+            else:
+                all_procs = harvester.cp().channel(chan)\
+                                    .era(era).bin([b]).process(processes)
+            # get overall rate
+            total_rate = all_procs.GetRate()
+            # initialize list with processes to drop
+            to_drop = []
+            # loop through all processes in the process set and do comparison
+            for p in all_procs.process_set():
+                p = str(p)
+                # get process rate
+                proc_rate = all_procs.cp().process([p]).GetRate()
+                # compare rate with overall rate
+                if proc_rate < self.background_threshold*total_rate:
+                    print(" ".join("""
+                        Very small background process. 
+                        In bin {} background process {} has yield {}. 
+                        Total background rate in this bin is {}
+                        """.format(b, p, proc_rate, total_rate).split()
+                        ))
+                    to_drop.append(p)
+            if len(to_drop) > 0:
+                self.drop_all_processes(harvester, to_drop = to_drop,
+                                        eras = era, channels = chan,
+                                        bins = [b])
+
     def drop_small_backgrounds(self, harvester, eras = [".*"], \
                             channels = [".*"], bins = [".*"]):
+        harvester.SetFlag("filters-use-regex", True)
         if self.verbosity >= 50:
             print("parameters for dropping processes:")
             print("\teras: {}".format(", ".join(eras)))
@@ -294,28 +351,11 @@ class ValidationInterface(object):
         # check for minor backgrounds
         for chan in channels:
             for era in eras:
-                bins = harvester.cp().channel([chan]).era([era]).bin_set()
-                for b in bins:
-                    b = str(b)
-                    bin_backgrounds = harvester.cp().channel([chan])\
-                                        .era([era]).bin([b]).backgrounds()
-                    total_rate = bin_backgrounds.GetRate()
-                    to_drop = []
-                    for p in bin_backgrounds.process_set():
-                        p = str(p)
-                        proc_rate = bin_backgrounds.cp().process([p]).GetRate()
-                        if proc_rate < self.background_threshold*total_rate:
-                            print(" ".join("""
-                                Very small background process. 
-                                In bin {} background process {} has yield {}. 
-                                Total background rate in this bin is {}
-                                """.format(b, p, proc_rate, total_rate).split()
-                                ))
-                            to_drop.append(p)
-                    if len(to_drop) > 0:
-                        self.drop_all_processes(harvester, to_drop = to_drop,
-                                                eras = [era], channels = [chan],
-                                                bins = [b])
+                these_bins = harvester.cp().channel([chan])\
+                                .era([era]).bin(bins).bin_set()
+                self.drop_small_processes(harvester = harvester, chan = [chan], \
+                                era = [era], bins = these_bins)
+                
 
     def apply_validation(self, harvester,  eras = [".*"], \
                             channels = [".*"], bins = [".*"]):
