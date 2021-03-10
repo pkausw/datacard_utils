@@ -191,14 +191,14 @@ def create_2D_matrix(dictionary, outname, exclude_list = None, out_format = "txt
 def cleanup_varname(name, translationFile = None):
     orig_name = name
     name = name.replace("_hdecay","")
-    name = name.replace("ge4j_ge3t_","")
-    name = name.replace("ge4j_3t_","")
-    name = name.replace("ge4j_ge4t_","")
-    name = name.replace("ge6j_ge3t_","")
-    name = name.replace("4j_ge3t_","")
-    name = name.replace("le5j_ge3t_","")
-    name = name.replace("5j_ge3t_","")
-    name = name.replace("ljets_","")
+    # name = name.replace("ge4j_ge3t_","")
+    # name = name.replace("ge4j_3t_","")
+    # name = name.replace("ge4j_ge4t_","")
+    # name = name.replace("ge6j_ge3t_","")
+    # name = name.replace("4j_ge3t_","")
+    # name = name.replace("le5j_ge3t_","")
+    # name = name.replace("5j_ge3t_","")
+    # name = name.replace("ljets_","")
     
     if not translationFile is None:
         

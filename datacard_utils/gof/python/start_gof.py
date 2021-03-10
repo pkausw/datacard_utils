@@ -374,7 +374,6 @@ def main(options, datacard_paths):
             #check for workspace
             add_t2w_cmd = "-D %s --channel-masks" % options.data_obs
             path = helper.check_workspace(  pathToDatacard = datacard,
-                                            pathToCMSSWsetup = cmsswsource,
                                             additional_cmds = add_t2w_cmd
                                             )
             if path == "":

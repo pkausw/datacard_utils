@@ -5,13 +5,14 @@ import json
 import os
 import shutil
 import fnmatch
+import subprocess
 
 class helperClass(object):
 
     def __init__(self):
-        print "initializing helperClass"
+        print("initializing helperClass")
         self._debug = 0
-	if not ("CMSSW_BASE" in os.environ or "SCRAM_ARCH" in os.environ):
+        if not ("CMSSW_BASE" in os.environ or "SCRAM_ARCH" in os.environ):
             exit("You need to setup CMSSW")
         self._JOB_PREFIX = """#!/bin/sh
 ulimit -s unlimited
@@ -23,10 +24,10 @@ source $VO_CMS_SW_DIR/cmsset_default.sh
 eval `scramv1 runtime -sh`
 cd -
 """ % ({
-    'CMSSW_BASE': os.environ['CMSSW_BASE'],
-    'SCRAM_ARCH': os.environ['SCRAM_ARCH'],
-    # 'PWD': os.environ['PWD']
-    })
+        'CMSSW_BASE': os.environ['CMSSW_BASE'],
+        'SCRAM_ARCH': os.environ['SCRAM_ARCH'],
+        # 'PWD': os.environ['PWD']
+        })
 
 
     @property
@@ -49,11 +50,11 @@ cd -
             elif joinwith == "insert":
                 pass
             elif joinwith == "remove":
-                print "removing",keyword, toinsert
-                print "index:", cmds.index(keyword)
+                print( "removing '{} {}'".format(keyword, toinsert))
+                print( "index: {}".format(cmds.index(keyword)))
                 # cmds = [x for j, x in enumerate(cmds) if j != i or j!= i+1]
                 cmds = cmds[:i] + cmds[i+2:]
-                print cmds
+                print( cmds)
             else:
                 cmds[i+1] = joinwith.join([cmds[i+1],toinsert])
         else:
@@ -75,17 +76,18 @@ cd -
     def remove_extension(self, s):
         return ".".join(s.split(".")[:-1])
 
-    def check_workspace(self, pathToDatacard):
+    def check_workspace(self, pathToDatacard, additional_cmds = ""):
         workspacePath = ""
         parts = pathToDatacard.split(".")
         outputPath = ".".join(parts[:len(parts)-1]) + ".root"
         if not os.path.exists(outputPath):
-            print "generating workspace for", pathToDatacard
+            print( "generating workspace for {}".format(pathToDatacard))
             
-            bashCmd = ["source {0} ;".format(pathToCMSSWsetup)]
-            bashCmd.append("text2workspace.py -m 125 " + pathToDatacard)
+            bashCmd = ["{0} ;".format("; ".join(self._JOB_PREFIX.split()))]
+            bashCmd.append("text2workspace.py -m 125.38 " + pathToDatacard)
+            bashCmd.append(additional_cmds)
             bashCmd.append("-o " + outputPath)
-            print bashCmd
+            print( bashCmd)
             subprocess.call([" ".join(bashCmd)], shell = True)
        
         workspacePath = outputPath
@@ -97,20 +99,20 @@ cd -
             else:
                 test = f.Get("w")
                 if not isinstance(test, ROOT.RooWorkspace):
-                    print "could not find workspace in", workspacePath
+                    print ("could not find workspace in {}".format(workspacePath))
                     workspacePath = ""
         else:
-            print "could not find", workspacePath
+            print ("could not find {}".format(workspacePath))
             workspacePath = ""
         return workspacePath
 
     def dump_json(self, outname, allvals):
         if len(allvals) > 0:
-            print "opening file", outname
+            print ("opening file {}".format(outname))
             with open(outname, "w") as outfile:
                 json.dump(allvals, outfile, indent = 4, separators = (',', ': '))
         else:
-            print "given dictionary is empty, will not create '%s'" % outname
+            print ("given dictionary is empty, will not create '{}'".format(outname))
 
     def is_number(self, s):
         s.replace("p", ".")
@@ -118,7 +120,7 @@ cd -
             float(s)
             return True
         except ValueError:
-            print "{0} is not a number!".format(s)
+            print ("{0} is not a number!".format(s))
             return False
 
     def intact_root_file(self, f):
@@ -130,20 +132,20 @@ cd -
                         return True
                     else:
                         if self._debug >= 99: 
-                            print "ERROR: file '%s' is recovered!" % f.GetName()
+                            print ("ERROR: file '%s' is recovered!" % f.GetName())
                 else:
                     if self._debug >= 99:
-                        print "ERROR: file '%s' is zombie!" % f.GetName()
+                        print ("ERROR: file '%s' is zombie!" % f.GetName())
             else:
                 if self._debug >= 99:
-                    print "ERROR: file '%s' is not open" % f.GetName()
+                    print ("ERROR: file '%s' is not open" % f.GetName())
         return False
     
     def is_good_fit(self, result):
         if result.status() == 0 and result.covQual() == 3:
             return True
-        print "WARNING: This is not a good fit!"
-        print "\tStatus: {0}\tQuality: {1}".format(result.status(), result.covQual())
+        print ("WARNING: This is not a good fit!")
+        print ("\tStatus: {0}\tQuality: {1}".format(result.status(), result.covQual()))
         return True #DANGERZONE!
 
     def load_roofitresult(self, rfile, fitres = "fit_s"):
@@ -200,10 +202,10 @@ cd -
                     f.Close()
                     return value, errorhi, abs(errorlo)
                 else:
-                    print "Could not load RooRealVar %s from %s" % (parname, filename)
+                    print ("Could not load RooRealVar %s from %s" % (parname, filename))
             else:
-                print "Could not load RooFitResult from %s" % (filename)
+                print ("Could not load RooFitResult from %s" % (filename))
         else:
-            print "File %s is not intact!" % filename
+            print ("File %s is not intact!" % filename)
         if f.IsOpen(): f.Close()
         return None
