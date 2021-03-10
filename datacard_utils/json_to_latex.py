@@ -11,6 +11,25 @@ line = """{parameter} & {bestfit} & {statonly} & {signi}\\\\"""
 footer = """\\bottomrule
 \\end{tabular}"""
 
+def setup_global_table_format(mode):
+    global header
+    global line
+    global footer
+    if mode == "tex":
+        header = """\\begin{tabular}{lccc}
+        \\toprule
+        Parameter & Stat+Syst & Stat-Only & Significance \\\\"""
+        line = """{parameter} & {bestfit} & {statonly} & {signi}\\\\"""
+        footer = """\\bottomrule
+        \\end{tabular}"""
+    elif mode == "md":
+        header = """
+        | Parameter | Stat+Syst | Stat-Only | Significance |
+        | --- | --- | --- | --- |
+        """
+        line = """| {parameter} & {bestfit} & {statonly} & {signi} |""".replace("&", "|")
+        footer = ""
+
 def parse_arguments():
     
     parser = OptionParser()
@@ -42,10 +61,24 @@ def parse_arguments():
                           at one .tex file""".split()
                           )
                         )
+    parser.add_option("--mode",
+                        help = " ".join(
+                            """
+                            select output mode. Current choices:
+                            tex (LaTex), md (Markdown). Defaults to tex
+                            """.split()
+                            ),
+                        dest = "mode",
+                        choices = ["tex", "md"],
+                        default = "tex"
+                        )
     options, infiles = parser.parse_args()
     if options.merge and options.is_prefix:
         parser.error("LOGIC ERROR: cannot merge and use prefix!")
     
+    setup_global_table_format(options.mode)
+    if not options.outfile.endswith(options.mode):
+        options.outfile = ".".join(options.outfile.split(".")[:-1] + [options.mode])
     return options, infiles
 
 def parse_results(file):
@@ -72,7 +105,7 @@ def parse_results(file):
             )
         else:
             stat_only_text = "--"
-        if "significance" in subdict:
+        if "significance" in subdict and not subdict["significance"] == "--":
             signi_text = str(round(subdict["significance"], 1))
         else:
             signi_text = "--"
@@ -96,15 +129,14 @@ def create_merged_tex(files):
     return "\n".join(lines)
 
 def save_file(outname, output):
-    if not outname.endswith(".tex"):
-        outname += ".tex"
     with open(outname, "w") as f:
-            f.write(output)
+        f.write(output)
 
 def main(options, files):
     merge = options.merge
     prepend = options.is_prefix
     outname = options.outfile
+    mode = options.mode
     output = None
     if merge:
         print("="*130)
@@ -117,7 +149,8 @@ def main(options, files):
     else:
         if len(files) == 1:
             tmp = [header]
-            tmp.append("\\midrule")
+            if mode == "tex":
+                tmp.append("\\midrule")
             tmp += parse_results(files[0])
             tmp.append(footer)
             output = "\n".join(tmp)
