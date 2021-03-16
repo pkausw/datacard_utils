@@ -19,10 +19,11 @@ except:
 from optparse import OptionParser, OptionGroup
 from subprocess import call
 from nuisance_manipulator import NuisanceManipulator
+from process_manipulator import ProcessManipulator
 
 ROOT.TH1.AddDirectory(False)
 
-class ValidationInterface(object):
+class ValidationInterface(ProcessManipulator):
 
     def __init__(self):
         self.__jsonpath = None
@@ -118,32 +119,7 @@ class ValidationInterface(object):
     @property
     def validation_dict(self):
         return self.__validation_dict
-    
-    def matching_proc(self, p,s):
-        return ((p.bin()==s.bin()) and (p.process()==s.process()) \
-                and (p.signal()==s.signal()) and \
-                (p.analysis()==s.analysis()) and (p.era()==s.era()) \
-                and (p.channel()==s.channel()) and (p.bin_id()==s.bin_id()) \
-                and (p.mass()==s.mass()))
-    
-    def drop_procs(self, chob, proc, drop_list):
-        if self.verbosity >= 50:
-            print("="*130)
-            print("checking process if it should be dropped:")
-            print("\tname: {}".format(proc.process()))
-            print("\tbin: {}".format(proc.bin()))
-            print("\trate: {}".format(proc.rate()))
-            # print("\tcurrent bin to prune: {}".format(bin_name))
-            print("\tcurrent list to drop: {}".format(", ".join(drop_list)))
-        drop = proc.process() in drop_list
-        drop = drop or proc.rate() == 0
-        if(drop):
-            if self.verbosity >= 10:
-                print("dropping process '{}/{}'".\
-                        format(proc.bin(), proc.process()))
-            chob.FilterSysts(lambda sys: self.matching_proc(proc,sys)) 
-        return drop
-    
+        
     def load_rate_values(self, harvester, uncertainty, channel, process):
         vals = []
         harvester.cp().bin([str(channel)]).process([str(process)]).\
@@ -230,31 +206,7 @@ class ValidationInterface(object):
                     # sys.exit()
         return harvester
     
-    def drop_all_processes(self, harvester, to_drop, \
-                            eras = [".*"], channels = [".*"],
-                            bins = [".*"]):
-        if self.verbosity >= 50:
-                print("pruning bins '{}'".format(", ".join(bins)))
-                print("to drop: [{}]".format(", ".join(to_drop)))
-                print("harvester with era selection:")
-                harvester.cp().era(eras).PrintProcs()
-                print("="*130)
-                print("harvester with bin selection")
-                harvester.cp().era(eras).channel(channels).bin(bins).PrintProcs()
-                print("="*130)
-                print("harvester with channel selection")
-                harvester.cp().era(eras).channel(channels).PrintProcs()
-            
-                print("="*130)
-        harvester.cp().era(eras).channel(channels).bin(bins)\
-            .ForEachProc(lambda x: \
-                harvester.FilterProcs(lambda y: True if self.matching_proc(x, y) and \
-                                                        self.drop_procs(harvester, x,
-                                                        to_drop)\
-                                                    else False
-                                    )
-                        )
-
+    
     def drop_small_signals(self, harvester, change_dict, eras = [".*"], \
                             channels = [".*"], bins = [".*"]):
         if self.verbosity >= 50:
@@ -270,62 +222,6 @@ class ValidationInterface(object):
             self.drop_all_processes(harvester = harvester, to_drop = to_drop,
                                     eras = eras, channels = channels, 
                                     bins = bins)
-    
-    def drop_small_processes(self, harvester, chan = [".*"], \
-                                era = [".*"], bins = [".*"], \
-                                processes = []):
-        """Function to drop processes from a set of process that do not
-        contribute to the set significantly. The decision is based on the
-        member variables 'background_threshold'.
-
-        The function loops through all processes in the set 'processes'
-        and compare the rate of the individual processes with the overall rate.
-
-
-        Args:
-            harvester (CombineHarvester): harvester instance that contains the processes
-            chan (list, optional): list of channels to check. Defaults to [".*"].
-            era (list, optional): list of eras to check. Defaults to [".*"].
-            bins (list, optional): list of bins to check. Defaults to [".*"].
-            processes (list, optional): list of bins to check. Defaults to [], in which case
-                                        the set of background processes is used.
-
-        Yields:
-            None
-        """       
-        # loop through all bins    
-        these_bins = harvester.cp().bin(bins).bin_set()                     
-        for b in these_bins:
-            b = str(b)
-            # load the relevant process set. If 'processes' is empty, use set of backgrounds
-            if len(processes)== 0:
-                all_procs = harvester.cp().channel(chan)\
-                                    .era(era).bin([b]).backgrounds()
-            else:
-                all_procs = harvester.cp().channel(chan)\
-                                    .era(era).bin([b]).process(processes)
-            # get overall rate
-            total_rate = all_procs.GetRate()
-            # initialize list with processes to drop
-            to_drop = []
-            # loop through all processes in the process set and do comparison
-            for p in all_procs.process_set():
-                p = str(p)
-                # get process rate
-                proc_rate = all_procs.cp().process([p]).GetRate()
-                # compare rate with overall rate
-                if proc_rate < self.background_threshold*total_rate:
-                    print(" ".join("""
-                        Very small background process. 
-                        In bin {} background process {} has yield {}. 
-                        Total background rate in this bin is {}
-                        """.format(b, p, proc_rate, total_rate).split()
-                        ))
-                    to_drop.append(p)
-            if len(to_drop) > 0:
-                self.drop_all_processes(harvester, to_drop = to_drop,
-                                        eras = era, channels = chan,
-                                        bins = [b])
 
     def drop_small_backgrounds(self, harvester, eras = [".*"], \
                             channels = [".*"], bins = [".*"]):
