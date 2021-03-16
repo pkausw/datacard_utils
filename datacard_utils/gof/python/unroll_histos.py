@@ -2,7 +2,7 @@ import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 from sys import argv, path as spath
 import os
-from os import path as opath, getcwd, remove, environ
+from os import path as opath, getcwd, remove
 from math import ceil
 thisfile = opath.abspath(opath.realpath(__file__))
 thisdir = opath.dirname(thisfile)
@@ -20,42 +20,26 @@ import json
 verbosity = 0
 
 
-head = """#!/bin/sh
-ulimit -s unlimited
-targetdir="%(TARGETDIR)s"
-cmd="%(CMD)s"
-"""
-
-cmssw_base = os.environ["CMSSW_BASE"]
-if not os.path.exists(cmssw_base):
-    raise ValueError("Please setup the CMSSW environment!")
+head = helper.JOB_PREFIX
 
 body = """
-export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch
-source $VO_CMS_SW_DIR/cmsset_default.sh
-export CMSSW_BASE={CMSSW_BASE}
+targetdir="%(TARGETDIR)s"
+cmd="%(CMD)s"
 
-if [[ -d $CMSSW_BASE ]]; then
-    cd $CMSSW_BASE
-    eval `scram runtime -sh`
+if [[ -d $targetdir ]]; then
+    cd $targetdir
+    echo $cmd
+    eval $cmd
     cd -
-
-    if [[ -d $targetdir ]]; then
-        cd $targetdir
-        echo $cmd
-        eval $cmd
-        cd -
-    else
-        echo "could not change into directory $targetdir"
-    fi
 else
-    echo "Could not find CMSSW_BASE in $CMSSW_BASE!"
+    echo "could not change into directory $targetdir"
 fi
-""".format(CMSSW_BASE = cmssw_base)
+"""
 shell_template = head + body
 
-cmd_template = "python " + thisfile + " -i %(INPUTFILE)s -o %(OUTPUTFILE)s -k %(KEYLIST)s --binJson %(BINJSON)s"
+cmd_template = "python " + thisfile + " -i %(INPUTFILE)s -o %(OUTPUTFILE)s --binJson %(BINJSON)s -k %(KEYLIST)s "
 
+# deprecated -> Use Rebin Function from TH2 in addition with addOverflows
 def rebin_histo(h, division_factor = 2):
     bins_x = h.GetNbinsX()
     bins_y = h.GetNbinsY()
@@ -91,84 +75,34 @@ def rebin_histo(h, division_factor = 2):
     return new_h
 
 
-def rebin_histo_new(h, division_factor = 2):
-    bins_x = h.GetNbinsX()
-    bins_y = h.GetNbinsY()
-    # new_bins_x = int(ceil(bins_x/float(division_factor)))
-    # new_bins_y = int(ceil(bins_y/float(division_factor)))
-    new_bins_x = int(floor(bins_x/float(division_factor)))
-    new_bins_y = int(floor(bins_y/float(division_factor)))
+def addOverflows(h):
+    nBinsX = h.GetNbinsX()
+    nBinsY = h.GetNbinsY()
 
-    x_min = h.GetXaxis().GetBinLowEdge(1)
-    x_max = h.GetXaxis().GetBinUpEdge(bins_x)
+    h.SetDirectory(0)
 
-    y_min = h.GetYaxis().GetBinLowEdge(1)
-    y_max = h.GetYaxis().GetBinUpEdge(bins_y)
+    for y in range(0,nBinsY+2):
+        h.SetBinContent(1, y, h.GetBinContent(0,y)+h.GetBinContent(1,y))
+        h.SetBinError(1, y, (h.GetBinError(0,y)**2+h.GetBinError(1,y)**2)**(1./2.))
+        h.SetBinContent(0, y, 0)
+        h.SetBinError(0, y, 0)
 
-    print ("Creating new histogram with n_x = %s, n_y = %s" % (str(new_bins_x), str(new_bins_y)))
-    name = h.GetName()
-    if not "rebinned" in name:
-        name = "rebinned_" + h.GetName()
-    new_h = ROOT.TH2D(name, h.GetTitle(), new_bins_x, x_min, x_max, new_bins_y, y_min, y_max)
-
-    xProblem = False
-    yProblem = False
-    if bins_x % 2 != 0:
-        xProblem = True
-    if bins_y % 2 != 0:
-        yProblem = True
-    # print(xProblem,yProblem)
-
-    for x in range(1, bins_x+1, division_factor):
-        for y in range(1, bins_y+1, division_factor):
-            content = 0
-            error = 0
-            xOffset = 0
-            yOffset = 0
-            for i in range(0, division_factor):
-                for j in range(0, division_factor):
-                    if not (yProblem and y == bins_y) and not (xProblem and x == bins_x):
-                        if  verbosity > 0:
-                            print ("\tadding from ({0}, {1}) value {2}, {3}".format(x+i, y+j, h.GetBinContent(x+i, y+j), (h.GetBinError(x+i, y+j))**2))
-                        content += h.GetBinContent(x+i, y+j)
-                        error += (h.GetBinError(x+i, y+j))**2
-
-                if xProblem and x == bins_x and y != bins_y:
-                    xOffset = -1
-                    content += h.GetBinContent(x, y+i)
-                    error += (h.GetBinContent(x, y+i))**2 
-
-                if yProblem and y == bins_y and x != bins_x:
-                    yOffset = -1
-                    content += h.GetBinContent(x+i, y)
-                    error += (h.GetBinContent(x+i, y))**2 
-
-                if xProblem and yProblem and x == bins_x and y == bins_y:
-                    xOffset = -1
-                    yOffset = -1
-                    content += h.GetBinContent(x+i, y+i)
-                    error += (h.GetBinContent(x+i, y+i))**2 
-
-            new_x = int(ceil(x/float(division_factor)))+xOffset
-            new_y = int(ceil(y/float(division_factor)))+yOffset
-            # new_x = int(floor(x/float(division_factor)))+xOffset
-            # new_y = int(floor(y/float(division_factor)))+yOffset
-
-            if not (yProblem and y == bins_y) and not (xProblem and x == bins_x):
-                new_h.SetBinContent(new_x, new_y, content)
-                new_h.SetBinError(new_x, new_y, error**(1./2))
-            elif (yProblem and y == bins_y and x != bins_x):
-                new_h.SetBinContent(new_x, new_y-1, new_h.GetBinContent(new_x, new_y-1)+ content)
-                new_h.SetBinError(new_x, new_y-1, (new_h.GetBinError(new_x, new_y-1)**2 + error**2)**(1./2))
-            elif (xProblem and x == bins_x and y != bins_y):
-                new_h.SetBinContent(new_x-1, new_y, new_h.GetBinContent(new_x-1, new_y) + content)
-                new_h.SetBinError(new_x, new_y-1, (new_h.GetBinError(new_x-1, new_y)**2 + error**2)**(1./2))
-            elif (xProblem and yProblem and x == bins_x and y == bins_y):
-                new_h.SetBinContent(new_x, new_y, new_h.GetBinContent(new_x, new_y) + content)
-                new_h.SetBinError(new_x, new_y, (new_h.GetBinError(new_x, new_y)**2 + error**2)**(1./2))
-    return new_h
-
-
+        h.SetBinContent(nBinsX, y ,h.GetBinContent(nBinsX+1,y)+h.GetBinContent(nBinsX,y))
+        h.SetBinError(nBinsX, y , (h.GetBinError(nBinsX+1,y)**2+h.GetBinError(nBinsX,y)**2)**(1./2.))
+        h.SetBinContent(nBinsX+1, y, 0)
+        h.SetBinError(nBinsX+1, y, 0)
+    
+    for x in range(1,nBinsX+1):
+        h.SetBinContent(x, 1, h.GetBinContent(x,0)+h.GetBinContent(x,1))
+        h.SetBinError(x, 1, (h.GetBinError(x,0)**2+h.GetBinError(x,1)**2)**(1./2.))
+        h.SetBinContent(x, 0 , 0)
+        h.SetBinError(x, 0 , 0)
+        
+        h.SetBinContent(x, nBinsY, h.GetBinContent(x,nBinsY+1)+h.GetBinContent(x,nBinsY))
+        h.SetBinError(x, nBinsY, (h.GetBinError(x,nBinsY+1)**2+h.GetBinError(x,nBinsY)**2)**(1./2.))
+        h.SetBinContent(x, nBinsY+1, 0)
+        h.SetBinError(x, nBinsY+1 , 0)
+    return h
 
 def cross_check(orig, unrolled):
     bins = unrolled.GetNbinsX()
@@ -182,30 +116,29 @@ def cross_check(orig, unrolled):
         print ("origval({2},{3}) = {0}\tunrolled val({4}) = {1}".format(orig_val, unrolled_val, x, y, b))
 
 def do_unrolling(h):
-    bins_x = h.GetNbinsX()+2 #also count over and underflow bins
-    bins_y = h.GetNbinsY()+2
+    bins_x = h.GetNbinsX()
+    bins_y = h.GetNbinsY()
     allbins = bins_x*bins_y
     hist = ROOT.TH1D("unrolled_" + h.GetName(), "", allbins, 0, allbins)
     hist.Sumw2()
     hist.SetDirectory(0)
     bins = []
-    for x in range(0, bins_x):
-        for y in range(0, bins_y):
-            # print "x={0}\ty={1}".format(x, y)
-            current_bin = h.GetBin(x, y)
-            bins.append(current_bin)
-            current_val = h.GetBinContent(current_bin)
-            current_error = h.GetBinError(current_bin)
-            # print "\tbin = {0}\tval = {1}\terr = {2}".format(current_bin, current_val, current_error)
-            if current_bin > allbins:
-                print ("WARNING: global bin is in overflow of unrolled histo {}".format( hist.GetName()))
-            hist.SetBinContent(current_bin, current_val)
-            hist.SetBinError(current_bin, current_error)
+    bincounter = 1
+    for x in range(1, bins_x+1):
+        for y in range(1, bins_y+1):
+            current_val = h.GetBinContent(x,y)
+            current_error = h.GetBinError(x,y)
+            if verbosity > 5: print ("\tbin = {0},{1}\tval = {2}\terr = {3}".format(x,y, current_val, current_error))
+            if bincounter > allbins:
+                print ("WARNING: global bin is in overflow of unrolled histo", hist.GetName())
+            hist.SetBinContent(bincounter, current_val)
+            hist.SetBinError(bincounter, current_error)
+            bincounter +=1
     norm = hist.Integral()
     if norm <= 0:
         print("WARNING: HISTOGRAM HAS NEGATIV INTEGRAL ({})! Will skip {}".format(norm, h.GetName()))
         return None
-    # print "allbins = {0}\tcounted bins = {1}".format(allbins, len(bins))
+    if verbosity > 5: print ("allbins = {0}\tcounted bins = {1}".format(allbins, len(bins)))
     # cross_check(orig = h, unrolled = hist)
     return hist
 
@@ -242,28 +175,39 @@ def unroll_histos(path_to_file, outfilepath, keylist, binJson):
     nRebins = 0
     for keycounter, key in enumerate(keys):
         if key.count("__") == 2:
-            nomName = "".join(key.split("__", 2)[1:2])
+            nomName = "".join(key.split("__", 2)[0:1])
+        elif key.count("__") > 2:
+            if any(key.endswith(ext) for ext in "Up Down".split()):
+                nomName = "__".join(key.split("__")[0:-2])
+            else:
+                nomName = "__".join(key.split("__")[0:-1])
         else:
-            nomName = key.split("__")[1].strip("_")
+            nomName = key.split("__")[0].strip("_")
         try:
-            nRebins = rebinDict[nomName]["Nrebins"]
+            divFactor = rebinDict[nomName]["divFac"]
         except:
             print("Could't find entry in BinJson for {}".format(nomName))
             broken.append(key)
             
-        print("Rebinning {n} times for {key}".format(n=nRebins, key = key))
+        if verbosity > 5: print("Rebinning with division Factor of {n} for {key}".format(n=divFactor, key = key))
         
-        if keycounter % 100 == 0:
+        if keycounter % 50 == 0:
             print ("reading key {0}/{1}".format(keycounter, nkeys))
         if isinstance(key, str):
             keyname = key
         else:
             keyname = key.GetName()
         h = infile.Get(keyname)
+        # h.Print("Range")
+        h.SetDirectory(0)
+        # print(h.Integral())
         if isinstance(h, ROOT.TH2):
-            for i in range(nRebins):
-                h = rebin_histo_new(h)
+            # print(divFactor)
+            h = h.Rebin2D(divFactor, divFactor)
+            h = addOverflows(h)
+            # h.Print("Range")
             tmp = do_unrolling(h)
+            # tmp.Print("Range")
             if not tmp is None: 
                 outfile.WriteTObject(tmp, keyname)
             else:
@@ -287,7 +231,7 @@ def write_skript(cmd, outname, targetdir):
             "TARGETDIR": targetdir,
             "CMD": cmd,
         })
-    print ("writing script here: {}".format( outname))
+    print ("writing script here: {}".format(outname))
     with open(outname, "w") as f:
         f.write(code)
     if os.path.exists(outname):
@@ -299,11 +243,11 @@ def split_unrolling(infilepath, outfilepath, nHists, binJson, runLocally = False
     keys = [x.GetName() for x in infile.GetListOfKeys()]
     if veto:
         keys = [x for x in keys if not veto in x]
-
+    binJson = opath.abspath(binJson)
     outfiledir = opath.dirname(outfilepath)
     basename = opath.basename(outfilepath)
     parts_folder = opath.join(outfiledir, "parts_" + ".".join(basename.split(".")[:-1]))
-    print ("will save output parts here: {}".format(parts_folder))
+    print( "will save output parts here: {}".format(parts_folder))
     if not opath.exists(parts_folder):
         os.mkdir(parts_folder)
     startfolder = getcwd()
@@ -320,7 +264,7 @@ def split_unrolling(infilepath, outfilepath, nHists, binJson, runLocally = False
 
         outpartname = ".".join(parts[:-1])+ "_%s.%s" %(str(i), parts[-1])
         outpartname = os.path.join(parts_folder, os.path.basename(outpartname)) 
-        print( outpartname)
+        print (outpartname)
         cmd = cmd_template % ({
                     "INPUTFILE": infilepath,
                     "OUTPUTFILE": outpartname,
@@ -352,7 +296,8 @@ def split_unrolling(infilepath, outfilepath, nHists, binJson, runLocally = False
                 cmd = "source " + script
                 # subprocess.call([cmd], shell=True)
     else:
-        print ("ERROR: Could not generate any scripts for {}".format(infilepath))
+        print ("ERROR: Could not generate any scripts for {}".format( infilepath))
+    os.chdir(startfolder)
 
 def parse_arguments():
     usage = """
