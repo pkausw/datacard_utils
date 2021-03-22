@@ -29,6 +29,7 @@ if not thisdir in sys.path:
 #     sys.path.append(manipulator_dir)
 
 from nuisance_manipulator import NuisanceManipulator
+from process_manipulator import ProcessManipulator
 
 class CommonManipulations(object):
 
@@ -123,10 +124,30 @@ class CommonManipulations(object):
         }
         manipulator.remove_nuisances_from_procs(harvester)
 
+    def add_bgnorm_uncertainties(self, harvester):
+        # harvester.cp().process(["ttcc"])\
+        #             .AddSyst(harvester, "CMS_ttHbb_bgnorm_ttcc", "lnN", ch.SystMap()(1.5))
+        harvester.cp().process(["ttbb.*"])\
+                    .AddSyst(harvester, "CMS_ttHbb_bgnorm_ttbb", "rateParam", ch.SystMap()(1.))
+        # harvester.GetParameter("CMS_ttHbb_bgnorm_ttbb").set_range(0, 5)
+        harvester.GetParameter("CMS_ttHbb_bgnorm_ttbb").set_range(-5, 5)
+        harvester.cp().process(["ttcc.*"])\
+                    .AddSyst(harvester, "CMS_ttHbb_bgnorm_ttcc", "rateParam", ch.SystMap()(1.))
+        harvester.GetParameter("CMS_ttHbb_bgnorm_ttcc").set_range(-5, 5)
+
+    def remove_5FS_prediction(self, harvester):
+        process_manipulator = ProcessManipulator()
+        process_manipulator.drop_all_processes(harvester = harvester,
+                                                to_drop = ["ttbb_5FS"])
+
     def apply_common_manipulations(self, harvester):
+        harvester.SetFlag("filters-use-regex", True)
+
         self.freeze_nuisances(harvester)
         self.add_lumi_uncertainties(harvester)
         self.remove_see_saw(harvester)
+        self.add_bgnorm_uncertainties(harvester)
+        self.remove_5FS_prediction(harvester)
 
 
 def main(**kwargs):
