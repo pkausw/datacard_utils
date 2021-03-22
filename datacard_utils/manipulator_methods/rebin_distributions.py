@@ -28,6 +28,7 @@ class BinManipulator(object):
     def __init__(self):
         self.bin_edges = []
         self.threshold = 15
+        self.__debug = 10
         
     def load_edges(self, proc):
         h = proc.ShapeAsTH1F()
@@ -97,14 +98,17 @@ class BinManipulator(object):
         for i in range(nbins, 0, -1):
             if i == nbins:
                 last_added_edge = combinedHist.GetBinLowEdge(nbins+1)
+                if self.__debug >= 10:
+                    print("adding new bin edge at {}".format(last_added_edge))
                 bin_edges.append(last_added_edge)
 
             # add together squared bin errors and bin contents
             squaredError += combinedHist.GetBinError(i)**2
             binContent += combinedHist.GetBinContent(i)
-            # print("bin (low edge): {} ({})".format(i, combinedHist.GetBinLowEdge(i)))
-            # print("bkg stack: {}".format(combinedHist.GetBinContent(i)))
-            # print("sum: {}".format(binContent))
+            if self.__debug >= 10:
+                print("bin (low edge): {} ({})".format(i, combinedHist.GetBinLowEdge(i)))
+                print("bkg stack: {}".format(combinedHist.GetBinContent(i)))
+                print("sum: {}".format(binContent))
 
             # calculate relative error
             relerror = squaredError**0.5/binContent if not binContent == 0 else squaredError**0.5
@@ -114,8 +118,9 @@ class BinManipulator(object):
                 # do rebinning based on the population of the bins enterly
                 # bins are ok if the bin content is larger than the threshold
                 if binContent >= self.threshold:
-                    # if relative error is smaller than threshold, start new bin
                     last_added_edge = combinedHist.GetBinLowEdge(i)
+                    if self.__debug >= 10:
+                        print("adding new bin edge at {}".format(last_added_edge))
                     bin_edges.append(last_added_edge)
                     squaredError = 0.
                     binContent = 0.
@@ -136,7 +141,8 @@ class BinManipulator(object):
         #     # the underflow_edge 
         #     bin_edges[-1] = underflow_edge
         bin_edges = sorted(bin_edges)
-        print("\tnew bin edges: [{}]".format(",".join([str(round(b,4)) for b in bin_edges])))
+        if self.__debug >= 1:
+            print("\tnew bin edges: [{}]".format(",".join([str(round(b,4)) for b in bin_edges])))
         return bin_edges
 
     def do_statistical_rebinning(self, harvester, bins = [".*"], processes = []):
@@ -152,11 +158,15 @@ class BinManipulator(object):
             else:
                 relevant_process_harv = harvester.cp().bin([b]).process(processes)
             self.bin_edges = []
+            if self.__debug >= 10:
+                print("considered processes for bin '{}'".format(b))
+                print(relevant_process_harv.process_set())
+            
             hist = relevant_process_harv.GetShape()
-            print(b)
             # print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
             self.bin_edges = self.get_statistical_binning(hist)
-            print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
+            if self.__debug >= 10:
+                print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
             harvester.cp().bin([b]).VariableRebin(self.bin_edges)
         return harvester
     
@@ -167,11 +177,13 @@ class BinManipulator(object):
             p = harvester.cp().bin([b]).process_set()[-1]
             harvester.cp().bin([b]).process([p]).ForEachProc(\
                 lambda x: self.load_edges(x))
-            print(b)
-            print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
+            if self.__debug >= 10:
+                print(b)
+                print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
             self.bin_edges = self.apply_scheme()
-            print("after applying scheme {}".format(self.scheme))
-            print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
+            if self.__debug >= 10:
+                print("after applying scheme {}".format(self.scheme))
+                print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
             harvester.cp().bin([b]).VariableRebin(self.bin_edges)
         return harvester
 
