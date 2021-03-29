@@ -16,7 +16,6 @@ class helperClass(object):
             exit("You need to setup CMSSW")
         self._JOB_PREFIX = """#!/bin/sh
 ulimit -s unlimited
-set -e
 cd %(CMSSW_BASE)s/src
 export SCRAM_ARCH=%(SCRAM_ARCH)s
 export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch
@@ -105,7 +104,19 @@ cd -
             print ("could not find {}".format(workspacePath))
             workspacePath = ""
         return workspacePath
+    def check_for_twin(self, name, iteration=0):
 
+        tocheck = name
+        ext = "." + name.split(".")[-1]
+        if not iteration == 0:
+            add = "_" + str(iteration)
+            tocheck = tocheck.replace(ext, add + ext)
+        if os.path.exists(tocheck):
+            iteration += 1
+
+            tocheck = self.check_for_twin(name, iteration)
+        return tocheck
+        
     def dump_json(self, outname, allvals):
         if len(allvals) > 0:
             print ("opening file {}".format(outname))
