@@ -9,12 +9,17 @@ from array import array
 
 def load_channels(file, key):
     channels = []
-    if "/" in key:
+    if key.count("/") == 2:
         print("loading channels using {}".format(key))
         maindirpath = key.split("/")[0]
         maindir = file.Get(maindirpath)
         maindir.GetListOfKeys().Print()
         channels = [x.GetName() for x in maindir.GetListOfKeys()\
+                        if x.IsFolder()]
+        print(channels)
+    elif key.count("/") == 1:
+        print("loading channels using {}".format(key))
+        channels = [x.GetName() for x in file.GetListOfKeys()\
                         if x.IsFolder()]
         print(channels)
     else:
@@ -131,7 +136,7 @@ def main(*args,**kwargs):
     filepath = kwargs.get("rootfile")
     file = open_file(filepath)
     channels = kwargs.get("channels")
-    nomkey = kwargs.get("nomkey")
+    nomkey = kwargs.get("nominalkey")
     mode = kwargs.get("mode")
     datacard = kwargs.get("datacard")
     if len(channels) == 0:
