@@ -339,7 +339,6 @@ pathsToMSworkspaces, additionalToyCmds, additionalFitCmds, murange):
     #shellscript.append('ulimit -s unlimited')
     #shellscript.append('pathToCMSSWsetup='+pathToCMSSWsetup)
     shellscript.append(CMSSW_setup)
-    shellscript.append('if [[ -f "$CMSSW_BASE" ]]; then\n')
 
     #shellscript.append('\teval "source $pathToCMSSWsetup"')
     shellscript.append('\ttargetDatacard='+targetDatacard)
@@ -432,9 +431,6 @@ pathsToMSworkspaces, additionalToyCmds, additionalFitCmds, murange):
     shellscript.append('\telse')
     shellscript.append('\t\techo "$outputPath is not a directory! Aborting"')
     shellscript.append('\tfi\n')
-    shellscript.append('else')
-    shellscript.append('\techo "Could not find file to setup CMSSW! Aborting"')
-    shellscript.append('fi')
 
     return shellscript
 
