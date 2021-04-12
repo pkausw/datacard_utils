@@ -935,7 +935,7 @@ void compareShapes(const std::vector<PseudoExperiments>& exps, const TString& ou
 
 }
 
-void loadPseudoExperiments(TString pathToPseudoExperiments, TString containsSignalStrength, std::vector<PseudoExperiments>& expSet, Color_t color = kBlue, double injectedMu = -999, const TString suffix = "", const TString sourceFile = "fitDiagnostics.root"){
+void loadPseudoExperiments(TString pathToPseudoExperiments, TString containsSignalStrength, std::vector<PseudoExperiments>& expSet, Color_t color = kBlue, double injectedMu = -999, const TString suffix = "", const TString sourceFile = "fitDiagnosticsTest.root"){
     double nominalMu=0;
     TString helper;
     std::cout << "in 'loadPseudoExperiments': injectedMu = " << injectedMu << std::endl;
