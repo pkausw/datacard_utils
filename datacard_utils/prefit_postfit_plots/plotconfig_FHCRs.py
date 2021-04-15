@@ -203,6 +203,7 @@ systematics = [   ]
 sortedprocesses = [   
     'signal',
     'total_signal',
+    'CRs',
     'ttlf',
     'ttcc',
     'ttbb',
