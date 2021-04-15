@@ -40,7 +40,7 @@ public:
 
   void addExperimentFromRoofit(const TString& mlfit);
   bool addExperimentFromTree(const TString& mlfit);
-  void addExperiments(TString& sourceDir, const TString& mlfitFile = "mlfit.root");
+  void addExperiments(TString& sourceDir, const TString& mlfitFile = "fitDiagnosticsTest.root");
   void setColor(const int& c){
     std::cout << "setting color to " << c << std::endl;
     color_ = c;
