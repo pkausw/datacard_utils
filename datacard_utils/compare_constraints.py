@@ -8,6 +8,49 @@ from optparse import OptionParser
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 ROOT.gROOT.SetBatch(True)
 
+header = """
+    \\begin{frame}
+    \\begin{scriptsize}
+    \\begin{tabular}{lcccc}
+    \\toprule
+    Parameter & Base Value & Varied Value & Difference & Rel.\\ Difference \\\\
+    \\midrule
+    """
+footer = """
+\\bottomrule
+\\end{tabular}
+\\end{scriptsize}
+\\end{frame}
+"""
+template = "$_{{{low:+}}}^{{{up:+}}}$"
+
+def setup_table_template(mode):
+    global header
+    global footer
+    global template
+    if mode == "tex":
+        header = """
+        \\begin{frame}
+        \\begin{scriptsize}
+        \\begin{tabular}{lcccc}
+        \\toprule
+        Parameter & Base Value & Varied Value & Difference & Rel.\\ Difference \\\\
+        \\midrule
+        """
+        footer = """
+        \\bottomrule
+        \\end{tabular}
+        \\end{scriptsize}
+        \\end{frame}
+        """
+        template = "$_{{{low:+}}}^{{{up:+}}}$"
+    elif mode == "md":
+        header = """
+        | Parameter | Base Value | Varied Value | Difference | Rel. Difference |
+        | --- | --- | --- | --- | --- |
+        """
+        footer = ""
+        template = "{low:+}/{up:+}"
 
 def translate_fitresult_to_dict(f):
     params = f.floatParsFinal().contentsString().split(",")
@@ -85,22 +128,8 @@ def construct_difference_dict(basevals, othervals):
         rdict[key] = round(rdict[key], 3)
     return rdict
 
-def create_table(dictionary):
-    header = """
-    \\begin{frame}
-    \\begin{scriptsize}
-    \\begin{tabular}{lcccc}
-    \\toprule
-    Parameter & Base Value & Varied Value & Difference & Rel.\\ Difference \\\\
-    \\midrule
-    """
-    footer = """
-    \\bottomrule
-    \\end{tabular}
-    \\end{scriptsize}
-    \\end{frame}
-    """
-    template = "$_{{{low:+}}}^{{{up:+}}}$"
+def create_table(dictionary, outformat):
+    
     s = ""
     for i, par in enumerate(dictionary):
         if i == 0:
@@ -108,7 +137,9 @@ def create_table(dictionary):
         elif i % 15 == 0:
             s += footer
             s += header
-        parts = [par.replace("_", "\\_")]
+        parts = [par]
+        if outformat == "tex":
+            parts = [par.replace("_", "\\_")]
         pardict = dictionary[par]
         parts.append(template.format(low = pardict["baseval_down"], 
                                         up = pardict["baseval_up"]))
@@ -117,7 +148,10 @@ def create_table(dictionary):
         parts.append(template.format(low = pardict["differance_down"], 
                                         up = pardict["differance_up"]))
         parts.append(str(pardict["rel_diff"]))
-        s += " & ".join(parts) + "\\\\\n"
+        if outformat == "tex":
+            s += " & ".join(parts) + "\\\\\n"
+        elif outformat == "md":
+            s += "| {} |\n".format(" | ".join(parts))
     s += footer
     return s
 
@@ -143,7 +177,7 @@ def get_differences(basevals, othervals):
                 print("Could not find values for '{}'! Skipping".format(parname))
     return return_dict
 
-def main(basevals, othervals, outpath):
+def main(basevals, othervals, outpath, outformat):
 
     results = {}
     params1 = load_json(basevals)
@@ -154,9 +188,10 @@ def main(basevals, othervals, outpath):
                                 key = lambda x: x[1]["rel_diff"])))
     print(json.dumps(values, indent = 4))
 
-    table = create_table(values)
+    table = create_table(values, outformat)
     print(table)
-    if not outpath.endswith(".tex"): outpath += ".tex"
+    if not outpath.endswith(outformat): 
+        outpath = ".".join(outpath.split(".")[:-1] + [outformat])
     with open(outpath, "w") as f:
         f.write(table)
 
@@ -198,8 +233,18 @@ def parse_arguments():
                         dest = "outpath",
                         type = "str"
                     )
-    options, args = parser.parse_args()
+    parser.add_option("-f", "--format",
+                        help = " ".join(
+                            """select output format. Available formats:
+                            tex, md
+                            """.split()),
+                        dest = "format",
+                        choices = ["tex", "md"],
+                        default = "tex"
+                    )
 
+    options, args = parser.parse_args()
+    setup_table_template(options.format)
     return options
 if __name__ == "__main__":
     
@@ -208,4 +253,4 @@ if __name__ == "__main__":
     fpath2 = check_path(options.varied)
     outpath = options.outpath
     
-    main(basevals = fpath1, othervals = fpath2, outpath = outpath)
+    main(basevals = fpath1, othervals = fpath2, outpath = outpath, outformat = options.format)
