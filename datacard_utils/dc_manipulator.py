@@ -277,6 +277,12 @@ def main(**kwargs):
                         jsonpath = jsonpath)
     if prune_backgrounds:
         remove_minor_bkgs(harvester)
+
+    make_tH_signal = kwargs.get("make_tH_signal", False)
+    if make_tH_signal:
+        harvester.SetFlag("filters-use-regex", True)
+        harvester.cp().process(["tH.*"])\
+            .ForEachProc(lambda x: x.set_signal(True))
     
     print("="*130)
     print("back in dc_manipulator::main")
@@ -449,6 +455,17 @@ def parse_arguments():
                             """.split()
                         ),
                         dest = "remove_minor_jec",
+                        action = "store_true",
+                        default = False
+                    )
+    optional_group.add_option("--make-tH-signal",
+                        help = " ".join(
+                            """
+                            set the tH process to signal processes.
+                            Default: False
+                            """.split()
+                        ),
+                        dest = "make_tH_signal",
                         action = "store_true",
                         default = False
                     )
