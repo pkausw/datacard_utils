@@ -89,6 +89,8 @@ def get_values(file, signals, backgrounds, key, name_template, mode, \
                 value = sig/bkg
             elif mode == "s_o_sqrtb":
                 value = sig/sqrt(bkg)
+            elif mode == "s_o_uncertb":
+                value = sig/h_background.GetBinError(i)
         else:
             print("ERROR: Background stack is zero")
             print("\tbin {}".format(i))
@@ -322,12 +324,13 @@ def parse_arguments():
                       help = " ".join(
                           """
                           define what measure you want to compute.
-                          Current choices: s_o_b (S/B), s_o_sqrtb (S/sqrt(B)).
+                          Current choices: s_o_b (S/B), s_o_sqrtb (S/sqrt(B)),
+                          s_o_uncertb (S/Bin_Uncertainty(B)).
                           Default: s_o_b
                           """.split()
                         ),
                       dest = "mode",
-                      choices = ["s_o_b", "s_o_sqrtb"],
+                      choices = ["s_o_b", "s_o_sqrtb", "s_o_uncertb"],
                       default = "s_o_b"
                       )
     
