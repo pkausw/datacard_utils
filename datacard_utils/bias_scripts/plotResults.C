@@ -1063,7 +1063,7 @@ void plotResults(TString pathname, TString pathToShapeExpectationRootfile = "", 
     TString temp;
     for(auto& exp : expSet){
       std::cout << "label " << exp() << std::endl;
-      outputString = "";
+      outputString = "Parameter Mean MeanError RMS MeanPost-fit (MeanPost-fitLo MeanPost-fitUp) Median";
       for(auto& poi : exp.pois())
       {
           if(outputString.EqualTo("")) 
@@ -1075,21 +1075,12 @@ void plotResults(TString pathname, TString pathToShapeExpectationRootfile = "", 
           outputString += temp;
           std::cout << "\t" << temp.Data() << std::endl;
           std::cout << "\tmedian = " << helperFuncs::getMedian(exp.postfitS(poi)) << std::endl;
-          std::cout << "\tbias = " << exp.biasfitSMean(poi) << " +- " << exp.biasfitSMeanError(poi) << std::endl;
+          temp.Form("\tbias = %f +- %f\n", exp.biasfitSMean(poi), exp.biasfitSMeanError(poi));
+          std::cout << temp.Data();
+          outputString += temp;
           
       }
-    //   std::cout << "\tprinting correlation for Bonly fit\n";
-    //   correlation = exp.getCorrelationPlotPostfitB();
-    //   printCorrelationPlots(correlation, outputPath, "correlationPlot_PostfitB_" + exp());
-    //   if(correlation) delete correlation;
-      exp.printPostfitBcorrelations(outputPath+"PostfitB_");
-    //   std::cout << "\tprinting correlation for S+B fit\n";
-    //   correlation = exp.getCorrelationPlotPostfitS();
-    //   printCorrelationPlots(correlation, outputPath, "correlationPlot_PostfitS_" + exp());
-    //   if(correlation) delete correlation;
-      exp.printPostfitScorrelations(outputPath+"PostfitS_");
-      
-      TString tablename = "POIs_" + exp();
+    TString tablename = "POIs_" + exp();
       if(tablename.Contains(".")) tablename.ReplaceAll(".", "p");
       if(tablename.Contains("=")) tablename.ReplaceAll("=", "");
       while(tablename.Contains("  ")) tablename.ReplaceAll("  ", " ");
@@ -1104,6 +1095,18 @@ void plotResults(TString pathname, TString pathToShapeExpectationRootfile = "", 
           output.close();
       }
     }
+    //   std::cout << "\tprinting correlation for Bonly fit\n";
+    //   correlation = exp.getCorrelationPlotPostfitB();
+    //   printCorrelationPlots(correlation, outputPath, "correlationPlot_PostfitB_" + exp());
+    //   if(correlation) delete correlation;
+    //   exp.printPostfitBcorrelations(outputPath+"PostfitB_");
+    //   std::cout << "\tprinting correlation for S+B fit\n";
+    //   correlation = exp.getCorrelationPlotPostfitS();
+    //   printCorrelationPlots(correlation, outputPath, "correlationPlot_PostfitS_" + exp());
+    //   if(correlation) delete correlation;
+    //   exp.printPostfitScorrelations(outputPath+"PostfitS_");
+      
+      
 
 
   }
