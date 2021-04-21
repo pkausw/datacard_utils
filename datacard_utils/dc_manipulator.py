@@ -78,7 +78,7 @@ def remove_minor_JEC(harvester):
         np_manipulator.remove_nuisances_from_procs(harvester = harvester,
                                                     bins = bins)
 
-def do_validation(harvester, cardpaths, jsonpath, prune_backgrounds = False):
+def do_validation(harvester, cardpaths, jsonpath):
     val_interface = ValidationInterface()
     val_interface.remove_small_signals = True
     val_interface.remove_small_backgrounds = False
@@ -95,39 +95,65 @@ def do_validation(harvester, cardpaths, jsonpath, prune_backgrounds = False):
                 val_interface.jsonpath = jsonpath
             
             val_interface.apply_validation(harvester, eras = [era])
-            if prune_backgrounds:
-                # drop minor processes for tHq
-                print("pruning tHq")
-                processes = harvester.cp().process(["tHq.*"]).process_set()
-                print("pruning processes: {}".format(", ".join(processes)))
-                val_interface.drop_small_processes(harvester = harvester,
-                                                    era = [era], 
-                                                    processes = processes)
-
-                # drop minor processes for tHW
-                print("pruning tHW")
-                processes = harvester.cp().process(["tHW.*"]).process_set()
-                print("pruning processes: {}".format(", ".join(processes)))
-                val_interface.drop_small_processes(harvester = harvester,
-                                                    era = [era], 
-                                                    processes = processes)
-
-                # drop minor backgrounds, but protect tH processes
-                # first, select all backgrounds that are not tH processes, 
-                # then do check with this set of processes
-                processes = harvester.cp().backgrounds()\
-                                    .process(["tH(q|W).*"], False)\
-                                    .process_set()
-                print("pruning processes: {}".format(", ".join(processes)))
-                val_interface.drop_small_processes(harvester = harvester,
-                                                    era = [era], 
-                                                    processes = processes)
 
             print("="*130)
             print("after validation interface")
             harvester.cp().era([era]).PrintProcs()
             print("="*130)
 
+def remove_minor_bkgs(harvester):
+    val_interface = ValidationInterface()
+    harvester.SetFlag("filters-use-regex", True)
+    # val_interface.verbosity = 80
+    era_set = harvester.era_set()
+    if len(era_set) == 0:
+        era_set = [".*"]
+    channel_set = harvester.channel_set()
+    if len(channel_set) == 0:
+        channel_set = [".*"]
+    for era in era_set:
+        for channel in channel_set:
+            bin_set = harvester.cp().era([era]).channel([channel]).bin_set()
+            for b in bin_set:
+                # drop minor processes for tHq
+                print("pruning tHq")
+                processes = harvester.cp().era([era]).channel([channel]).bin([b])\
+                                .process(["tHq.*"]).process_set()
+                print("pruning processes: {}".format(", ".join(processes)))
+                val_interface.drop_small_processes(harvester = harvester,
+                                                    era = [era],
+                                                    chan = [channel],
+                                                    bins = [b],
+                                                    processes = processes)
+
+                # drop minor processes for tHW
+                print("pruning tHW")
+                processes = harvester.cp().era([era]).channel([channel]).bin([b])\
+                                .process(["tHW.*"]).process_set()
+                print("pruning processes: {}".format(", ".join(processes)))
+                val_interface.drop_small_processes(harvester = harvester,
+                                                    era = [era],
+                                                    chan = [channel],
+                                                    bins = [b], 
+                                                    processes = processes)
+
+                # drop minor backgrounds, but protect tH processes
+                # first, select all backgrounds that are not tH processes, 
+                # then do check with this set of processes
+                processes = harvester.cp().era([era]).channel([channel]).bin([b])\
+                                .backgrounds().process(["tH(q|W).*"], False)\
+                                    .process_set()
+                print("pruning processes: {}".format(", ".join(processes)))
+                val_interface.drop_small_processes(harvester = harvester,
+                                                    era = [era],
+                                                    chan = [channel],
+                                                    bins = [b],
+                                                    processes = processes)
+
+                print("="*130)
+                print("after process pruning")
+                harvester.cp().era([era]).PrintProcs()
+                print("="*130)
 
 def load_datacards(groups, harvester):
 
@@ -162,9 +188,11 @@ def write_harvester(harvester, cardname, outfile, group_manipulator):
 
 
 def write_datacards(harvester, outdir, prefix, rootfilename, era, \
-                    group_manipulator, combine_cards = True):
+                    group_manipulator, combine_cards = True,\
+                    bgnorm_mode = "rateParams"):
     
     common_manipulations = CommonManipulations()
+    common_manipulations.bgnorm_mode = bgnorm_mode
     common_manipulations.apply_common_manipulations(harvester)
     # harvester.PrintSysts()
 
@@ -246,8 +274,9 @@ def main(**kwargs):
 
         do_validation(  harvester = harvester,
                         cardpaths = cardpaths,
-                        jsonpath = jsonpath ,
-                        prune_backgrounds=prune_backgrounds)
+                        jsonpath = jsonpath)
+    if prune_backgrounds:
+        remove_minor_bkgs(harvester)
     
     print("="*130)
     print("back in dc_manipulator::main")
@@ -269,16 +298,17 @@ def main(**kwargs):
         stxs_interface = STXSModifications()
         stxs_interface.do_stxs_modifications(harvester)
 
-
+    bgnorm_mode = kwargs.get("bgnorm_mode", "rateParams")
     if combine_cards:
         for e in eras:
             write_datacards(harvester = harvester.cp().era([e]), outdir = outdir, 
                             rootfilename = output_rootfile, prefix = prefix, era = e, 
-                            group_manipulator = group_manipulator)
+                            group_manipulator = group_manipulator, bgnorm_mode = bgnorm_mode)
         
         write_datacards(harvester = harvester, outdir = outdir, rootfilename = output_rootfile, 
                         prefix = prefix, era = "all_years", 
-                            group_manipulator = group_manipulator)
+                            group_manipulator = group_manipulator,
+                            bgnorm_mode = bgnorm_mode)
     else:
         for e in eras:
             era_dir = os.path.join(outdir, e)
@@ -287,7 +317,8 @@ def main(**kwargs):
             write_datacards(harvester = harvester.cp().era([e]), outdir = era_dir, 
                             rootfilename = output_rootfile, prefix = prefix, era = e,
                             combine_cards = False, 
-                            group_manipulator = group_manipulator)
+                            group_manipulator = group_manipulator,
+                            bgnorm_mode = bgnorm_mode)
 
 
 def parse_arguments():
@@ -434,6 +465,20 @@ def parse_arguments():
                         dest = "remove_minor_bkgs",
                         action = "store_true",
                         default = False
+                    )
+
+    optional_group.add_option("--bgnorm-mode",
+                        help = " ".join(
+                            """
+                            Choose the kind of parameters you would like
+                            to use for the bgnorm parameters for ttbb and ttcc.
+                            Current choices: {}. Default: rateParams
+                            """.format(CommonManipulations.bgnorm_mode_choices())\
+                                .split()
+                        ),
+                        dest = "bgnorm_mode",
+                        choices = CommonManipulations.bgnorm_mode_choices(),
+                        default = "rateParams"
                     )
     optional_group.add_option("--stxs",
                         help = " ".join(
