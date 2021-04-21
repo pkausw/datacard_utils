@@ -29,7 +29,7 @@ PyConfig.IgnoreCommandLineOptions = True
 
 shell_template = helper.JOB_PREFIX + """
 targetdir="%(TARGETDIR)s"
-cmd="%(CMD)s"
+cmd='%(CMD)s'
 
 if [[ -d $targetdir ]]; then
     cd $targetdir
@@ -42,7 +42,7 @@ fi
 
 """
 base_gof_cmd = 'combine -M GoodnessOfFit --algo "saturated"'
-base_bestfit_cmd = 'combine -M FitDiagnostics -m 125.38'
+base_bestfit_cmd = 'combine -M FitDiagnostics'
 def parse_arguments():
     usage = """
     usage: %prog [options] path/to/datacards OR path/to/workspaces
@@ -172,6 +172,9 @@ def generate_gof_cmd(datacard, nToys = None, additional_cmds = None,
     if additional_cmds:
         #make sure there are no double white spaces in additional cmds
         code += additional_cmds
+    code = helper.insert_values( cmds = code, keyword = "-m",
+                                    toinsert = "125.38", joinwith="insert"
+                                )
     if run_asimov and nToys is None:
         code = helper.insert_values(    cmds = code, keyword = "-t", 
                                         toinsert = "-1", joinwith="insert")
@@ -214,6 +217,9 @@ def generate_bestfit_cmd(datacard, additional_cmds = None,
         #                                     toinsert = "", joinwith="insert")
         # code = helper.insert_values(    cmds = code, keyword = "--saveWithUncertainties", 
         #                                     toinsert = "", joinwith="insert")
+        code = helper.insert_values( cmds = code, keyword = "-m",
+                                    toinsert = "125.38", joinwith="insert"
+                                )
         if run_asimov:
             code = helper.insert_values(    cmds = code, keyword = "-t", 
                                             toinsert = "-1", joinwith="insert")
@@ -224,7 +230,10 @@ def generate_bestfit_cmd(datacard, additional_cmds = None,
     else:
         dirname = os.path.dirname(datacard)
         base = helper.remove_extension(os.path.basename(datacard))
-        code += "PostFitShapesFromWorkspace --postfit --sampling --print -m 125".split()
+        code += "PostFitShapesFromWorkspace --postfit --sampling --print".split()
+        code = helper.insert_values( cmds = code, keyword = "-m",
+                                    toinsert = "125.38", joinwith="insert"
+                                )
         # code += ("-d " + os.path.join(dirname, base + ".txt")).split()
         code += ("-w " + os.path.join(dirname, base + ".root")).split()
         code += ("-o " + "postfit_shape_%s.root" % base).split()
