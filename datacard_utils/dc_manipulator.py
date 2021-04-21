@@ -283,6 +283,8 @@ def main(**kwargs):
         harvester.SetFlag("filters-use-regex", True)
         harvester.cp().process(["tH.*"])\
             .ForEachProc(lambda x: x.set_signal(True))
+        harvester.cp().process(["tH.*"])\
+            .ForEachSyst(lambda x: x.set_signal(True))
     
     print("="*130)
     print("back in dc_manipulator::main")
