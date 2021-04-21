@@ -10,11 +10,13 @@ Parameter & Stat+Syst & Stat-Only & Significance \\\\"""
 line = """{parameter} & {bestfit} & {statonly} & {signi}\\\\"""
 footer = """\\bottomrule
 \\end{tabular}"""
-
+global_mode = "tex"
 def setup_global_table_format(mode):
     global header
     global line
     global footer
+    global global_mode
+    global_mode = mode
     if mode == "tex":
         header = """\\begin{tabular}{lccc}
         \\toprule
@@ -25,8 +27,7 @@ def setup_global_table_format(mode):
     elif mode == "md":
         header = """
         | Parameter | Stat+Syst | Stat-Only | Significance |
-        | --- | --- | --- | --- |
-        """
+        | --- | --- | --- | --- |"""
         line = """| {parameter} & {bestfit} & {statonly} & {signi} |""".replace("&", "|")
         footer = ""
 
@@ -123,7 +124,8 @@ def create_merged_tex(files):
         if not os.path.exists(f):
             print("ERROR: file {} does not exist".format(f))
             continue
-        lines.append("\\midrule")
+        if global_mode == "tex":
+            lines.append("\\midrule")
         lines += parse_results(f)
     lines.append(footer)
     return "\n".join(lines)
