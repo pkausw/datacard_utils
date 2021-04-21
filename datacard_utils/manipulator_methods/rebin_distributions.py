@@ -24,14 +24,17 @@ except:
 from common_manipulations import CommonManipulations
 
 class BinManipulator(object):
-    choices = "left right all mem".split()
+    choices = "left right all mem half".split()
     def __init__(self):
         self.bin_edges = []
         self.threshold = 15
         self.__debug = 10
         
     def load_edges(self, proc):
-        h = proc.ShapeAsTH1F()
+        if isinstance(proc, ROOT.TH1):
+            h = proc
+        else:
+            h = proc.ShapeAsTH1F()
         nbins = h.GetNbinsX()
         self.bin_edges = [h.GetBinLowEdge(i) for i in range(1, nbins+2)]
         print(self.bin_edges)
@@ -49,12 +52,17 @@ class BinManipulator(object):
         elif self.scheme == "mem":
             # drop first bin for tests with SL MEM
             edges = self.bin_edges[1:]
+        elif self.scheme == "half":
+            # select every second bin edge
+            edges = [self.bin_edges[0], self.bin_edges[-1]]
+            edges += self.bin_edges[::2]
         else:
             print("ERROR: did not recognice scheme '{}'".format(self.scheme))
             print("Will not rebin")
             edges = self.bin_edges
         if not self.bin_edges[-1] in edges:
             edges.append(self.bin_edges[-1])
+        edges = sorted(list(set(edges)))
         return edges
 
     def get_statistical_binning(self, combinedHist):
@@ -147,6 +155,7 @@ class BinManipulator(object):
 
     def do_statistical_rebinning(self, harvester, bins = [".*"], processes = []):
         harvester.SetFlag("filters-use-regex", True)
+        # harvester.SetFlag("merge-under-overflow-bins", True)
         these_bins = harvester.cp().bin(bins).bin_set()
         print("Rebinning based on MC Statistics with threshold '{}'".\
                     format(self.threshold))
@@ -324,4 +333,4 @@ def parse_arguments():
 
 if __name__ == "__main__":
     options, files = parse_arguments()
-    main(*files, **vars(options))
+    main(*files, **vars(options
