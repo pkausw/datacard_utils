@@ -333,4 +333,4 @@ def parse_arguments():
 
 if __name__ == "__main__":
     options, files = parse_arguments()
-    main(*files, **vars(options
+    main(*files, **vars(options))
