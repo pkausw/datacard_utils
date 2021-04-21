@@ -618,7 +618,7 @@ def main(*wildcards, **kwargs):
             print "loading pvalue for dir '%s'" % directory
             pval = get_pvalue(directory = directory, config = config, 
                                 skip_distr = skip_distr)
-            if not pval: continue
+            # if not pval: continue
             if mode == "1D":
                 pvals[varname] = pval
             elif mode == "2D":
