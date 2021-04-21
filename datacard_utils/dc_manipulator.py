@@ -251,7 +251,12 @@ def main(**kwargs):
 
     # harvester.PrintAll()
 
-    
+    make_tH_signal = kwargs.get("make_tH_signal", False)
+    harvester.SetFlag("filters-use-regex", True)
+    harvester.cp().process(["tH.*"])\
+        .ForEachProc(lambda x: x.set_signal(make_tH_signal))
+    harvester.cp().process(["tH.*"])\
+        .ForEachSyst(lambda x: x.set_signal(make_tH_signal))
     rebin_scheme = kwargs.get("scheme", None)
     check_mc = kwargs.get("check_mc", False)
     if rebin_scheme or check_mc:
@@ -277,14 +282,6 @@ def main(**kwargs):
                         jsonpath = jsonpath)
     if prune_backgrounds:
         remove_minor_bkgs(harvester)
-
-    make_tH_signal = kwargs.get("make_tH_signal", False)
-    if make_tH_signal:
-        harvester.SetFlag("filters-use-regex", True)
-        harvester.cp().process(["tH.*"])\
-            .ForEachProc(lambda x: x.set_signal(True))
-        harvester.cp().process(["tH.*"])\
-            .ForEachSyst(lambda x: x.set_signal(True))
     
     print("="*130)
     print("back in dc_manipulator::main")
