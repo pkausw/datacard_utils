@@ -19,6 +19,19 @@ PostFitShapesFromWorkspace -w path/to/workspace.root -d .path/to/datacard.txt -f
 
 For more information, checkout the [`CombineHarvester` documentation](http://cms-analysis.github.io/CombineHarvester/post-fit-shapes-ws.html)
 
+### Parallelize the shape generation
+
+You can parallelize the shape generation if you create workspaces for the individual categories.
+**Important**: The parameter names have to be *exactly* like they are in the fit results file you want to use for the post-fit shape generation.
+Otherwise, the mapping of parameters will not work correctly.
+
+You can generate such workspaces with the setup in the datacards repo with this recipe:
+- when using `makeCombinedCards.py`, specify the option `-i`. This will create datacards for the individual categories with the correct naming
+- if you want to use the full Run-II fit results, you should create a full Run-II workspace for the categories. You can do this with `build_cards_across_years.py` if you use the option `-a`
+
+After creating suitable workspaces, you can use `submit_shape_generation.py` to create the pre-fit and post-fit shapes.
+Please have a look at the help function of the script for more information.
+
 ## Generate the plots
 
 You need
