@@ -16,8 +16,8 @@ cmd_base_parts += "--combineflag {flag} -r {rootfile}".split()
 cmd_base_parts += "--channelname {channel}".split()
 cmd_base_parts += "--combineDatacard {datacard}".split()
 cmd_base_parts += "--pdfname {pdfname}".split()
-cmd_base_parts += '--xLabel "ANN Discriminant"'.split()
-#cmd_base_parts += ["--plot-blind"]
+cmd_base_parts += '--xLabel "{xtitle}"'.split()
+cmd_base_parts += ["--plot-blind"]
 #cmd_base_parts += "--skipErrorbands --pdftag noError".split()
 # cmd_base_parts += "--dontScaleSignal".split()
 
@@ -134,6 +134,8 @@ def generate_plots(file, options):
         bottom = labels[channel].get("bottom", "")
         final_channel = channel if prefix == "" \
                             else "_".join([prefix, channel])
+        xtitle = labels[channel].get("xtitle", "ANN Discriminant")
+        ratio_range = labels[channel].get("range", 0.2)
         for flag in flags:
             # pdfname = "{}_{}.pdf".format(channel, flag)
             final_bottom = " ".join([bottom, flags[flag]])
@@ -142,6 +144,7 @@ def generate_plots(file, options):
                                     label = label,
                                     flag = flag,
                                     pdfname = final_channel,
+                                    xtitle = xtitle,
                                     **base_options)
             if options.lumiLabel:
                 cmd += ' --lumilabel "{}"'.format(options.lumiLabel)
@@ -151,6 +154,9 @@ def generate_plots(file, options):
                 cmd += " --multisignal"
             if options.divideByBinWidth:
                 cmd += " --divideByBinWidth"
+            if flag == "shapes_fit_s":
+                cmd += " --ratio-lower-bound {}".format(1-ratio_range)
+                cmd += " --ratio-upper-bound {}".format(1+ratio_range)
             print(cmd)
             call([cmd], shell = True)
 
