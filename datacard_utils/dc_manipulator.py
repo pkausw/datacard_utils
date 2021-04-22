@@ -189,12 +189,16 @@ def write_harvester(harvester, cardname, outfile, group_manipulator):
 
 def write_datacards(harvester, outdir, prefix, rootfilename, era, \
                     group_manipulator, combine_cards = True,\
-                    bgnorm_mode = "rateParams"):
+                    bgnorm_mode = "rateParams",
+                    stxs_interface = None):
     
     common_manipulations = CommonManipulations()
     common_manipulations.bgnorm_mode = bgnorm_mode
     common_manipulations.apply_common_manipulations(harvester)
     # harvester.PrintSysts()
+    if stxs_interface:
+        stxs_interface.do_stxs_modifications(harvester)
+
 
     channels = harvester.channel_set()
     card_dir = os.path.join(outdir, "datacards")
@@ -299,21 +303,23 @@ def main(**kwargs):
     group_manipulator = GroupManipulator()
 
     stxs = kwargs.get("stxs", False)
+    stxs_interface = None
     if stxs:
         stxs_interface = STXSModifications()
-        stxs_interface.do_stxs_modifications(harvester)
 
     bgnorm_mode = kwargs.get("bgnorm_mode", "rateParams")
     if combine_cards:
         for e in eras:
             write_datacards(harvester = harvester.cp().era([e]), outdir = outdir, 
                             rootfilename = output_rootfile, prefix = prefix, era = e, 
-                            group_manipulator = group_manipulator, bgnorm_mode = bgnorm_mode)
+                            group_manipulator = group_manipulator, bgnorm_mode = bgnorm_mode,
+                            stxs_interface = stxs_interface)
         
         write_datacards(harvester = harvester, outdir = outdir, rootfilename = output_rootfile, 
                         prefix = prefix, era = "all_years", 
                             group_manipulator = group_manipulator,
-                            bgnorm_mode = bgnorm_mode)
+                            bgnorm_mode = bgnorm_mode,
+                            stxs_interface = stxs_interface)
     else:
         for e in eras:
             era_dir = os.path.join(outdir, e)
@@ -323,7 +329,8 @@ def main(**kwargs):
                             rootfilename = output_rootfile, prefix = prefix, era = e,
                             combine_cards = False, 
                             group_manipulator = group_manipulator,
-                            bgnorm_mode = bgnorm_mode)
+                            bgnorm_mode = bgnorm_mode,
+                            stxs_interface = stxs_interface)
 
 
 def parse_arguments():
