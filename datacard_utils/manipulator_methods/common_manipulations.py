@@ -52,28 +52,65 @@ class CommonManipulations(object):
 
         self.__lumi_uncertainties_all_years={
             "2016": {
-                "lumi_13TeV_2016": 1.022,
-                "lumi_13TeV_XY" : 1.009,
-                "lumi_13TeV_BBD" : 1.004,
-                "lumi_13TeV_DB": 1.005,
-                "lumi_13TeV_GS": 1.004
+                "lumi_13TeV_2016": 1.01,
+                "lumi_13TeV_correlated" : 1.006,
             },
             "2017": {
                 "lumi_13TeV_2017": 1.020,
-                "lumi_13TeV_XY" : 1.008,
-                "lumi_13TeV_LS" : 1.003,
-                "lumi_13TeV_BBD" : 1.004,
-                "lumi_13TeV_DB": 1.005,
-                "lumi_13TeV_BCC": 1.003,
-                "lumi_13TeV_GS": 1.001
+                "lumi_13TeV_correlated" : 1.009,
+                "lumi_13TeV_1718" : 1.006,
             },
             "2018": {
                 "lumi_13TeV_2018": 1.015,
-                "lumi_13TeV_XY" : 1.020,
-                "lumi_13TeV_LS" : 1.002,
-                "lumi_13TeV_BCC": 1.002,
+                "lumi_13TeV_correlated" : 1.020,
+                "lumi_13TeV_1718" : 1.002,
             }
         }
+
+        self.__lnN_uncertainties = {
+            "tHq.*": {
+                "QCDscale_tHq": (0.851,1.065),
+                "pdf_Higgs_tHq": 1.037
+            },
+            "tHW.*": {
+                "QCDscale_tHW": (0.933,1.049),
+                "pdf_Higgs_tHW": 1.063
+            },
+            "ttH.*": {
+                "QCDscale_ttH": (0.908,1.058),
+                "pdf_Higgs_ttH": 1.036
+            },
+            "ttbb.*|ttcc|ttlf":{
+                "QCDscale_ttbar": (0.907,1.081),
+                "pdf_gg": 1.035
+            },
+            "signlet": {
+                "QCDscale_singlet": (0.979,1.031),
+                "pdf_qg": 1.028
+            },
+            "wjets": {
+                "QCDscale_V": 1.038,
+                "pdf_qqbar": 0.996/1.008
+            },
+            "zjets": {
+                "QCDscale_V": 1.02,
+                "pdf_qqbar": 1.002
+            },
+            "ttbarW": {
+                "QCDscale_ttbar": (1-0.164, 1+0.255),
+                "pdf_qqbar": 1.036
+            },
+            "ttbarZ": {
+                "QCDscale_ttbar": (1-0.093, 1+0.081),
+                "pdf_gg": 1.035
+            },
+            "diboson": {
+                "QCDscale_VV": 1.03,
+                "pdf_qqbar" : 1.05
+            }
+        }
+
+        self.manipulator = NuisanceManipulator()
         self.__mode = "GoF"
         
     @classmethod
@@ -125,8 +162,7 @@ class CommonManipulations(object):
     
     def remove_see_saw(self, harvester):
 
-        manipulator = NuisanceManipulator()
-        manipulator.to_remove = {
+        self.manipulator.to_remove = {
             "CMS_ttHbb_FSR_ttbb": "ttcc ttlf".split(),
             "CMS_ttHbb_FSR_ttcc": "ttbb ttlf".split(),
             "CMS_ttHbb_FSR_ttlf": "ttbb ttcc".split(),
@@ -138,7 +174,7 @@ class CommonManipulations(object):
             "CMS_ttHbb_scaleMuF_ttbbNLO": "ttcc ttlf".split(),
             "CMS_ttHbb_scaleMuF": ["ttbb"],
         }
-        manipulator.remove_nuisances_from_procs(harvester)
+        self.manipulator.remove_nuisances_from_procs(harvester)
 
     def add_bgnorm_uncertainties(self, harvester):
         uncertainties = harvester.syst_name_set()
@@ -164,7 +200,25 @@ class CommonManipulations(object):
             harvester.cp().process(["ttcc.*"])\
                         .AddSyst(harvester, "CMS_ttHbb_bgnorm_ttcc", "lnN", ch.SystMap()(1.5))
         # 
-        
+    
+    def add_lnN_uncertainties(self, harvester):
+        harvester.SetFlag("filters-use-regex", True)
+
+        for proc in self.__lnN_uncertainties:
+            for unc in self.__lnN_uncertainties[proc]:
+                #first, drop existing uncertainties
+                print("removing '{}' from '{}'".format(unc, proc))
+                self.manipulator.to_remove = {
+                    unc : [proc]
+                }
+                self.manipulator.remove_nuisances_from_procs(harvester)
+                # now add new uncertainties
+                print("adding uncertainty '{}' to '{}'"\
+                    .format(unc, proc))
+                value = self.__lnN_uncertainties[proc][unc]
+                harvester.cp().process([proc])\
+                    .AddSyst(harvester, unc, "lnN", ch.SystMap()(value))
+
 
     def remove_5FS_prediction(self, harvester):
         process_manipulator = ProcessManipulator()
@@ -179,6 +233,7 @@ class CommonManipulations(object):
         self.remove_see_saw(harvester)
         self.add_bgnorm_uncertainties(harvester)
         self.remove_5FS_prediction(harvester)
+        self.add_lnN_uncertainties(harvester)
         harvester.SetAutoMCStats(harvester, 10)
 
 
