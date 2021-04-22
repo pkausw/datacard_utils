@@ -464,6 +464,8 @@ class DrawHistograms:
         self.yLabel          = yLabel
         self.xLabel          = xLabel
         self.dontScaleSignal = dontScaleSignal
+        self.ratio_lower_bound = 0.5
+        self.ratio_upper_bound = 1.5
     # ===============================================
     # DRAW HISTOGRAMS ON CANVAS
     # ===============================================
@@ -794,7 +796,8 @@ class DrawHistograms:
         line.Divide(line)
         line.SetFillStyle(0)
         #line.GetYaxis().SetRangeUser(0.5,1.5)
-        line.GetYaxis().SetRangeUser(0.3,1.7)
+        line.GetYaxis().SetRangeUser(   self.ratio_lower_bound-0.2,
+                                        self.ratio_upper_bound+0.2)
         line.GetYaxis().SetTitle(self.ratio)
 
         line.SetTitle("")

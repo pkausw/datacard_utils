@@ -165,7 +165,10 @@ styleOptions.add_option("--splitlegend", dest="splitlegend",  default=None,
         help="splits the legend in two")
 styleOptions.add_option("--sortedprocesses", dest="sortedprocesses", default=None,
         help="List for the order of Processes to be stacked, starts with first, if processes are not specified in this list but included in the background, they get added at the end by their event yield. (For shapes only important for legend order)")
-
+styleOptions.add_option("--ratio-lower-bound", dest="ratio_lower_bound", default = 0.5, type = "float",
+        help= "set lower bound for the ratio plot range. Defaults to 0.5")
+styleOptions.add_option("--ratio-upper-bound", dest="ratio_upper_bound", default = 1.5, type = "float",
+        help= "set upper bound for the ratio plot range. Defaults to 1.5")
 parser.add_option_group(styleOptions)
 
 """
@@ -602,6 +605,10 @@ DrawHistogramObject = Plots.DrawHistograms(PlotList,options.channelName,
                                 combineflag=combineflag,shape=shape,
                                 sortedProcesses=sortedProcesses,
                                 yLabel=yLabel, xLabel = xLabel, dontScaleSignal=options.dontScaleSignal)
+
+
+DrawHistogramObject.ratio_lower_bound = options.ratio_lower_bound
+DrawHistogramObject.ratio_upper_bound = options.ratio_upper_bound
 
 DrawHistogramObject.drawHistsOnCanvas()
 
