@@ -4,27 +4,45 @@ import ROOT
 import json
 ROOT.gROOT.SetBatch(True)
 
-results_json = "HIG-18-030_HIG18030_v01_results_unblinded.json"
-
 from optparse import OptionParser, OptionGroup
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
-# Which result? Options: "17", "16p17"
-result_version = "STXS" 
-#result_version = "16p17" 
-
 fontsize = 0.04
 
+def get_table_head(table_format = "tex"):
+    if table_format == "tex":
+        return """\\begin{tabular}{lccc}
+    \\hline\\hline
+    Parameter & Stat+Syst & Stat-Only & Significance \\\\
+    \\hline"""
+    elif table_format == "md":
+        return """| Parameter | Stat+Syst | Stat-Only | Significance |
+    | --- | --- | --- | --- |"""
+
+def get_table_line(table_format = "tex"):
+    if table_format == "tex":
+        return """{parameter} & {bestfit} & {statonly} & {signi}\\\\"""
+    elif table_format == "md":
+        return """| {parameter} | {bestfit} | {statonly} | {signi} |"""
+
+def get_table_footer(table_format = "tex"):
+    if table_format == "tex":
+        return """\\hline\\hline
+    \\end{tabular}"""
+    else:
+        return ""
+
 def parse_results(mu, upper, lower, upper_stat, lower_stat,\
-                    order, significance):
+                    order, significance, table_format="tex"):
     
     lines = []
     fitresult_template = "{val:+.2f}  {up:+.2f}/{down:+.2f}"
-    line = """{parameter} & {bestfit} & {statonly} & {signi}\\\\"""
+    line = get_table_line(table_format)
     counter = 0
     for name in order:
         if name == "LINE":
-            lines.append("\\hline")
+            if table_format == "tex":
+                lines.append("\\hline")
             continue
         bestfit_text = fitresult_template.format(
                 val = mu[counter],
@@ -39,11 +57,14 @@ def parse_results(mu, upper, lower, upper_stat, lower_stat,\
         signi_text = str(round(significance[counter], 1)) \
                         if isinstance(significance[counter], float) \
                             else significance[counter]
-        name = name.replace("#", "\\")
-        if any(x in name for x in "[ ]".split()):
-            name = "${}$".format(name)
+        # latex format requires additional pollishing of the combination name
+        if table_format == "tex":
+            name = name.replace("#", "\\")
+            if any(x in name for x in "[ ]".split()):
+                name = "${}$".format(name)
+            name = name.replace("_", "\\_")
         lines.append(line.format(
-            parameter = name.replace("_", "\\_"),
+            parameter = name,
             bestfit = bestfit_text,
             statonly = stat_only_text,
             signi = signi_text
@@ -69,22 +90,21 @@ def load_values(result_dict, result_set, value_keyword, order):
 
 
 def create_table(mu, upper, lower, upper_stat, lower_stat,\
-                    entry_names, significance, outname):
+                    entry_names, significance, outname,\
+                    table_format = "tex"):
 
-    header = """\\begin{tabular}{lccc}
-    \\hline\\hline
-    Parameter & Stat+Syst & Stat-Only & Significance \\\\
-    \\hline"""
+    header = get_table_head(table_format)
     
-    footer = """\\hline\\hline
-    \\end{tabular}"""
+    footer = get_table_footer(table_format)
 
     lines = [header]
     lines += parse_results(mu = mu, upper = upper, lower = lower,
                             upper_stat = upper_stat, lower_stat = lower_stat,\
-                            order = entry_names, significance = significance)
+                            order = entry_names, significance = significance,\
+                            table_format = table_format)
     lines.append(footer)
-    outpath = outname + ".tex"
+    if not outname.endswith(table_format):
+        outpath = ".".join([outname, table_format])
     print("writing table to {}".format(outpath))
     with open(outpath, "w") as f:
         f.write("\n".join(lines))
@@ -159,12 +179,12 @@ def bestfit( **kwargs ):
                 include_signi = include_signi, style = kwargs)
 
     skip_table = kwargs.get("skip_table", False)
-
+    table_format = kwargs.get("table_format", "tex")
     if not skip_table:
         create_table(mu = mu, upper = upper, lower = lower,
                 upper_stat = upper_stat, lower_stat = lower_stat,
                 entry_names = entry_names, outname = outname,
-                significance = significance)
+                significance = significance, table_format = table_format)
 
 def create_plot(mu, upper, lower, upper_stat, lower_stat,\
     upper_syst, lower_syst , entry_names, outname, style, include_signi = False):
@@ -451,6 +471,17 @@ def parse_arguments():
                         dest = "include_signi",
                         action = "store_true",
                         default = False,
+                    )
+
+    style_group.add_option("-t", "--table-format",
+                        help = " ".join("""
+                            output format for results table.
+                            Current choices: tex, md.
+                            Defaults to tex
+                        """.split()),
+                        dest = "table_format",
+                        choices = "tex md".split(),
+                        default = "tex"
                     )
 
     parser.add_option_group(style_group)
