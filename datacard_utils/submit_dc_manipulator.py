@@ -58,6 +58,17 @@ def parse_arguments():
                         dest = "additional_cmds",
                         action = "append"
                     )
+    parser.add_option("--dry-run",
+                      help = " ".join(
+                            """
+                            just create shell scripts, do not submit anything to
+                            batch system
+                            """.split()
+                      ),
+                      dest = "dry_run",
+                      action = "store_true",
+                      default = False
+                    )
     options, args = parser.parse_args()
     if not options.inputs:
         parser.error("You need to provide an input for the dc_manipulator!")
@@ -81,7 +92,7 @@ def create_script(input, outdir, additional_cmds = []):
 def main(**kwargs):
     inputs = kwargs.get("inputs")
     outdir = kwargs.get("directory")
-
+    dry_run = kwargs.get("dry_run", False)
     additional_cmds = kwargs.get("additional_cmds", [])
     if not additional_cmds:
         additional_cmds = []
@@ -94,9 +105,10 @@ def main(**kwargs):
     
     
     if len(scripts) > 0:
-        arrayname = "arrayJob.sh"
-        arrayname = helper.check_for_twin(arrayname)
-        batch.submitArrayToBatch(scripts = scripts, arrayscriptpath = arrayname)
+        if not dry_run:
+            arrayname = "arrayJob.sh"
+            arrayname = helper.check_for_twin(arrayname)
+            batch.submitArrayToBatch(scripts = scripts, arrayscriptpath = arrayname)
     else:
         print("Could not generate any dc_manipulator scripts!")
     
