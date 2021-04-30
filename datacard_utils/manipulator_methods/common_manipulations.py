@@ -81,8 +81,8 @@ class CommonManipulations(object):
                 "pdf_Higgs_ttH": 1.036
             },
             "ttbb.*|ttcc|ttlf":{
-                "QCDscale_ttbar": (0.907,1.081),
-                "pdf_gg": 1.035
+                "QCDscale_ttbar": (1-0.035,1+0.024),
+                "pdf_gg": 1.042
             },
             "signlet": {
                 "QCDscale_singlet": (0.979,1.031),
@@ -90,7 +90,7 @@ class CommonManipulations(object):
             },
             "wjets": {
                 "QCDscale_V": 1.038,
-                "pdf_qqbar": 0.996/1.008
+                "pdf_qqbar": (0.996,1.008)
             },
             "zjets": {
                 "QCDscale_V": 1.02,
