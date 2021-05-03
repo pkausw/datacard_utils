@@ -141,13 +141,14 @@ class BinManipulator(object):
                     binContent = 0.
         
         
-        # underflow_edge = combinedHist.GetBinLowEdge(1)
-        # if not underflow_edge in bin_edges:
-        #     # if underflow_edge is not in bin_edges list the relative
-        #     # error of the last bin is too small, so just merge the
-        #     # first two bins by replacing the last_added_edge with
-        #     # the underflow_edge 
-        #     bin_edges[-1] = underflow_edge
+        underflow_edge = combinedHist.GetBinLowEdge(1)
+        if not underflow_edge in bin_edges:
+            # if underflow_edge is not in bin_edges list the relative
+            # error of the last bin is too small, so just merge the
+            # first two bins by replacing the last_added_edge with
+            # the underflow_edge 
+            min_index = bin_edges.index(min(bin_edges))
+            bin_edges[min_index] = underflow_edge
         bin_edges = sorted(bin_edges)
         if self.__debug >= 1:
             print("\tnew bin edges: [{}]".format(",".join([str(round(b,4)) for b in bin_edges])))
