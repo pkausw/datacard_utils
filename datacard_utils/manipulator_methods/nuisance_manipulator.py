@@ -49,7 +49,8 @@ class NuisanceManipulator(object):
         # print("dropping sys {}".format(parameter_to_drop))
         harvester.FilterSysts(lambda syst: self.matching_proc(proc, syst) and syst.name() == parameter_to_drop)
 
-    def remove_nuisances_from_procs(self, harvester, bins = None):
+    def remove_nuisances_from_procs(self, harvester, bins = None, channels = [".*"], eras = [".*"]):
+        harvester.SetFlag("filters-use-regex", True)
         harvester_params = harvester.syst_name_set()
         if not isinstance(bins, list):
             bins = harvester.bin_set()
@@ -70,7 +71,7 @@ class NuisanceManipulator(object):
                     print(bins)
                     print("removing param '{}' for procs '{}' in bins '{}'".\
                         format(par, ", ".join(procs), ", ".join(bins)))
-                harvester.cp().bin(bins).process(procs).\
+                harvester.cp().bin(bins).channel(channels).era(eras).process(procs).\
                     ForEachProc(lambda proc: self.drop_syst(harvester,proc, par))
 
 

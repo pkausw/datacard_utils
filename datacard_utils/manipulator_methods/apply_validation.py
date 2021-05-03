@@ -191,12 +191,14 @@ class ValidationInterface(ProcessManipulator):
                                 ForEachSyst(lambda x: x.set_value_d(vals[1]))
                         else:
                             print("Detected uncertainty with less than 0.1% yield effect!")
-                            print("will drop")
+                            print("will drop '{}' for process '{}/{}'"\
+                                    .format(unc, channel, process))
                             # self.__np_manipulator.debug = 3
                             self.__np_manipulator.to_remove = {unc: [str(process)]}
                             self.__np_manipulator.remove_nuisances_from_procs(
                                                     harvester = harvester,
-                                                    bins = [str(channel)])
+                                                    bins = [str(channel)],
+                                                    eras = eras)
                     else:
                         print("="*130)
                         print("Could not find uncertainty '{}' in '{}/{}'".\
