@@ -235,6 +235,8 @@ class CommonManipulations(object):
         self.remove_5FS_prediction(harvester)
         self.add_lnN_uncertainties(harvester)
         harvester.SetAutoMCStats(harvester, 10)
+        harvester.FilterSysts(lambda x: (x.value_u() == 0 or x.value_d() == 0)\
+                                 and any(x.type == t for t in "shape shape? lnN".split()))
 
 
 def main(**kwargs):
