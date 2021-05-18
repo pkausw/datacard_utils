@@ -189,14 +189,17 @@ class CommonManipulations(object):
         elif self.__mode == "rateParams":
             harvester.cp().process(["ttcc.*"])\
                     .AddSyst(harvester, "CMS_ttHbb_bgnorm_ttcc", "rateParam", ch.SystMap()(1.))
-            harvester.GetParameter("CMS_ttHbb_bgnorm_ttcc").set_range(-5, 5)
+            if "CMS_ttHbb_bgnorm_ttcc" in harvester.cp().syst_type(["rateParam"]).syst_name_set():
+                harvester.GetParameter("CMS_ttHbb_bgnorm_ttcc").set_range(-5, 5)
             harvester.cp().process(["ttbb.*"])\
                     .AddSyst(harvester, "CMS_ttHbb_bgnorm_ttbb", "rateParam", ch.SystMap()(1.))
-            harvester.GetParameter("CMS_ttHbb_bgnorm_ttbb").set_range(-5, 5)
+            if "CMS_ttHbb_bgnorm_ttbb" in harvester.cp().syst_type(["rateParam"]).syst_name_set():
+                harvester.GetParameter("CMS_ttHbb_bgnorm_ttbb").set_range(-5, 5)
         elif self.__mode == "GoF":
             harvester.cp().process(["ttbb.*"])\
                     .AddSyst(harvester, "CMS_ttHbb_bgnorm_ttbb", "rateParam", ch.SystMap()(1.))
-            harvester.GetParameter("CMS_ttHbb_bgnorm_ttbb").set_range(0, 5)
+            if "CMS_ttHbb_bgnorm_ttbb" in harvester.cp().syst_type(["rateParam"]).syst_name_set():
+                harvester.GetParameter("CMS_ttHbb_bgnorm_ttbb").set_range(0, 5)
             harvester.cp().process(["ttcc.*"])\
                         .AddSyst(harvester, "CMS_ttHbb_bgnorm_ttcc", "lnN", ch.SystMap()(1.5))
         # 
