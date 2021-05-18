@@ -24,7 +24,7 @@ except:
 from common_manipulations import CommonManipulations
 
 class BinManipulator(object):
-    choices = "left right all mem half".split()
+    choices = "left right all mem half dl".split()
     def __init__(self):
         self.bin_edges = []
         self.threshold = 15
@@ -32,10 +32,12 @@ class BinManipulator(object):
         
     def load_edges(self, proc):
         if isinstance(proc, ROOT.TH1):
-            h = proc
+            h = proc.Clone("clone")
         else:
             h = proc.ShapeAsTH1F()
         nbins = h.GetNbinsX()
+        if self.__debug >= 10:
+            print("loading edges from {} bins".format(nbins))
         self.bin_edges = [h.GetBinLowEdge(i) for i in range(1, nbins+2)]
         print(self.bin_edges)
 
@@ -56,6 +58,8 @@ class BinManipulator(object):
             # select every second bin edge
             edges = [self.bin_edges[0], self.bin_edges[-1]]
             edges += self.bin_edges[::2]
+        elif self.scheme == "dl":
+            edges = [-1, 0, 1]
         else:
             print("ERROR: did not recognice scheme '{}'".format(self.scheme))
             print("Will not rebin")
