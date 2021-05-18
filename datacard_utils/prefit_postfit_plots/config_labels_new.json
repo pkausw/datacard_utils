@@ -47,15 +47,11 @@
         "top": "SL \\geq 4 jets 3 tags",
         "bottom": "tHq node"
     },
-    "ttH_hbb_13TeV_dl_4j3b_DNN_ttbb": {
+    "ttH_hbb_13TeV_dl_4j3b_DNN_ttHbb_ratioObservable": {
         "top": "DL \\geq 4 jets \\geq 3 tags",
-        "bottom": "ttbb node",
-        "range": 0.0
-    },
-    "ttH_hbb_13TeV_dl_4j3b_DNN_ttHbb": {
-        "top": "DL \\geq 4 jets \\geq 3 tags",
-        "bottom": "ttH node",
-        "range": 0.0
+        "bottom": "ttH + ttbb node",
+        "range": 0.0,
+        "xtitle": "Ratio Observable"
     },
     "ttbbCR": {
         "top": "ttbb Control Region",
