@@ -185,8 +185,41 @@ def write_harvester(harvester, cardname, outfile, group_manipulator):
 
     harvester.WriteDatacard(cardname, outfile)
 
-
-
+def transpose_binning(harvester, binning_groups):
+    print("will perform rebinning based on '{}'".format(binning_groups))
+    binning_harvester = ch.CombineHarvester()
+    binning_harvester.SetFlag("allow-missing-shapes", False)
+    binning_harvester.SetFlag("workspaces-use-clone", True)
+    binning_harvester.SetFlag("filters-use-regex", True)
+    p = load_datacards(binning_groups, binning_harvester)
+    bin_manipulator = BinManipulator()
+    eras = harvester.era_set()
+    
+    source_eras = binning_harvester.era_set()
+    for e in eras:
+        if not e in source_eras:
+            print("Could not find era '{}' in source!")
+            continue
+        source_bins = binning_harvester.cp().era([e]).bin_set()
+        for s in source_bins:
+            print("checking bin '{}' for matches".format(s))
+            bins = harvester.cp().era([e]).bin([".*{}.*".format(s)]).bin_set()
+            if len(bins) == 0:
+                print("WARNING: found no matches for bin {}".format(s))
+            else:
+                source = binning_harvester.cp().era([e]).bin([s])\
+                                .backgrounds()
+                h = source.GetShape()
+                h.Print("Range")
+                bin_manipulator.load_edges(h)
+                for b in bins:
+                    print("Rebinning bin '{}'".format(b))                  
+                    print("applying this binning:")
+                    print(bin_manipulator.bin_edges)
+                    harvester.cp().bin([b]).era([e])\
+                        .VariableRebin(bin_manipulator.bin_edges)
+               
+            
 def write_datacards(harvester, outdir, prefix, rootfilename, era, \
                     group_manipulator, combine_cards = True,\
                     bgnorm_mode = "rateParams",
@@ -261,8 +294,13 @@ def main(**kwargs):
         .ForEachProc(lambda x: x.set_signal(make_tH_signal))
     harvester.cp().process(["tH.*"])\
         .ForEachSyst(lambda x: x.set_signal(make_tH_signal))
+    
+    # binning related manipulations
     rebin_scheme = kwargs.get("scheme", None)
     check_mc = kwargs.get("check_mc", False)
+    binning_groups = kwargs.get("binning_groups", None)
+    if binning_groups:
+        transpose_binning(harvester, binning_groups)
     if rebin_scheme or check_mc:
         bin_manipulator = BinManipulator()
         if check_mc:
@@ -402,7 +440,8 @@ def parse_arguments():
                         dest = "prefix",
                         type = "str"
                     )
-    optional_group.add_option("-s", "--rebin-scheme",
+    binning_options = OptionGroup(parser, "Options regarding the binning of templates")
+    binning_options.add_option("-s", "--rebin-scheme",
                         help = " ".join(
                             """
                             rebin the shapes in the different channels
@@ -416,7 +455,21 @@ def parse_arguments():
                         # type = "str"
                     )
 
-    optional_group.add_option("--check-mc-binning",
+    binning_options.add_option("-b", "--binning",
+                        help = " ".join(
+                            """
+                            define groups of inputs to load binning from. 
+                            The format should be like
+                            'SCHEME:wildcard/to/input/files*.txt'
+                            """.split()
+                        ),
+                        dest = "binning_groups",
+                        metavar = "SCHEME:path/to/datacard",
+                        type = "str",
+                        action = "append"
+                    )
+
+    binning_options.add_option("--check-mc-binning",
                         help = " ".join(
                             """
                             rebin the shapes in the different channels
@@ -428,8 +481,9 @@ def parse_arguments():
                         action = "store_true",
                         default = False
                     )
-
-    optional_group.add_option("--apply-validation",
+    text = "Options regarding the validation of datacards"
+    validation_options = OptionGroup(parser, text)
+    validation_options.add_option("--apply-validation",
                         help = " ".join(
                             """
                             apply results obtained by ValidateDatacards.py
@@ -440,7 +494,7 @@ def parse_arguments():
                         default = False
                         # type = "str"
                     )
-    optional_group.add_option("--jsonpath",
+    validation_options.add_option("--jsonpath",
                         help = " ".join(
                             """
                             use this .json file as output of ValidateDatacards.py.
@@ -450,7 +504,9 @@ def parse_arguments():
                         dest = "validation_jsonpath",
                         type = "str"
                     )
-    optional_group.add_option("--remove-minor-jec",
+    text = "Options to modify the stat. model in general"
+    model_manipulations = OptionGroup(parser, text)
+    model_manipulations.add_option("--remove-minor-jec",
                         help = " ".join(
                             """
                             remove JEC uncertainties from minor backgrounds.
@@ -464,7 +520,7 @@ def parse_arguments():
                         action = "store_true",
                         default = False
                     )
-    optional_group.add_option("--make-tH-signal",
+    model_manipulations.add_option("--make-tH-signal",
                         help = " ".join(
                             """
                             set the tH process to signal processes.
@@ -475,7 +531,7 @@ def parse_arguments():
                         action = "store_true",
                         default = False
                     )
-    optional_group.add_option("--remove-minor-bkgs",
+    model_manipulations.add_option("--remove-minor-bkgs",
                         help = " ".join(
                             """
                             remove backgrounds which contribute less than
@@ -490,7 +546,7 @@ def parse_arguments():
                         default = False
                     )
 
-    optional_group.add_option("--bgnorm-mode",
+    model_manipulations.add_option("--bgnorm-mode",
                         help = " ".join(
                             """
                             Choose the kind of parameters you would like
@@ -503,7 +559,7 @@ def parse_arguments():
                         choices = CommonManipulations.bgnorm_mode_choices(),
                         default = "rateParams"
                     )
-    optional_group.add_option("--stxs",
+    model_manipulations.add_option("--stxs",
                         help = " ".join(
                             """
                             apply stxs-specific modifications.
@@ -528,6 +584,9 @@ def parse_arguments():
                         default = False
                     )
     parser.add_option_group(optional_group)
+    parser.add_option_group(model_manipulations)
+    parser.add_option_group(validation_options)
+    parser.add_option_group(binning_options)
     options, files = parser.parse_args()
 
     # cardpath = options.datacard
