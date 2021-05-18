@@ -3,6 +3,7 @@ import os
 import sys
 import importlib
 from optparse import OptionParser
+from array import array
 
 mu_s = 1
 
@@ -33,7 +34,9 @@ def get_hist(in_file,dir_name,process):
     elif process == "vjets":
         outhist= get_sum_of_hists(in_file,dir_name,"vjets",["wjets","zjets"])
     elif process == "tH":
-        outhist= get_sum_of_hists(in_file,dir_name,"tH", ["tHq_hbb","tHW_hbb"])
+        outhist= get_sum_of_hists(in_file,dir_name,"tH", ["{proc}_{dec}".format(proc = x, dec = y)\
+                                                            for x in "tHq tHW".split()\
+                                                            for y in "hbb hcc hww hzz hzg htt hgluglu hgg".split()])
         if not outhist:
             outhist= get_sum_of_hists(in_file,dir_name,"tH", ["tHq","tHW"])
     elif process == "multijet":
@@ -84,8 +87,10 @@ def get_yield_string(category_yield_map,category,process,sig_scale=1, total_sig 
         return "{:5.1f}".format(y), "{:3.1f}".format(ye)
     obj = category_yield_map[category][process]
     if isinstance(obj, ROOT.TH1):
-        y  = obj.Integral()
-        ye = obj.GetBinError(1)
+        errs = array('d', [0.])
+        y  = obj.IntegralAndError(1, obj.GetNbinsX(), errs)
+        # ye = obj.GetBinError(1)
+        ye = errs[0]
     elif isinstance(obj,ROOT.TGraphAsymmErrors):
         for i in range(obj.GetN()):
             y  += obj.GetY()[i]
