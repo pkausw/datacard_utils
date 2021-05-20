@@ -23,6 +23,8 @@ prefit_template += """
     inputfile=$3
 
     cmd="PostFitShapesFromWorkspace -w $inputfile -o $outfile"
+    cmd="$cmd -p 'tH=tH.*' -p 'vjets=(w|z)jets' -p 'ttbarV=ttbar(W|Z)' -p 'multijet=.*_CR'"
+    cmd="$cmd -p 'tHq=tHq_.* -p 'tHW=tHW_.*"
 
     if [ "$#" -eq 4 ] ; then
         inputdatacard=$4
@@ -49,7 +51,9 @@ postfit_template += """
     inputfile=$5
     
 
-    cmd="PostFitShapesFromWorkspace -w $inputfile -o $outfile"
+    cmd="PostFitShapesFromWorkspace -w $inputfile -o $outfile "
+    cmd="$cmd -p 'tH=tH.*' -p 'vjets=(w|z)jets' -p 'ttbarV=ttbar(W|Z)' -p 'multijet=.*_CR'"
+    cmd="$cmd -p 'tHq=tHq_.* -p 'tHW=tHW_.*"
     cmd="$cmd -f $fitresult"
     cmd="$cmd --skip-prefit --postfit --sampling --samples $nsamples"
     cmd="$cmd --skip-proc-errs"

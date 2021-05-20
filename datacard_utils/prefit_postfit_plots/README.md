@@ -32,6 +32,9 @@ You can generate such workspaces with the setup in the datacards repo with this 
 After creating suitable workspaces, you can use `submit_shape_generation.py` to create the pre-fit and post-fit shapes.
 Please have a look at the help function of the script for more information.
 
+**Important**: The current version of the script will only work correctly with [this](https://github.com/pkausw/CombineHarvester/tree/HIG-19-011) fork of the CombineHarvester (branch `HIG-19-011`)!
+
+
 ## Generate the plots
 
 You need
