@@ -97,6 +97,9 @@ def get_yield_string(category_yield_map,category,process,sig_scale=1, total_sig 
         ye = obj.GetErrorYhigh(0)
         ye += obj.GetErrorYlow(0)
         ye /= 2.
+    elif isinstance(obj, ROOT.RooRealVar):
+        y = obj.getVal()
+        ye = obj.getError()
     else:
         print("WARNING: could not read object at [{}][{}]".format(category,process))
     # ye = 0
