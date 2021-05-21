@@ -38,13 +38,37 @@ def get_hist(in_file,dir_name,process):
                                                             for x in "tHq tHW".split()\
                                                             for y in "hbb hcc hww hzz hzg htt hgluglu hgg".split()])
         if not outhist:
-            outhist= get_sum_of_hists(in_file,dir_name,"tH", ["tHq","tHW"])
+                outhist= get_sum_of_hists(in_file,dir_name,"tH", ["tHq","tHW"])
+
+    elif process == "ttH_PTH_0_60":
+        outhist= get_sum_of_hists(in_file,dir_name,"ttH_PTH_0_60", ["ttH_PTH_0_60_{dec}".format(dec = x)\
+                                                            for x in "hbb hcc hww hzz hzg htt hgluglu hgg".split()])
+                                                            # for x in "hbb".split()])
+    elif process == "ttH_PTH_60_120":
+        outhist= get_sum_of_hists(in_file,dir_name,"ttH_PTH_60_120", ["ttH_PTH_60_120_{dec}".format(dec = x)\
+                                                            for x in "hbb hcc hww hzz hzg htt hgluglu hgg".split()])
+    elif process == "ttH_PTH_120_200":
+        outhist= get_sum_of_hists(in_file,dir_name,"ttH_PTH_120_200", ["ttH_PTH_120_200_{dec}".format(dec = x)\
+                                                            for x in "hbb hcc hww hzz hzg htt hgluglu hgg".split()])
+    elif process == "ttH_PTH_200_300":
+        outhist= get_sum_of_hists(in_file,dir_name,"ttH_PTH_200_300", ["ttH_PTH_200_300_{dec}".format(dec = x)\
+                                                            for x in "hbb hcc hww hzz hzg htt hgluglu hgg".split()])
+
+    elif process == "ttH_PTH_300_450":
+        outhist= get_sum_of_hists(in_file,dir_name,"ttH_PTH_300_450", ["ttH_PTH_300_450_{dec}".format(dec = x)\
+                                                            for x in "hbb hcc hww hzz hzg htt hgluglu hgg".split()])
+    elif process == "ttH_PTH_GT450":
+        outhist= get_sum_of_hists(in_file,dir_name,"ttH_PTH_GT450", ["ttH_PTH_GT450_{dec}".format(dec = x)\
+                                                            for x in "hbb hcc hww hzz hzg htt hgluglu hgg".split()])                                                                                                                 
+
     elif process == "multijet":
         outhist= get_sum_of_hists(in_file,dir_name,"multijet", ["data_CR", "ttbb_CR", "ttcc_CR", "ttlf_CR", "singlet_CR", "ttbarW_CR", "ttbarZ_CR", "wjets_CR", "zjets_CR", "diboson_CR"])
     else:
         outhist= in_file.Get(histpath)
+
     if outhist!=None:
         print("found '{}'".format(outhist.GetName()))
+        print(outhist)
     else:
         print("did not find '{}'".format(histpath))
     return outhist    
