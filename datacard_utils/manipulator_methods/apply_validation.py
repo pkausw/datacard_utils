@@ -263,26 +263,27 @@ class ValidationInterface(ProcessManipulator):
             print("\teras: {}".format(", ".join(eras)))
             print("\tchannels: {}".format(", ".join(channels)))
             print("\tbins: {}".format(", ".join(bins)))
-        if "smallShapeEff" in self.validation_dict and self.__do_smallShapeEff:
-            if self.verbosity > 15:
-                print("Will ratify uncertainties w/ small shape effect")
-            subdict = self.validation_dict["smallShapeEff"]
-            harvester = self.ratify(harvester = harvester, 
-                                    change_dict = subdict,
-                                    eras = eras)
+        if isinstance(self.validation_dict, dict):
+            if "smallShapeEff" in self.validation_dict and self.__do_smallShapeEff:
+                if self.verbosity > 15:
+                    print("Will ratify uncertainties w/ small shape effect")
+                subdict = self.validation_dict["smallShapeEff"]
+                harvester = self.ratify(harvester = harvester, 
+                                        change_dict = subdict,
+                                        eras = eras)
 
-        if "smallSignalProc" in self.validation_dict and self.__do_smallSigCut:
-            if self.verbosity > 15:
-                print("Processes before small signal pruning:")
-                harvester.PrintProcs()
-            subdict = self.validation_dict["smallSignalProc"]
-            self.drop_small_signals(harvester, change_dict = subdict,
-                                    eras = eras, channels = channels,
-                                    bins = bins)
+            if "smallSignalProc" in self.validation_dict and self.__do_smallSigCut:
+                if self.verbosity > 15:
+                    print("Processes before small signal pruning:")
+                    harvester.PrintProcs()
+                subdict = self.validation_dict["smallSignalProc"]
+                self.drop_small_signals(harvester, change_dict = subdict,
+                                        eras = eras, channels = channels,
+                                        bins = bins)
 
-            if self.verbosity > 15:
-                print("Processes after small signal pruning:")
-                harvester.PrintProcs()
+                if self.verbosity > 15:
+                    print("Processes after small signal pruning:")
+                    harvester.PrintProcs()
         if self.__do_smallBkgCut:
             self.drop_small_backgrounds(harvester, eras = eras, 
                                         channels = channels,
