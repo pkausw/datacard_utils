@@ -84,7 +84,7 @@ class CommonManipulations(object):
                 "QCDscale_ttbar": (1-0.035,1+0.024),
                 "pdf_gg": 1.042
             },
-            "signlet": {
+            "singlet": {
                 "QCDscale_singlet": (0.979,1.031),
                 "pdf_qg": 1.028
             },
