@@ -1,3 +1,4 @@
+import os
 import numpy as np
 from ROOT import TH2F, TCanvas, gStyle, TLatex, TAxis, TLine, TGraphErrors, TGraphAsymmErrors, TLegend, kGreen, kYellow, TPaveText, gROOT
 import json
@@ -33,65 +34,80 @@ paramsToDraw = [ x for x in paramsToDraw if "prop_bin" not in x ]
 print(paramsToDraw)
 # exit()
 
+combinationsToDraw = """
+combined_DLFHSL_{}.root  combined_FH_{}_DNN.root          combined_SL_{}_DNN_ge4j_ge4t.root
+combined_DLSL_{}.root    combined_SL_{}_DNN.root     combined_DLFH_{}.root combined_SLFH_{}.root
+combined_DL_{}_DNN.root               combined_SL_{}_DNN_ge4j_3t.root
+""".split()
 
-combinationsToDraw = [
+combinationsToDraw = [x.format(y) for x in combinationsToDraw for y in "2016 2017 2018 1617 1718 all_years".split()]
+combinationsToDraw = [x.replace("/", "") for x in combinationsToDraw]
 
-    "combined_DL_2016_DNN",
-    "combined_DL_2017_DNN",
-    "combined_DL_2018_DNN",
-    "combined_DL_all_years_DNN",
-
-    "combined_FH_2016_DNN",
-    "combined_FH_2017_DNN",
-    "combined_FH_2018_DNN",
-    "combined_FH_all_years_DNN",
-
-    "combined_SL_2016_DNN",
-    # "combined_SL_2016_DNN_ge4j_3t",
-    # "combined_SL_2016_DNN_ge4j_ge4t",
-    "combined_SL_2017_DNN",
-    # "combined_SL_2017_DNN_ge4j_3t",
-    # "combined_SL_2017_DNN_ge4j_ge4t",
-    "combined_SL_2018_DNN",
-    # "combined_SL_2018_DNN_ge4j_3t",
-    # "combined_SL_2018_DNN_ge4j_ge4t",
-    "combined_SL_all_years_DNN",
-    # "combined_SL_all_years_DNN_ge4j_3t",
-    # "combined_SL_all_years_DNN_ge4j_ge4t",
-
-    "combined_full_2016_baseline_v01",
-    "combined_full_2017_baseline_v01",
-    "combined_full_2018_baseline_v01",
-    "combined_full_all_years_baseline_v01",
-
-    "combined_DLFHSL_2016_baseline_v01",
-    "combined_DLFHSL_2017_baseline_v01",
-    "combined_DLFHSL_2018_baseline_v01",
-    "combined_DLFHSL_all_years_baseline_v01",
-    # "combined_DLSL_2016_baseline_v01",
-    # "combined_DLSL_2017_baseline_v01",
-    # "combined_DLSL_2018_baseline_v01",
-    # "combined_DLSL_all_years_baseline_v01",
-]
-
-
+combinationsToDraw = [x.replace(".root", "") for x in combinationsToDraw]
+combinationsToDraw = sorted(combinationsToDraw)
 
 naming = {
-    "combined_DLFHSL_2016_baseline_v01": "DL+FH+SL 2016",
-    "combined_DLFHSL_2017_baseline_v01": "DL+FH+SL 2017",
-    "combined_DLFHSL_2018_baseline_v01": "DL+FH+SL 2018",
-    "combined_DLFHSL_all_years_baseline_v01": "DL+FH+SL all years",
-    "combined_DLSL_2016_baseline_v01": "DL+SL 2016",
-    "combined_DLSL_2017_baseline_v01": "DL+SL 2017",
-    "combined_DLSL_2018_baseline_v01": "DL+SL 2017",
-    "combined_DLSL_all_years_baseline_v01": "DL+SL all years",
+    "combined_DLFHSL_2016_nominorDL" : "DL+FH+SL (no 3j2b,3j3b,4j2b) 2016",
+    "combined_DLSL_2016_nominorDL": "DL+SL (no 3j2b,3j3b,4j2b) 2016",
+    "combined_DL_2016_DNN_nominorDL": "DL+SL (no 3j2b,3j3b,4j2b) 2016",
+
+    "no_3j2b_3j3b_combined_DLFHSL_2016" : "DL+SL (no 3j2b,3j3b) 2016",
+    "no_3j2b_3j3b_combined_DLSL_2016" : "DL+SL (no 3j2b,3j3b) 2016",
+    "no_3j2b_3j3b_combined_DL_2016_DNN" : "DL (no 3j2b,3j3b) 2016",
+
+    "no_4j2b_combined_DLFHSL_2016" : "DL+FH+SL (no 4j2b) 2016",
+    "no_4j2b_combined_DLSL_2016": "DL+SL (no 4j2b) 2016",
+    "no_4j2b_combined_DL_2016_DNN" : "DL (no 4j2b) 2016",
+
+    "no_3j2b_combined_DLFHSL_2016" : "DL+FH+SL (no 3j2b) 2016",
+    "no_3j2b_combined_DLSL_2016": "DL+SL (no 3j2b) 2016",
+    "no_3j2b_combined_DL_2016_DNN" : "DL (no 3j2b) 2016",
+    
+    "combined_N_Jets_DLFHSL_2016": "DL+FH+SL (NJets) 2016", 
+    "combined_N_Jets_DLFH_2016": "DL+FH (NJets) 2016",
+    "combined_N_Jets_DLSL_2016": "DL+SL (NJets) 2016",  
+    "combined_N_Jets_FHSL_2016": "FH+SL (NJets) 2016", 
+    "combined_N_Jets_DL_2016": "DL (NJets) 2016", 
+    "combined_DL_2016_DNN_nominorDL": "DL (4j3b) 2016",
+    "onlyminorDL_combined_DL_2016_DNN": "DL (no 4j3b) 2016",
+    "combined_N_Jets_FH_2016": "FH (NJets) 2016", 
+    "combined_N_Jets_SL_2016": "SL (NJets) 2016", 
+
+    "combined_DLFHSL_2016": "DL+FH+SL 2016",
+    "combined_DLFHSL_2017": "DL+FH+SL 2017",
+    "combined_DLFHSL_2018": "DL+FH+SL 2018",
+    "combined_DLFHSL_1617": "DL+FH+SL 2016+2017",
+    "combined_DLFHSL_1718": "DL+FH+SL 2017+2018",
+    "combined_DLFHSL_all_years": "DL+FH+SL all years",
+    "combined_DLSL_2016": "DL+SL 2016",
+    "combined_DLSL_2017": "DL+SL 2017",
+    "combined_DLSL_2018": "DL+SL 2018",
+    "combined_DLSL_1617": "DL+SL 2016+2017",
+    "combined_DLSL_1718": "DL+SL 2017+2018",
+    "combined_DLSL_all_years": "DL+SL all years",
+    "combined_DLFH_2016": "DL+FH 2016",
+    "combined_DLFH_2017": "DL+FH 2017",
+    "combined_DLFH_2018": "DL+FH 2018",
+    "combined_DLFH_1617": "DL+FH 2016+2017",
+    "combined_DLFH_1718": "DL+FH 2017+2018",
+    "combined_DLFH_all_years": "DL+FH all years",
+    "combined_SLFH_2016": "SL+FH 2016",
+    "combined_SLFH_2017": "SL+FH 2017",
+    "combined_SLFH_2018": "SL+FH 2018",
+    "combined_SLFH_1617": "SL+FH 2016+2017",
+    "combined_SLFH_1718": "SL+FH 2017+2018",
+    "combined_SLFH_all_years": "SL+FH all years",
     "combined_DL_2016_DNN": "DL 2016",
     "combined_DL_2017_DNN": "DL 2017",
     "combined_DL_2018_DNN": "DL 2018",
+    "combined_DL_1617_DNN": "DL 2016+2017",
+    "combined_DL_1718_DNN": "DL 2017+2018",
     "combined_DL_all_years_DNN": "DL all years",
     "combined_FH_2016_DNN": "FH 2016",
     "combined_FH_2017_DNN": "FH 2017",
     "combined_FH_2018_DNN": "FH 2018",
+    "combined_FH_1617_DNN": "FH 2016+2017",
+    "combined_FH_1718_DNN": "FH 2017+2018",
     "combined_FH_all_years_DNN": "FH all years",
     "combined_SL_2016_DNN": "SL 2016",
     "combined_SL_2016_DNN_ge4j_3t": "SL 2016 4j3b",
@@ -102,13 +118,19 @@ naming = {
     "combined_SL_2018_DNN": "SL 2018",
     "combined_SL_2018_DNN_ge4j_3t": "SL 2018 4j3b",
     "combined_SL_2018_DNN_ge4j_ge4t": "SL 2018 4j4b",
+    "combined_SL_1617_DNN": "SL 2016+2017",
+    "combined_SL_1617_DNN_ge4j_3t": "SL 2016+2017 4j3b",
+    "combined_SL_1617_DNN_ge4j_ge4t": "SL 2016+2017 4j4b",
+    "combined_SL_1718_DNN": "SL 2017+2018",
+    "combined_SL_1718_DNN_ge4j_3t": "SL 2017+2018 4j3b",
+    "combined_SL_1718_DNN_ge4j_ge4t": "SL 2017+2018 4j4b",
     "combined_SL_all_years_DNN": "SL all years",
     "combined_SL_all_years_DNN_ge4j_3t": "SL all years 4j3b",
-    "combined_SL_all_years_DNN_ge4j_ge4t": "SL all years 4j3b",
-    "combined_full_2016_baseline_v01": "DL+FH+SL+DLCR 2016",
-    "combined_full_2017_baseline_v01": "DL+FH+SL+DLCR 2017",
-    "combined_full_2018_baseline_v01": "DL+FH+SL+DLCR 2018",
-    "combined_full_all_years_baseline_v01": "DL+FH+SL+DLCR all years"
+    "combined_SL_all_years_DNN_ge4j_ge4t": "SL all years 4j4b",
+    "combined_full_2016": "DL+FH+SL+DLCR 2016",
+    "combined_full_2017": "DL+FH+SL+DLCR 2017",
+    "combined_full_2018": "DL+FH+SL+DLCR 2018",
+    "combined_full_all_years": "DL+FH+SL+DLCR all years"
 }
 
 def draw_Evolution( results_json, paramToDraw = "CMS_ttHbb_bgnorm_ttbb"):
@@ -126,19 +148,33 @@ def draw_Evolution( results_json, paramToDraw = "CMS_ttHbb_bgnorm_ttbb"):
     print("############")
     print("Drawing param: {}".format(paramToDraw))
     print("############")
-
+    
     for i,combination in enumerate(combinationsToDraw):
+        comb_dict = res.get(combination, {})
+        print("="*130)
+        print("combination: {}".format(combination))
+        print(json.dumps(comb_dict, indent=4))
+        print("############")
+        print("Drawing param: {}".format(paramToDraw))
+        print("############")
         try:
-            bestfit.append(res[combination][paramToDraw]["bestfit"]["value"])
-            upper.append(res[combination][paramToDraw]["bestfit"]["up"])
-            lower.append(abs(res[combination][paramToDraw]["bestfit"]["down"]))
+            param_dict = res[combination].get(paramToDraw, {})
+            print(json.dumps(param_dict, indent=4))
+            bestfit_dict = param_dict.get("bestfit", {})
+            bestfit.append(bestfit_dict["value"])
+            upper.append(bestfit_dict["up"])
+            lower.append(abs(bestfit_dict["down"]))
             channels.append(2+3*nCombs-0.5)
             combs.append(combination)
             nCombs=nCombs+1
 
         except:
             print("skipping {}".format(combination))
+            if combination == "combined_N_Jets_DLSL_2016" and paramToDraw == "CMS_ttHbb_MuR_ttH":
+                exit()
             continue
+        if combination == "combined_N_Jets_DLSL_2016" and paramToDraw == "CMS_ttHbb_MuR_ttH":
+            exit()
 
 
 
@@ -176,7 +212,7 @@ def draw_Evolution( results_json, paramToDraw = "CMS_ttHbb_bgnorm_ttbb"):
     lmin1.DrawLine( -1.0, 0, -1.0, 3*nCombs+0.5 )
 
     gmu_tot = TGraphAsymmErrors( nCombs, bestfit, channels, lower, upper, zero, zero )
-    gmu_tot.SetMarkerStyle( 1 )
+    gmu_tot.SetMarkerStyle( 5 )
     gmu_tot.SetMarkerSize( 1 )
     gmu_tot.SetMarkerColor( 4 )
     gmu_tot.SetLineColor( 4 )
@@ -244,7 +280,7 @@ def draw_canvas_histo( combinations, xmin, xmax, title ):
         # print(yaxis.GetBinCenter(int(2+3*(i))))
 
 
-    pub = TLatex();
+    pub = TLatex()
     pub.SetNDC()
     pub.SetTextFont( 42 )
     pub.SetTextSize( 0.05 )
@@ -322,6 +358,8 @@ def my_style():
     
 if __name__ == '__main__':
     my_style()
+    if not os.path.exists("paramEvo"):
+        os.makedirs("paramEvo")
     #limits()
     # for param in reversed(paramsToDraw):
     for param in paramsToDraw:

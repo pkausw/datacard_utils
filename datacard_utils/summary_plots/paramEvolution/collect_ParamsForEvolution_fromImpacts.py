@@ -25,36 +25,43 @@ multisignal = True
 
 
 combinations = """
-combined_DLFHSL_{}_baseline_v01.root  combined_FH_{}_DNN.root          combined_SL_{}_DNN_ge4j_ge4t.root
-combined_DLSL_{}_baseline_v01.root    combined_SL_{}_DNN.root          combined_full_{}_baseline_v01.root
+combined_DLFHSL_{}.root  combined_FH_{}_DNN.root          combined_SL_{}_DNN_ge4j_ge4t.root
+combined_DLSL_{}.root    combined_SL_{}_DNN.root     combined_DLFH_{}.root combined_SLFH_{}.root     
 combined_DL_{}_DNN.root               combined_SL_{}_DNN_ge4j_3t.root
 """.split()
 
 #combinations = """
 #combined_SL_{}_DNN.root combined_SL_{}_DNN_ge4j_ge4t.root combined_SL_{}_DNN_ge4j_3t.root
 #""".split()
+combinations = [x.replace(".root", "") for x in combinations]
 #combinations = """
-#combined_full_{}_baseline_v01_packaged_mus_channels.root
+#combined_full_{}_packaged_mus_channels.root
 #""".split()
 
 #combinations = """
-#rate_5FS_to_4FS_combined_full_2017_baseline_v01.root
-#hybrid_5FS_to_4FS_combined_full_2017_baseline_v01_withMCCR.root
+#rate_5FS_to_4FS_combined_full_2017.root
+#hybrid_5FS_to_4FS_combined_full_2017_withMCCR.root
 #""".split()
 
 #combinations = "combined_SL_2017_DNN.root".split()
-#combinations = ["combined_full_{}_baseline_v01.root"]
-years = "2016 2017 2018 all_years".split()
-#years = ["2017"]
+#combinations = ["combined_full_{}.root"]
+years = "2016 2017 2018 1617 1718 all_years".split()
+# years = ["2016"]
 #combinations += ["No_minor_"+x for x in combinations]
 #combinations += ["ttbb_CR_{}.root"]
 combinations = [x.format(y) for x in combinations for y in years]
 # combinations += """
-# combined_full_all_years_baseline_v01_packaged_mus.root
-# combined_full_all_years_baseline_v01_packaged_mus_per_year.root
-# combined_full_all_years_baseline_v01_packaged_mus_per_year_per_channel.root""".split()
-combinations = [x.replace(".root", "") for x in combinations]
-
+# combined_full_all_years_packaged_mus.root
+# combined_full_all_years_packaged_mus_per_year.root
+# combined_full_all_years_packaged_mus_per_year_per_channel.root""".split()
+# combinations = """
+# combined_DLFHSL_2016_nominorDL  combined_SL_2016_DNN_ge4j_3t_nominorDL           no_3j2b_3j3b_combined_DLSL_2016/  no_3j2b_combined_DL_2016_DNN/
+# combined_DLSL_2016_nominorDL    combined_SL_2016_DNN_ge4j_ge4t_nominorDL         no_3j2b_3j3b_combined_DL_2016_DNN/
+# combined_DL_2016_DNN_nominorDL               combined_SL_2016_DNN_nominorDL                   no_3j2b_combined_DLFHSL_2016/
+# combined_FH_2016_DNN_nominorDL               no_3j2b_3j3b_combined_DLFHSL_2016/  no_3j2b_combined_DLSL_2016/
+# no_4j2b_combined_DLFHSL_2016  no_4j2b_combined_DLSL_2016  no_4j2b_combined_DL_2016_DNN
+# """.split()
+combinations = [x.replace("/", "") for x in combinations]
 # combinations = """
 #     combined_SL_2018_DNN
 #     combined_SL_2017_DNN
@@ -135,20 +142,25 @@ def main(indir = sys.argv[1], outname = sys.argv[2]):
     # else:
     #     raise ValueError("Directory {} does not exist!".format(indir))
     results = {}
+    allParams = []
     for comb in combinations:
         print("#"*10)
         print(comb)
-        inFiles = glob.glob(indir+"/"+comb+"/*.json")
+        query = indir+"/"+comb+"/*.json"
+        print(query)
+        inFiles = glob.glob(query)
         if len(inFiles) != 1:
             print("WARNING found more than one or zero json files: {}".format(inFiles))
         else:
             inFile = inFiles[0]
             # print(inFile)
-            results_, allParams = loadParams(inFile)
+            results_, allParams_ = loadParams(inFile)
             results[comb] = results_
+            allParams = list(set(allParams + allParams_))
+    
     dump = {
         "r" : results,
-        "allParams" : allParams    
+        "allParams" :  allParams 
             }
     dump_json(outname = outname+"_ParamEvolution.json", allvals = dump)
     
