@@ -116,7 +116,7 @@ if __name__ == '__main__':
 
 
     ### list of nuisance to look at during unblinding procedure
-    unblinded_nuisances = {'scale', 'ISR','FSR', 'HDAMP', 'UE', 'btag'}
+    unblinded_nuisances = {'scale', 'ISR','FSR', 'HDAMP', 'UE', 'btag', 'eff', 'PU'}
 
     ### MLF output plots
     if opts.output_dir:
@@ -331,8 +331,8 @@ if __name__ == '__main__':
                    hcov_S.GetYaxis().SetNdivisions(-414)
                    hcov_S.GetXaxis().SetLabelSize  (0.6 * hcov_S.GetXaxis().GetLabelSize  ())
                    hcov_S.GetYaxis().SetLabelSize  (0.6 * hcov_S.GetYaxis().GetLabelSize  ())
-                   hcov_S.GetXaxis().SetLabelOffset(2.0 * hcov_S.GetXaxis().GetLabelOffset())
-                   hcov_S.GetYaxis().SetLabelOffset(2.0 * hcov_S.GetYaxis().GetLabelOffset())
+                   hcov_S.GetXaxis().SetLabelOffset(1.0 * hcov_S.GetXaxis().GetLabelOffset())
+                   hcov_S.GetYaxis().SetLabelOffset(1.0 * hcov_S.GetYaxis().GetLabelOffset())
                    hcov_S.Draw('axis,same')
 
                    txtTL = ROOT.TLatex(L+(1-R-L)*0.00, (1-T)+T*.150, opts.txtTL)
@@ -412,16 +412,17 @@ if __name__ == '__main__':
                hcov_B.SetStats(0)
                hcov_B.SetMinimum(-100)
                hcov_B.SetMaximum(+100)
-               hcov_B.SetMarkerSize          (0.8     if len(parB_ls) > 10 else 1) #max(0.5, 4.0/len(parB_ls))
+               hcov_B.SetMarkerSize          (0.6     if len(parB_ls) > 10 else 1) #max(0.5, 4.0/len(parB_ls))
                ROOT.gStyle.SetPaintTextFormat('.1f' if len(parB_ls) > 10 else '.2f')
                hcov_B.Draw('colz,text')
 
                hcov_B.GetXaxis().SetNdivisions(-414)
                hcov_B.GetYaxis().SetNdivisions(-414)
-               hcov_B.GetXaxis().SetLabelSize  (1. * hcov_B.GetXaxis().GetLabelSize  ())
+               hcov_B.GetXaxis().SetLabelSize  (0.6 * hcov_B.GetXaxis().GetLabelSize  ())
                hcov_B.GetYaxis().SetLabelSize  (0.7 * hcov_B.GetYaxis().GetLabelSize  ())
-               hcov_B.GetXaxis().SetLabelOffset(2.0 * hcov_B.GetXaxis().GetLabelOffset())
-               hcov_B.GetYaxis().SetLabelOffset(2.0 * hcov_B.GetYaxis().GetLabelOffset())
+               hcov_B.GetXaxis().SetLabelOffset(1.0 * hcov_B.GetXaxis().GetLabelOffset())
+               hcov_B.GetYaxis().SetLabelOffset(1.0 * hcov_B.GetYaxis().GetLabelOffset())
+               hcov_S.GetXaxis().LabelsOption("v")
                hcov_B.Draw('axis,same')
 
                txtTL = ROOT.TLatex(L+(1-R-L)*0.00, (1-T)+T*.150, opts.txtTL)
@@ -496,16 +497,17 @@ if __name__ == '__main__':
                 hcov_S.SetStats(0)
                 hcov_S.SetMinimum(-100)
                 hcov_S.SetMaximum(+100)
-                hcov_S.SetMarkerSize          (0.8     if len(parS_ls) > 10 else 1) #max(0.5, 4.0/len(parS_ls)))
+                hcov_S.SetMarkerSize          (0.6     if len(parS_ls) > 10 else 1) #max(0.5, 4.0/len(parS_ls)))
                 ROOT.gStyle.SetPaintTextFormat('.1f' if len(parS_ls) > 10 else '.2f')
                 hcov_S.Draw('colz,text')
 
                 hcov_S.GetXaxis().SetNdivisions(-414)
                 hcov_S.GetYaxis().SetNdivisions(-414)
-                hcov_S.GetXaxis().SetLabelSize  (1. * hcov_S.GetXaxis().GetLabelSize  ())
+                hcov_S.GetXaxis().SetLabelSize  (0.6 * hcov_S.GetXaxis().GetLabelSize  ())
                 hcov_S.GetYaxis().SetLabelSize  (0.7 * hcov_S.GetYaxis().GetLabelSize  ())
-                hcov_S.GetXaxis().SetLabelOffset(2.0 * hcov_S.GetXaxis().GetLabelOffset())
-                hcov_S.GetYaxis().SetLabelOffset(2.0 * hcov_S.GetYaxis().GetLabelOffset())
+                hcov_S.GetXaxis().SetLabelOffset(1.0 * hcov_S.GetXaxis().GetLabelOffset())
+                hcov_S.GetYaxis().SetLabelOffset(1.0 * hcov_S.GetYaxis().GetLabelOffset())
+                hcov_S.GetXaxis().LabelsOption("v")
                 hcov_S.Draw('axis,same')
 
                 txtTL = ROOT.TLatex(L+(1-R-L)*0.00, (1-T)+T*.150, opts.txtTL)
