@@ -116,7 +116,7 @@ if __name__ == '__main__':
 
 
     ### list of nuisance to look at during unblinding procedure
-    unblinded_nuisances = {'scale', 'ISR','FSR', 'HDAMP', 'UE', 'btag', 'eff', 'PU'}
+    unblinded_nuisances = {'scale', 'ISR','FSR', 'HDAMP', 'UE', 'btag', 'eff', 'PU', 'glusplit'}
 
     ### MLF output plots
     if opts.output_dir:
@@ -412,7 +412,7 @@ if __name__ == '__main__':
                hcov_B.SetStats(0)
                hcov_B.SetMinimum(-100)
                hcov_B.SetMaximum(+100)
-               hcov_B.SetMarkerSize          (0.6     if len(parB_ls) > 10 else 1) #max(0.5, 4.0/len(parB_ls))
+               hcov_B.SetMarkerSize          (0.5     if len(parB_ls) > 10 else 1) #max(0.5, 4.0/len(parB_ls))
                ROOT.gStyle.SetPaintTextFormat('.1f' if len(parB_ls) > 10 else '.2f')
                hcov_B.Draw('colz,text')
 
@@ -497,7 +497,7 @@ if __name__ == '__main__':
                 hcov_S.SetStats(0)
                 hcov_S.SetMinimum(-100)
                 hcov_S.SetMaximum(+100)
-                hcov_S.SetMarkerSize          (0.6     if len(parS_ls) > 10 else 1) #max(0.5, 4.0/len(parS_ls)))
+                hcov_S.SetMarkerSize          (0.5     if len(parS_ls) > 10 else 1) #max(0.5, 4.0/len(parS_ls)))
                 ROOT.gStyle.SetPaintTextFormat('.1f' if len(parS_ls) > 10 else '.2f')
                 hcov_S.Draw('colz,text')
 
