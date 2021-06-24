@@ -15,7 +15,7 @@ slide_template = """\\subsection*{{{clearname}}}
 	"""
 
 prefix_label = "unblinded_impacts"
-prefix_clearname = "all_years"
+prefix_clearname = "Full Run-II"
 
 logfile = "json_creation.log"
 

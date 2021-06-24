@@ -1,23 +1,6 @@
 keyword_dict = {
-    "combined_full_all_years_baseline_v01": {
-		"label"		: "{}::all_years_combination",
-		"clearname"	: "{}\\\\ FH (DNN)+ DL (DNN) + SL (DNN) \\\\ + ttbb CR Combined"
-	},
-    "combined_full_all_years_baseline_v01_packaged_mus": {
-		"label"		: "{}::all_years_combination_split",
-		"clearname"	: "{}\\\\ FH (DNN)+ DL (DNN) + SL (DNN) \\\\ + ttbb CR Split"
-	},
-    "combined_full_all_years_baseline_v01_scalable": {
-		"label"		: "{}::all_years_combination_scaled",
-		"clearname"	: "{}\\\\ FH (DNN)+ DL (DNN) + SL (DNN) \\\\ + ttbb CR Combined @ 140\\,fb-1"
-	},
-    "combined_full_all_years_baseline_v01_scalable_packaged_mus": {
-		"label"		: "{}::all_years_combination_scaled_split",
-		"clearname"	: "{}\\\\ FH (DNN)+ DL (DNN) + SL (DNN) \\\\ + ttbb CR Split @ 140\\,fb-1"
-	},
-    
 
-	"combined_DLFHSL_all_years_baseline_v01": {
+	"combined_DLFHSL_all_years": {
 		"label"		: "{}::dlslfh_all_years_combination",
 		"clearname"	: "{}\\\\ FH (DNN)+ DL (DNN) + SL (DNN) Combined"
 	},
@@ -25,7 +8,7 @@ keyword_dict = {
 		"label"		: "{}::dlslfh_all_years_combination",
 		"clearname"	: "{}\\\\ FH (DNN)+ DL (DNN) + SL (DNN) Combined"
 	},
-    "combined_DLSL_all_years_baseline_v01": {
+    "combined_DLSL_all_years": {
 		"label"		: "{}::sldl_all_years_combination",
 		"clearname"	: "{} SL+DL"
 	},
@@ -33,6 +16,14 @@ keyword_dict = {
 		"label"		: "{}::sldl_all_years_combination",
 		"clearname"	: "{} SL+DL"
 	},
+       "combined_DLFH_all_years": {
+                "label"         : "{}::dlfh_all_years_combination",
+                "clearname"     : "{} DL+FH"
+        },
+        "combined_SLFH_all_years": {
+                "label"         : "{}::slfh_all_years_combination",
+                "clearname"     : "{} SL+FH"
+        },
 	"combined_FH_all_years_DNN": {
 		"label"		: "{}::fh_all_years_combination",
 		"clearname"	: "{} FH"
@@ -143,15 +134,15 @@ keyword_dict = {
 
 
 order = [
-    "combined_full_all_years_baseline_v01",
-    "combined_full_all_years_baseline_v01_packaged_mus",
-    "combined_full_all_years_baseline_v01_scalable",
-    "combined_full_all_years_baseline_v01_scalable_packaged_mus",
+    #"combined_full_all_years",
+    #"combined_full_all_years_packaged_mus",
+    #"combined_full_all_years_scalable",
+    #"combined_full_all_years_scalable_packaged_mus",
 
-	"combined_DLFHSL_all_years_baseline_v01",
 	"combined_DLFHSL_all_years",
-    "combined_DLSL_all_years_baseline_v01",
     "combined_DLSL_all_years",
+	"combined_DLFH_all_years",
+	"combined_SLFH_all_years",
 	"combined_FH_all_years_DNN",    
 	"combined_DL_all_years_DNN",    
     "combined_SL_all_years_DNN",
