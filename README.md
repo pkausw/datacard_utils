@@ -19,8 +19,10 @@ It is designed to perform all the modification (or just a subset of them) to the
 The current modifications are:
 - remove JEC from minor backgrounds
 - drop signal processes with < 0.1% signal contribution
+- drop background processes with < 0.1% signal contribution
 - coarser binning in DL and SL (scheme left)
 - change uncertainties with small shape effect to lnN uncertainties
+- drop lnN uncertainties with an effect of < 0.1 % 
 
 Additionally, the script will
 - introduce the Higgs mass scaling
@@ -32,8 +34,11 @@ For a full overview over the different options available, please use `python dc_
 Here is one example which will apply everything at once:
 
 ```
-python path/to/dc_manipulator.py -i 'INPUT_GROUP' --apply-validation -s left --remove-minor-jec
+python path/to/dc_manipulator.py -i 'INPUT_GROUP' --apply-validation -s left --remove-minor-jec --remove-minor-bkgs
 ```
+
+If you are planning on using options that change the binning of the templates, it's recommended to first apply the rebinning and then apply the validation (i.e. run the tool twice with different options).
+This will make sure that the true shape effect is correctly accounted for. 
 
 The `INPUT_GROUP` clarifies how to load datacards into the CombineHarvester instance.
 It relies on the functions in the CombineHarvester package to parse multiple datacards at once, which are described [here](http://cms-analysis.github.io/CombineHarvester/intro1.html#ex1-p2) in more detail.
@@ -65,6 +70,13 @@ The modified datacards are also sorted according to the era, i.e. the year.
 
 *IMPORTANT*: FH has a dedicated binning scheme. 
 Therefore, you should drop the option `-s left` when modifying FH cards.
+
+The tool can also perform the final modifications for the STXS datacards.
+You can activate this with the option `--stxs`.
+This will
+- remove the scaleMuR/F, ISR/FSR and QCDscale parameters for all ttH processes and
+- add the migration uncertainties to the STXS bins.
+The rest of the workflow is the same as for the other datacards.
 
 You should use this script to modify basic datacards for the different input channels.
 After this, you can follow the instructions in the already established work flow.
