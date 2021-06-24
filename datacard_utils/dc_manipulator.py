@@ -285,6 +285,8 @@ def main(**kwargs):
     
     # harvester.ParseDatacard(cardpath, "test", "13TeV", "")
     cardpaths = load_datacards(groups, harvester)
+    prefix = kwargs.get("prefix")
+    outdir = kwargs.get("outdir")
 
     # harvester.PrintAll()
 
@@ -298,12 +300,18 @@ def main(**kwargs):
     # binning related manipulations
     rebin_scheme = kwargs.get("scheme", None)
     check_mc = kwargs.get("check_mc", False)
+    check_mc_data = kwargs.get("check_mc_data", False)
     binning_groups = kwargs.get("binning_groups", None)
     if binning_groups:
         transpose_binning(harvester, binning_groups)
-    if rebin_scheme or check_mc:
+    if rebin_scheme or check_mc or check_mc_data:
         bin_manipulator = BinManipulator()
+        bin_manipulator.log_path = os.path.join(outdir, "rebin.log")
+        if check_mc_data:
+            bin_manipulator.threshold = "data"
+            harvester = bin_manipulator.do_statistical_rebinning(harvester, processes = [".*"])
         if check_mc:
+            bin_manipulator.threshold = 15
             harvester = bin_manipulator.do_statistical_rebinning(harvester)
         if rebin_scheme:
             bin_manipulator.scheme = rebin_scheme
@@ -328,8 +336,7 @@ def main(**kwargs):
     print("="*130)
     print("back in dc_manipulator::main")
     harvester.PrintProcs()
-    prefix = kwargs.get("prefix")
-    outdir = kwargs.get("outdir")
+
     if not os.path.exists(outdir):
         os.mkdir(outdir)
     output_rootfile = kwargs.get("output_rootpath")
@@ -478,6 +485,18 @@ def parse_arguments():
                             """.split()
                         ),
                         dest = "check_mc",
+                        action = "store_true",
+                        default = False
+                    )
+    binning_options.add_option("--check-mc-binning-data",
+                        help = " ".join(
+                            """
+                            rebin the shapes in the different channels
+                            according to the coverage of data in each bin of the
+                            total background distributions. Default is False
+                            """.split()
+                        ),
+                        dest = "check_mc_data",
                         action = "store_true",
                         default = False
                     )

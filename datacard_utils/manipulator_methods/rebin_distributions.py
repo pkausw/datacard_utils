@@ -24,11 +24,25 @@ except:
 from common_manipulations import CommonManipulations
 
 class BinManipulator(object):
-    choices = "left right all mem half dl".split()
+    choices = "left right all mem half dl third".split()
     def __init__(self):
         self.bin_edges = []
         self.threshold = 15
         self.__debug = 10
+        self.log = ""
+        self.log_path = "rebin.log"
+
+    def __del__(self):
+        if self.__debug >= 10:
+            print("saving log of rebinning module here: '{}'"\
+                        .format(self.log_path))
+        outdir = os.path.dirname(self.log_path)
+        if not os.path.exists(outdir):
+            os.makedirs(outdir)
+        with open(self.log_path, "w") as f:
+            f.write(self.log)
+        
+        # super().__del__()
         
     def load_edges(self, proc):
         if isinstance(proc, ROOT.TH1):
@@ -58,6 +72,10 @@ class BinManipulator(object):
             # select every second bin edge
             edges = [self.bin_edges[0], self.bin_edges[-1]]
             edges += self.bin_edges[::2]
+        elif self.scheme == "third":
+            # select every second bin edge
+            edges = [self.bin_edges[0], self.bin_edges[-1]]
+            edges += self.bin_edges[::3]
         elif self.scheme == "dl":
             edges = [-1, 0, 1]
         else:
@@ -69,7 +87,7 @@ class BinManipulator(object):
         edges = sorted(list(set(edges)))
         return edges
 
-    def get_statistical_binning(self, combinedHist):
+    def get_statistical_binning(self, combinedHist, datahist):
         """Determine binning based on MC statistics in each bin.
         In statistical analyses, it is important to choose a binning
         where each bin
@@ -104,6 +122,7 @@ class BinManipulator(object):
         """
         squaredError = 0.
         binContent = 0.
+        data = 0.
         bin_edges = []
         last_added_edge = 0
         nbins = combinedHist.GetNbinsX()
@@ -117,6 +136,7 @@ class BinManipulator(object):
             # add together squared bin errors and bin contents
             squaredError += combinedHist.GetBinError(i)**2
             binContent += combinedHist.GetBinContent(i)
+            data += datahist.GetBinContent(i)
             if self.__debug >= 10:
                 print("bin (low edge): {} ({})".format(i, combinedHist.GetBinLowEdge(i)))
                 print("bkg stack: {}".format(combinedHist.GetBinContent(i)))
@@ -126,23 +146,40 @@ class BinManipulator(object):
             relerror = squaredError**0.5/binContent if not binContent == 0 else squaredError**0.5
             
             if binContent == 0: continue
-            if self.threshold > 1:
-                # do rebinning based on the population of the bins enterly
-                # bins are ok if the bin content is larger than the threshold
-                if binContent >= self.threshold:
-                    last_added_edge = combinedHist.GetBinLowEdge(i)
-                    if self.__debug >= 10:
-                        print("adding new bin edge at {}".format(last_added_edge))
-                    bin_edges.append(last_added_edge)
-                    squaredError = 0.
-                    binContent = 0.
+            criterion = False
+            if isinstance(self.threshold, str):
+                # check if data is covered by prefit background uncertainties
+                dataError = data**0.5
+                # MC stat fluctuations are not covered in bin error of 
+                # histograms, add manually
+                binError = (squaredError + binContent)**0.5 
+                print("checking data")
+                print("\tdata: {}".format(data))
+                print("\tdataError: {}".format(dataError))
+                print("\tbinContent: {}".format(binContent))
+                print("\tbinError: {}".format(binError))
+                if data >= binContent:
+                    criterion = any(x <= (binContent + binError) for x in [data - dataError, data])
+                else:
+                    criterion = any(x >= (binContent - binError) for x in [data + dataError, data])
             else:
-                # if relative error is smaller than threshold, start new bin
-                if relerror <= self.threshold:
-                    last_added_edge = combinedHist.GetBinLowEdge(i)
-                    bin_edges.append(last_added_edge)
-                    squaredError = 0.
-                    binContent = 0.
+                if self.threshold > 1:
+                    # do rebinning based on the population of the bins enterly
+                    # bins are ok if the bin content is larger than the threshold
+                    criterion = binContent >= self.threshold
+                        
+                else:
+                    # if relative error is smaller than threshold, start new bin
+                    criterion = relerror <= self.threshold
+            # if criterion for binning is met, add new bin edge
+            if criterion:
+                last_added_edge = combinedHist.GetBinLowEdge(i)
+                if self.__debug >= 10:
+                    print("adding new bin edge at {}".format(last_added_edge))
+                bin_edges.append(last_added_edge)
+                squaredError = 0.
+                binContent = 0.
+                data = 0.
         
         
         underflow_edge = combinedHist.GetBinLowEdge(1)
@@ -153,52 +190,109 @@ class BinManipulator(object):
             # the underflow_edge 
             min_index = bin_edges.index(min(bin_edges))
             bin_edges[min_index] = underflow_edge
+        last_added_edge = combinedHist.GetBinLowEdge(nbins+1)
+        if not last_added_edge in bin_edges:
+            bin_edges.append(last_added_edge)
         bin_edges = sorted(bin_edges)
         if self.__debug >= 1:
             print("\tnew bin edges: [{}]".format(",".join([str(round(b,4)) for b in bin_edges])))
         return bin_edges
 
-    def do_statistical_rebinning(self, harvester, bins = [".*"], processes = []):
+    def do_statistical_rebinning(self, harvester, channels = [".*"], eras = [".*"],\
+                                     bins = [".*"], processes = []):
         harvester.SetFlag("filters-use-regex", True)
-        # harvester.SetFlag("merge-under-overflow-bins", True)
-        these_bins = harvester.cp().bin(bins).bin_set()
-        print("Rebinning based on MC Statistics with threshold '{}'".\
-                    format(self.threshold))
-        print("will perform rebinning for bins:")
-        print(these_bins)
-        for b in these_bins:
-            if len(processes) == 0:
-                relevant_process_harv = harvester.cp().bin([b]).backgrounds()
-            else:
-                relevant_process_harv = harvester.cp().bin([b]).process(processes)
-            self.bin_edges = []
-            if self.__debug >= 10:
-                print("considered processes for bin '{}'".format(b))
-                print(relevant_process_harv.process_set())
-            
-            hist = relevant_process_harv.GetShape()
-            # print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
-            self.bin_edges = self.get_statistical_binning(hist)
-            if self.__debug >= 10:
-                print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
-            harvester.cp().bin([b]).VariableRebin(self.bin_edges)
+        channel_set = harvester.cp().channel(channels).channel_set()
+        eras_set = harvester.cp().era(eras).era_set()
+        for ch in channel_set:
+            for e in eras_set:
+                
+                current_harvester = harvester.cp().channel([ch]).era([e])
+                these_bins = current_harvester.cp().bin(bins).bin_set()
+                print("Rebinning based on MC Statistics with threshold '{}'".\
+                            format(self.threshold))
+                print("will perform rebinning for bins:")
+                print(these_bins)
+                for b in these_bins:
+                    log_lines = ["="*60]
+                    log_lines.append("channel: '{}'".format(ch))
+                    log_lines.append("era: '{}'".format(e))
+                    log_lines.append("bin: '{}'".format(b))
+                    if len(processes) == 0:
+                        relevant_process_harv = current_harvester.cp().bin([b])\
+                                                    .backgrounds()
+                    else:
+                        relevant_process_harv = current_harvester.cp().bin([b])\
+                                                    .process(processes)
+                    self.bin_edges = []
+                    proc_list = ", ".join(relevant_process_harv.process_set())
+                    log_lines.append("processes: {}".format(proc_list))
+                    if self.__debug >= 10:
+                        print("considered processes for bin '{}'".format(b))
+                        print(proc_list)
+                    
+                    hist = relevant_process_harv.GetShapeWithUncertainty()
+                    data = current_harvester.cp().bin([b]).GetObservedShape()
+                    self.load_edges(hist)
+                    original_edges = self.bin_edges[:]
+                    # log edges before and after manipulation
+                    log_lines.append("bin edges before rebinning:")
+                    log_lines.append(", ".join([str(x) for x in self.bin_edges]))
+
+                    self.bin_edges = self.get_statistical_binning(hist, data)
+
+                    log_lines.append("bin edges after rebinning:")
+                    log_lines.append(", ".join([str(x) for x in self.bin_edges]))
+                    if not original_edges == self.bin_edges:
+                        log_lines.append("Attention: binning changed!")
+                    if self.__debug >= 10:
+                        print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
+                    harvester.cp().channel([ch]).era([e]).bin([b])\
+                            .VariableRebin(self.bin_edges)
+                    log_lines.append("="*60+"\n")
+                    self.log += "\n".join(log_lines)
         return harvester
     
-    def rebin_shapes(self, harvester):
-        bins = harvester.bin_set()
-        for b in bins:
-            self.bin_edges = []
-            p = harvester.cp().bin([b]).process_set()[-1]
-            harvester.cp().bin([b]).process([p]).ForEachProc(\
-                lambda x: self.load_edges(x))
-            if self.__debug >= 10:
-                print(b)
-                print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
-            self.bin_edges = self.apply_scheme()
-            if self.__debug >= 10:
-                print("after applying scheme {}".format(self.scheme))
-                print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
-            harvester.cp().bin([b]).VariableRebin(self.bin_edges)
+    def rebin_shapes(self, harvester, channels = [".*"], eras = [".*"],\
+                            bins = [".*"]):
+        harvester.SetFlag("filters-use-regex", True)
+        # harvester.SetFlag("merge-under-overflow-bins", True)
+        channel_set = harvester.cp().channel(channels).channel_set()
+        eras_set = harvester.cp().era(eras).era_set()
+        for ch in channel_set:
+            for e in eras_set:
+                # load relevant bins for current channel and era
+                bins = harvester.cp().channel([ch]).era([e]).bin_set()
+                for b in bins:
+                    log_lines = ["="*60]
+                    log_lines.append("channel: '{}'".format(ch))
+                    log_lines.append("era: '{}'".format(e))
+                    log_lines.append("bin: '{}'".format(b))
+                    self.bin_edges = []
+                    this_harvester = harvester.cp().channel([ch]).era([e])\
+                                        .bin([b])
+                    p = this_harvester.process_set()[-1]
+                    this_harvester.cp().process([p]).ForEachProc(\
+                        lambda x: self.load_edges(x))
+                    log_lines.append("bin edges before rebinning:")
+                    log_lines.append(", ".join([str(x) for x in self.bin_edges]))
+                    if self.__debug >= 10:
+                        print(b)
+                        print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
+
+                    self.bin_edges = self.apply_scheme()
+
+                    log_lines.append("bin edges after rebinning:")
+                    log_lines.append(", ".join([str(x) for x in self.bin_edges]))
+                    
+                    if self.__debug >= 10:
+                        print("after applying scheme {}".format(self.scheme))
+                        print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
+
+                    harvester.cp().channel([ch]).era([e]).bin([b])\
+                        .VariableRebin(self.bin_edges)
+
+                    log_lines.append("="*60+"\n")
+                    self.log += "\n".join(log_lines)
         return harvester
 
 def WriteCards(harvester, newpath, output_rootfile, bins):
