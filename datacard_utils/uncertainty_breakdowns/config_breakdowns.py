@@ -2,6 +2,7 @@ import ROOT
 import fnmatch
 from os import path as ospath
 from sys import path as syspath
+from collections import OrderedDict
 thisdir = ospath.dirname(ospath.realpath(__file__))
 basedir = ospath.join(thisdir, "../base")
 if not basedir in syspath:
@@ -10,7 +11,7 @@ if not basedir in syspath:
 # from helperClass import helperClass
 # helper = helperClass()
 
-clearnames = {
+clearnames = OrderedDict({
 	"all"					: "Stat",
 	"thy"				: "Theory",
 	"bgn"					: "  Background normalisation",
@@ -24,7 +25,7 @@ clearnames = {
 	"sig_thy"			: "Theory for Signal",
 	"tthf_bgn"			: "  add. t#bar{t}+HF XS",
 	"tthf_model"		: "  add. t#bar{t}+HF XS + PS",
-}
+})
 
 
 def translate_names(breakdownname, filterstring):
@@ -43,7 +44,7 @@ def find_group(filename, filterstring):
 		temp = temp[:-1]
 	name = ".".join(filename.split(".")[:-1])
 	parts = name.split(temp)
-	print parts
+	print (parts)
 	
 	sub = parts[-1]
 	groupname = translate_names(breakdownname = sub, filterstring= filterstring)
