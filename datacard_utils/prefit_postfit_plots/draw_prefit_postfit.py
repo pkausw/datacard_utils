@@ -17,7 +17,7 @@ cmd_base_parts += "--channelname {channel}".split()
 cmd_base_parts += "--combineDatacard {datacard}".split()
 cmd_base_parts += "--pdfname {pdfname}".split()
 cmd_base_parts += '--xLabel "{xtitle}"'.split()
-cmd_base_parts += ["--plot-blind"]
+#cmd_base_parts += ["--plot-blind"]
 #cmd_base_parts += "--skipErrorbands --pdftag noError".split()
 # cmd_base_parts += "--dontScaleSignal".split()
 
