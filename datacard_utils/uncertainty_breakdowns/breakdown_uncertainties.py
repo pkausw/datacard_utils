@@ -63,17 +63,20 @@ def add_basic_commands(cmd, mu, murange, suffix = ""):
         fitrangeUp += mu
         fitrangeDown += mu
     cmd = helpfulFuncs.insert_values(cmds = cmd, keyword = "-n", toinsert = suffix, joinwith = "_")
-    # cmd += "--cminDefaultMinimizerStrategy 0".split()
+    cmd = helpfulFuncs.insert_values(cmds = cmd, keyword = "-m", toinsert = "125.38", joinwith = "insert")
+
     cmd = helpfulFuncs.insert_values(cmds = cmd, keyword = "--cminDefaultMinimizerStrategy", toinsert = "0", joinwith = "insert")
-    # cmd += "--cminDefaultMinimizerTolerance 1e-3".split()
     cmd = helpfulFuncs.insert_values(cmds = cmd, keyword = "--cminDefaultMinimizerTolerance", toinsert = "1e-3", joinwith = "insert")
-    # cmd += ("--rMin {0} --rMax {1} -t -1 --expectSignal {2}".format(mu-murange, mu+murange, mu)).split()
     cmd = helpfulFuncs.insert_values(cmds = cmd, keyword = "--rMin", toinsert = str(fitrangeDown), joinwith = "insert")
     cmd = helpfulFuncs.insert_values(cmds = cmd, keyword = "--rMax", toinsert = str(fitrangeUp), joinwith = "insert")
     
     if mu is not None:
         cmd = helpfulFuncs.insert_values(cmds = cmd, keyword = "-t", toinsert = "-1", joinwith = "insert")
         cmd = helpfulFuncs.insert_values(cmds = cmd, keyword = "--expectSignal", toinsert = str(mu), joinwith = "insert")
+    if "MultiDimFit" in cmd and not "FitDiagnostics" in cmd:
+        cmd = helpfulFuncs.insert_values(cmds = cmd, keyword = "--floatOtherPOIs",
+                                            toinsert=str(1), joinwith="insert"
+                                        )
     
 
 def create_script(cmd, scriptname, outfolder = None, wsfile = None):
@@ -147,13 +150,19 @@ def finish_cmds(cmd, mu, murange, suffix, paramgroup, param = None, pois = None)
     if paramgroup and paramgroup != "all":
         cmd = helpfulFuncs.insert_values(cmds = cmd, keyword = "--freezeNuisanceGroups", toinsert = paramgroup, joinwith = ",")
     elif paramgroup and paramgroup == "all":
-        cmd = helpfulFuncs.insert_values(cmds = cmd, keyword = "-S", toinsert = "0", joinwith="insert")
+        cmd = helpfulFuncs.insert_values(cmds = cmd, keyword = "--freezeParameters", 
+                                            toinsert = "allConstrainedNuisances",
+                                             joinwith="insert"
+                                        )
         
         if (pois and param) and len(pois) > 1:
             tofreeze = pois[:]
             if param in tofreeze:
                 tofreeze.pop(tofreeze.index(param))
-            helpfulFuncs.insert_values(cmds = cmd, keyword = "--freezeParameters", toinsert = ",".join(tofreeze), joinwith=",")
+            helpfulFuncs.insert_values(cmds = cmd, keyword = "--freezeParameters", 
+                                        toinsert = ",".join(tofreeze), 
+                                        joinwith=","
+                                    )
 
     cmd = [x for x in cmd if x != ""]
 
@@ -166,7 +175,7 @@ def create_fit_cmd( mdfout, paramgroup, outfolder, suffix,
     if not fast:
         cmd = "combine -M MultiDimFit".split()
         cmd.append(mdfout)
-        cmd += "--algo grid --points 50 -m 125.38".split()
+        cmd += "--algo grid --points 50".split()
         cmd = helpfulFuncs.insert_values(cmds= cmd, keyword = "--floatOtherPOIs", toinsert = str(1), joinwith = "insert")
         if cmdbase:
             cmd += cmdbase
@@ -210,7 +219,7 @@ def loadPOIs(workspace):
     """
     Loads the list of POIs from the input 'workspace'
     """
-    print "loading POIs from workspace in", workspace
+    print( "loading POIs from workspace in {}".format( workspace))
     infile = ROOT.TFile(workspace)
     w = infile.Get("w")
     npois = 1
@@ -279,7 +288,7 @@ def submit_fit_cmds(ws, paramgroups = ["all"], mu = None, cmdbase = None, murang
     """
 
     #create workspace folder
-    print "entering submit_fit_cmds"
+    print ("entering submit_fit_cmds")
     if not os.path.exists(ws):
         raise sys.exit("workspace file %s does not exist!" % ws)
     # parts = os.path.basename(ws).split(".")
@@ -288,7 +297,7 @@ def submit_fit_cmds(ws, paramgroups = ["all"], mu = None, cmdbase = None, murang
         foldername = suffix + "_" + foldername
     helpfulFuncs.create_folder(folder = foldername, reset = True)
     os.chdir(foldername)
-    print os.getcwd()
+    print (os.getcwd())
 
     
     #do nominal scan
@@ -300,7 +309,7 @@ def submit_fit_cmds(ws, paramgroups = ["all"], mu = None, cmdbase = None, murang
 
         cmd = helpfulFuncs.insert_values(cmds = cmd, keyword = "--saveFitResult", toinsert = "", joinwith = "insert")
         cmd.append(ws)
-        create_script(pathToCMSSWsetup = pathToCMSSWsetup, cmd = [cmd], scriptname = "nominal_scan.sh", wsfile = ws)
+        create_script(cmd = [cmd], scriptname = "nominal_scan.sh", wsfile = ws)
         if os.path.exists("nominal_scan.sh"):
             batch_fits.submitJobToBatch("nominal_scan.sh")
             # pass
@@ -320,7 +329,7 @@ def submit_fit_cmds(ws, paramgroups = ["all"], mu = None, cmdbase = None, murang
     prefit_script = "bestfit.sh"
     create_script(cmd=[cmd], scriptname = prefit_script, wsfile = ws)
     if os.path.exists(prefit_script):
-        print "successfully created prefit script, submitting"
+        print ("successfully created prefit script, submitting")
         jobid = batch_fits.submitJobToBatch(prefit_script)
         scripts = []
         mdfout = "higgsCombine"
@@ -347,7 +356,7 @@ def submit_fit_cmds(ws, paramgroups = ["all"], mu = None, cmdbase = None, murang
                       pois = pois, fast = fast)
 
         if(len(scripts) > 0):
-            print "submitting {0} jobs".format(len(scripts))
+            print ("submitting {0} jobs".format(len(scripts)))
             return batch_fits.submitArrayToBatch(   scripts = scripts,
                         arrayscriptpath = "arrayJob.sh",
                         jobid = jobid )
@@ -412,7 +421,7 @@ def main(options, wildcards):
         for d in glob.glob(wildcard):
             d = os.path.abspath(d)
             if os.path.exists(d):
-                print "checking %s for workspace" % d
+                print( "checking %s for workspace" % d)
                 d = helpfulFuncs.check_workspace(d)
                 pois = loadPOIs(d)
                 arrayid = submit_fit_cmds(  ws = d,
@@ -424,7 +433,7 @@ def main(options, wildcards):
                                             pois = pois,
                                             fast = options.fast)
                 if arrayid != -1:
-                    print "all fits submitted to batch"
+                    print( "all fits submitted to batch")
                 os.chdir(base)
 
 if __name__ == '__main__':
