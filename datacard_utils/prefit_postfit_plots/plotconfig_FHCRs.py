@@ -235,7 +235,7 @@ sortedprocesses = [
 #options for the plotting style
 plotoptions = {   'cmslabel': 'private Work',
     'data': 'data_obs',
-    'datalabel': 'pseudo data',
+    'datalabel': 'Data',
     'logarithmic': True,
     'lumiLabel': '41.5',
     'nominalKey': '$PROCESS__$CHANNEL',
