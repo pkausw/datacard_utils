@@ -829,7 +829,7 @@ class DrawHistograms:
         ratioPlot.SetLineWidth(1)
         ratioPlot.SetMarkerStyle(20)
         ROOT.gStyle.SetErrorX(0)
-        ratioPlot.DrawCopy("sameP")
+        ratioPlot.DrawCopy("sameP0")
 
         self.generateRatioErrorband()
         self.canvas.cd(1)
@@ -842,7 +842,7 @@ class DrawHistograms:
                 self.ratio_error_graph.SetPoint(i,self.errorband.GetX()[i],1)
                 self.ratio_error_graph.SetPointEYhigh(i,self.errorband.GetErrorYhigh(i)/self.errorband.GetY()[i])
                 self.ratio_error_graph.SetPointEYlow(i,self.errorband.GetErrorYlow(i)/self.errorband.GetY()[i])
-            self.ratio_error_graph.Draw("same2")
+            self.ratio_error_graph.Draw("same02")
 
         if self.data:
             self.ratioPlot = ROOT.TGraphAsymmErrors(self.data.Clone())
@@ -851,7 +851,7 @@ class DrawHistograms:
                 self.ratioPlot.SetPointError(i-1,0.,0.,
                     (self.data.GetBinErrorLow(i))/self.background.GetBinContent(i),(self.data.GetBinErrorUp(i))/self.background.GetBinContent(i))
             self.ratioPlot.SetMarkerStyle(20)
-            self.ratioPlot.Draw("P2 same")
+            self.ratioPlot.Draw("P02 same")
         self.canvas.cd(1)
 
     # scales the Errorband for the ratio plot
@@ -877,7 +877,7 @@ class DrawHistograms:
                     reb.SetPointEYlow(i,0)
                     reb.SetPointEYhigh(i,0)
 
-            reb.Draw("same2")
+            reb.Draw("same02")
         
     def GetyTitle(self):
         # normalize plots to unit area
