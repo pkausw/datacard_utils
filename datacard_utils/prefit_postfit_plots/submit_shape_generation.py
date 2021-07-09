@@ -155,7 +155,15 @@ def parse_arguments():
                         default = False,
                         dest = "skip_postfit"
         )
-    
+    parser.add_option("-v", "--verbose",
+                        help= " ".join(
+                            """
+                            generate shapes with the verbose output option.
+                            Careful: This can generate very large log files,
+                            use only for debug with small number of toys
+                            """.split()
+                        )
+        )
     options, files = parser.parse_args()
 
     if not options.skip_postfit and not options.fitresult:
