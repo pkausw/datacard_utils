@@ -10,7 +10,7 @@ bkg_processes = [
 ]
 total_bkg = "TotalBkg"
 total_sig = "TotalSig"
-data      = "data"
+data      = "data_obs"
 
 njet_categories = [ "SL \\geq 4j 3t"]
 sub_categories = [ 

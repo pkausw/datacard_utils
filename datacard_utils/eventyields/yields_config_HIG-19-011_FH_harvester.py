@@ -13,7 +13,7 @@ bkg_processes = [
 #bkg_processes += ["dataCR"]
 total_bkg = "TotalBkg"
 total_sig = "TotalSig"
-data      = "data"
+data      = "data_obs"
 
 njet_categories = [ "FH"]
 sub_categories = [  

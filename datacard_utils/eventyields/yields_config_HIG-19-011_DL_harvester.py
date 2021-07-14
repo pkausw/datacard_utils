@@ -15,9 +15,9 @@ data      = "data_obs"
 
 njet_categories = [ "DL"]
 sub_categories = [  
-                    "3j 2t", 
+                    # "3j 2t", 
                     "3j 3t", 
-                    "4j 2t", 
+                    # "4j 2t", 
                     "4j \\geq 3t ttHbb", 
                     # "4j \\geq 3t ttbb",
                     "4j \\geq 3t ttcc",
@@ -25,9 +25,9 @@ sub_categories = [
                 ]
 
 category_channel_map = {
-    "DL 3j 2t" : "ttH_hbb_13TeV_dl_3j2b_ttHbb",
+    # "DL 3j 2t" : "ttH_hbb_13TeV_dl_3j2b_ttHbb",
     "DL 3j 3t" : "ttH_hbb_13TeV_dl_3j3b_ttHbb",
-    "DL 4j 2t" : "ttH_hbb_13TeV_dl_4j2b_ttHbb",
+    # "DL 4j 2t" : "ttH_hbb_13TeV_dl_4j2b_ttHbb",
     "DL 4j \\geq 3t ttHbb" : "ttH_hbb_13TeV_dl_4j3b_DNN_ttHbb_ratioObservable",
     # "DL 4j \\geq 3t ttbb" : "ttH_hbb_13TeV_dl_4j3b_DNN_ttbb",
     "DL 4j \\geq 3t ttcc" : "ttH_hbb_13TeV_dl_4j3b_DNN_ttcc",
@@ -54,7 +54,7 @@ sub_category_commands = {
     # "4j \\geq 3t ttbb" : "$4j \\geq 3t$ \\ttbb",
     "4j \\geq 3t ttcc" : "$4j \\geq 3t$ \\ttcc",
     "4j \\geq 3t ttlf" : "$4j \\geq 3t$ \\ttlf",
-    "3t"   : "\\dlFourThree",
-    "4tl"  : "\\dlFourFour BDT-low",
-    "4th"  : "\\dlFourFour BDT-high",
+    # "3t"   : "\\dlFourThree",
+    # "4tl"  : "\\dlFourFour BDT-low",
+    # "4th"  : "\\dlFourFour BDT-high",
 }
