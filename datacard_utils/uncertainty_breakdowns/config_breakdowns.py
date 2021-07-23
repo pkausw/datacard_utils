@@ -11,22 +11,21 @@ if not basedir in syspath:
 # from helperClass import helperClass
 # helper = helperClass()
 
-clearnames = OrderedDict({
-	"all"					: "Stat",
-	"thy"				: "Theory",
-	"bgn"					: "  Background normalisation",
-	"exp"					: "Exp",
-	"syst"			: "Systematic",
-	"btag"				: "  B tagging",
-	"jes"				: "  JES",
-	"ps"				: "  PS",
-	"QCD"				: "QCD",
-	"autoMCStats"		: "MC uncertainty",
-	"sig_thy"			: "Theory for Signal",
-	"tthf_bgn"			: "  add. t#bar{t}+HF XS",
-	"tthf_model"		: "  add. t#bar{t}+HF XS + PS",
-})
-
+clearnames = OrderedDict([
+        ("syst"                 , "Systematic"),
+        ("exp"                                  , "  Exp"),
+        ("btag"                         , "    B tagging"),
+        ("jes"                          , "    JES"),
+        ("thy"                          , "  Theory"),
+        ("sig_thy"                      , "    Theory for Signal"),
+        ("bgn"                                  , "    Background normalisation"),
+        ("tthf_model"           , "    add. t#bar{t}+HF XS + PS"),
+        ("tthf_bgn"                     , "      add. t#bar{t}+HF XS"),
+        ("ps"                           , "      PS"),
+        ("ddQCD"                          , "  QCD"),
+        ("autoMCStats"          , "MC uncertainty"),
+        ("all"                                  , "Stat"),
+])
 
 def translate_names(breakdownname, filterstring):
 	if "bestfit" in filterstring:

@@ -53,7 +53,7 @@ def create_table(val_dict, outname, order = []):
     if len(order) == 0:
         order = val_dict.keys()
     if not "Total" in order:
-        order = ["Total", "Total-Stat"] + order
+        order += ["Total-Stat","Total"] 
     for group in order:
         group_dict = val_dict.get(group, None)
         if group_dict:
@@ -75,7 +75,7 @@ def load_order(path_to_config):
     order = []
     config = imp.load_source('config', path_to_config)
     try:
-        names = config.clearnames
+       names = config.clearnames
     except:
         s = ("Unable to load object 'clearnames' from '{}'"
                 .format(path_to_config))
@@ -88,6 +88,7 @@ def load_order(path_to_config):
         s = ("Currently unable to support config with clearnames of type '{}'"
                 .format(type(names)))
         raise ValueError(s)
+    
     return order
 
 def main(*files, **kwargs):
