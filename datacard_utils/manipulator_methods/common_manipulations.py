@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import sys
 import ROOT
@@ -28,8 +30,8 @@ if not thisdir in sys.path:
 # if not manipulator_dir in sys.path:
 #     sys.path.append(manipulator_dir)
 
-from nuisance_manipulator import NuisanceManipulator
-from process_manipulator import ProcessManipulator
+from .nuisance_manipulator import NuisanceManipulator
+from .process_manipulator import ProcessManipulator
 
 class CommonManipulations(object):
     __choices = "rateParams lnN GoF".split()
@@ -80,7 +82,7 @@ class CommonManipulations(object):
                 "QCDscale_ttH": (0.908,1.058),
                 "pdf_Higgs_ttH": 1.036
             },
-            "ttbb.*|ttcc|ttlf":{
+            "ttbb.*|ttcc.*|ttlf.*":{
                 "QCDscale_ttbar": (1-0.035,1+0.024),
                 "pdf_gg": 1.042
             },
@@ -125,8 +127,8 @@ class CommonManipulations(object):
             self.__mode = value
         else:
             print("Could not set mode to add bgnorm uncertainties!")
-            print("Current choices are: '{}'"\
-                    .format(", ".join(self.__choices)))
+            print(("Current choices are: '{}'"\
+                    .format(", ".join(self.__choices))))
 
 
     def freeze_nuisances(self, harvester):
@@ -157,8 +159,8 @@ class CommonManipulations(object):
                 harvester.cp().era([e])\
                     .AddSyst(harvester, unc, "lnN", ch.SystMap()(value))
             if len(uncertainties) == 0:
-                print("WARNING: did not find uncertainties for era '{}'"\
-                        .format(e))
+                print(("WARNING: did not find uncertainties for era '{}'"\
+                        .format(e)))
     
     def remove_see_saw(self, harvester):
 
@@ -178,7 +180,7 @@ class CommonManipulations(object):
 
     def add_bgnorm_uncertainties(self, harvester):
         uncertainties = harvester.syst_name_set()
-        uncertainties = [".*bgnorm.*"]
+        uncertainties = [".*bgnorm_tt.*"]
         if len(uncertainties) > 0:
             harvester.syst_name(uncertainties, False)
         if self.__mode == "lnN":
@@ -210,14 +212,14 @@ class CommonManipulations(object):
         for proc in self.__lnN_uncertainties:
             for unc in self.__lnN_uncertainties[proc]:
                 #first, drop existing uncertainties
-                print("removing '{}' from '{}'".format(unc, proc))
+                print(("removing '{}' from '{}'".format(unc, proc)))
                 self.manipulator.to_remove = {
                     unc : [proc]
                 }
                 self.manipulator.remove_nuisances_from_procs(harvester)
                 # now add new uncertainties
-                print("adding uncertainty '{}' to '{}'"\
-                    .format(unc, proc))
+                print(("adding uncertainty '{}' to '{}'"\
+                    .format(unc, proc)))
                 value = self.__lnN_uncertainties[proc][unc]
                 harvester.cp().process([proc])\
                     .AddSyst(harvester, unc, "lnN", ch.SystMap()(value))
@@ -227,6 +229,30 @@ class CommonManipulations(object):
         process_manipulator = ProcessManipulator()
         process_manipulator.drop_all_processes(harvester = harvester,
                                                 to_drop = ["ttbb_5FS"])
+
+    def decorrelate_btags(self, harvester):
+        wildcard = "CMS_btag_(lf|hf|cferr1|cferr2)"
+
+        parameters = harvester.cp().syst_name([wildcard]).syst_name_set()
+        print("="*130)
+        
+        for p in parameters:
+            print("decorrelating parameter '{}' in year '{}'".format(p, "2016"))
+            harvester.cp().era(["2016"]).\
+                RenameSystematic(harvester, p, "_".join([p, "2016"]))
+            print("decorrelating parameter '{}' in year '{}'".format(p, "2017, 2018"))
+            harvester.cp().era(["2017","2018"]).\
+                RenameSystematic(harvester, p, "_".join([p, "1718"]))
+
+        # decorrelate FH parameters
+        wildcard = "CMS_btag_cferr.?_(2016|1718)"
+        fh_harvester = harvester.cp().bin([".*fh.*|.*FH.*"])
+        parameters = fh_harvester.cp().syst_name([wildcard]).syst_name_set()
+        for p in parameters:
+            new_parname = "_".join([p, "FH"])
+            print("decorrelating parameter '{}' to '{}'".format(p, new_parname))
+            fh_harvester.\
+                RenameSystematic(harvester, p, new_parname)
 
     def apply_common_manipulations(self, harvester):
         harvester.SetFlag("filters-use-regex", True)
@@ -240,6 +266,7 @@ class CommonManipulations(object):
         harvester.SetAutoMCStats(harvester, 10)
         harvester.FilterSysts(lambda x: (x.value_u() == 0 or x.value_d() == 0)\
                                  and any(x.type == t for t in "shape shape? lnN".split()))
+        self.decorrelate_btags(harvester)
 
 
 def main(**kwargs):
