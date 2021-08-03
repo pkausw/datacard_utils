@@ -245,14 +245,14 @@ class CommonManipulations(object):
                 RenameSystematic(harvester, p, "_".join([p, "1718"]))
 
         # decorrelate FH parameters
-        wildcard = "CMS_btag_cferr.?_(2016|1718)"
-        fh_harvester = harvester.cp().bin([".*fh.*|.*FH.*"])
-        parameters = fh_harvester.cp().syst_name([wildcard]).syst_name_set()
-        for p in parameters:
-            new_parname = "_".join([p, "FH"])
-            print("decorrelating parameter '{}' to '{}'".format(p, new_parname))
-            fh_harvester.\
-                RenameSystematic(harvester, p, new_parname)
+        # wildcard = "CMS_btag_cferr.?_(2016|1718)"
+        # fh_harvester = harvester.cp().bin([".*fh.*|.*FH.*"])
+        # parameters = fh_harvester.cp().syst_name([wildcard]).syst_name_set()
+        # for p in parameters:
+        #     new_parname = "_".join([p, "FH"])
+        #     print("decorrelating parameter '{}' to '{}'".format(p, new_parname))
+        #     fh_harvester.\
+        #         RenameSystematic(harvester, p, new_parname)
 
     def apply_common_manipulations(self, harvester):
         harvester.SetFlag("filters-use-regex", True)
