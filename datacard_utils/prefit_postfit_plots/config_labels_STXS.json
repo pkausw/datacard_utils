@@ -1,0 +1,205 @@
+{
+    "dl_3j3b_DNN_ttHbb": {
+        "top": "DL 3 jets 3 tags",
+        "bottom": "binary ANN"
+    },
+    "dl_4j3b_DNN_ttcc": {
+        "top": "DL \\geq 4 jets \\geq 3 tags",
+        "bottom": "ttcc node"
+    },
+    "dl_4j3b_DNN_ttlf": {
+        "top": "DL \\geq 4 jets \\geq 3 tags",
+        "bottom": "ttlf node"
+    },
+    "dl_4j3b_DNN_ttHbb_STXSbin1": {
+        "top": "DL \\geq 4 jets \\geq 3 tags",
+        "bottom": "(ttH + ttbb) nodes",
+        "xtitle": "Ratio Observable * STXS Bin0 Node"
+    },
+    "dl_4j3b_DNN_ttHbb_STXSbin2": {
+        "top": "DL \\geq 4 jets \\geq 3 tags",
+        "bottom": "(ttH + ttbb) nodes",
+        "xtitle": "Ratio Observable * STXS Bin1 Node"
+    },
+    "dl_4j3b_DNN_ttHbb_STXSbin3": {
+        "top": "DL \\geq 4 jets \\geq 3 tags",
+        "bottom": "(ttH + ttbb) nodes",
+        "xtitle": "Ratio Observable * STXS Bin2 Node"
+    },
+    "dl_4j3b_DNN_ttHbb_STXSbin4": {
+        "top": "DL \\geq 4 jets \\geq 3 tags",
+        "bottom": "(ttH + ttbb) nodes",
+        "xtitle": "Ratio Observable * STXS Bin3 Node"
+    },
+    "dl_4j3b_DNN_ttHbb_STXSbin5": {
+        "top": "DL \\geq 4 jets \\geq 3 tags",
+        "bottom": "(ttH + ttbb) nodes",
+        "xtitle": "Ratio Observable * STXS Bin4 Node"
+    },
+    
+
+    "fh_STXS_0_j7_t4_DNN_Node0": {
+        "top": "FH 7 jets \\geq 4 tags",
+        "bottom": "STXS Bin 0"
+    },
+    "fh_STXS_1_j7_t4_DNN_Node0": {
+        "top": "FH 7 jets \\geq 4 tags",
+        "bottom": "STXS Bin 1"
+    },
+    "fh_STXS_2_j7_t4_DNN_Node0": {
+        "top": "FH 7 jets \\geq 4 tags",
+        "bottom": "STXS Bin 2"
+    },
+    "fh_STXS_3_j7_t4_DNN_Node0": {
+        "top": "FH 7 jets \\geq 4 tags",
+        "bottom": "STXS Bin 3"
+    },
+    "fh_STXS_4_j7_t4_DNN_Node0": {
+        "top": "FH 7 jets \\geq 4 tags",
+        "bottom": "STXS Bin 4"
+    },
+
+    "fh_STXS_0_j8_t4_DNN_Node0": {
+        "top": "FH 8 jets \\geq 4 tags",
+        "bottom": "STXS Bin 0"
+    },
+    "fh_STXS_1_j8_t4_DNN_Node0": {
+        "top": "FH 8 jets \\geq 4 tags",
+        "bottom": "STXS Bin 1"
+    },
+    "fh_STXS_2_j8_t4_DNN_Node0": {
+        "top": "FH 8 jets \\geq 4 tags",
+        "bottom": "STXS Bin 2"
+    },
+    "fh_STXS_3_j8_t4_DNN_Node0": {
+        "top": "FH 8 jets \\geq 4 tags",
+        "bottom": "STXS Bin 3"
+    },
+    "fh_STXS_4_j8_t4_DNN_Node0": {
+        "top": "FH 8 jets \\geq 4 tags",
+        "bottom": "STXS Bin 4"
+    },
+
+    "fh_STXS_0_j9_t4_DNN_Node0": {
+        "top": "FH 9 jets \\geq 4 tags",
+        "bottom": "STXS Bin 0"
+    },
+    "fh_STXS_1_j9_t4_DNN_Node0": {
+        "top": "FH 9 jets \\geq 4 tags",
+        "bottom": "STXS Bin 1"
+    },
+    "fh_STXS_2_j9_t4_DNN_Node0": {
+        "top": "FH 9 jets \\geq 4 tags",
+        "bottom": "STXS Bin 2"
+    },
+    "fh_STXS_3_j9_t4_DNN_Node0": {
+        "top": "FH 9 jets \\geq 4 tags",
+        "bottom": "STXS Bin 3"
+    },
+    "fh_STXS_4_j9_t4_DNN_Node0": {
+        "top": "FH 9 jets \\geq 4 tags",
+        "bottom": "STXS Bin 4"
+    },
+
+
+
+
+    "ljets_ge4j_3t_classification_tHq_node": {
+        "top": "SL \\geq 4 jets 3 tags",
+        "bottom": "tHq node"
+    },
+    "ljets_ge4j_3t_classification_tHW_node": {
+        "top": "SL \\geq 4 jets 3 tags",
+        "bottom": "tHW node"
+    },
+    "ljets_ge4j_3t_classification_tt2b_node": {
+        "top": "SL \\geq 4 jets 3 tags",
+        "bottom": "tt2b node"
+    },
+    "ljets_ge4j_3t_classification_ttlf_node": {
+        "top": "SL \\geq 4 jets 3 tags",
+        "bottom": "ttlf node"
+    },
+    "ljets_ge4j_3t_classification_ttcc_node": {
+        "top": "SL \\geq 4 jets 3 tags",
+        "bottom": "ttcc node"
+    },
+    "ljets_ge4j_3t_classification_ttmb_node": {
+        "top": "SL \\geq 4 jets 3 tags",
+        "bottom": "ttb/bb node"
+    },
+    "ljets_ge4j_3t_classification_ttH_times_ttHbb_STXS_0": {
+        "top": "SL \\geq 4 jets 3 tags",
+        "bottom": "(ttH + STXS Bin 0) nodes"
+    },
+    "ljets_ge4j_3t_classification_ttH_times_ttHbb_STXS_1": {
+        "top": "SL \\geq 4 jets 3 tags",
+        "bottom": "(ttH + STXS Bin 1) nodes"
+    },
+    "ljets_ge4j_3t_classification_ttH_times_ttHbb_STXS_2": {
+        "top": "SL \\geq 4 jets 3 tags",
+        "bottom": "(ttH + STXS Bin 2) nodes"
+    },
+    "ljets_ge4j_3t_classification_ttH_times_ttHbb_STXS_3": {
+        "top": "SL \\geq 4 jets 3 tags",
+        "bottom": "(ttH + STXS Bin 3) nodes"
+    },
+    "ljets_ge4j_3t_classification_ttH_times_ttHbb_STXS_4": {
+        "top": "SL \\geq 4 jets 3 tags",
+        "bottom": "(ttH + STXS Bin 4) nodes"
+    },
+
+
+
+    "ljets_ge4j_ge4t_classification_tHq_node": {
+        "top": "SL \\geq 4 jets \\geq 4 tags",
+        "bottom": "tHq node"
+    },
+    "ljets_ge4j_ge4t_classification_tHW_node": {
+        "top": "SL \\geq 4 jets \\geq 4 tags",
+        "bottom": "tHW node"
+    },
+    "ljets_ge4j_ge4t_classification_tt2b_node": {
+        "top": "SL \\geq 4 jets \\geq 4 tags",
+        "bottom": "tt2b node"
+    },
+    "ljets_ge4j_ge4t_classification_ttcc_node": {
+        "top": "SL \\geq 4 jets \\geq 4 tags",
+        "bottom": "ttcc node"
+    },
+    "ljets_ge4j_ge4t_classification_ttcc_nod": {
+        "top": "SL \\geq 4 jets \\geq 4 tags",
+        "bottom": "ttcc node"
+    },
+    "ljets_ge4j_ge4t_classification_ttlf_node": {
+        "top": "SL \\geq 4 jets \\geq 4 tags",
+        "bottom": "ttlf node"
+    },
+
+    "ljets_ge4j_ge4t_classification_ttH_ttmb_vs_slike_times_ttHbb_STXS_0": {
+        "top": "SL \\geq 4 jets \\geq 4 tags",
+        "bottom": "(ttH + ttb/bb + STXS Bin 0) nodes",
+        "xtitle": "Ratio Observable * STXS Bin 0 Node"
+    },
+    "ljets_ge4j_ge4t_classification_ttH_ttmb_vs_slike_times_ttHbb_STXS_1": {
+        "top": "SL \\geq 4 jets \\geq 4 tags",
+        "bottom": "(ttH + ttb/bb + STXS Bin 1) nodes",
+        "xtitle": "Ratio Observable * STXS Bin 1 Node"
+    },
+    "ljets_ge4j_ge4t_classification_ttH_ttmb_vs_slike_times_ttHbb_STXS_2": {
+        "top": "SL \\geq 4 jets \\geq 4 tags",
+        "bottom": "(ttH + ttb/bb + STXS Bin 2) nodes",
+        "xtitle": "Ratio Observable * STXS Bin 2 Node"
+    },
+    "ljets_ge4j_ge4t_classification_ttH_ttmb_vs_slike_times_ttHbb_STXS_3": {
+        "top": "SL \\geq 4 jets \\geq 4 tags",
+        "bottom": "(ttH + ttb/bb + STXS Bin 3) nodes",
+        "xtitle": "Ratio Observable * STXS Bin 3 Node"
+    },
+    "ljets_ge4j_ge4t_classification_ttH_ttmb_vs_slike_times_ttHbb_STXS_4": {
+        "top": "SL \\geq 4 jets \\geq 4 tags",
+        "bottom": "(ttH + ttb/bb + STXS Bin 4) nodes",
+        "xtitle": "Ratio Observable * STXS Bin 4 Node"
+    }
+}
+
