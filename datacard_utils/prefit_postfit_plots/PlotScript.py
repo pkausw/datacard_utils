@@ -151,6 +151,8 @@ styleOptions.add_option("--datalabel", dest="datalabel", default=None,
         help="label of the data in the legend")
 styleOptions.add_option("--signallabel", dest="signallabel", default=None,
         help="Option only for COMBINE Plots: label of the signal in the legend")
+styleOptions.add_option("--signalcolor", dest="signalcolor", default=None,
+        help="Option only for COMBINE Plots: Color of the total signal contribution. Default: {}".format(ROOT.kBlue))
 styleOptions.add_option("--signalscaling", dest="signalscaling", default=None,
         help="scale factor of the signal processes, -1 to scale with background integral")
 styleOptions.add_option("--lumilabel", dest="lumilabel", default=None,
@@ -313,8 +315,9 @@ if combineflag:
 
         options.data = "data_obs"
     options.nominalKey  = options.nominalKey.replace(combineIden, combineflag)
-    
-    if options.datacard:
+    print("datacard: '{}'".format(options.datacard))
+    print("type: '{}'".format(type(options.datacard)))
+    if not options.datacard == "None":
         if not os.path.exists(options.datacard):
             print("ERROR: could not load datacard from '{}'".format(options.datacard))
         datacard_dir = os.path.dirname(os.path.abspath(options.datacard))
@@ -470,6 +473,8 @@ if combineflag:
 
     signallabel   = getParserConfigDefaultValue(parser=options.signallabel,config="signallabel",
                                             plotoptions=plotoptions,defaultvalue="signal")
+    signalcolor   = getParserConfigDefaultValue(parser=options.signalcolor,config="signalcolor",
+                                            plotoptions=plotoptions,defaultvalue=ROOT.kBlue)
     """
     add signal to stack plot if already fitted (post fit),
     else keep as shape plot
@@ -478,13 +483,13 @@ if combineflag:
         bkgKey = nominalKey.replace(procIden, str_total)
         if not multisignal:
             PlotList["total_signal"] = Plots.Plot(totalsignal,"total_signal",label=signallabel,
-                                        typ="bkg", OverUnderFlowInc=True)
+                                        typ="bkg", OverUnderFlowInc=True, color = signalcolor)
         options.ratio = "#frac{data}{total MC}"
     else:
         bkgKey = nominalKey.replace(procIden, str_total_bkg)
         if not multisignal:
             PlotList["total_signal"] = Plots.Plot(totalsignal,"total_signal",label=signallabel,
-                                        typ="signal", OverUnderFlowInc=True)
+                                        typ="signal", OverUnderFlowInc=True, color = signalcolor)
     # from total background or total background+signal prediction histogram in mlfit file, get the error band
     if not xLabel == "" and not multisignal:
         PlotList["total_signal"].hist.SetTitle(xLabel)
@@ -604,7 +609,9 @@ DrawHistogramObject = Plots.DrawHistograms(PlotList,options.channelName,
                                 normalize=normalize,splitlegend=splitlegend,
                                 combineflag=combineflag,shape=shape,
                                 sortedProcesses=sortedProcesses,
-                                yLabel=yLabel, xLabel = xLabel, dontScaleSignal=options.dontScaleSignal)
+                                yLabel=yLabel, xLabel = xLabel, dontScaleSignal=options.dontScaleSignal,
+                                divideByBinWidth = divideByBinWidth
+                                )
 
 
 DrawHistogramObject.ratio_lower_bound = options.ratio_lower_bound

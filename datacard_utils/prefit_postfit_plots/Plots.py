@@ -377,7 +377,8 @@ def addErrorbands(combinedErrorbands,combinedHist,correlated=False):
 
 
 def moveOverUnderFlow(hist):
-    print("zeroth bin: {}".format(hist.GetBinContent(0)))
+    print("underflow bin: {}".format(hist.GetBinContent(0)))
+    print("overflow bin: {}".format(hist.GetBinContent(hist.GetNbinsX()+1)))
     # move underflow
     hist.SetBinContent(1, hist.GetBinContent(0)+hist.GetBinContent(1))
     # move overflow
@@ -436,7 +437,8 @@ class DrawHistograms:
     def __init__(self, PlotList, canvasName, data=None, ratio=False, signalscaling=1, 
                     errorband=None, background=None, displayname=None, logoption=False, shape=False,
                     normalize=False, combineflag=False, splitlegend=False, datalabel="data",
-                    sortedProcesses=False, yLabel="Events expected", xLabel = None, dontScaleSignal=False):
+                    sortedProcesses=False, yLabel="Events expected", xLabel = None, dontScaleSignal=False,
+                    divideByBinWidth = False):
         self.PlotList       = PlotList
         self.canvasName     = canvasName
         self.data           = data 
@@ -460,7 +462,9 @@ class DrawHistograms:
         self.sortedProcesses = sortedProcesses
         if self.combineflag and not self.sortedProcesses:
             self.sortedProcesses = ["total_signal"]
-
+        self.integralOption = ""
+        if divideByBinWidth:
+            self.integralOption = "width"
         self.yLabel          = yLabel
         self.xLabel          = xLabel
         self.dontScaleSignal = dontScaleSignal
@@ -528,7 +532,11 @@ class DrawHistograms:
         to scale the signal
         and normalize the Plot 
         """
-        firstHistIntegral=firstHist.Integral()
+        print("="*130)
+        print("drawing signal")
+        print("normalize: '{}'".format(self.normalize))
+        print("="*130)
+        firstHistIntegral=firstHist.Integral(self.integralOption)
         if self.shape:
             firstHist.Scale(1./firstHistIntegral)
         elif self.normalize:
@@ -606,12 +614,22 @@ class DrawHistograms:
         firstHist.DrawCopy("axissame")
         
         # draw signal histograms
+        print("="*130)
+        print("drawing signal")
+        print("signalscaling: '{}'".format(self.signalscaling))
+        print("background integral: '{}'".format(self.background.Integral(self.integralOption)))
+        print("="*130)
         for n,shape in enumerate(self.shapePlots):
             # scale signal
             if self.normalize or self.shape:
-                scalefactor=1/shape.Integral()
+                scalefactor=1/shape.Integral(self.integralOption)
             elif self.signalscaling==-1:
-                scalefactor=firstHistIntegral/shape.Integral()
+                print("calculating signal scale")
+                print("fistHist name: '{}'".format(firstHist.GetName()))
+                print("fistHist integral: '{}'".format(firstHistIntegral))
+                print("shape name: '{}'".format(shape.GetName()))
+                print("shape integral: '{}'".format(shape.Integral(self.integralOption)))
+                scalefactor=firstHistIntegral/shape.Integral(self.integralOption)
             else:
                 scalefactor=self.signalscaling
             if not self.dontScaleSignal:
@@ -657,13 +675,13 @@ class DrawHistograms:
             if PlotObject == "ERROR": continue
             if self.shape:
                 PlotObject.setStyle("signal")
-                Shapes[PlotObject.name] = PlotObject.hist.Integral()
+                Shapes[PlotObject.name] = PlotObject.hist.Integral(self.integralOption)
             else:
                 PlotObject.setStyle()
                 if PlotObject.typ == "signal":
-                    Shapes[PlotObject.name] = PlotObject.hist.Integral()
+                    Shapes[PlotObject.name] = PlotObject.hist.Integral(self.integralOption)
                 elif PlotObject.typ == "bkg":
-                    Stacks[PlotObject.name] = PlotObject.hist.Integral()
+                    Stacks[PlotObject.name] = PlotObject.hist.Integral(self.integralOption)
         """
         sort it by Event Yield, lowest to highest
         """
@@ -671,20 +689,32 @@ class DrawHistograms:
         self.sortedStacks      = sorted(Stacks, key=Stacks.get,reverse=True)
 
         if self.sortedProcesses:
+            print("="*130)
+            print("sorting processes")
+            print("self.sortedProcesses:")
+            print("="*130)
+            print(self.sortedProcesses)
             sortedShapes        = self.sortedShapes
             self.sortedShapes   = []
             sortedStacks        = self.sortedStacks
             self.sortedStacks   = []
             for process in self.sortedProcesses:
                 if process in sortedShapes:
+                    print("appending '{}' to sortedShapes".format(process))
                     self.sortedShapes.append(process)
                 elif process in sortedStacks:
+                    print("appending '{}' to sortedStacks".format(process))
                     self.sortedStacks.append(process)
+            print("="*130)
+            print("adding remaining processes")
+            print("="*130)
             for shape in sortedShapes:
                 if shape not in self.sortedShapes:
+                    print("appending '{}' to sortedShapes".format(shape))
                     self.sortedShapes.append(shape)
             for stack in sortedStacks:
                 if stack not in self.sortedStacks:
+                    print("appending '{}' to sortedStacks".format(stack))
                     self.sortedStacks.append(stack)
 
     def stackPlots(self, sortedPlots):
@@ -709,9 +739,13 @@ class DrawHistograms:
 
         self.stackPlots         = []
         self.combinederrorbands = None
+        print(sortedPlots)
         for i in range(len(sortedPlots),0,-1):
             Plot        = sortedPlots[i-1]
+            print("Plot: '{}'".format(Plot))
+            print("\tIntegral: '{}'")
             PlotObject  = self.PlotList[Plot]
+            print("\tIntegral: '{}'".format(PlotObject.hist.Integral(self.integralOption)))
             if len(self.stackPlots)==0:
                 self.stackPlots.append(PlotObject.hist.Clone())
                 if not self.combineflag:
@@ -763,13 +797,13 @@ class DrawHistograms:
         self.yMax = 1e-9
         self.yMinMax = 1000.
         for hist in self.stackPlots+self.shapePlots:
-            if self.shape and hist.Integral()!=0:
-                self.yMax = max(hist.GetBinContent(hist.GetMaximumBin())/hist.Integral(), self.yMax)
+            if self.shape and hist.Integral(self.integralOption)!=0:
+                self.yMax = max(hist.GetBinContent(hist.GetMaximumBin())/hist.Integral(self.integralOption), self.yMax)
             else:
                 self.yMax = max(hist.GetBinContent(hist.GetMaximumBin()), self.yMax)
             if hist.GetBinContent(hist.GetMaximumBin()) > 0:
-                if self.shape and hist.Integral()!=0:
-                    self.yMinMax = min(hist.GetBinContent(hist.GetMaximumBin())/hist.Integral(), self.yMinMax)
+                if self.shape and hist.Integral(self.integralOption)!=0:
+                    self.yMinMax = min(hist.GetBinContent(hist.GetMaximumBin())/hist.Integral(self.integralOption), self.yMinMax)
                 else:
                     self.yMinMax = min(hist.GetBinContent(hist.GetMaximumBin()), self.yMinMax)
 
@@ -778,7 +812,7 @@ class DrawHistograms:
         """
         to normalize the Plot 
         """
-        self.normalizefactor=1/PlotHist.Integral()
+        self.normalizefactor=1/PlotHist.Integral(self.integralOption)
         PlotHist.Scale(self.normalizefactor)
         self.yMax    = self.yMax*self.normalizefactor
         self.yMinMax = self.yMinMax*self.normalizefactor
