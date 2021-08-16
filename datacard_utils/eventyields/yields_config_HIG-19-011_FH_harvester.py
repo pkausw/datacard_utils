@@ -53,7 +53,7 @@ process_commands = {
 }
 
 sub_category_commands = {
-    "7j" : "$7j \\geq 3t$", 
-    "8j" : "$8j \\geq 3t$",
-    "9j" : "$\\geq 9j \\geq 3t$",
+    "7j" : "$7j \\geq 4t$", 
+    "8j" : "$8j \\geq 4t$",
+    "9j" : "$\\geq 9j \\geq 4t$",
 }
