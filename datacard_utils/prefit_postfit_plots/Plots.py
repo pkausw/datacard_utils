@@ -532,10 +532,7 @@ class DrawHistograms:
         to scale the signal
         and normalize the Plot 
         """
-        print("="*130)
-        print("drawing signal")
-        print("normalize: '{}'".format(self.normalize))
-        print("="*130)
+
         firstHistIntegral=firstHist.Integral(self.integralOption)
         if self.shape:
             firstHist.Scale(1./firstHistIntegral)
@@ -614,21 +611,11 @@ class DrawHistograms:
         firstHist.DrawCopy("axissame")
         
         # draw signal histograms
-        print("="*130)
-        print("drawing signal")
-        print("signalscaling: '{}'".format(self.signalscaling))
-        print("background integral: '{}'".format(self.background.Integral(self.integralOption)))
-        print("="*130)
         for n,shape in enumerate(self.shapePlots):
             # scale signal
             if self.normalize or self.shape:
                 scalefactor=1/shape.Integral(self.integralOption)
             elif self.signalscaling==-1:
-                print("calculating signal scale")
-                print("fistHist name: '{}'".format(firstHist.GetName()))
-                print("fistHist integral: '{}'".format(firstHistIntegral))
-                print("shape name: '{}'".format(shape.GetName()))
-                print("shape integral: '{}'".format(shape.Integral(self.integralOption)))
                 scalefactor=firstHistIntegral/shape.Integral(self.integralOption)
             else:
                 scalefactor=self.signalscaling
@@ -689,10 +676,6 @@ class DrawHistograms:
         self.sortedStacks      = sorted(Stacks, key=Stacks.get,reverse=True)
 
         if self.sortedProcesses:
-            print("="*130)
-            print("sorting processes")
-            print("self.sortedProcesses:")
-            print("="*130)
             print(self.sortedProcesses)
             sortedShapes        = self.sortedShapes
             self.sortedShapes   = []
@@ -700,21 +683,15 @@ class DrawHistograms:
             self.sortedStacks   = []
             for process in self.sortedProcesses:
                 if process in sortedShapes:
-                    print("appending '{}' to sortedShapes".format(process))
                     self.sortedShapes.append(process)
                 elif process in sortedStacks:
-                    print("appending '{}' to sortedStacks".format(process))
                     self.sortedStacks.append(process)
-            print("="*130)
-            print("adding remaining processes")
-            print("="*130)
+
             for shape in sortedShapes:
                 if shape not in self.sortedShapes:
-                    print("appending '{}' to sortedShapes".format(shape))
                     self.sortedShapes.append(shape)
             for stack in sortedStacks:
                 if stack not in self.sortedStacks:
-                    print("appending '{}' to sortedStacks".format(stack))
                     self.sortedStacks.append(stack)
 
     def stackPlots(self, sortedPlots):
@@ -742,10 +719,7 @@ class DrawHistograms:
         print(sortedPlots)
         for i in range(len(sortedPlots),0,-1):
             Plot        = sortedPlots[i-1]
-            print("Plot: '{}'".format(Plot))
-            print("\tIntegral: '{}'")
             PlotObject  = self.PlotList[Plot]
-            print("\tIntegral: '{}'".format(PlotObject.hist.Integral(self.integralOption)))
             if len(self.stackPlots)==0:
                 self.stackPlots.append(PlotObject.hist.Clone())
                 if not self.combineflag:
