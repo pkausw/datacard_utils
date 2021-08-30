@@ -1,6 +1,7 @@
 import os
 import sys
 import ROOT
+import json
 
 ROOT.gROOT.SetBatch(True)
 ROOT.PyConfig.IgnoreCommandLineOptions = True
@@ -18,6 +19,18 @@ def parse_arguments():
                         dest = "outpath",
                         default = ".",
                         type = "str"
+                    )
+    parser.add_option("-m", "--mode",
+                        help = " ".join("""
+                            Flag to control what you want to fill. Current choices:
+                            'ratio': Fill the yield change relative to the prefit yield;
+                            'prefit_pull': Fill the yield change relative to the prefit uncertainty
+                            'postfit_pull': Fill the yield change relative to the postfit uncertainty;
+                            Defaults to 'ratio'
+                            """.split()),
+                        dest = "mode",
+                        choices = "ratio prefit_pull postfit_pull".split(),
+                        default = "ratio"
                     )
     parser.add_option("-p", "--prefix",
                         help = " ".join("""
@@ -37,6 +50,15 @@ def parse_arguments():
                         dest = "extensions",
                         default = "png pdf".split(),
                         action = "append"
+                    )
+
+    parser.add_option("-t", "--translate",
+                        help = " ".join("""
+                            translate category names based on this dictionary
+                            """.split()),
+                        dest = "translation_path",
+                        metavar = "path/to/translation_dict.json",
+                        type = "str"
                     )
     
     options, args = parser.parse_args()
@@ -85,11 +107,11 @@ def load_yields(rfile, category, process):
     y = rfile.Get(object_name)
     # print(y)
     if isinstance(y, ROOT.RooRealVar):
-        return y.getVal()
+        return y.getVal(), y.getError()
     else:
         print("Could not load process '{}' for category '{}'"\
                 .format(process, category))
-    return 0.
+    return 0., 0.
 
 
 def collect_information(rfile):
@@ -143,7 +165,35 @@ def collect_information(rfile):
     infos["processes"] = processes
     return infos
 
-def construct_histogram(rfile, infos):
+def calculate_value(cat_dict, rfile, process, mode = "ratio"):
+    # load yields
+    prefit_name = cat_dict["prefit"]
+    postfit_name = cat_dict["postfit"]
+    prefit_yield, prefit_uncert = load_yields(rfile = rfile, category = prefit_name, 
+                        process = process)
+    postfit_yield, postfit_uncert = load_yields(rfile = rfile, category = postfit_name, 
+                        process = process)
+    # if process is not available for given category,
+    # prefit_yield is 0. In that case, avoid division
+    # by 0 by filling a 0
+    ratio = 0
+    print("\tprocess = {}".format(process))
+    print("\tprefit = {} +- {}".format(prefit_yield, prefit_uncert))
+    print("\tpostfit = {} +- {}".format(postfit_yield, postfit_uncert))
+    if mode == "ratio":
+        ratio = (postfit_yield - prefit_yield)/prefit_yield \
+                    if not prefit_yield == 0. else 0.
+        ratio *= 100
+    elif mode == "prefit_pull":
+        ratio = (postfit_yield - prefit_yield)/prefit_uncert \
+                    if not prefit_uncert == 0. else 0.
+    elif mode == "postfit_pull":
+        ratio = (postfit_yield - prefit_yield)/postfit_uncert \
+                    if not postfit_uncert == 0. else 0.
+    print("\tfinal value (mode '{}') = {}".format(mode, ratio))
+    return ratio
+
+def construct_histogram(rfile, infos, mode = "ratio", translation_dict = {}):
     """Construct histogram with yield pulls.
     Function first load information from 'infos' dictionary.
     Then a ROOT.TH2D histogram is initialized with the number
@@ -165,12 +215,15 @@ def construct_histogram(rfile, infos):
                         },
                         "processes": set processes in different categories
                     }
+        mode (str, optional): flag to control what to fill into the histogram. Current modes are
+                    'ratio': Fill the yield change relative to the prefit yield
+                    'prefit_pull': Fill the yield change relative to the prefit uncertainty
+                    'postfit_pull': Fill the yield change relative to the postfit uncertainty
+        translation_dict (dict, optional): dictionary with category names for final plot
 
     Returns:
-        [type]: [description]
+        [TH2D]: Filled histogram
 
-    Yields:
-        [type]: [description]
     """    
     # load necessary information
     category_dict = infos["categories"]
@@ -186,33 +239,38 @@ def construct_histogram(rfile, infos):
     h.SetStats(False)
     # setup names for bins
     for i, cat in enumerate(categories, 1):
-        h.GetYaxis().SetBinLabel(i, cat)
+        catname = translation_dict.get(cat, cat)
+        h.GetYaxis().SetBinLabel(i, catname)
     for i, proc in enumerate(processes, 1):
         h.GetXaxis().SetBinLabel(i, proc)
 
     # setup axis names
-    ztitle = "#frac{yield_{postfit} - yield_{prefit}}{yield_{prefit}} in %"
+    if mode == "ratio":
+        ztitle = "#frac{yield_{postfit} - yield_{prefit}}{yield_{prefit}} in %"
+        zmin = -100
+        zmax = 100
+    elif mode == "prefit_pull":
+        ztitle = "#frac{yield_{postfit} - yield_{prefit}}{#sigma_{prefit}}"
+        zmin = -2
+        zmax = 2
+    elif mode == "postfit_pull":
+        ztitle = "#frac{yield_{postfit} - yield_{prefit}}{#sigma_{postfit}}"
+        zmin = -2
+        zmax = 2
     h.GetZaxis().SetTitle(ztitle)
     h.GetZaxis().SetTitleOffset(1.7)
-    h.GetZaxis().SetRangeUser(-100, 100)
+    h.GetZaxis().SetRangeUser(zmin, zmax)
     # loop through the categories
     for y, cat in enumerate(categories, 1):
+        cat_dict = category_dict[cat]
         for x, proc in enumerate(processes, 1):
-            # load yields
-            prefit_name = category_dict[cat]["prefit"]
-            postfit_name = category_dict[cat]["postfit"]
-            prefit_yield = load_yields(rfile = rfile, category = prefit_name, 
-                                process = proc)
-            postfit_yield = load_yields(rfile = rfile, category = postfit_name, 
-                                process = proc)
-            # if process is not available for given category,
-            # prefit_yield is 0. In that case, avoid division
-            # by 0 by filling a 0
-            ratio = (postfit_yield - prefit_yield)/prefit_yield \
-                        if not prefit_yield == 0. else 0.
+            ratio = calculate_value(cat_dict = cat_dict, 
+                                    rfile = rfile, 
+                                    process = proc, 
+                                    mode = mode)
             
             # finally, fill histogram
-            h.SetBinContent(x, y, ratio*100)
+            h.SetBinContent(x, y, ratio)
     return h
         
 
@@ -233,13 +291,20 @@ def construct_yield_pulls(infile, **kwargs):
 
     """
     infos = collect_information(infile)
-    histogram = construct_histogram(rfile=infile, infos = infos)
+    mode = kwargs.get("mode", "ratio")
+    translation_dict = {}
+    translation_path = kwargs.get("translation_path")
+    if translation_path:
+        with open(translation_path) as f:
+            translation_dict = json.load(f)
+    histogram = construct_histogram(rfile=infile, infos = infos, mode = mode, translation_dict = translation_dict)
 
     # get file name
     filename = os.path.basename(infile.GetName())
     # remove extension
     filename = ".".join(filename.split(".")[:-1])
-
+    # always add the mode to the file name so it's clear what has been done
+    filename = "_".join([mode, filename])
     # build output file name for plot
     prefix = kwargs.get("prefix", "")
     outpath = kwargs.get("outpath", ".")
@@ -254,7 +319,7 @@ def construct_yield_pulls(infile, **kwargs):
 
     # in order to save final plot, first draw histogram to canvas
 
-    c = ROOT.TCanvas("yield_pull", "yield_pulls", 2200, 1600)
+    c = ROOT.TCanvas(mode, mode, 2200, 1600)
     ROOT.gStyle.SetPaintTextFormat("2.1f")
     c.SetRightMargin(0.2)
     c.SetLeftMargin(0.35)
