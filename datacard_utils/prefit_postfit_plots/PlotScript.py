@@ -9,6 +9,9 @@ import optparse
 import importlib 
 import ROOT
 
+ROOT.gROOT.SetBatch(True)
+ROOT.PyConfig.IgnoreCommandLineOptions = True
+
 debug=0
 
 #get bool information out of parser string
