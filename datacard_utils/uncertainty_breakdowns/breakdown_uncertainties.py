@@ -139,7 +139,14 @@ def create_script(cmd, scriptname, outfolder = None, wsfile = None):
     with open(scriptname, "w") as s:
         s.write("\n".join(script))
 
-def finish_cmds(cmd, mu, murange, suffix, paramgroup, param = None, pois = None):
+def finish_cmds(cmd, 
+mu, 
+murange, 
+suffix, 
+paramgroup, 
+param = None, 
+pois = None,
+freeze_parameters = None):
     """
     Finalize the combine command given in 'cmd', which means appending the freeze options
     for uncertainty group 'paramgroup'.
@@ -147,27 +154,38 @@ def finish_cmds(cmd, mu, murange, suffix, paramgroup, param = None, pois = None)
     add_basic_commands(cmd = cmd, mu = mu, murange = murange, suffix = suffix)
     
     #if the command is not generating a stat-only fit, freeze the given uncertainty group. Otherwise, freeze all nuisance parameters
-    if paramgroup and paramgroup != "all":
+    if paramgroup and not freeze_parameters:
         cmd = helpfulFuncs.insert_values(cmds = cmd, keyword = "--freezeNuisanceGroups", toinsert = paramgroup, joinwith = ",")
-    elif paramgroup and paramgroup == "all":
+    elif isinstance(freeze_parameters, str):
         cmd = helpfulFuncs.insert_values(cmds = cmd, keyword = "--freezeParameters", 
-                                            toinsert = "allConstrainedNuisances",
-                                             joinwith="insert"
-                                        )
+                                                toinsert = freeze_parameters,
+                                                joinwith="insert"
+                                            )
         
-        if (pois and param) and len(pois) > 1:
-            tofreeze = pois[:]
-            if param in tofreeze:
-                tofreeze.pop(tofreeze.index(param))
-            helpfulFuncs.insert_values(cmds = cmd, keyword = "--freezeParameters", 
-                                        toinsert = ",".join(tofreeze), 
-                                        joinwith=","
-                                    )
+        # if (pois and param) and len(pois) > 1:
+        #     tofreeze = pois[:]
+        #     if param in tofreeze:
+        #         tofreeze.pop(tofreeze.index(param))
+        #     helpfulFuncs.insert_values(cmds = cmd, keyword = "--freezeParameters", 
+        #                                 toinsert = '"var{}"'.format("|".join(tofreeze)), 
+        #                                 joinwith=","
+        #                             )
 
     cmd = [x for x in cmd if x != ""]
 
-def create_fit_cmd( mdfout, paramgroup, outfolder, suffix,
-            mu = None, murange = 5., cmdbase = None, pois = None, fast = False, param = None):
+def create_fit_cmd( 
+    mdfout, 
+    paramgroup, 
+    outfolder, 
+    suffix,
+    mu = None, 
+    murange = 5., 
+    cmdbase = None, 
+    pois = None, 
+    fast = False, 
+    param = None,
+    freeze_parameters = None
+):
     """
     create script for the break down of the uncertainty group 'paramgroup'
     """
@@ -187,7 +205,9 @@ def create_fit_cmd( mdfout, paramgroup, outfolder, suffix,
         if paramgroup and paramgroup == "all":
             cmd = helpfulFuncs.insert_values(cmds = cmd, keyword = "--fastScan", toinsert = "", joinwith = "insert")
 
-        finish_cmds(cmd=cmd,mu=mu,murange=murange,suffix="_"+suffix,paramgroup=paramgroup,pois=pois, param = param)
+        finish_cmds(cmd=cmd,mu=mu,murange=murange,suffix="_"+suffix,
+                        paramgroup=paramgroup,pois=pois, param = param,
+                        freeze_parameters = freeze_parameters)
         
         
         all_cmds.append(cmd)
@@ -201,7 +221,9 @@ def create_fit_cmd( mdfout, paramgroup, outfolder, suffix,
     # cmd += "--minos all".split()
     temp = paramgroup
     
-    finish_cmds(cmd = cmd,mu=mu,murange=murange,suffix= "_"+suffix,paramgroup=temp,pois=pois, param = param)
+    finish_cmds(cmd = cmd,mu=mu,murange=murange,suffix= "_"+suffix,paramgroup=temp,pois=pois, param = param,
+                freeze_parameters = freeze_parameters
+                )
     all_cmds.append(cmd)
 
     outscript = "script_"+paramgroup + ".sh"
@@ -228,8 +250,20 @@ def loadPOIs(workspace):
         if isinstance(mc, ROOT.RooStats.ModelConfig):
             return mc.GetParametersOfInterest().contentsString().split(",")
 
-def create_folders( outfolder, combineInput, paramgroup, suffix,
-                    mu, scripts, cmdbase, murange, pois = None, fast = False, param = None):
+def create_folders( 
+    outfolder, 
+    combineInput, 
+    paramgroup, 
+    suffix,
+    mu, 
+    scripts, 
+    cmdbase, 
+    murange, 
+    pois = None, 
+    fast = False, 
+    param = None,
+    freeze_parameters = None
+):
     """
     create a folder for the uncertainty group 'paramgroup' and a corresponding .sh script containing
     the combine fit commands.
@@ -246,7 +280,8 @@ def create_folders( outfolder, combineInput, paramgroup, suffix,
             murange = murange,
             pois = pois,
             fast = fast,
-            param = param)        
+            param = param,
+            freeze_parameters = freeze_parameters)        
     if path:
         scripts.append(path)
 
@@ -257,7 +292,14 @@ def create_folders_and_scripts(foldername, combineInput, paramgroup, suffix,
     If the list if POIs is not None, the function will generate a stat only fit for every
     individual POI while freezing all other POIs.
     """
-    outfolder = "breakdown_" + paramgroup
+
+    # check for on the fly group definitions
+    folder_name = paramgroup
+    freeze_parameters = None
+    if "=" in paramgroup:
+        folder_name, freeze_parameters = paramgroup.split("=")
+
+    outfolder = "breakdown_" + folder_name
     
     suffix += "_"+outfolder
  
@@ -266,14 +308,14 @@ def create_folders_and_scripts(foldername, combineInput, paramgroup, suffix,
             for param in pois:
                 final_outfolder = "%s_%s" % (outfolder, param)
                 create_folders(outfolder = final_outfolder, combineInput = combineInput,
-                                paramgroup = paramgroup, suffix = suffix,
+                                paramgroup = folder_name, suffix = suffix,
                                 mu = mu, scripts = scripts, cmdbase = cmdbase, murange = murange, 
-                                pois = pois, fast = fast, param = param)
+                                pois = pois, fast = fast, param = param, freeze_parameters = "allConstrainedNuisances")
     else:
         create_folders(outfolder = outfolder, combineInput = combineInput,
-                        paramgroup = paramgroup, suffix = suffix,
+                        paramgroup = folder_name, suffix = suffix,
                         mu = mu, scripts = scripts, cmdbase = cmdbase, murange = murange, 
-                        pois = pois, fast = fast)
+                        pois = pois, fast = fast, freeze_parameters = freeze_parameters)
 
 
 
@@ -312,7 +354,7 @@ def submit_fit_cmds(ws, paramgroups = ["all"], mu = None, cmdbase = None, murang
         create_script(cmd = [cmd], scriptname = "nominal_scan.sh", wsfile = ws)
         if os.path.exists("nominal_scan.sh"):
             batch_fits.submitJobToBatch("nominal_scan.sh")
-            # pass
+            pass
         else:
             sys.exit("could not create script for nominal scan! Aborting")
 
@@ -337,6 +379,8 @@ def submit_fit_cmds(ws, paramgroups = ["all"], mu = None, cmdbase = None, murang
         mdfout += ".MultiDimFit.mH125.38.root"
         mdfout = os.path.abspath(mdfout)
         #start scancs with frozen np groups
+        if not "all" in paramgroups:
+            paramgroups.append("all")
         for group in paramgroups:
             create_folders_and_scripts( foldername = foldername,
                             combineInput = mdfout,
@@ -346,14 +390,14 @@ def submit_fit_cmds(ws, paramgroups = ["all"], mu = None, cmdbase = None, murang
                             cmdbase = cmdbase, murange = murange,
                             pois = pois, fast = fast
                             )
-        if not "all" in paramgroups:
-            create_folders( foldername = foldername,
-                      combineInput = mdfout,
-                      paramgroup = "all",
-                      suffix = foldername,
-                      mu = mu, scripts = scripts,
-                      cmdbase = cmdbase, murange = murange,
-                      pois = pois, fast = fast)
+        # if not "all" in paramgroups:
+        #     create_folders( foldername = foldername,
+        #               combineInput = mdfout,
+        #               paramgroup = "all",
+        #               suffix = foldername,
+        #               mu = mu, scripts = scripts,
+        #               cmdbase = cmdbase, murange = murange,
+        #               pois = pois, fast = fast)
 
         if(len(scripts) > 0):
             print ("submitting {0} jobs".format(len(scripts)))
@@ -381,7 +425,7 @@ def parse_arguments():
                         default = 5.0,
                         dest = "murange")
     parser.add_option(  "-b", "--breakdown",
-                        help = """list of parameter groups to break down. Either comma-separated or can be used multiple times.
+                        help = """list of parameter groups to break down. Either collon-separated or can be used multiple times.
                         Please note that the keyword for the stat-only fit is 'all' (will be generated automatically if not given explicitely)
                         """,
                         action = "append",
@@ -410,7 +454,7 @@ def main(options, wildcards):
         paramgroups = ["all"]
     else:
         for group in options.paramgroups:
-            paramgroups += group.split(",")
+            paramgroups += group.split(":")
     combineoptions = []
     if options.addCommands != None:
         for cmd in options.addCommands:
