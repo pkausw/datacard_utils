@@ -75,13 +75,15 @@ def parse_results(mu, upper, lower, upper_stat, lower_stat,\
 def load_values(result_dict, result_set, value_keyword, order):
     values = []
     for name in order:
+        if name == "LINE": continue
         subdict = result_dict.get(name, {})
+        if len(subdict) == 0: continue
         set_dict = subdict.get(result_set, {})
         val = None
         if not isinstance(set_dict, dict):
             val = set_dict
         else:
-            val = set_dict.get(value_keyword, None)
+            val = set_dict.get(value_keyword, "--")
         if val:
             print("For result '{}', saving value {} ({}/{})".\
                 format(name, val, result_set, value_keyword))
@@ -205,7 +207,7 @@ def create_plot(mu, upper, lower, upper_stat, lower_stat,\
     print(xmax)
 
     c,h = draw_canvas_histo(    nchannels = nchannels, 
-                                xmin = xmin-4, xmax = xmax+12, 
+                                xmin = abs(xmin)*(-3), xmax = xmax*5, 
                                 title = "#hat{#mu} = #hat{#sigma}/#sigma_{SM}",
                                 positions = channels,
                                 entry_names = entry_names ,
@@ -245,7 +247,10 @@ def create_plot(mu, upper, lower, upper_stat, lower_stat,\
     print(" ".join(latex_parts))
     if include_signi:
         latex_parts += "       "
-    leg.DrawLatex( 4.2, 3.1*nchannels, "".join(latex_parts))
+
+    body_position = xmax*4.7
+    header_position = body_position/2.5
+    leg.DrawLatex( header_position, 3.1*nchannels, "".join(latex_parts))
 
     for ich,channel in enumerate(channels):
         res = ROOT.TLatex()
@@ -267,7 +272,7 @@ def create_plot(mu, upper, lower, upper_stat, lower_stat,\
         if include_signi:
             latex_parts += ["{:.1f} #sigma".format(significance[ich])]
         
-        res.DrawLatex( xmax+11.5, channel-0.2, " ".join(latex_parts))
+        res.DrawLatex( body_position, channel-0.2, " ".join(latex_parts))
 
   
     
@@ -324,12 +329,13 @@ def draw_canvas_histo( nchannels, xmin, xmax, title, entry_names, positions, \
                    "#bf{CMS}" )
                 #    "#bf{CMS} #it{Preliminary}")
 
-    lumi = ROOT.TLatex()
-    lumi.SetNDC()
-    lumi.SetTextFont( 42 )
-    lumi.SetTextSize( 0.035 )
-    lumi.SetTextAlign( 31 )
-    lumi.DrawLatex( 1-ROOT.gStyle.GetPadRightMargin(), 0.965, "{} fb^{{-1}} (13 TeV)".format(lumilabel) )
+    if lumilabel and not lumilabel == "":
+        lumi = ROOT.TLatex()
+        lumi.SetNDC()
+        lumi.SetTextFont( 42 )
+        lumi.SetTextSize( 0.035 )
+        lumi.SetTextAlign( 31 )
+        lumi.DrawLatex( 1-ROOT.gStyle.GetPadRightMargin(), 0.965, "{} fb^{{-1}} (13 TeV)".format(lumilabel) )
 
     return c,h
 
