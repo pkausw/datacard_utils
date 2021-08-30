@@ -17,7 +17,6 @@ cmd_base_parts += "--channelname {channel}".split()
 cmd_base_parts += "--combineDatacard {datacard}".split()
 cmd_base_parts += "--pdfname {pdfname}".split()
 cmd_base_parts += '--xLabel "{xtitle}"'.split()
-#cmd_base_parts += ["--plot-blind"]
 #cmd_base_parts += "--skipErrorbands --pdftag noError".split()
 # cmd_base_parts += "--dontScaleSignal".split()
 
@@ -86,6 +85,18 @@ def parse_arguments():
                         action = "store_true", 
                         help = "draw multiple signals"
                     )
+    parser.add_option( "-u", "--unblind", 
+                        dest="unblind", 
+                        default = False,
+                        action = "store_true", 
+                        help = "unblind the distributions, i.e. draw points for observed data"
+                    )
+    parser.add_option( "--hide-signal", 
+                        dest="hide_signal", 
+                        default = False,
+                        action = "store_true", 
+                        help = "hide the signal in the post-fit distributions"
+                    )
     parser.add_option("--divideByBinWidth", dest = "divideByBinWidth", default = False, action = "store_true", 
         help = "divide content by bin width")
     parser.add_option( "--prefix",
@@ -146,6 +157,8 @@ def generate_plots(file, options):
                                     pdfname = final_channel,
                                     xtitle = xtitle,
                                     **base_options)
+            if not options.unblind:
+                cmd += " --plot-blind"
             if options.lumiLabel:
                 cmd += ' --lumilabel "{}"'.format(options.lumiLabel)
             if options.drawFromHarvester:
@@ -157,6 +170,8 @@ def generate_plots(file, options):
             if flag == "shapes_fit_s":
                 cmd += " --ratio-lower-bound {}".format(1-ratio_range)
                 cmd += " --ratio-upper-bound {}".format(1+ratio_range)
+                if options.hide_signal:
+                    cmd += " --hide-signal"
             print(cmd)
             call([cmd], shell = True)
 
