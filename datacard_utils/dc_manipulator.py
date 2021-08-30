@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import sys
 import ROOT
@@ -87,7 +89,7 @@ def do_validation(harvester, cardpaths, jsonpath):
     for era in cardpaths:
         cards = cardpaths[era]
         print("applying validation to paths")
-        print("\n".join(cards))
+        print(("\n".join(cards)))
         for cardpath in cardpaths[era]:
             if not jsonpath:
                 val_interface.generate_validation_output(cardpath)
@@ -96,10 +98,10 @@ def do_validation(harvester, cardpaths, jsonpath):
             
             val_interface.apply_validation(harvester, eras = [era])
 
-            print("="*130)
+            print(("="*130))
             print("after validation interface")
             harvester.cp().era([era]).PrintProcs()
-            print("="*130)
+            print(("="*130))
 
 def remove_minor_bkgs(harvester):
     val_interface = ValidationInterface()
@@ -119,7 +121,7 @@ def remove_minor_bkgs(harvester):
                 print("pruning tHq")
                 processes = harvester.cp().era([era]).channel([channel]).bin([b])\
                                 .process(["tHq.*"]).process_set()
-                print("pruning processes: {}".format(", ".join(processes)))
+                print(("pruning processes: {}".format(", ".join(processes))))
                 val_interface.drop_small_processes(harvester = harvester,
                                                     era = [era],
                                                     chan = [channel],
@@ -130,7 +132,7 @@ def remove_minor_bkgs(harvester):
                 print("pruning tHW")
                 processes = harvester.cp().era([era]).channel([channel]).bin([b])\
                                 .process(["tHW.*"]).process_set()
-                print("pruning processes: {}".format(", ".join(processes)))
+                print(("pruning processes: {}".format(", ".join(processes))))
                 val_interface.drop_small_processes(harvester = harvester,
                                                     era = [era],
                                                     chan = [channel],
@@ -143,17 +145,17 @@ def remove_minor_bkgs(harvester):
                 processes = harvester.cp().era([era]).channel([channel]).bin([b])\
                                 .backgrounds().process(["tH(q|W).*"], False)\
                                     .process_set()
-                print("pruning processes: {}".format(", ".join(processes)))
+                print(("pruning processes: {}".format(", ".join(processes))))
                 val_interface.drop_small_processes(harvester = harvester,
                                                     era = [era],
                                                     chan = [channel],
                                                     bins = [b],
                                                     processes = processes)
 
-                print("="*130)
+                print(("="*130))
                 print("after process pruning")
                 harvester.cp().era([era]).PrintProcs()
-                print("="*130)
+                print(("="*130))
 
 def load_datacards(groups, harvester):
 
@@ -161,18 +163,18 @@ def load_datacards(groups, harvester):
     for group in groups:
         template, wildcard = group.split(":")
         cards = glob(wildcard)
-        print("template: {}".format(template))
+        print(("template: {}".format(template)))
         for f in cards:
-            print("loading '{}'".format(f))
+            print(("loading '{}'".format(f)))
             harvester.QuickParseDatacard(f, template)
             eras = harvester.era_set()
             for e in eras:
                 if e in f:
                     if not e in cardpaths:
                         cardpaths[e] = []
-                    print("saving path '{}' for era '{}'".format(f, e))
+                    print(("saving path '{}' for era '{}'".format(f, e)))
                     cardpaths[e].append(f)
-    print(json.dumps(cardpaths, indent = 4))
+    print((json.dumps(cardpaths, indent = 4)))
     # exit()
     return cardpaths
 
@@ -181,12 +183,12 @@ def write_harvester(harvester, cardname, outfile, group_manipulator):
     
     print(group_manipulator)
     group_manipulator.add_groups_to_harvester(harvester)
-    print("writing card '{}'".format(cardname))
+    print(("writing card '{}'".format(cardname)))
 
     harvester.WriteDatacard(cardname, outfile)
 
 def transpose_binning(harvester, binning_groups):
-    print("will perform rebinning based on '{}'".format(binning_groups))
+    print(("will perform rebinning based on '{}'".format(binning_groups)))
     binning_harvester = ch.CombineHarvester()
     binning_harvester.SetFlag("allow-missing-shapes", False)
     binning_harvester.SetFlag("workspaces-use-clone", True)
@@ -202,10 +204,10 @@ def transpose_binning(harvester, binning_groups):
             continue
         source_bins = binning_harvester.cp().era([e]).bin_set()
         for s in source_bins:
-            print("checking bin '{}' for matches".format(s))
+            print(("checking bin '{}' for matches".format(s)))
             bins = harvester.cp().era([e]).bin([".*{}.*".format(s)]).bin_set()
             if len(bins) == 0:
-                print("WARNING: found no matches for bin {}".format(s))
+                print(("WARNING: found no matches for bin {}".format(s)))
             else:
                 source = binning_harvester.cp().era([e]).bin([s])\
                                 .backgrounds()
@@ -213,9 +215,9 @@ def transpose_binning(harvester, binning_groups):
                 h.Print("Range")
                 bin_manipulator.load_edges(h)
                 for b in bins:
-                    print("Rebinning bin '{}'".format(b))                  
+                    print(("Rebinning bin '{}'".format(b)))                  
                     print("applying this binning:")
-                    print(bin_manipulator.bin_edges)
+                    print((bin_manipulator.bin_edges))
                     harvester.cp().bin([b]).era([e])\
                         .VariableRebin(bin_manipulator.bin_edges)
                
@@ -274,7 +276,15 @@ def write_datacards(harvester, outdir, prefix, rootfilename, era, \
             write_harvester(harvester = current_harvester,
                             cardname = cardname, outfile = outfile, 
                             group_manipulator = group_manipulator)
+
+def invert_nuisance_directions(harvester, invertion_list):
+    print(("inverting directions for list '{}'"\
+                .format(", ".join([str(x) for x in invertion_list]))))
     
+    harvester.cp().syst_name(invertion_list).PrintSysts()
+    harvester.cp().syst_name(invertion_list).ForEachSyst(lambda x: x.SwapUpAndDown())
+    harvester.cp().syst_name(invertion_list).PrintSysts()
+
 def main(**kwargs):
 
     harvester = ch.CombineHarvester()
@@ -311,13 +321,13 @@ def main(**kwargs):
             bin_manipulator.threshold = "data"
             harvester = bin_manipulator.do_statistical_rebinning(harvester, processes = [".*"])
         if check_mc:
-            bin_manipulator.threshold = 15
+            threshold = kwargs.get("check_mc_threshold", 15)
+            bin_manipulator.threshold = threshold
             harvester = bin_manipulator.do_statistical_rebinning(harvester)
         if rebin_scheme:
             bin_manipulator.scheme = rebin_scheme
             harvester = bin_manipulator.rebin_shapes(harvester = harvester)
     
-
     remove_minor_jec = kwargs.get("remove_minor_jec", False)
     if remove_minor_jec:
         remove_minor_JEC(harvester)
@@ -332,8 +342,13 @@ def main(**kwargs):
                         jsonpath = jsonpath)
     if prune_backgrounds:
         remove_minor_bkgs(harvester)
+
+    invert_directions = kwargs.get("invert_directions", [])
+
+    if isinstance(invert_directions, list) and len(invert_directions) > 0:
+        invert_nuisance_directions(harvester, invert_directions)
     
-    print("="*130)
+    print(("="*130))
     print("back in dc_manipulator::main")
     harvester.PrintProcs()
 
@@ -488,6 +503,18 @@ def parse_arguments():
                         action = "store_true",
                         default = False
                     )
+    binning_options.add_option("--binning-threshold",
+                        help = " ".join(
+                            """
+                            Use this threshold when checking the binning
+                            according to the MC stats of the individual bins.
+                            Default: 15
+                            """.split()
+                        ),
+                        dest = "check_mc_threshold",
+                        type = "float",
+                        default = 15
+                    )
     binning_options.add_option("--check-mc-binning-data",
                         help = " ".join(
                             """
@@ -539,6 +566,18 @@ def parse_arguments():
                         action = "store_true",
                         default = False
                     )
+    model_manipulations.add_option("--invert-directions",
+                        help = " ".join(
+                            """
+                            invert direction for this nuisance.
+                            Inputs are regex expressions to selection
+                            nuisance parameters.
+                            Can be called multiple times
+                            """.split()
+                        ),
+                        dest = "invert_directions",
+                        action = "append"
+                        )
     model_manipulations.add_option("--make-tH-signal",
                         help = " ".join(
                             """
