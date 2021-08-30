@@ -32,11 +32,12 @@ def loadPOIs(workspace):
             return mc.GetParametersOfInterest().contentsString().split(",")
 
 
-def reset_directory(outputDirectory):
-    if os.path.exists(outputDirectory):
+def reset_directory(outputDirectory, reset=False):
+    if os.path.exists(outputDirectory) and reset:
         print "resetting ", outputDirectory
         rmtree(outputDirectory)
-    os.makedirs(outputDirectory)
+    if not os.path.exists(outputDirectory):
+        os.makedirs(outputDirectory)
 
 def do_prefit(datacard, cmdlist = None):
     
@@ -60,7 +61,7 @@ def do_prefit(datacard, cmdlist = None):
     return None
 
 def do_1D_scan(param, datacard, cmdList):
-    reset_directory(param)
+    reset_directory(param, reset = True)
     os.chdir(param)
     cmd = ("python {0}/nllscan.py".format(scriptDir)).split()
     cmd += ("-d " + datacard).split()
@@ -125,12 +126,12 @@ if os.path.exists(pathToTxt):
             if param.startswith("#"):
                 continue
             
-            #do_1D_scan(param = param, datacard = datacard, cmdList = cmdList)
-            pois = loadPOIs(datacard)
-            if len(pois)>1:
-                print ("Only 1 POI for 2D scans")
-            param_r = pois[0]
-            do_2D_scan(param_x = param, param_y = param_r, datacard = datacard, cmdList = cmdList)
+            do_1D_scan(param = param, datacard = datacard, cmdList = cmdList)
+            # pois = loadPOIs(datacard)
+            # if len(pois)>1:
+            #     print ("Only 1 POI for 2D scans")
+            # param_r = pois[0]
+            # do_2D_scan(param_x = param, param_y = param_r, datacard = datacard, cmdList = cmdList)
             
         os.chdir(basepath)
     
