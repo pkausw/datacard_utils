@@ -3,6 +3,19 @@ import sys
 import glob
 import subprocess
 import json
+from ROOT import TFile, RooWorkspace, RooStats
+
+def loadPOIs(workspace):
+    """
+    Loads the list of POIs from the input 'workspace'
+    """
+    print("loading POIs from workspace in " + workspace)
+    infile = TFile.Open(workspace)
+    w = infile.Get("w")
+    if isinstance(w, RooWorkspace):
+        mc = w.obj("ModelConfig")
+        if isinstance(mc, RooStats.ModelConfig):
+            return mc.GetParametersOfInterest().contentsString().split(",")
 
 addCommands = sys.argv[1]
 pathToJson = sys.argv[2]
@@ -61,19 +74,23 @@ for wildcard in wildcards:
             subprocess.call([cmd], shell=True)
             
             if os.path.exists(impactName +".json"):
-                cmd = "plotImpacts.py -i " + impactName +".json"
-                cmd += " -o " + impactName
-                cmd += " " + addCommands
-                cmd += " | tee plotImpacts.log"
-                print cmd
-                subprocess.call([cmd], shell=True)
-                # cmd = "plotImpacts.py -i " + impactName +".json"
-                # cmd += " -o " + impactName + "_10perpage"
-                # cmd += " --per-page 10"
-                # cmd += " " + addCommands
-                # cmd += " | tee plotImpacts_10perpage.log"
-                # print cmd
-                # subprocess.call([cmd], shell=True)
+                pois = loadPOIs(workspace)
+                for poi in pois:
+                    cmd = " ".join(("""plotImpacts.py -i {impactName}.json
+                    -o {impactName}_{poi} --POI {poi} {addCommands}
+                    | tee plotImpacts_{poi}.log""".format(impactName = impactName,
+                                                            poi = poi,
+                                                            addCommands = addCommands).split())
+                                    )
+                    print cmd
+                    subprocess.call([cmd], shell=True)
+                    # cmd = "plotImpacts.py -i " + impactName +".json"
+                    # cmd += " -o " + impactName + "_10perpage"
+                    # cmd += " --per-page 10"
+                    # cmd += " " + addCommands
+                    # cmd += " | tee plotImpacts_10perpage.log"
+                    # print cmd
+                    # subprocess.call([cmd], shell=True)
             else:
                 print "could not find .json file"
         else:
