@@ -7,7 +7,10 @@ import shutil
 import fnmatch
 import subprocess
 
-class helperClass(object):
+# import extension with helpful functions
+from helpfulFuncs import helpfulFuncs
+
+class helperClass(helpfulFuncs):
 
     def __init__(self):
         print("initializing helperClass")
@@ -39,7 +42,8 @@ cd -
     def insert_values(self, cmds, keyword, toinsert = "", joinwith=","):
         # print "keyword:", keyword
         # print "toinsert:", toinsert
-        if keyword in cmds:
+        toinsert = str(toinsert)
+        if keyword in cmds and not joinwith == "add":
             i = cmds.index(keyword)
             # print i
             if joinwith == "replace":
@@ -66,12 +70,13 @@ cd -
 
     def create_folder(self, folder, reset = False):
         if reset:
+            print( "resetting folder", folder)
             if os.path.exists(folder):
                 shutil.rmtree(folder)
 
         if not os.path.exists(folder):
             os.makedirs(folder) 
-
+    
     def remove_extension(self, s):
         return ".".join(s.split(".")[:-1])
 

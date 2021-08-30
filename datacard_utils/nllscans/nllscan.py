@@ -10,18 +10,16 @@ from optparse import OptionParser
 from math import fsum
 
 basedir = os.path.dirname(os.path.abspath(sys.argv[0]))
-helperpath = os.path.join(basedir, "../base")
+helperpath = os.path.join(basedir, "..", "..", "base")
 if not helperpath in sys.path:
     sys.path.append(helperpath)
 import batchConfig
-batch = batchConfig.batchConfig(queue = "short")
-helperpath += "/helpfulFuncs.py"
-if os.path.exists(helperpath):
-    helperfuncs = imp.load_source('helpfulFuncs', helperpath)
-else:
-    sys.exit("Could not load helperfuncs from %s" % helperpath)
+batch = batchConfig.batchConfig()
+
+import helperClass
+
+helper = helperClass.helperClass()
 ROOT.gROOT.SetBatch(True)
-pathToCMSSWsetup="/afs/cern.ch/work/a/abdatta/combination_v2/CMSSW_10_2_15/src/CombineHarvester/CombineTools/datacards/utilities/impact_scripts/scripts/setup.sh"
 
 
 #======================================================================
@@ -33,7 +31,7 @@ def check_workspace(pathToDatacard):
     if not os.path.exists(outputPath) or doWorkspaces:
         print "generating workspace for", pathToDatacard
         
-        bashCmd = ["source {0} ;".format(pathToCMSSWsetup)]
+        bashCmd = [helper.JOB_PREFIX]
         bashCmd.append("text2workspace.py -m 125.38 " + pathToDatacard)
         bashCmd.append("-o " + outputPath)
         print bashCmd
@@ -57,55 +55,111 @@ def check_workspace(pathToDatacard):
 
 def make_mdf_command(   datacard, nPoints, unconstrained, params, xVar,
                         yVar, bonly, suffix, additionalCmds = None):
-    
-
-#______________combine stuff_____________________________________
+    """#______________combine stuff______________________________"""
 
 
     fitresFile = "higgsCombine"
     
-    multidimfitcmd = ['combine -M MultiDimFit ' + datacard]
-    multidimfitcmd.append('--algo=grid --points=' + str(nPoints))
+    multidimfitcmd = 'combine -M MultiDimFit {}'.format(datacard).split()
+    if additionalCmds:
+
+        for cmd in additionalCmds:
+            multidimfitcmd += cmd.split()
+    multidimfitcmd += '--algo=grid --points={}'.format(nPoints).split()
     # multidimfitcmd += ' --minimizerStrategy 1 --minimizerTolerance 0.3'
-    # multidimfitcmd += ' --cminApproxPreFitTolerance=25'
-    # multidimfitcmd += ' --cminFallbackAlgo "Minuit2,migrad,0:0.3"'
-    # multidimfitcmd += ' --cminOldRobustMinimize=0'
-    # multidimfitcmd += ' --X-rtd MINIMIZER_MaxCalls=9999999'
-    multidimfitcmd.append('-m 125.38')
+    multidimfitcmd = helper.insert_values(   cmds = multidimfitcmd, 
+                                            keyword = "--cminDefaultMinimizerStrategy", 
+                                            toinsert = "0", 
+                                            joinwith="insert"
+                                        )
+    multidimfitcmd = helper.insert_values(   cmds = multidimfitcmd, 
+                                            keyword = "--cminDefaultMinimizerTolerance", 
+                                            toinsert = "1e-2", 
+                                            joinwith="insert"
+                                        )
+    multidimfitcmd = helper.insert_values(   cmds = multidimfitcmd, 
+                                            keyword = "--X-rtd", 
+                                            toinsert = "MINIMIZER_analytic", 
+                                            joinwith="insert"
+                                        )
+    multidimfitcmd = helper.insert_values(   cmds = multidimfitcmd, 
+                                            keyword = "-m", 
+                                            toinsert = "125.38", 
+                                            joinwith="insert"
+                                        )
     if "--firstPoint=0" in additionalCmds or not any("--firstPoint" in x for x in additionalCmds):
          multidimfitcmd.append('--saveWorkspace')
-    if additionalCmds:
-        multidimfitcmd.append(" ".join(additionalCmds))
+    
         
     # multidimfitcmd.append('--rMin -10 --rMax 10')
-    multidimfitcmd.append('--saveFitResult')
-    multidimfitcmd.append('--saveInactivePOI 1')
+    multidimfitcmd = helper.insert_values(   cmds = multidimfitcmd, 
+                                            keyword = "--saveFitResult", 
+                                            joinwith="insert"
+                                        )
+    multidimfitcmd = helper.insert_values(   cmds = multidimfitcmd, 
+                                            keyword = "--saveInactivePOI", 
+                                            toinsert = "1", 
+                                            joinwith="insert"
+                                        )
         
     if unconstrained:
-        multidimfitcmd.append("--redefineSignalPOIs " + ",".join(params))
+        multidimfitcmd = helper.insert_values(   cmds = multidimfitcmd, 
+                                            keyword = "--redefineSignalPOIs", 
+                                            toinsert = ",".join(params), 
+                                            joinwith=","
+                                        )
     else:
-        multidimfitcmd += ["-P " + str(x) for x in params]
+        for p in params:
+            multidimfitcmd = helper.insert_values(   cmds = multidimfitcmd, 
+                                            keyword = "-P", 
+                                            toinsert = p, 
+                                            joinwith="add"
+                                        )
     if not xVar in params and not xVar == "r":
-        multidimfitcmd.append("--saveSpecifiedNuis " + xVar)
+        multidimfitcmd = helper.insert_values(   cmds = multidimfitcmd, 
+                                            keyword = "--trackParameters", 
+                                            toinsert = xVar, 
+                                            joinwith=","
+                                        )
     if not yVar == "deltaNLL" and not yVar == "r" and not yVar in params:
-        multidimfitcmd.append("--saveSpecifiedNuis " + yVar)
+        multidimfitcmd = helper.insert_values(   cmds = multidimfitcmd, 
+                                            keyword = "--trackParameters", 
+                                            toinsert = yVar, 
+                                            joinwith=","
+                                        )
     if "r" in [xVar, yVar] and not "r" in params:
-        multidimfitcmd.append("--floatOtherPOIs 1")
+        multidimfitcmd = helper.insert_values(   cmds = multidimfitcmd, 
+                                            keyword = "--floatOtherPOIs", 
+                                            toinsert = 1, 
+                                            joinwith="insert"
+                                        )
     if bonly:
         print "will perform background-only fit"
         suffix += "_bonly"
-        multidimfitcmd.append("--setParameters r=0 --freezeParameters r")
+        multidimfitcmd = helper.insert_values(   cmds = multidimfitcmd, 
+                                            keyword = "--setParameters", 
+                                            toinsert = "r=0", 
+                                            joinwith=","
+                                        )
+        multidimfitcmd = helper.insert_values(   cmds = multidimfitcmd, 
+                                            keyword = "--freezeParameters", 
+                                            toinsert = "r", 
+                                            joinwith=","
+                                        )
         
     if not suffix == "":
-        multidimfitcmd.append("-n " + suffix)
+        multidimfitcmd = helper.insert_values(   cmds = multidimfitcmd, 
+                                            keyword = "-n", 
+                                            toinsert = suffix, 
+                                            joinwith="_"
+                                        )
         fitresFile += suffix
     else:
         fitresFile += "Test"
     mdfcmd = " ".join(multidimfitcmd)
     mdfcmd = mdfcmd.replace("  ", " ")
-    print mdfcmd
-
-    fitresFile = os.path.abspath(fitresFile + ".MultiDimFit.mH125.38.root")
+    print (mdfcmd)
+    fitresFile = os.path.abspath(fitresFile + ".MultiDimFit.mH125.root")
     return fitresFile, mdfcmd
 
 def make_script(low, up, datacard, nPoints, unconstrained, params, xVar,
@@ -127,30 +181,19 @@ def make_script(low, up, datacard, nPoints, unconstrained, params, xVar,
                                         suffix = currentSuffix, 
                                         additionalCmds = currentCmds)
     
-    lines = ["#!/bin/bash"]
-    lines.append("ulimit -s unlimited")
-    lines.append("pathToCMSSW="+pathToCMSSWsetup)
-    lines.append('if [ -f "$pathToCMSSW" ]; then')
-    lines.append('  source "$pathToCMSSW"')
-    lines.append("  cmd='{0}'".format(mdfcmd))
-    lines.append('  echo "$cmd"')
-    lines.append('  eval "$cmd"')
+    lines = [helper.JOB_PREFIX]
+    lines.append("cmd='{0}'".format(mdfcmd))
+    lines.append('echo "$cmd"')
+    lines.append('eval "$cmd"')
 
-    lines.append('else')
-    lines.append('  echo "could not find CMSSW source path!"')
-    lines.append('fi')
-    
     with open(script, "w") as output:
         output.write("\n".join(lines))
     
     return result, script
 
 def do_fits():
-    foldername = "fit_parts"+suffix
-    if os.path.exists(foldername):
-        print "resetting folder for scripts"
-        shutil.rmtree(foldername)
-    os.makedirs(foldername)
+    foldername = "fit_parts"
+    helper.create_folder(foldername, reset = True)
     base = os.getcwd()
     os.chdir(foldername)
     scripts = []
@@ -186,19 +229,16 @@ def do_fits():
         if os.path.exists(script):
             scripts.append(script)
     if len(scripts) != 0:
-        #arrayid = batch.submitArrayToBatch( scripts = scripts, 
-        #                                arrayscriptpath = "arrayJob.sh")
-    	arrayid = 0
+        # batch.runtime = 
+        arrayid = batch.submitArrayToBatch( scripts = scripts, 
+                                        arrayscriptpath = "arrayJob.sh")
     else:
         sys.exit("Unable to create any scripts!")
     
     os.chdir(base)
     
-    lines = ["#!/bin/bash"]
-    lines.append("ulimit -s unlimited")
-    lines.append("pathToCMSSW="+pathToCMSSWsetup)
-    lines.append('if [ -f "$pathToCMSSW" ]; then')
-    lines.append('  source "$pathToCMSSW"')
+    lines = [helper.JOB_PREFIX]
+
     cmds = ["python"]
     cmds += sys.argv
     indeces = [i for i,x in enumerate(cmds) if (x == "-a" or x =="--addCommand" or x == "--setXtitle" or x == "--setYtitle")]
@@ -213,29 +253,25 @@ def do_fits():
         cmds = cmds[:index] + cmds[index+2:]
     cmds.append("--directlyDrawFrom")
     # cmds.append(",".join(results))
-    cmds.append('"{0}/higgsCombine*{1}*.MultiDimFit.*.root"'.format(foldername, suffix))
+    cmds.append('"{0}/higgsCombine*.MultiDimFit.*.root"'.format(foldername))
     cmds.append("--runLocally")
     cmd = " ".join(cmds)
     lines.append("  cmd='{0}'".format(cmd))
     lines.append('  echo "$cmd"')
     lines.append('  eval "$cmd"')
-
-    lines.append('else')
-    lines.append('  echo "could not find CMSSW source path!"')
-    lines.append('fi')
     
-    mergescript = "merge_files"+suffix+".sh"
+    mergescript = "merge_files.sh"
     
     with open(mergescript,"w") as out:
         out.write("\n".join(lines))
     if os.path.exists(mergescript):
-        #mergeid = batch.submitJobToBatch(script = mergescript, jobid = arrayid)
-        mergeid = 0
+        logdir = os.path.join(os.path.dirname(mergescript),)
+        mergeid = batch.submitJobToBatch(script = mergescript, jobid = arrayid)
         sys.exit("Everything submitted! Jobids: {0} {1}".format(arrayid, mergeid))
     else:
-        sys.exit("Could not write script to merge files!")
+        sys.exit("Could not write script to merge files!") 
 
-def get_cl_value(cl, npois = None):
+def get_cl_value(cl, npois = None, ybest = None):
     """
     Find confidence level value \Delta\chi^2/2*\Delta\ln L for
     specific coverage probability. 
@@ -246,10 +282,11 @@ def get_cl_value(cl, npois = None):
     cl      -   coverage probability string (e.g. 68%)
     """
     if not npois:
-        #open workspace to get # of fitted POIs (#POIs) from ModelConfig
+        npois = 1
+        #open workspace to get ModelConfig
+
         infile = ROOT.TFile(fitresFile)
         w = infile.Get("w")
-        npois = 1
         if isinstance(w, ROOT.RooWorkspace):
             mc = w.obj("ModelConfig")
             if isinstance(mc, ROOT.RooStats.ModelConfig):
@@ -288,7 +325,7 @@ def get_cl_value(cl, npois = None):
         #check if requested coverage probability is in the dictionary
         cls = cldict[npois]
         if cl in cls:
-            return cls[cl]
+            return cls[cl] + ybest if not ybest is None else cls[cl]
         else:
             print "WARNING:\tunknown confidence level! Cannot compute errors"
     else:
@@ -395,7 +432,7 @@ def create_parabola(xmin, xmax, xbest, ybest=None):
     parabel.SetLineColor(ROOT.kBlack)
     return parabel
 
-def create_lines_from_RooFitResult(var, pathToErrors, xmin, xmax, ymin,ymax, bonly = False):
+def create_lines_from_RooFitResult(var, pathToErrors, xmin, xmax, ymin,ymax, ybest=None, bonly = False):
     clresults = {}
     style = 2
     clname = "68.27%"
@@ -414,8 +451,10 @@ def create_lines_from_RooFitResult(var, pathToErrors, xmin, xmax, ymin,ymax, bon
                 x_down = results.getVal() + results.getErrorLo()
                 x_up = results.getVal() + results.getErrorHi()
                 vals = [x_down, x_up]
+                print results.getErrorLo(), "\t", results.getErrorHi()
+                print vals
                 lines = []
-                line_hor = create_straight_line(val = get_cl_value(cl = clname, npois = 1),
+                line_hor = create_straight_line(val = get_cl_value(cl = clname, npois = 1, ybest = ybest),
                                                                 minVal = xmin,
                                                                 maxVal = xmax,
                                                                 mode = "horizontal",
@@ -471,9 +510,10 @@ def create_lines(   graph, xbest, clStyles, granularity, ybest = None,
             if isinstance(parabel, ROOT.TF1):
                 x_down = None
                 x_up = None
+                cl = get_cl_value(clname, 1, ybest)
                 if not xbest == None:
                     x_down = find_crossing( graph = parabel,
-                                            cl = get_cl_value(clname, 1), 
+                                            cl = cl, 
                                             start = xbest, 
                                             stop = xmin,
                                             granularity = granularity)
@@ -482,7 +522,7 @@ def create_lines(   graph, xbest, clStyles, granularity, ybest = None,
                     else:
                         vals.append("none")
                     x_up = find_crossing(   graph = parabel,
-                                            cl = get_cl_value(clname,1), 
+                                            cl = cl, 
                                             start = xbest, 
                                             stop = xmax,
                                             granularity = granularity)
@@ -491,7 +531,7 @@ def create_lines(   graph, xbest, clStyles, granularity, ybest = None,
                     else:
                         vals.append("none")
                     print vals
-                line_hor = create_straight_line(val = get_cl_value(cl = clname, npois = 1),
+                line_hor = create_straight_line(val = cl,
                                                 minVal = xmin,
                                                 maxVal = xmax,
                                                 mode = "horizontal",
@@ -519,9 +559,9 @@ def create_lines(   graph, xbest, clStyles, granularity, ybest = None,
     return clresults
 
 def save_output(canvas, graph, name):
-    canvas.SaveAs(name + ".pdf")
-    canvas.SaveAs(name+".png")
-    canvas.SaveAs(name + "_canvas.root")
+    canvas.Print(name + ".pdf", "pdf")
+    canvas.Print(name+".png", "png")
+    canvas.Print(name + "_canvas.root", "root")
     # graph.SaveAs(name + ".root")
 
 
@@ -532,6 +572,7 @@ def fill_graph(graph, xVals, yVals, zVals = None):
             if zVals is not None:
                 graph.SetPoint(i, xVals[i], yVals[i], zVals[i])
             else:
+                print "setting point {}: ({},{})".format(i, xVals[i], yVals[i])
                 graph.SetPoint(i, xVals[i], yVals[i])
     elif isinstance(graph, ROOT.TH1):
         for i in range(len(xVals)):
@@ -558,9 +599,68 @@ def set_titles(graph, xtitle, ytitle, ztitle = None):
         print "WARNING! Could not set axis titles!"
     graph.SetTitle("Scan of {0} over {1}".format(ytitle, xtitle))
 
+def find_parameter(bl, var):
+    if var in bl:
+        return var
+    var = "trackedParam_" + var
+    if var in bl:
+        return var
+    msg = "Could not find variable {} in TTree!".format(var)
+    msg += " Are you sure you saved it?"
+    raise KeyError(msg)
+
+def load_values(limit, xVar, yVar, nllcutoff, dim = 1):
+    xVals = []
+    yVals = []
+    nllvals = []
+    listxbest = []
+    listybest = []
+    xbest = None
+    ybest = None
+    nllbest = None
+    branchlist = [x.GetName() for x in limit.GetListOfBranches()]
+    xVar = find_parameter(bl = branchlist, var = xVar)
+    yVar = find_parameter(bl = branchlist, var = yVar)
+    for i, e in enumerate(limit):
+        x = eval("e." + xVar)
+        y = eval("e." + yVar)
+        nll = e.deltaNLL
+        print "current values: {0}, {1}, nll = {2}".format(x, y, nll)
+
+        if nll <= nllcutoff:
+            print "\tsaving values {0}, {1}".format(x, y)
+            xVals.append(x)
+            yVals.append(y)
+            nllvals.append(2*nll)
+            print("nllvals[-1]: {}".format(nllvals[-1]))
+
+        if nllbest is None or nll < nllbest:
+            xbest = xVals[-1]
+            ybest = yVals[-1]
+            nllbest = nllvals[-1]
+    if yVar == "deltaNLL":
+        yVals = nllvals
+        ybest = nllbest
+    # if len(listxbest) == 0:
+    #     xbest = None
+    # else:
+    #     xbest = fsum(listxbest)/len(listxbest)
+    # if len(listybest) == 0:
+    #     ybest = None
+    # else:
+    #     ybest = fsum(listybest)/len(listybest)
+    print "found best fit point at (x, y) = ({0}, {1})".format(xbest, ybest)
+    bestvalues = [xbest, ybest]
+    if dim == 1:
+        return xVals, yVals, bestvalues
+    elif dim == 2:
+        return xVals, yVals, nllvals, bestvalues
+    else:
+        raise ValueError("Scans are defined for dimensions 1 and 2!")
+
 def do1DScan(   limit, xVar, yVar, outputDirectory, suffix, granularity,
                 xtitle = None, ytitle = None, pathToErrors = None,
-                doProfile = False, bonly = False):
+                doProfile = False, bonly = False, nllcutoff = 10):
     cls = { "68.27%"    : 2,  
             # "95%"       : 3
             }       
@@ -571,43 +671,20 @@ def do1DScan(   limit, xVar, yVar, outputDirectory, suffix, granularity,
     if ytitle == "deltaNLL":
         ytitle = '2#Delta NLL'
     filename = "nllscan_{0}_{1}{2}".format(xtitle,ytitle, suffix)
-    filename = helperfuncs.treat_special_chars(string = filename)
+    filename = helper.treat_special_chars(string = filename)
     filename = outputDirectory + "/" + filename
     if bonly:
         filename += "_bonly"
     outfile = ROOT.TFile(filename + ".root", "RECREATE")
-    xVals = []
-    yVals = []
-    listxbest = []
-    listybest = []
-    for i, e in enumerate(limit):
-        x = eval("e." + xVar)
-        y = eval("e." + yVar)
-        # print "current values: {0}, {1}".format(x, y)
-        
-        if yVar == "deltaNLL":
-            if y >= 0 and y < 10:
-                # print "\tsaving values {0}, {1}".format(x, 2*y)
-                xVals.append(x)
-                yVals.append(2*y)
-        else:
-            xVals.append(x)
-            yVals.append(y)
-            
-        if y == 0:
-            listxbest.append(xVals[-1])
-            listybest.append(yVals[-1])
-    
-    if len(listxbest) == 0:
-        xbest = None
-    else:
-        xbest = fsum(listxbest)/len(listxbest)
-    if len(listybest) == 0:
-        ybest = None
-    else:
-        ybest = fsum(listybest)/len(listybest)
-    print "found best fit point at (x, y) = ({0}, {1})".format(xbest, ybest)
-    
+    xVals, yVals, bestvalues = load_values(limit = limit, xVar = xVar, 
+                                            yVar = yVar, nllcutoff = nllcutoff)
+    xbest = bestvalues[0]
+    ybest = bestvalues[1]
+    # if not ybest is None and ybest != 0 and yVar == "deltaNLL":
+    #     print "rebasing y values to ", ybest
+    #     yVals = [y - ybest for y in yVals]
+    print xVals
+    print yVals
     # c = helperfuncs.getCanvas()
     xmin = min(xVals)
     xmax = max(xVals)
@@ -621,10 +698,12 @@ def do1DScan(   limit, xVar, yVar, outputDirectory, suffix, granularity,
         graph = ROOT.TGraph(len(xVals))
     fill_graph(graph = graph, xVals= xVals, yVals = yVals)
     
-    leg = helperfuncs.getLegend()
+    leg = helper.getLegend()
     set_titles(graph = graph, xtitle = xtitle, ytitle = ytitle)
     if isinstance(graph, ROOT.TGraph):
         graph.Sort()
+    for i in range(graph.GetN()):
+        print("{}: ({}, {})".format(i, graph.GetX()[i], graph.GetY()[i]))
     graph.Draw()
     ymin = graph.GetYaxis().GetXmin()
     if isinstance(graph, ROOT.TGraph):
@@ -643,6 +722,7 @@ def do1DScan(   limit, xVar, yVar, outputDirectory, suffix, granularity,
                                                     pathToErrors = pathToErrors,
                                                     xmin = xmin, xmax = xmax,
                                                     ymin = ymin, ymax = ymax,
+                                                    ybest = ybest,
                                                     bonly = bonly)
         if len(results) == 0:
             results = create_lines( graph = graph, xbest = xbest, 
@@ -697,7 +777,7 @@ def do1DScan(   limit, xVar, yVar, outputDirectory, suffix, granularity,
     
 def do2DScan(   limit, xVar, yVar, outputDirectory, suffix, 
                 xtitle= None, ytitle = None, pathToErrors = None,
-                doProfile = False, npois = None):
+                doProfile = False, npois = None, nllcutoff = 10):
     cls = { "68.27%"    : 2,  #68%
             "95%"       : 3}  #95%
     if xtitle == None:
@@ -705,8 +785,8 @@ def do2DScan(   limit, xVar, yVar, outputDirectory, suffix,
     if ytitle == None:
         ytitle = yVar
     filename = ("nllscan_2D_{0}_{1}{2}").format(xtitle,ytitle, suffix)
-    filename = helperfuncs.treat_special_chars(string = filename)
-    filename = outputDirectory + "/" + filename
+    filename = helper.treat_special_chars(string = filename)
+    filename = os.path.join(outputDirectory, filename)
     outfile = ROOT.TFile(filename+".root", "RECREATE")
     xVals = []
     yVals = []
@@ -720,8 +800,8 @@ def do2DScan(   limit, xVar, yVar, outputDirectory, suffix,
         z = e.deltaNLL
         #print "current values: {0}, {1}".format(x, y)
 
-        if z >= 0 and z < 10:
-            #print "saving values {0}, {1}".format(x, 2*y)
+        if z >= 0 and z < nllcutoff:
+            print "saving values {0}, {1}".format(x, 2*y)
             xVals.append(x)
             yVals.append(y)
             zVals.append(2*z)
@@ -765,7 +845,7 @@ def do2DScan(   limit, xVar, yVar, outputDirectory, suffix,
     graph.Write("nllscan")
     bestfit.Draw("P")
     bestfit.Write("bestfit")
-    label = helperfuncs.getLegend()
+    label = helper.getLegend()
     label.AddEntry(bestfit, "Best Fit Value", "p")
     contours = []
     for cl in cls:
@@ -791,11 +871,11 @@ def do2DScan(   limit, xVar, yVar, outputDirectory, suffix,
     outfile.Close()
 
 def merge_files(filelist):
-    cmd = "hadd -f merged_combine_output"+suffix+".root " + " ".join(filelist)
+    cmd = "hadd -f merged_combine_output.root " + " ".join(filelist)
     print cmd
     subprocess.call([cmd], shell = True)
-    if os.path.exists("merged_combine_output"+suffix+".root"):
-        return os.path.abspath("merged_combine_output"+suffix+".root")
+    if os.path.exists("merged_combine_output.root"):
+        return os.path.abspath("merged_combine_output.root")
     else:
         sys.exit("Could not produce merged combine output file!")
 def intact_root_file(infilepath):
@@ -803,6 +883,16 @@ def intact_root_file(infilepath):
     if f.IsOpen() and not f.IsZombie() and not f.TestBit(ROOT.TFile.kRecovered):
         return True
     return False
+
+def check_parameters_in_workspace(workspacepath, paramlist):
+    infile = ROOT.TFile(workspacepath)
+    w = infile.Get("w")
+    if isinstance(w, ROOT.RooWorkspace):
+        pars = w.allVars().contentsString().split(",")
+        print pars
+        if not all(x in pars for x in paramlist):
+            sys.exit("ERROR: Not all parameters to scan exist in the given workspace in '%s'!" % workspacepath)
+
 #=======================================================================
 
 if __name__ == '__main__':
@@ -824,7 +914,11 @@ if __name__ == '__main__':
     parser.add_option("--scanUnconstrained", dest = "unconstrained", action = "store_true", default = False, help = "Drop constraints for scaned parameters")
     parser.add_option("--doWorkspaces", dest = "doWorkspaces", action = "store_true", default = False, help = "Force creation of workspaces even if they exist already (default = false)")
     parser.add_option("-p", "--paramsToScan", metavar = "par1,par2,...", dest = "paramsToScan", help = "scan these parameters. Default is scanning x (and y if '--scan2D'). Can be used multiple times", action = "append")
-    parser.add_option("--runLocally", help = "do not perform fits on batch system (default = false)", dest = "runLocally", action = "store_true", default = False)
+    parser.add_option(  "--runLocally", "-r",
+                         help = "do not perform fits on batch system (default = false)", 
+                         dest = "runLocally", 
+                         action = "store_true", 
+                         default = False)
     parser.add_option(  "-g", "--granularity",
                         help = "set granularity for cl crossing scan in 1D NLL scan (default = 1e-3)",
                         type = "float",
@@ -851,6 +945,12 @@ if __name__ == '__main__':
                         help = "in 2D contour, draw cl level for this number of pois",
                         dest = "npois",
                         type = "int")
+    parser.add_option(  "--nllcutoff",
+                        help = "use this value as cut off for the negative log likelihood",
+                        dest = "nllcutoff",
+                        type = "float",
+                        default = 10
+    )
     (options, args) = parser.parse_args()
     
     directDrawPath = options.directDraw
@@ -869,6 +969,7 @@ if __name__ == '__main__':
     pathToErrors = options.pathToErrors
     doProfile = options.doProfile
     npois = options.npois
+    nllcutoff = options.nllcutoff
     
     if pathToErrors is not None:
         if not os.path.exists(pathToErrors):
@@ -924,6 +1025,9 @@ if __name__ == '__main__':
         if yVar != "deltaNLL" and scan2D:
             params.append(yVar) 
     
+    check_parameters_in_workspace(workspacepath = datacard, 
+                                    paramlist = params)
+
     suffix = options.suffix
     outputDirectory = os.path.abspath(options.outputDirectory)
     if not os.path.exists(outputDirectory):
@@ -946,8 +1050,8 @@ if __name__ == '__main__':
         if "*" in directDrawPath or "?" in directDrawPath:
             filelist = glob.glob(directDrawPath)
             if len(filelist) == 1:
-                subprocess.call(["cp {0} ./merged_combine_output"+suffix+".root".format(filelist[-1])], shell= True)
-                fitresFile = "merged_combine_output"+suffix+".root"
+                subprocess.call(["cp {0} ./merged_combine_output.root".format(filelist[-1])], shell= True)
+                fitresFile = "merged_combine_output.root"
             else:
                 fitresFile = merge_files(filelist = filelist)
         elif "," in directDrawPath:
@@ -996,7 +1100,8 @@ if __name__ == '__main__':
                                 ytitle = ytitle,
                                 pathToErrors = pathToErrors,
                                 doProfile = doProfile,
-                                npois = npois)
+                                npois = npois,
+                                nllcutoff = nllcutoff)
                 else:
                     do1DScan(   limit, xVar = xVar, yVar = yVar, 
                                 outputDirectory = outputDirectory, 
@@ -1006,7 +1111,8 @@ if __name__ == '__main__':
                                 ytitle = ytitle,
                                 pathToErrors = pathToErrors,
                                 doProfile = doProfile,
-                                bonly = bonly)
+                                bonly = bonly,
+                                nllcutoff = nllcutoff)
     
     
             else:
