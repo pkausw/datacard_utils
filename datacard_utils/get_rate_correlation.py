@@ -120,7 +120,7 @@ def parse_arguments():
 
 def get_rate_evolution(harvester, fit):
     parameters = fit.floatParsFinal().contentsString().split(",")
-    rate = harvester.GetRate("")
+    rate = harvester.GetRate()
     rate_dict = harvester.RateEvolution(fit)
     return rate_dict
         
