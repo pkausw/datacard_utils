@@ -223,6 +223,7 @@ def generate_scripts(outpath, files, template, script_name, prefix,\
     print("\n".join(cmds))
     arrayscriptpath = "arrayJobs_{}.sh".format(prefix)
     arrayscriptpath = os.path.join(srcpath, arrayscriptpath)
+    batch.runtime = 6*60*60
     batch.submitArrayToBatch(scripts = cmds, arrayscriptpath = arrayscriptpath)
     
         
