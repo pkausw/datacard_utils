@@ -550,7 +550,7 @@ class DrawHistograms:
         scaling maximal and minimal y value for better readability
         """
         if self.logoption:
-            firstHist.GetYaxis().SetRangeUser(self.yMinMax/10000, self.yMax*1000)
+            firstHist.GetYaxis().SetRangeUser(self.yMinMax/10, self.yMax*1000)
             ROOT.gPad.SetLogy(1)
         else:
             firstHist.GetYaxis().SetRangeUser(0.01, self.yMax*1.6)
@@ -777,9 +777,10 @@ class DrawHistograms:
                 self.yMax = max(hist.GetBinContent(hist.GetMaximumBin()), self.yMax)
             if hist.GetBinContent(hist.GetMaximumBin()) > 0:
                 if self.shape and hist.Integral(self.integralOption)!=0:
-                    self.yMinMax = min(hist.GetBinContent(hist.GetMaximumBin())/hist.Integral(self.integralOption), self.yMinMax)
+                    self.yMinMax = min(hist.GetBinContent(hist.GetMinimumBin())/hist.Integral(self.integralOption), self.yMinMax)
                 else:
-                    self.yMinMax = min(hist.GetBinContent(hist.GetMaximumBin()), self.yMinMax)
+                    self.yMinMax = min(hist.GetBinContent(hist.GetMinimumBin()), self.yMinMax)
+        # self.yMinMax = max(self.yMinMax, 1e-1)
 
     def normalizePlot(self, PlotHist):
 
