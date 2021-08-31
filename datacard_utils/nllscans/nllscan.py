@@ -188,7 +188,7 @@ def make_script(low, up, datacard, nPoints, unconstrained, params, xVar,
 
     with open(script, "w") as output:
         output.write("\n".join(lines))
-    
+    script = os.path.abspath(script)
     return result, script
 
 def do_fits():
