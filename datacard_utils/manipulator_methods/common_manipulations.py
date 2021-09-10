@@ -156,7 +156,9 @@ class CommonManipulations(object):
             uncertainties = lumi_uncertainties.get(e, {})
             for unc in uncertainties:
                 value = uncertainties[unc]
-                harvester.cp().era([e])\
+                # exclude data_CR template from FH here
+                print(harvester.cp().process(["^(?!(data_.*)).*"]).process_set())
+                harvester.cp().process(["^(?!(data_.*)).*"]).era([e])\
                     .AddSyst(harvester, unc, "lnN", ch.SystMap()(value))
             if len(uncertainties) == 0:
                 print(("WARNING: did not find uncertainties for era '{}'"\
