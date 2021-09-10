@@ -100,6 +100,9 @@ class batchConfig(object):
             self.jobmode_ = optionsdict["jobmode"]
         if "subopts" in optionsdict:
             self.subopts_ = optionsdict["subopts"]
+        
+        self.__dry_run = False
+        self.__verbosity = 0
 
     def addhost(self, hostkeyword, dictionary):
         """
@@ -169,7 +172,24 @@ class batchConfig(object):
         else:
             self.addoption(optionsstring = s)
 
+    @property
+    def dry_run(self):
+        """return status of dry_run flag. If try, script are generated but not submitted
 
+        Returns:
+            bool: dry_run is True or False
+        """
+        return self.__dry_run
+    @dry_run.setter
+    def dry_run(self, val):
+        if isinstance(val, bool):
+            if self.__verbosity >= 10:
+                print("="*130)
+                print("Will set dry_run to '{}'".format(val))
+            self.__dry_run = val
+        else:
+            print("Cannot set dry_run to '{}': Input must be bool!".format(val))
+            print("Dry_run stays with '{}'".format(self.__dry_run))
     @property
     def hostname(self):
         """return hostname """
@@ -426,22 +446,28 @@ class batchConfig(object):
             command.append(arrayscriptpath)
         
         # submitting
-        print "command:", command
-        a = subprocess.Popen(command, stdout=subprocess.PIPE,stderr=subprocess.STDOUT,stdin=subprocess.PIPE)
-        output = a.communicate()[0]
-        jobidstring = output
-        if len(jobidstring)<2:
-            sys.exit("something did not work with submitting the array job")
-        
-        # extracting jobid
-        try:
-            jobidint = int(output.split(".")[0])
-        except:
-            sys.exit("something went wrong with calling condor_submit command, submission of jobs was not succesfull")
-        submittime=submitclock.RealTime()
-        print "submitted job", jobidint, " in ", submittime
-        if hold:
-            self.setupRelease(jobid, jobidint)
+        jobidint = []
+        if not self.__dry_run:
+            print "command:", command
+            a = subprocess.Popen(command, stdout=subprocess.PIPE,stderr=subprocess.STDOUT,stdin=subprocess.PIPE)
+            output = a.communicate()[0]
+            jobidstring = output
+            if len(jobidstring)<2:
+                sys.exit("something did not work with submitting the array job")
+            
+            # extracting jobid
+            try:
+                jobidint = int(output.split(".")[0])
+            except:
+                sys.exit("something went wrong with calling condor_submit command, submission of jobs was not succesfull")
+            submittime=submitclock.RealTime()
+            print "submitted job", jobidint, " in ", submittime
+            if hold:
+                self.setupRelease(jobid, jobidint)
+        else:
+            print("="*130)
+            print( "DRY-RUN: command would be {}".format(" ".join(command)))
+            print("="*130)
         return [jobidint]
     
     def submitJobToBatch(self, script, jobid = None):
@@ -475,26 +501,31 @@ class batchConfig(object):
             cmdlist.append(script)
         jobids = []
         #command = " ".join(cmdlist)
-        print "command:", cmdlist
-        a = subprocess.Popen(cmdlist, stdout=subprocess.PIPE,stderr=subprocess.STDOUT,stdin=subprocess.PIPE)
-        output = a.communicate()[0]
-        #print output
-        if self.jobmode_ == "HTC":
-            try:
-                jobidint = int(output.split(".")[0])
-            except:
-                sys.exit("something went wrong with calling condor_submit command, submission of jobs was not succesfull")
-        else:
-            jobidstring = output.split()
-            for jid in jobidstring:
-                if jid.isdigit():
-                    jobidint=int(jid)
-                    continue
+        if not self.__dry_run:
+            print "command:", cmdlist
+            a = subprocess.Popen(cmdlist, stdout=subprocess.PIPE,stderr=subprocess.STDOUT,stdin=subprocess.PIPE)
+            output = a.communicate()[0]
+            #print output
+            if self.jobmode_ == "HTC":
+                try:
+                    jobidint = int(output.split(".")[0])
+                except:
+                    sys.exit("something went wrong with calling condor_submit command, submission of jobs was not succesfull")
+            else:
+                jobidstring = output.split()
+                for jid in jobidstring:
+                    if jid.isdigit():
+                        jobidint=int(jid)
+                        continue
 
-        print "this job's ID is", jobidint
-        jobids.append(jobidint)
-        if hold:
-            self.setupRelease(jobid, jobidint)
+            print "this job's ID is", jobidint
+            jobids.append(jobidint)
+            if hold:
+                self.setupRelease(jobid, jobidint)
+        else:
+            print("="*130)
+            print( "DRY-RUN: command would be {}".format(" ".join(cmdlist)))
+            print("="*130)
         return jobids
         
     def do_qstat(self, jobids):
