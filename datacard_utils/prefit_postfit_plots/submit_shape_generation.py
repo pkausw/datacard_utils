@@ -1,6 +1,7 @@
 import os
 import sys
 import stat
+import ROOT
 
 thisdir = os.path.realpath(os.path.dirname(__file__))
 basedir = os.path.join(thisdir, "..", "utilities", "base")
@@ -75,6 +76,17 @@ postfit_template += """
     fi
         
 """
+
+def check_fitobject(fit, path):
+    rfile = ROOT.TFile.Open(path)
+    if not rfile.IsOpen() or rfile.IsZombie() or rfile.TestBit(ROOT.TFile.kRecovered):
+        raise ValueError("File '{}' is broken!".format(path))
+    # next, test fit object itself
+    f = rfile.Get(fit)
+    if not isinstance(f, ROOT.RooFitResult):
+        raise ValueError("Could not load '{}' from '{}'".format(fit, path))
+    if not ((f.covQual() == 3 or f.covQual() == -1) and f.status() == 0 ):
+        raise ValueError("Fit in '{}' in file '{}' is broken, please check!".format(fit, path))
 
 def parse_arguments():
     usage = """
@@ -164,6 +176,17 @@ def parse_arguments():
                             """.split()
                         )
         )
+    parser.add_option("-t", "--runtime",
+                        help= " ".join(
+                            """
+                            request this run time (in seconds) for the post-fit
+                            generation. Default is the standard run time of the
+                            HTCondor schedd
+                            """.split()
+                        ),
+                        type="int",
+                        dest = "runtime"
+        )
     options, files = parser.parse_args()
 
     if not options.skip_postfit and not options.fitresult:
@@ -177,6 +200,7 @@ def parse_arguments():
         path, fitobject = options.fitresult.split(":")
         path = os.path.abspath(path)
         if os.path.exists(path):
+            check_fitobject(fitobject, path)
             options.fitresult = ":".join([path, fitobject])
         else:
             parser.error("Could not find file '{}'".format(path))
@@ -195,7 +219,7 @@ def find_datacard(workspace):
     
 
 def generate_scripts(outpath, files, template, script_name, prefix,\
-                            additional_options = None):
+                            additional_options = None, runtime = None):
     srcpath = os.path.join(outpath, "temp")
     if not os.path.exists(srcpath):
         os.mkdir(srcpath)
@@ -223,7 +247,8 @@ def generate_scripts(outpath, files, template, script_name, prefix,\
     print("\n".join(cmds))
     arrayscriptpath = "arrayJobs_{}.sh".format(prefix)
     arrayscriptpath = os.path.join(srcpath, arrayscriptpath)
-    batch.runtime = 6*60*60
+    if runtime:
+        batch.runtime = runtime
     batch.submitArrayToBatch(scripts = cmds, arrayscriptpath = arrayscriptpath)
     
         
@@ -246,6 +271,7 @@ def main(*files, **kwargs):
     outpath = kwargs.get("outputpath", ".")
     fitresult = kwargs.get("fitresult")
     nsamples = kwargs.get("nsamples", 300)
+    runtime = kwargs.get("runtime")
     if not os.path.exists(outpath):
         os.makedirs(outpath)
     outpath = os.path.abspath(outpath)
@@ -262,7 +288,8 @@ def main(*files, **kwargs):
                             template = postfit_template, 
                             script_name = "generate_postfit_shapes.sh",
                             prefix = "shapes_postfit",
-                            additional_options=additional_cmds    
+                            additional_options=additional_cmds,
+                            runtime = runtime  
                         )
     
 
