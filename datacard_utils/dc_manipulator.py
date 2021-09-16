@@ -119,7 +119,8 @@ def remove_minor_bkgs(harvester):
             for b in bin_set:
                 # drop minor processes for tHq
                 print("pruning tHq")
-                processes = harvester.cp().era([era]).channel([channel]).bin([b])\
+                this_harvester = harvester.cp().era([era]).channel([channel]).bin([b])
+                processes = this_harvester.cp()\
                                 .process(["tHq.*"]).process_set()
                 print(("pruning processes: {}".format(", ".join(processes))))
                 val_interface.drop_small_processes(harvester = harvester,
@@ -130,7 +131,7 @@ def remove_minor_bkgs(harvester):
 
                 # drop minor processes for tHW
                 print("pruning tHW")
-                processes = harvester.cp().era([era]).channel([channel]).bin([b])\
+                processes = this_harvester.cp()\
                                 .process(["tHW.*"]).process_set()
                 print(("pruning processes: {}".format(", ".join(processes))))
                 val_interface.drop_small_processes(harvester = harvester,
@@ -142,15 +143,37 @@ def remove_minor_bkgs(harvester):
                 # drop minor backgrounds, but protect tH processes
                 # first, select all backgrounds that are not tH processes, 
                 # then do check with this set of processes
-                processes = harvester.cp().era([era]).channel([channel]).bin([b])\
-                                .backgrounds().process(["tH(q|W).*"], False)\
-                                    .process_set()
+                pure_bkg_harvester = this_harvester.cp()\
+                                .backgrounds().process(["tH(q|W).*"], False)
+                processes = pure_bkg_harvester.process_set()
                 print(("pruning processes: {}".format(", ".join(processes))))
+                # introduce special case for FH: subtraction for multijet estimation
+                # doesn't work correctly if harvester is initialized with .txt file
+                # Therefore, we need to subtract the CR templates by hand
+
+                # introduce total yield
+                tot_yield = None
+                if any("FH" in x.upper() for x in [channel, b]):
+                    print("Will check for FH hack!")
+                    rate_data_CR = pure_bkg_harvester.cp().process(["data_CR"]).GetRate()
+                    rate_other_CR = pure_bkg_harvester.cp().\
+                                    process(["data_CR"], False).process([".*_CR"]).GetRate()
+                    rate_sr = pure_bkg_harvester.cp().\
+                                    process([".*_CR"], False).GetRate()
+                    # if the yield of the MC templates in the CR is positive, 
+                    # the minus sign is missing -> compute the yield by hand
+                    if rate_other_CR > 0:
+                        print("Calculating total yield manually")
+                        print("\tyield(SR): {}".format(rate_sr))
+                        print("\tyield(data CR): {}".format(rate_data_CR))
+                        print("\tyield(other CR): {}".format(rate_other_CR))
+                        tot_yield = rate_sr + rate_data_CR - rate_other_CR
                 val_interface.drop_small_processes(harvester = harvester,
                                                     era = [era],
                                                     chan = [channel],
                                                     bins = [b],
-                                                    processes = processes)
+                                                    processes = processes,
+                                                    tot_yield = tot_yield)
 
                 print(("="*130))
                 print("after process pruning")
