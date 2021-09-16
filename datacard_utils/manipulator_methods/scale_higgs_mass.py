@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import sys
 import ROOT
@@ -24,7 +26,7 @@ except:
             Are you sure you installed it?""".split())
     raise ImportError(msg)
 
-from common_manipulations import CommonManipulations
+from .common_manipulations import CommonManipulations
 
 
 class MassManipulator(object):
@@ -63,10 +65,10 @@ class MassManipulator(object):
                     par = "ttH_13TeV"
                     baseval = source.function(par).getVal()   
                 else:
-                    print("Could not find '{}' in file '{}:{}'"\
-                        .format(e, path, ws_name))
-                    print("Will not generate lines for object '{}'"\
-                        .format(e))
+                    print(("Could not find '{}' in file '{}:{}'"\
+                        .format(e, path, ws_name)))
+                    print(("Will not generate lines for object '{}'"\
+                        .format(e)))
                     continue
     
             line = " ".join([par, "extArg", ":".join([path, ws_name])])
@@ -91,11 +93,11 @@ class MassManipulator(object):
         wBR.var("MH").setVal(basemass)
         wXS.var("MH").setVal(basemass)
         xs_procs=[x+"_13TeV" for x in self.productions]
-        print("xs_procs: {}".format(xs_procs))
+        print(("xs_procs: {}".format(xs_procs)))
         lines = self.GenerateScalingLine( objects = xs_procs, ws_name = "xs_13TeV",
                                     path = self.xs_path, source = wXS, wildcard = "{}_*")
         xs_procs=[x+"_13TeV" for x in self.productions_no_decays]
-        print("xs_procs: {}".format(xs_procs))
+        print(("xs_procs: {}".format(xs_procs)))
         lines += self.GenerateScalingLine( objects = xs_procs, ws_name = "xs_13TeV",
                                     path = self.xs_path, source = wXS, wildcard = "{}*")
         lines += self.GenerateScalingLine( objects = self.decays, ws_name = "br",
@@ -154,7 +156,7 @@ class MassManipulator(object):
                 harvester = f
             self.load_decays_and_procs(harvester)
             lines = self.MassScaling(basemass = self.basemass)
-            print("\n".join(lines))
+            print(("\n".join(lines)))
             if self.apply:
                 param_list = harvester.cp().syst_type(["rateParam", "extArg"]).syst_name_set()
                 print(param_list)

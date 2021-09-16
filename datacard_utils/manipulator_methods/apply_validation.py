@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import sys
 import ROOT
@@ -18,8 +20,8 @@ except:
 
 from optparse import OptionParser, OptionGroup
 from subprocess import call
-from nuisance_manipulator import NuisanceManipulator
-from process_manipulator import ProcessManipulator
+from .nuisance_manipulator import NuisanceManipulator
+from .process_manipulator import ProcessManipulator
 
 ROOT.TH1.AddDirectory(False)
 
@@ -45,11 +47,11 @@ class ValidationInterface(ProcessManipulator):
     def verbosity(self, val):
         try:
             verbo_level = int(val)
-            print("setting verbosity to level '{}'".format(verbo_level))
+            print(("setting verbosity to level '{}'".format(verbo_level)))
             self.__debug = verbo_level
         except:
-            print("Could not convert value '{}' to integer!".format(val))
-            print("Verbosity level will stay at '{}'".format(self.verbosity))
+            print(("Could not convert value '{}' to integer!".format(val)))
+            print(("Verbosity level will stay at '{}'".format(self.verbosity)))
 
     @property
     def jsonpath(self):
@@ -67,7 +69,7 @@ class ValidationInterface(ProcessManipulator):
                     print(s)
 
             else:
-                print("ERROR: file '{}' does not exist!".format(path))
+                print(("ERROR: file '{}' does not exist!".format(path)))
         else:
             print("ERROR: path to validation json has to be a string!")
     
@@ -84,7 +86,7 @@ class ValidationInterface(ProcessManipulator):
                 print("Will keep small signals")
             self.__do_smallSigCut = val
         else:
-            print("Could not set 'remove_small_signals' to '{}'".format(val))
+            print(("Could not set 'remove_small_signals' to '{}'".format(val)))
             print("Value has to be bool")
 
     @property
@@ -96,9 +98,9 @@ class ValidationInterface(ProcessManipulator):
             fvalue = float(value)
             self.__bkg_threshold = fvalue
         except:
-            print("could not convert '{}' to float!".format(fvalue))
-            print("Background threshold will stay at '{}'"\
-                    .format(self.background_threshold))
+            print(("could not convert '{}' to float!".format(fvalue)))
+            print(("Background threshold will stay at '{}'"\
+                    .format(self.background_threshold)))
 
     @property
     def remove_small_backgrounds(self):
@@ -113,7 +115,7 @@ class ValidationInterface(ProcessManipulator):
                 print("Will keep small backgrounds")
             self.__do_smallBkgCut = val
         else:
-            print("Could not set 'remove_small_backgrounds' to '{}'".format(val))
+            print(("Could not set 'remove_small_backgrounds' to '{}'".format(val)))
             print("Value has to be bool")
 
     @property
@@ -154,15 +156,15 @@ class ValidationInterface(ProcessManipulator):
     def ratify(self, harvester, change_dict, eras = [".*"]):
         for unc in change_dict:
             if self.verbosity > 5:
-                print("Uncertainty: {}".format(unc))
+                print(("Uncertainty: {}".format(unc)))
             dict_unc = change_dict[unc]
             for channel in dict_unc:
                 if self.verbosity > 5:
-                    print("\tChannel: {}".format(channel))
+                    print(("\tChannel: {}".format(channel)))
                 dict_chan = dict_unc[channel]
                 for process in dict_chan:
                     if self.verbosity > 5:
-                        print("\t\tProcess: {}".format(process))
+                        print(("\t\tProcess: {}".format(process)))
                     era_harvester = harvester.cp().era(eras)
                     vals = self.load_rate_values(harvester = era_harvester,
                                                 uncertainty = unc,
@@ -191,8 +193,8 @@ class ValidationInterface(ProcessManipulator):
                                 ForEachSyst(lambda x: x.set_value_d(vals[1]))
                         else:
                             print("Detected uncertainty with less than 0.1% yield effect!")
-                            print("will drop '{}' for process '{}/{}'"\
-                                    .format(unc, channel, process))
+                            print(("will drop '{}' for process '{}/{}'"\
+                                    .format(unc, channel, process)))
                             # self.__np_manipulator.debug = 3
                             self.__np_manipulator.to_remove = {unc: [str(process)]}
                             self.__np_manipulator.remove_nuisances_from_procs(
@@ -200,9 +202,9 @@ class ValidationInterface(ProcessManipulator):
                                                     bins = [str(channel)],
                                                     eras = eras)
                     else:
-                        print("="*130)
-                        print("Could not find uncertainty '{}' in '{}/{}'".\
-                                format(unc, channel, process))
+                        print(("="*130))
+                        print(("Could not find uncertainty '{}' in '{}/{}'".\
+                                format(unc, channel, process)))
 
                     # harvester.PrintSysts()
                     # sys.exit()
@@ -213,12 +215,12 @@ class ValidationInterface(ProcessManipulator):
                             channels = [".*"], bins = [".*"]):
         if self.verbosity >= 50:
             print("parameters for dropping processes:")
-            print("\teras: {}".format(", ".join(eras)))
-            print("\tchannels: {}".format(", ".join(channels)))
-            print("\tbins: {}".format(", ".join(bins)))
-            print("\tchange_dict: \n{}".format(json.dumps(change_dict, indent=4)))
+            print(("\teras: {}".format(", ".join(eras))))
+            print(("\tchannels: {}".format(", ".join(channels))))
+            print(("\tbins: {}".format(", ".join(bins))))
+            print(("\tchange_dict: \n{}".format(json.dumps(change_dict, indent=4))))
         for chan in change_dict:
-            to_drop = change_dict[chan].keys()
+            to_drop = list(change_dict[chan].keys())
             
             bins = [str(chan)]
             self.drop_all_processes(harvester = harvester, to_drop = to_drop,
@@ -230,9 +232,9 @@ class ValidationInterface(ProcessManipulator):
         harvester.SetFlag("filters-use-regex", True)
         if self.verbosity >= 50:
             print("parameters for dropping processes:")
-            print("\teras: {}".format(", ".join(eras)))
-            print("\tchannels: {}".format(", ".join(channels)))
-            print("\tbins: {}".format(", ".join(bins)))
+            print(("\teras: {}".format(", ".join(eras))))
+            print(("\tchannels: {}".format(", ".join(channels))))
+            print(("\tbins: {}".format(", ".join(bins))))
         # first, collect the channels and eras present in the harvester
         # instance to avoid double matching of bins later
         channels = harvester.cp().channel(channels).channel_set()
@@ -260,9 +262,9 @@ class ValidationInterface(ProcessManipulator):
         harvester.SetFlag("filters-use-regex", True)
         if self.verbosity >= 50:
             print("input to 'apply_validation':")
-            print("\teras: {}".format(", ".join(eras)))
-            print("\tchannels: {}".format(", ".join(channels)))
-            print("\tbins: {}".format(", ".join(bins)))
+            print(("\teras: {}".format(", ".join(eras))))
+            print(("\tchannels: {}".format(", ".join(channels))))
+            print(("\tbins: {}".format(", ".join(bins))))
         if isinstance(self.validation_dict, dict):
             if "smallShapeEff" in self.validation_dict and self.__do_smallShapeEff:
                 if self.verbosity > 15:

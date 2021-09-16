@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import sys
 import ROOT
@@ -18,7 +20,7 @@ except:
 
 from optparse import OptionParser, OptionGroup
 from subprocess import call
-from nuisance_manipulator import NuisanceManipulator
+from .nuisance_manipulator import NuisanceManipulator
 
 ROOT.TH1.AddDirectory(False)
 
@@ -47,11 +49,11 @@ class STXSModifications(object):
     def verbosity(self, val):
         try:
             verbo_level = int(val)
-            print("setting verbosity to level '{}'".format(verbo_level))
+            print(("setting verbosity to level '{}'".format(verbo_level)))
             self.__debug = verbo_level
         except:
-            print("Could not convert value '{}' to integer!".format(val))
-            print("Verbosity level will stay at '{}'".format(self.verbosity))
+            print(("Could not convert value '{}' to integer!".format(val)))
+            print(("Verbosity level will stay at '{}'".format(self.verbosity)))
 
     @property
     def migration_dict(self):
@@ -61,7 +63,7 @@ class STXSModifications(object):
         if isinstance(input_dict, dict):
             if self.verbosity >= 10:
                 print("new migration dictionary:")
-                print(json.dumps(input_dict, indent=4))
+                print((json.dumps(input_dict, indent=4)))
             self.__migration_dict = input_dict
         else:
             s = " ".join("""Error: input for removal_dict 
@@ -82,7 +84,7 @@ class STXSModifications(object):
         if isinstance(input_dict, dict):
             if self.verbosity >= 10:
                 print("new removal dictionary:")
-                print(json.dumps(input_dict, indent=4))
+                print((json.dumps(input_dict, indent=4)))
             self.__removal_dict = input_dict
         else:
             s = " ".join("""Error: input for removal_dict 
@@ -123,8 +125,8 @@ class STXSModifications(object):
                 if value == 0:
                     continue
                 proc_wildcard = str(process+".*")
-                print("Adding uncertainty '{}' to processes '{}'"\
-                        .format(unc, proc_wildcard))
+                print(("Adding uncertainty '{}' to processes '{}'"\
+                        .format(unc, proc_wildcard)))
                 harvester.cp().process([proc_wildcard])\
                     .AddSyst(harvester, str(unc), "lnN", ch.SystMap()(round(1+value, 2)))
 
