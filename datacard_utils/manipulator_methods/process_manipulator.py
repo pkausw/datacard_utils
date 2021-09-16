@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import sys
 import ROOT
@@ -38,7 +40,7 @@ class ProcessManipulator(object):
         return self.__debug
     def drop_small_processes(self, harvester, chan = [".*"], \
                                 era = [".*"], bins = [".*"], \
-                                processes = []):
+                                processes = [], tot_yield = None):
         """Function to drop processes from a set of process that do not
         contribute to the set significantly. The decision is based on the
         member variables 'background_threshold'.
@@ -54,6 +56,10 @@ class ProcessManipulator(object):
             bins (list, optional): list of bins to check. Defaults to [".*"].
             processes (list, optional): list of bins to check. Defaults to [], in which case
                                         the set of background processes is used.
+            tot_yield (float, optional): if provided, use this number as denominator to calculate
+                                            contribution of a given process. If none is provided
+                                            load the yield from the sum of the processes. 
+                                            Defaults to None
 
         Yields:
             None
@@ -70,22 +76,25 @@ class ProcessManipulator(object):
                 all_procs = harvester.cp().channel(chan)\
                                     .era(era).bin([b]).process(processes)
             # get overall rate
-            total_rate = all_procs.GetRate()
+            total_rate = tot_yield if tot_yield else all_procs.GetRate()
             # initialize list with processes to drop
             to_drop = []
             # loop through all processes in the process set and do comparison
             for p in all_procs.process_set():
                 p = str(p)
                 # get process rate
-                proc_rate = all_procs.cp().process([p]).GetRate()
+                proc_rate = abs(all_procs.cp().process([p]).GetRate())
                 # compare rate with overall rate
                 if proc_rate < self.background_threshold*total_rate:
-                    print(" ".join("""
+                    print((" ".join("""
                         Very small background process. 
                         In bin {} background process {} has yield {}. 
                         Total background rate in this bin is {}
-                        """.format(b, p, proc_rate, total_rate).split()
-                        ))
+                        (weighted rate with threshold '{}': {})
+                        """.format(b, p, proc_rate, total_rate,
+                                 self.background_threshold,
+                                self.background_threshold*total_rate).split()
+                        )))
                     to_drop.append(p)
             if len(to_drop) > 0:
                 self.drop_all_processes(harvester, to_drop = to_drop,
@@ -97,18 +106,18 @@ class ProcessManipulator(object):
                             bins = [".*"]):
         harvester.SetFlag("filters-use-regex", True)
         if self.verbosity >= 50:
-                print("pruning bins '{}'".format(", ".join(bins)))
-                print("to drop: [{}]".format(", ".join(to_drop)))
+                print(("pruning bins '{}'".format(", ".join(bins))))
+                print(("to drop: [{}]".format(", ".join(to_drop))))
                 print("harvester with era selection:")
                 harvester.cp().era(eras).PrintProcs()
-                print("="*130)
+                print(("="*130))
                 print("harvester with bin selection")
                 harvester.cp().era(eras).channel(channels).bin(bins).PrintProcs()
-                print("="*130)
+                print(("="*130))
                 print("harvester with channel selection")
                 harvester.cp().era(eras).channel(channels).PrintProcs()
             
-                print("="*130)
+                print(("="*130))
         harvester.cp().era(eras).channel(channels).bin(bins)\
             .ForEachProc(lambda x: \
                 harvester.FilterProcs(lambda y: True if self.matching_proc(x, y) and \
@@ -127,18 +136,18 @@ class ProcessManipulator(object):
     
     def drop_procs(self, chob, proc, drop_list):
         if self.verbosity >= 50:
-            print("="*130)
+            print(("="*130))
             print("checking process if it should be dropped:")
-            print("\tname: {}".format(proc.process()))
-            print("\tbin: {}".format(proc.bin()))
-            print("\trate: {}".format(proc.rate()))
+            print(("\tname: {}".format(proc.process())))
+            print(("\tbin: {}".format(proc.bin())))
+            print(("\trate: {}".format(proc.rate())))
             # print("\tcurrent bin to prune: {}".format(bin_name))
-            print("\tcurrent list to drop: {}".format(", ".join(drop_list)))
+            print(("\tcurrent list to drop: {}".format(", ".join(drop_list))))
         drop = proc.process() in drop_list
         drop = drop or proc.rate() == 0
         if(drop):
             if self.verbosity >= 10:
-                print("dropping process '{}/{}'".\
-                        format(proc.bin(), proc.process()))
+                print(("dropping process '{}/{}'".\
+                        format(proc.bin(), proc.process())))
             chob.FilterSysts(lambda sys: self.matching_proc(proc,sys)) 
         return drop
