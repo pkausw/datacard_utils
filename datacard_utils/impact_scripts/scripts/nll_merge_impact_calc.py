@@ -215,6 +215,8 @@ if __name__ == '__main__':
                     datacard = card
                     impact_comb_dir = listOfImpactFolders[i]
                     break
+	if impact_comb_dir is None:
+            continue
         impact_json_file = os.path.join(impact_comb_dir, glob.glob(os.path.join(impact_comb_dir, "*.json"))[0])
         pois = loadPOIs(datacard)
 
@@ -258,7 +260,7 @@ if __name__ == '__main__':
         impact_name = ".".join(impact_file.split(".")[:-1])
         for poi in pois:
             
-            cmd = "plotImpacts.py -i {infile} -o {name}_{poi}".format(infile = impact_file, name = impact_name, poi = poi)
+            cmd = "plotImpacts.py -i {infile} -o {name}_{poi} --POI {poi}".format(infile = impact_file, name = impact_name, poi = poi)
             if not fit_type=="blind":
                 cmd += " --blind"
             
