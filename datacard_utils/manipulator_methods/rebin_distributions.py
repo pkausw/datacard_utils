@@ -1,7 +1,10 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import sys
 import ROOT
 import json
+from six.moves import range
 cmssw_base = os.environ["CMSSW_BASE"]
 ROOT.gROOT.SetBatch(True)
 ROOT.PyConfig.IgnoreCommandLineOptions = True
@@ -21,7 +24,7 @@ except:
     msg = " ".join("""Could not find package 'CombineHarvester'. 
             Are you sure you installed it?""".split())
     raise ImportError(msg)
-from common_manipulations import CommonManipulations
+from .common_manipulations import CommonManipulations
 
 class BinManipulator(object):
     choices = "left right all mem half dl third".split()
@@ -34,8 +37,8 @@ class BinManipulator(object):
 
     def __del__(self):
         if self.__debug >= 10:
-            print("saving log of rebinning module here: '{}'"\
-                        .format(self.log_path))
+            print(("saving log of rebinning module here: '{}'"\
+                        .format(self.log_path)))
         outdir = os.path.dirname(self.log_path)
         if not os.path.exists(outdir):
             os.makedirs(outdir)
@@ -51,9 +54,9 @@ class BinManipulator(object):
             h = proc.ShapeAsTH1F()
         nbins = h.GetNbinsX()
         if self.__debug >= 10:
-            print("loading edges from {} bins".format(nbins))
+            print(("loading edges from {} bins".format(nbins)))
         self.bin_edges = [h.GetBinLowEdge(i) for i in range(1, nbins+2)]
-        print(self.bin_edges)
+        print((self.bin_edges))
 
     def apply_scheme(self):
         edges = []
@@ -79,7 +82,7 @@ class BinManipulator(object):
         elif self.scheme == "dl":
             edges = [-1, 0, 1]
         else:
-            print("ERROR: did not recognice scheme '{}'".format(self.scheme))
+            print(("ERROR: did not recognice scheme '{}'".format(self.scheme)))
             print("Will not rebin")
             edges = self.bin_edges
         if not self.bin_edges[-1] in edges:
@@ -130,7 +133,7 @@ class BinManipulator(object):
             if i == nbins:
                 last_added_edge = combinedHist.GetBinLowEdge(nbins+1)
                 if self.__debug >= 10:
-                    print("adding new bin edge at {}".format(last_added_edge))
+                    print(("adding new bin edge at {}".format(last_added_edge)))
                 bin_edges.append(last_added_edge)
 
             # add together squared bin errors and bin contents
@@ -138,9 +141,10 @@ class BinManipulator(object):
             binContent += combinedHist.GetBinContent(i)
             data += datahist.GetBinContent(i)
             if self.__debug >= 10:
-                print("bin (low edge): {} ({})".format(i, combinedHist.GetBinLowEdge(i)))
-                print("bkg stack: {}".format(combinedHist.GetBinContent(i)))
-                print("sum: {}".format(binContent))
+                print(("bin (low edge): {} ({})".format(i, combinedHist.GetBinLowEdge(i))))
+                print(("bkg stack: {}".format(combinedHist.GetBinContent(i))))
+                print(("sum: {}".format(binContent)))
+                print(("threshold: {}".format(self.threshold)))
 
             # calculate relative error
             relerror = squaredError**0.5/binContent if not binContent == 0 else squaredError**0.5
@@ -154,10 +158,10 @@ class BinManipulator(object):
                 # histograms, add manually
                 binError = (squaredError + binContent)**0.5 
                 print("checking data")
-                print("\tdata: {}".format(data))
-                print("\tdataError: {}".format(dataError))
-                print("\tbinContent: {}".format(binContent))
-                print("\tbinError: {}".format(binError))
+                print(("\tdata: {}".format(data)))
+                print(("\tdataError: {}".format(dataError)))
+                print(("\tbinContent: {}".format(binContent)))
+                print(("\tbinError: {}".format(binError)))
                 if data >= binContent:
                     criterion = any(x <= (binContent + binError) for x in [data - dataError, data])
                 else:
@@ -170,12 +174,13 @@ class BinManipulator(object):
                         
                 else:
                     # if relative error is smaller than threshold, start new bin
+                    print("Relative error: {}".format(relerror))
                     criterion = relerror <= self.threshold
             # if criterion for binning is met, add new bin edge
             if criterion:
                 last_added_edge = combinedHist.GetBinLowEdge(i)
                 if self.__debug >= 10:
-                    print("adding new bin edge at {}".format(last_added_edge))
+                    print(("adding new bin edge at {}".format(last_added_edge)))
                 bin_edges.append(last_added_edge)
                 squaredError = 0.
                 binContent = 0.
@@ -195,7 +200,7 @@ class BinManipulator(object):
             bin_edges.append(last_added_edge)
         bin_edges = sorted(bin_edges)
         if self.__debug >= 1:
-            print("\tnew bin edges: [{}]".format(",".join([str(round(b,4)) for b in bin_edges])))
+            print(("\tnew bin edges: [{}]".format(",".join([str(round(b,4)) for b in bin_edges]))))
         return bin_edges
 
     def do_statistical_rebinning(self, harvester, channels = [".*"], eras = [".*"],\
@@ -208,8 +213,8 @@ class BinManipulator(object):
                 
                 current_harvester = harvester.cp().channel([ch]).era([e])
                 these_bins = current_harvester.cp().bin(bins).bin_set()
-                print("Rebinning based on MC Statistics with threshold '{}'".\
-                            format(self.threshold))
+                print(("Rebinning based on MC Statistics with threshold '{}'".\
+                            format(self.threshold)))
                 print("will perform rebinning for bins:")
                 print(these_bins)
                 for b in these_bins:
@@ -227,10 +232,12 @@ class BinManipulator(object):
                     proc_list = ", ".join(relevant_process_harv.process_set())
                     log_lines.append("processes: {}".format(proc_list))
                     if self.__debug >= 10:
-                        print("considered processes for bin '{}'".format(b))
+                        print(("considered processes for bin '{}'".format(b)))
                         print(proc_list)
-                    
-                    hist = relevant_process_harv.GetShapeWithUncertainty()
+                    if isinstance(self.threshold, float) and self.threshold <= 1:
+                        hist = relevant_process_harv.GetShape()
+                    else:
+                        hist = relevant_process_harv.GetShapeWithUncertainty()
                     data = current_harvester.cp().bin([b]).GetObservedShape()
                     self.load_edges(hist)
                     original_edges = self.bin_edges[:]
@@ -245,7 +252,7 @@ class BinManipulator(object):
                     if not original_edges == self.bin_edges:
                         log_lines.append("Attention: binning changed!")
                     if self.__debug >= 10:
-                        print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
+                        print(("\n".join(["\t{}".format(x) for x in self.bin_edges])))
                     harvester.cp().channel([ch]).era([e]).bin([b])\
                             .VariableRebin(self.bin_edges)
                     log_lines.append("="*60+"\n")
@@ -277,7 +284,7 @@ class BinManipulator(object):
                     log_lines.append(", ".join([str(x) for x in self.bin_edges]))
                     if self.__debug >= 10:
                         print(b)
-                        print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
+                        print(("\n".join(["\t{}".format(x) for x in self.bin_edges])))
 
                     self.bin_edges = self.apply_scheme()
 
@@ -285,8 +292,8 @@ class BinManipulator(object):
                     log_lines.append(", ".join([str(x) for x in self.bin_edges]))
                     
                     if self.__debug >= 10:
-                        print("after applying scheme {}".format(self.scheme))
-                        print("\n".join(["\t{}".format(x) for x in self.bin_edges]))
+                        print(("after applying scheme {}".format(self.scheme)))
+                        print(("\n".join(["\t{}".format(x) for x in self.bin_edges])))
 
                     harvester.cp().channel([ch]).era([e]).bin([b])\
                         .VariableRebin(self.bin_edges)

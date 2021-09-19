@@ -86,27 +86,27 @@ class CommonManipulations(object):
                 "QCDscale_ttbar": (1-0.035,1+0.024),
                 "pdf_gg": 1.042
             },
-            "singlet": {
+            "singlet.*": {
                 "QCDscale_singlet": (0.979,1.031),
                 "pdf_qg": 1.028
             },
-            "wjets": {
+            "wjets.*": {
                 "QCDscale_V": 1.038,
                 "pdf_qqbar": (0.996,1.008)
             },
-            "zjets": {
+            "zjets.*": {
                 "QCDscale_V": 1.02,
                 "pdf_qqbar": 1.002
             },
-            "ttbarW": {
+            "ttbarW.*": {
                 "QCDscale_ttbar": (1-0.164, 1+0.255),
                 "pdf_qqbar": 1.036
             },
-            "ttbarZ": {
+            "ttbarZ.*": {
                 "QCDscale_ttbar": (1-0.093, 1+0.081),
                 "pdf_gg": 1.035
             },
-            "diboson": {
+            "diboson.*": {
                 "QCDscale_VV": 1.03,
                 "pdf_qqbar" : 1.05
             }

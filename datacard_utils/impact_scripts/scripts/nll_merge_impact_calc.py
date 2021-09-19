@@ -215,9 +215,20 @@ if __name__ == '__main__':
                     datacard = card
                     impact_comb_dir = listOfImpactFolders[i]
                     break
-	if impact_comb_dir is None:
+        if not impact_comb_dir:
+            print("="*130)
+            print("Error for comb '{}': could not find entry in list of impact folders".format(comb))
+            print("list of impact folders:")
+            print(listOfImpactFolders)
             continue
-        impact_json_file = os.path.join(impact_comb_dir, glob.glob(os.path.join(impact_comb_dir, "*.json"))[0])
+        json_files = glob.glob(os.path.join(impact_comb_dir, "*.json"))
+        if len(json_files) == 0:
+            print("could not load json file for combination '{}'".format(impact_comb_dir))
+            continue
+        elif len(json_files) > 1:
+            print("found multiple json files for combination '{}', skipping".format(impact_comb_dir))
+            continue
+        impact_json_file = os.path.join(impact_comb_dir, json_files[0])
         pois = loadPOIs(datacard)
 
         dic = calculate_missing_impacts(datacard = datacard, 

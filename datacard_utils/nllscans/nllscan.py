@@ -15,12 +15,12 @@ if not helperpath in sys.path:
     sys.path.append(helperpath)
 import batchConfig
 batch = batchConfig.batchConfig()
+# batch.dry_run = True
 
 import helperClass
 
 helper = helperClass.helperClass()
 ROOT.gROOT.SetBatch(True)
-
 
 #======================================================================
 
@@ -232,6 +232,7 @@ def do_fits():
         # batch.runtime = 
         arrayid = batch.submitArrayToBatch( scripts = scripts, 
                                         arrayscriptpath = "arrayJob.sh")
+                        
     else:
         sys.exit("Unable to create any scripts!")
     

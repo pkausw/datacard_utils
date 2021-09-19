@@ -1,8 +1,11 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import sys
 import ROOT
 import json
 from fnmatch import filter
+# from six.moves import filter
 cmssw_base = os.environ["CMSSW_BASE"]
 ROOT.gROOT.SetBatch(True)
 ROOT.PyConfig.IgnoreCommandLineOptions = True
@@ -57,7 +60,7 @@ class NuisanceManipulator(object):
         # print(harvester_params)
         if self.debug >= 3: 
             print("will remove nuisances based on following dictionary")
-            print(json.dumps(self.to_remove, indent=4))
+            print((json.dumps(self.to_remove, indent=4)))
         for wildcard_par in self.to_remove:
             print(wildcard_par)
             procs = self.to_remove[wildcard_par]
@@ -69,8 +72,8 @@ class NuisanceManipulator(object):
                     print(par)
                     print(procs)
                     print(bins)
-                    print("removing param '{}' for procs '{}' in bins '{}'".\
-                        format(par, ", ".join(procs), ", ".join(bins)))
+                    print(("removing param '{}' for procs '{}' in bins '{}'".\
+                        format(par, ", ".join(procs), ", ".join(bins))))
                 harvester.cp().bin(bins).channel(channels).era(eras).process(procs).\
                     ForEachProc(lambda proc: self.drop_syst(harvester,proc, par))
 
