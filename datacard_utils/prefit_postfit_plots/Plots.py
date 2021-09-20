@@ -780,7 +780,7 @@ class DrawHistograms:
                     self.yMinMax = min(hist.GetBinContent(hist.GetMinimumBin())/hist.Integral(self.integralOption), self.yMinMax)
                 else:
                     self.yMinMax = min(hist.GetBinContent(hist.GetMinimumBin()), self.yMinMax)
-        # self.yMinMax = max(self.yMinMax, 1e-1)
+        self.yMinMax = max(self.yMinMax, 1e-7)
 
     def normalizePlot(self, PlotHist):
 
