@@ -72,7 +72,7 @@ def parse_results(mu, upper, lower, upper_stat, lower_stat,\
         counter += 1
     return lines
 
-def load_values(result_dict, result_set, value_keyword, order):
+def load_values(result_dict, result_set, value_keyword, order, default = "--"):
     values = []
     for name in order:
         if name == "LINE": continue
@@ -83,7 +83,7 @@ def load_values(result_dict, result_set, value_keyword, order):
         if not isinstance(set_dict, dict):
             val = set_dict
         else:
-            val = set_dict.get(value_keyword, "--")
+            val = set_dict.get(value_keyword, default)
         if val:
             print("For result '{}', saving value {} ({}/{})".\
                 format(name, val, result_set, value_keyword))
@@ -130,6 +130,10 @@ def bestfit( **kwargs ):
                         value_keyword = "value", 
                         order = order)
     print(mu)
+    expected = load_values(   result_dict = values, 
+                        result_set = "bestfit", 
+                        value_keyword = "value", 
+                        order = order, default = 1)
     upper = load_values(   result_dict = values, 
                         result_set = "bestfit", 
                         value_keyword = "up", 
@@ -174,7 +178,7 @@ def bestfit( **kwargs ):
 
     entry_names = [x for x in order if x in values.keys() or x == "LINE"]
 
-    create_plot(mu = mu, upper = upper, lower = lower,
+    create_plot(mu = mu, expected = expected, upper = upper, lower = lower,
                 upper_stat = upper_stat, lower_stat = lower_stat,
                 upper_syst = upper_syst, lower_syst = lower_syst, 
                 entry_names = entry_names, outname = outname,
@@ -188,7 +192,7 @@ def bestfit( **kwargs ):
                 entry_names = entry_names, outname = outname,
                 significance = significance, table_format = table_format)
 
-def create_plot(mu, upper, lower, upper_stat, lower_stat,\
+def create_plot(mu, expected, upper, lower, upper_stat, lower_stat,\
     upper_syst, lower_syst , entry_names, outname, style, include_signi = False):
 
     nchannels = mu.size
@@ -213,10 +217,13 @@ def create_plot(mu, upper, lower, upper_stat, lower_stat,\
                                 entry_names = entry_names ,
                                 lumilabel = style.get("lumilabel", ""))
 
-    # line at SM expectation of mu = 1
-    l = ROOT.TLine()
-    l.SetLineStyle( 2 )
-    l.DrawLine( 1.0, 0, 1.0, 3*nchannels+0.5 )
+    # line at SM expectation (default = 1)
+    lines = []
+    for i, exp_val in enumerate(reversed(expected), 1):
+        lines.append(ROOT.TLine())
+        l = lines[-1]
+        l.SetLineStyle( 2 )
+        l.DrawLine( exp_val, 3*(i-1), exp_val, 3*i)
 
     print(mu)
     gmu_tot = ROOT.TGraphAsymmErrors( nchannels, mu, channels, np.abs(lower), np.abs(upper), zero, zero )
@@ -248,6 +255,8 @@ def create_plot(mu, upper, lower, upper_stat, lower_stat,\
     if include_signi:
         latex_parts += "       "
 
+    uncertainty_template = "{{}}^{{{:+.2f}}}_{{{:-.2f}}}"
+
     body_position = xmax*4.7
     header_position = body_position/2.5
     leg.DrawLatex( header_position, 3.1*nchannels, "".join(latex_parts))
@@ -257,7 +266,6 @@ def create_plot(mu, upper, lower, upper_stat, lower_stat,\
         res.SetTextFont( 42 )
         res.SetTextSize( 0.045 )
         res.SetTextAlign( 31 )
-        uncertainty_template = "{{}}^{{{:+.2f}}}_{{{:-.2f}}}"
         uncertainties = uncertainty_template.format(upper[ich],lower[ich])
         latex_parts = ["{:+.2f} #color[4]{{ {: ^16} }}".\
                         format(mu[ich],uncertainties)]
