@@ -84,7 +84,7 @@ def load_values(result_dict, result_set, value_keyword, order, default = "--"):
             val = set_dict
         else:
             val = set_dict.get(value_keyword, default)
-        if val:
+        if not val is None:
             print("For result '{}', saving value {} ({}/{})".\
                 format(name, val, result_set, value_keyword))
             values.append(val)
@@ -131,7 +131,7 @@ def bestfit( **kwargs ):
                         order = order)
     print(mu)
     expected = load_values(   result_dict = values, 
-                        result_set = "bestfit", 
+                        result_set = "expected", 
                         value_keyword = "value", 
                         order = order, default = 1)
     upper = load_values(   result_dict = values, 
@@ -174,7 +174,7 @@ def bestfit( **kwargs ):
     print(lower_syst)
     include_signi = kwargs.get("include_signi", False)
     outname = kwargs.get("outname", "test")
-
+    display_style = kwargs.get("display_style")
 
     entry_names = [x for x in order if x in values.keys() or x == "LINE"]
 
@@ -182,7 +182,7 @@ def bestfit( **kwargs ):
                 upper_stat = upper_stat, lower_stat = lower_stat,
                 upper_syst = upper_syst, lower_syst = lower_syst, 
                 entry_names = entry_names, outname = outname,
-                include_signi = include_signi, style = kwargs)
+                include_signi = include_signi, style = kwargs, display_style = display_style)
 
     skip_table = kwargs.get("skip_table", False)
     table_format = kwargs.get("table_format", "tex")
@@ -193,7 +193,8 @@ def bestfit( **kwargs ):
                 significance = significance, table_format = table_format)
 
 def create_plot(mu, expected, upper, lower, upper_stat, lower_stat,\
-    upper_syst, lower_syst , entry_names, outname, style, include_signi = False):
+    upper_syst, lower_syst , entry_names, outname, style, include_signi = False,
+    display_style = "poi"):
 
     nchannels = mu.size
     print(nchannels)
@@ -207,12 +208,16 @@ def create_plot(mu, expected, upper, lower, upper_stat, lower_stat,\
 
     xmin = np.min(mu - np.abs(lower))
     xmax = np.max(mu + np.abs(upper))
+    xmax = max(xmax, 10)
     print(xmin)
     print(xmax)
-
+    title = "#hat{#mu} = #hat{#sigma}/#sigma_{SM}"
+    if display_style == "XS":
+        title = "#sigma in fb"
+    upper_stretch = 1.2 if not display_style == "XS" else 1.2*2.5
     c,h = draw_canvas_histo(    nchannels = nchannels, 
-                                xmin = abs(xmin)*(-3), xmax = xmax*5, 
-                                title = "#hat{#mu} = #hat{#sigma}/#sigma_{SM}",
+                                xmin = abs(xmin)*(-1.2), xmax = xmax*upper_stretch, 
+                                title = title,
                                 positions = channels,
                                 entry_names = entry_names ,
                                 lumilabel = style.get("lumilabel", ""))
@@ -248,18 +253,25 @@ def create_plot(mu, expected, upper, lower, upper_stat, lower_stat,\
     leg.SetTextSize( 0.035 )
     leg.SetTextAlign( 11 )
     headers = "#mu       #color[4]{tot}      #color[2]{stat}    syst".split()
+    if display_style == "XS":
+        headers = "#sigma       #color[4]{tot}      #color[2]{stat}    syst".split()
     print(headers)
-    latex_parts = ["{value: ^{width}}".format(value = x, width = str(len(x)+6)) for x in headers]
+    width = 10
+    latex_parts = ["{value: ^{width}}".format(value = x, width = width) for x in headers]
     print(latex_parts)
-    print(" ".join(latex_parts))
+    final_header = (" "*6).join(latex_parts)
+    print(final_header)
     if include_signi:
         latex_parts += "       "
 
     uncertainty_template = "{{}}^{{{:+.2f}}}_{{{:-.2f}}}"
+    if display_style == "XS":
+        uncertainty_template = "{{}}^{{{:+.2f} %}}_{{{:-.2f} %}}"
 
-    body_position = xmax*4.7
-    header_position = body_position/2.5
-    leg.DrawLatex( header_position, 3.1*nchannels, "".join(latex_parts))
+    leg.SetNDC()
+    leg.DrawLatex( 0.5, 0.87, final_header)
+    upper_stretch = 1.05 if not display_style == "XS" else 1.05*2.5
+    body_position = xmax*upper_stretch
 
     for ich,channel in enumerate(channels):
         res = ROOT.TLatex()
@@ -267,16 +279,16 @@ def create_plot(mu, expected, upper, lower, upper_stat, lower_stat,\
         res.SetTextSize( 0.045 )
         res.SetTextAlign( 31 )
         uncertainties = uncertainty_template.format(upper[ich],lower[ich])
-        latex_parts = ["{:+.2f} #color[4]{{ {: ^16} }}".\
-                        format(mu[ich],uncertainties)]
+        latex_parts = ["{val:.2f} #color[4]{{ {uncertainties: ^{width}} }}".\
+                        format(val = mu[ich],uncertainties = uncertainties, width = width)]
         uncertainties = uncertainty_template.\
                         format(upper_stat[ich],lower_stat[ich])
-        latex_parts += ["#color[2]{{ {: ^16} }}".\
-                        format(uncertainties)]
+        latex_parts += ["#color[2]{{ {uncertainties: ^{width}} }}".\
+                        format(uncertainties = uncertainties, width = width)]
         uncertainties = uncertainty_template.\
                         format(upper_syst[ich],lower_syst[ich])
-        latex_parts += ["{: ^16}".\
-                        format(uncertainties)]
+        latex_parts += ["{uncertainties: ^{width}}".\
+                        format(uncertainties = uncertainties, width = width)]
         if include_signi:
             latex_parts += ["{:.1f} #sigma".format(significance[ich])]
         
@@ -343,7 +355,7 @@ def draw_canvas_histo( nchannels, xmin, xmax, title, entry_names, positions, \
         lumi.SetTextFont( 42 )
         lumi.SetTextSize( 0.035 )
         lumi.SetTextAlign( 31 )
-        lumi.DrawLatex( 1-ROOT.gStyle.GetPadRightMargin(), 0.965, "{} fb^{{-1}} (13 TeV)".format(lumilabel) )
+        lumi.DrawLatex( 1-ROOT.gStyle.GetPadRightMargin(), 0.965, "{:.1f} fb^{{-1}} (13 TeV)".format(float(lumilabel)) )
 
     return c,h
 
@@ -496,6 +508,21 @@ def parse_arguments():
                         dest = "table_format",
                         choices = "tex md".split(),
                         default = "tex"
+                    )
+    style_group.add_option("--display-style",
+                        help = " ".join("""
+                            Choose display style for plot.
+                            Current choices: [poi, XS].
+                            Choose 'poi' if you want to display
+                            signal strengths.
+                            If 'XS' is chosen, the uncertainties are
+                            displayed with a percentage sign and
+                            the x title is adjusted.
+                            Defaults to 'poi'
+                        """.split()),
+                        dest = "display_style",
+                        choices = "poi XS".split(),
+                        default = "poi"
                     )
 
     parser.add_option_group(style_group)
