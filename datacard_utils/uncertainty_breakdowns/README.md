@@ -10,13 +10,13 @@ For more information, please have a look at the help functionality of the script
 You can call the script for example by using
 
 ```
-python breakdown_uncertainties.py -a "--cminDefaultMinimizerTolerance 1e-2 --cminDefaultMinimizerStrategy 0 --cminDefaultMinimizerPrecision 1e-12 --X-rtd MINIMIZER_analytic" --murange 10 -b all,thy,exp -s test -f path/to/workspace.root
+python breakdown_uncertainties.py -a "--cminDefaultMinimizerTolerance 1e-2 --cminDefaultMinimizerStrategy 0 --cminDefaultMinimizerPrecision 1e-12 --X-rtd MINIMIZER_analytic" --murange 10 -b all:thy:exp:bgnorm_ttX=allConstrainedNuisances,'var{.*bgnorm_tt.*}' -s test -f path/to/workspace.root
 ```
 
 Things to keep in mind:
 - In order to unsure a maximum compatibility with the nominal fit, you should use the same combine options as in the nominal fit by using the option `-a`
 - The option `--murange` in combination with the option `--mu` will generate a symmetric fit interval for the signal strength with the width `2*murange` and the center at the expected signal strength `mu`
-- The input for option `-b` are the names of the uncertainty groups as defined in the datacard/workspace. To generate a breakdown for the autoMCStat uncertainties, use the group `autoMCStats` (see [the combine reference page](https://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/part2/bin-wise-stats.html))
+- The input for option `-b` are the names of the uncertainty groups as defined in the datacard/workspace. To generate a breakdown for the autoMCStat uncertainties, use the group `autoMCStats` (see [the combine reference page](https://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/part2/bin-wise-stats.html)). You can also define groups on the fly with the syntax `GROUPNAME=LIST,OF,PARAMETERS,TO,FREEZE`. The syntax to freeze nuisances is the same as in the standard combine fit and will be parsed to the fitting routing (e.g. the example above will freeze all constrained nuisances and additionally the freely-floating bgnorm rateParams for ttbb and ttcc). Use `:` as separator for groups.
 - The option `-f` will skip the generation of likelihood scans, which greatly enhances the runtime
 
 
