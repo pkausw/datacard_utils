@@ -33,7 +33,7 @@ class BinManipulator(object):
         self.threshold = 15
         self.__debug = 10
         self.log = ""
-        self.log_path = "rebin.log"
+        self.log_path = os.path.join(os.getcwd(), "rebin.log")
 
     def __del__(self):
         if self.__debug >= 10:
