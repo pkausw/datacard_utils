@@ -64,6 +64,7 @@ class NuisanceManipulator(object):
         for wildcard_par in self.to_remove:
             print(wildcard_par)
             procs = self.to_remove[wildcard_par]
+            procs = [str(x) for x in procs]
             these_pars = filter(harvester_params, wildcard_par)
             print(these_pars)
             for par in these_pars:
