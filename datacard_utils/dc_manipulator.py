@@ -37,6 +37,7 @@ from manipulator_methods.apply_validation import ValidationInterface
 from manipulator_methods.nuisance_manipulator import NuisanceManipulator
 from manipulator_methods.common_manipulations import CommonManipulations
 from manipulator_methods.stxs_modifications import STXSModifications
+from manipulator_methods.XS_interpretation import XSModifications
 
 
 def scale_higgs_mass(harvester, base_mass = 125):
@@ -248,7 +249,7 @@ def transpose_binning(harvester, binning_groups):
 def write_datacards(harvester, outdir, prefix, rootfilename, era, \
                     group_manipulator, combine_cards = True,\
                     bgnorm_mode = "rateParams",
-                    stxs_interface = None):
+                    stxs_interface = None, xs_interface = None):
     
     common_manipulations = CommonManipulations()
     common_manipulations.bgnorm_mode = bgnorm_mode
@@ -256,6 +257,8 @@ def write_datacards(harvester, outdir, prefix, rootfilename, era, \
     # harvester.PrintSysts()
     if stxs_interface:
         stxs_interface.do_stxs_modifications(harvester)
+    if xs_interface:
+        xs_interface.do_xs_modifications(harvester)
 
 
     channels = harvester.channel_set()
@@ -390,19 +393,24 @@ def main(**kwargs):
     if stxs:
         stxs_interface = STXSModifications()
 
+    xs_measurement = kwargs.get("xs_measurement", False)
+    xs_interface = None
+    if xs_measurement:
+        xs_interface = XSModifications()
+
     bgnorm_mode = kwargs.get("bgnorm_mode", "rateParams")
     if combine_cards:
         for e in eras:
             write_datacards(harvester = harvester.cp().era([e]), outdir = outdir, 
                             rootfilename = output_rootfile, prefix = prefix, era = e, 
                             group_manipulator = group_manipulator, bgnorm_mode = bgnorm_mode,
-                            stxs_interface = stxs_interface)
+                            stxs_interface = stxs_interface, xs_interface = xs_interface)
         
         write_datacards(harvester = harvester, outdir = outdir, rootfilename = output_rootfile, 
                         prefix = prefix, era = "all_years", 
                             group_manipulator = group_manipulator,
                             bgnorm_mode = bgnorm_mode,
-                            stxs_interface = stxs_interface)
+                            stxs_interface = stxs_interface, xs_interface = xs_interface)
     else:
         for e in eras:
             era_dir = os.path.join(outdir, e)
@@ -413,7 +421,8 @@ def main(**kwargs):
                             combine_cards = False, 
                             group_manipulator = group_manipulator,
                             bgnorm_mode = bgnorm_mode,
-                            stxs_interface = stxs_interface)
+                            stxs_interface = stxs_interface,
+                            xs_interface = xs_interface)
 
 
 def parse_arguments():
@@ -648,6 +657,17 @@ def parse_arguments():
                             """.split()
                         ),
                         dest = "stxs",
+                        action = "store_true",
+                        default = False
+                    )
+    model_manipulations.add_option("--xs-interpretation",
+                        help = " ".join(
+                            """
+                            apply modifications for xs interpretation.
+                            Default: False
+                            """.split()
+                        ),
+                        dest = "xs_measurement",
                         action = "store_true",
                         default = False
                     )
