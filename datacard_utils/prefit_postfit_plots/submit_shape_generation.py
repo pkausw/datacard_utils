@@ -18,15 +18,29 @@ batch = batchConfig()
 
 prefit_template = helper.JOB_PREFIX
 
+CMD_BASE="""    
+    cmd="PostFitShapesFromWorkspace -w $inputfile -o $outfile "
+    cmd="$cmd -p 'tH=tH.*' -p 'vjets=(w|z)jets' -p 'ttbarV=ttbar(W|Z)' -p 'multijet=.*_CR'"
+    cmd="$cmd -p 'tHq=tHq_.*' -p 'tHW=tHW_.*'"
+"""
+CMD_BASE_STXS="""    
+    cmd="PostFitShapesFromWorkspace -w $inputfile -o $outfile "
+    cmd="$cmd -p 'tH=tH.*' -p 'vjets=(w|z)jets' -p 'ttbarV=ttbar(W|Z)' -p 'multijet=.*_CR'"
+    cmd="$cmd -p 'tHq=tHq_.*' -p 'tHW=tHW_.*'"
+    cmd="$cmd -p 'ttH_PTH_0_60=ttH_PTH_0_60_.*'"
+    cmd="$cmd -p 'ttH_PTH_60_120=ttH_PTH_60_120_.*'"
+    cmd="$cmd -p 'ttH_PTH_120_200=ttH_PTH_120_200_.*'"
+    cmd="$cmd -p 'ttH_PTH_200_300=ttH_PTH_200_300_.*'"
+    cmd="$cmd -p 'ttH_PTH_GT300=ttH_PTH_(300_450|GT300|GT450)_.*'"
+"""
+
+
 prefit_template += """
     outpath=$1
     outfile=$2
     inputfile=$3
 
-    cmd="PostFitShapesFromWorkspace -w $inputfile -o $outfile"
-    cmd="$cmd -p 'tH=tH.*' -p 'vjets=(w|z)jets' -p 'ttbarV=ttbar(W|Z)' -p 'multijet=.*_CR'"
-    cmd="$cmd -p 'tHq=tHq_.*' -p 'tHW=tHW_.*'"
-
+    {CMD_BASE}
     if [ "$#" -eq 4 ] ; then
         inputdatacard=$4
         cmd="$cmd -d $inputdatacard"
@@ -52,9 +66,7 @@ postfit_template += """
     inputfile=$5
     
 
-    cmd="PostFitShapesFromWorkspace -w $inputfile -o $outfile "
-    cmd="$cmd -p 'tH=tH.*' -p 'vjets=(w|z)jets' -p 'ttbarV=ttbar(W|Z)' -p 'multijet=.*_CR'"
-    cmd="$cmd -p 'tHq=tHq_.*' -p 'tHW=tHW_.*'"
+    {CMD_BASE}
     cmd="$cmd -f $fitresult"
     cmd="$cmd --skip-prefit --postfit --sampling --samples $nsamples"
     cmd="$cmd --skip-proc-errs"
@@ -167,6 +179,17 @@ def parse_arguments():
                         default = False,
                         dest = "skip_postfit"
         )
+    parser.add_option( "--stxs",
+                        help = " ".join(
+                            """
+                            Adjust commands to generate all process relevant for STXS.
+                            Defaults to False
+                            """.split()
+                        ),
+                        action = "store_true",
+                        default = False,
+                        dest = "stxs"
+        )
     parser.add_option("-v", "--verbose",
                         help= " ".join(
                             """
@@ -268,6 +291,7 @@ def main(*files, **kwargs):
 
     skip_prefit = kwargs.get("skip_prefit", False)
     skip_postfit = kwargs.get("skip_postfit", False)
+    stxs = kwargs.get("stxs", False)
     outpath = kwargs.get("outputpath", ".")
     fitresult = kwargs.get("fitresult")
     nsamples = kwargs.get("nsamples", 300)
@@ -275,21 +299,22 @@ def main(*files, **kwargs):
     if not os.path.exists(outpath):
         os.makedirs(outpath)
     outpath = os.path.abspath(outpath)
+    this_cmd_base = CMD_BASE if not stxs else CMD_BASE_STXS
     if not skip_prefit:
         generate_scripts(outpath = outpath, files = files, 
-                            template = prefit_template, 
+                            template = prefit_template.format(CMD_BASE=this_cmd_base), 
                             script_name = "generate_prefit_shapes.sh",
-                            prefix = "shapes_prefit"    
+                            prefix = "shapes_prefit"
                         )
 
     if not skip_postfit:
         additional_cmds = [str(nsamples), fitresult]
         generate_scripts(outpath = outpath, files = files, 
-                            template = postfit_template, 
+                            template = postfit_template.format(CMD_BASE = this_cmd_base), 
                             script_name = "generate_postfit_shapes.sh",
                             prefix = "shapes_postfit",
                             additional_options=additional_cmds,
-                            runtime = runtime  
+                            runtime = runtime
                         )
     
 
