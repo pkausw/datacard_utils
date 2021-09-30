@@ -34,7 +34,7 @@ from .nuisance_manipulator import NuisanceManipulator
 from .process_manipulator import ProcessManipulator
 
 class CommonManipulations(object):
-    __choices = "rateParams lnN GoF".split()
+    __choices = "rateParams lnN GoF old_lnN old_rateParams".split()
     def __init__(self):
         super(CommonManipulations, self).__init__()
         self.__to_freeze = """kfactor_wjets kfactor_zjets
@@ -185,27 +185,52 @@ class CommonManipulations(object):
         uncertainties = [".*bgnorm_tt.*"]
         if len(uncertainties) > 0:
             harvester.syst_name(uncertainties, False)
+        lnN_processes = []
+        rateParam_processes = []
         if self.__mode == "lnN":
-            harvester.cp().process(["ttcc.*"])\
-                        .AddSyst(harvester, "CMS_ttHbb_bgnorm_ttcc", "lnN", ch.SystMap()(1.5))
-            harvester.cp().process(["ttbb.*"])\
-                        .AddSyst(harvester, "CMS_ttHbb_bgnorm_ttbb", "lnN", ch.SystMap()(1.5))
+            lnN_processes = "ttcc ttbb".split()
+            rateParams_processes = []
         elif self.__mode == "rateParams":
-            harvester.cp().process(["ttcc.*"])\
-                    .AddSyst(harvester, "CMS_ttHbb_bgnorm_ttcc", "rateParam", ch.SystMap()(1.))
-            if "CMS_ttHbb_bgnorm_ttcc" in harvester.cp().syst_type(["rateParam"]).syst_name_set():
-                harvester.GetParameter("CMS_ttHbb_bgnorm_ttcc").set_range(-5, 5)
-            harvester.cp().process(["ttbb.*"])\
-                    .AddSyst(harvester, "CMS_ttHbb_bgnorm_ttbb", "rateParam", ch.SystMap()(1.))
-            if "CMS_ttHbb_bgnorm_ttbb" in harvester.cp().syst_type(["rateParam"]).syst_name_set():
-                harvester.GetParameter("CMS_ttHbb_bgnorm_ttbb").set_range(-5, 5)
+            rateParams_processes = "ttcc ttbb".split()
+            lnN_processes = []
+            
         elif self.__mode == "GoF":
-            harvester.cp().process(["ttbb.*"])\
-                    .AddSyst(harvester, "CMS_ttHbb_bgnorm_ttbb", "rateParam", ch.SystMap()(1.))
-            if "CMS_ttHbb_bgnorm_ttbb" in harvester.cp().syst_type(["rateParam"]).syst_name_set():
-                harvester.GetParameter("CMS_ttHbb_bgnorm_ttbb").set_range(0, 5)
-            harvester.cp().process(["ttcc.*"])\
-                        .AddSyst(harvester, "CMS_ttHbb_bgnorm_ttcc", "lnN", ch.SystMap()(1.5))
+            rateParams_processes = ["ttbb"]
+            lnN_processes = ["ttcc"]
+            
+        elif self.__mode == "old_lnN":
+            # apply 50% lnN Parameters to ttcc, ttb, tt2b, ttbb and their counter parts
+            # in the FH CR
+            lnN_processes = "ttcc ttb tt2b ttbb".split()
+            rateParams_processes = []
+
+        elif self.__mode == "old_rateParams":
+            # apply 50% lnN Parameters to ttcc, ttb, tt2b, ttbb and their counter parts
+            # in the FH CR
+            rateParams_processes = "ttcc ttb tt2b ttbb".split()
+            lnN_processes = []
+        elif self.__mode == "old_GOF":
+            rateParams_processes = "ttb tt2b ttbb".split()
+            lnN_processes = ["ttcc"]
+        
+        # centrally add 5FS processes here
+        lnN_processes += [x+"_5FS" for x in lnN_processes]
+        rateParams_processes += [x+"_5FS" for x in rateParams_processes]
+        # apply all lnN parameters here
+        for proc in lnN_processes:
+            cr = proc + "_CR"
+            parname = "CMS_ttHbb_bgnorm_{}".format(proc)
+            harvester.cp().process([proc, cr])\
+                        .AddSyst(harvester, parname, "lnN", ch.SystMap()(1.5))
+        
+        # apply all rateParams here
+        for proc in rateParams_processes:
+            cr = proc + "_CR"
+            parname = "CMS_ttHbb_bgnorm_{}".format(proc)
+            harvester.cp().process([proc, cr])\
+                    .AddSyst(harvester, parname, "rateParam", ch.SystMap()(1.))
+            if parname in harvester.cp().syst_type(["rateParam"]).syst_name_set():
+                harvester.GetParameter(parname).set_range(-5, 5)
         # 
     
     def add_lnN_uncertainties(self, harvester):
@@ -263,7 +288,9 @@ class CommonManipulations(object):
         self.add_lumi_uncertainties(harvester)
         self.remove_see_saw(harvester)
         self.add_bgnorm_uncertainties(harvester)
-        self.remove_5FS_prediction(harvester)
+        process_set = harvester.process_set()
+        if all(x in process_set for x in "ttbb ttbb_5FS".split()):
+            self.remove_5FS_prediction(harvester)
         self.add_lnN_uncertainties(harvester)
         harvester.SetAutoMCStats(harvester, 10)
         harvester.FilterSysts(lambda x: (x.value_u() == 0 or x.value_d() == 0)\
