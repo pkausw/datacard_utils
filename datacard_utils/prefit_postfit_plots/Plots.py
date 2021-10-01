@@ -771,15 +771,23 @@ class DrawHistograms:
         self.yMax = 1e-9
         self.yMinMax = 1000.
         for hist in self.stackPlots+self.shapePlots:
-            if self.shape and hist.Integral(self.integralOption)!=0:
-                self.yMax = max(hist.GetBinContent(hist.GetMaximumBin())/hist.Integral(self.integralOption), self.yMax)
+            integral = hist.Integral(self.integralOption)
+            if self.shape and integral !=0:
+                self.yMax = max(hist.GetBinContent(hist.GetMaximumBin())/integral, self.yMax)
             else:
                 self.yMax = max(hist.GetBinContent(hist.GetMaximumBin()), self.yMax)
             if hist.GetBinContent(hist.GetMaximumBin()) > 0:
-                if self.shape and hist.Integral(self.integralOption)!=0:
-                    self.yMinMax = min(hist.GetBinContent(hist.GetMinimumBin())/hist.Integral(self.integralOption), self.yMinMax)
+                if self.shape and integral!=0:
+                    temp_min = min(hist.GetBinContent(hist.GetMinimumBin())/integral, self.yMinMax)
                 else:
-                    self.yMinMax = min(hist.GetBinContent(hist.GetMinimumBin()), self.yMinMax)
+                    temp_min = min(hist.GetBinContent(hist.GetMinimumBin()), self.yMinMax)
+                
+                if temp_min < 0:
+                    print(("""WARNING: bogus minimum value for histogram '{}'. 
+                            Will not consider this value for y-axis range setting""".format(hist.GetName())))
+                else:
+                    self.yMinMax = temp_min
+        print("Minimum Value in templates: {}".format(self.yMinMax))
         self.yMinMax = max(self.yMinMax, 1e-7)
 
     def normalizePlot(self, PlotHist):
