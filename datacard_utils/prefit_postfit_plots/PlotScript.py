@@ -320,7 +320,7 @@ if combineflag:
     options.nominalKey  = options.nominalKey.replace(combineIden, combineflag)
     print("datacard: '{}'".format(options.datacard))
     print("type: '{}'".format(type(options.datacard)))
-    if not options.datacard == "None":
+    if not any(options.datacard == x for x in ["None", "", None]):
         if not os.path.exists(options.datacard):
             print("ERROR: could not load datacard from '{}'".format(options.datacard))
         datacard_dir = os.path.dirname(os.path.abspath(options.datacard))
