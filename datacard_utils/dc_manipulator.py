@@ -38,7 +38,7 @@ from manipulator_methods.nuisance_manipulator import NuisanceManipulator
 from manipulator_methods.common_manipulations import CommonManipulations
 from manipulator_methods.stxs_modifications import STXSModifications
 from manipulator_methods.XS_interpretation import XSModifications
-
+from manipulator_methods.fh_manipulations import FHmanipulations
 
 def scale_higgs_mass(harvester, base_mass = 125):
     mass_scaler = MassManipulator()
@@ -209,6 +209,7 @@ def write_harvester(harvester, cardname, outfile, group_manipulator):
     group_manipulator.add_groups_to_harvester(harvester)
     print(("writing card '{}'".format(cardname)))
 
+    # harvester.WriteDatacardWithFile(cardname, outfile)
     harvester.WriteDatacard(cardname, outfile)
 
 def transpose_binning(harvester, binning_groups):
@@ -386,6 +387,12 @@ def main(**kwargs):
     eras = harvester.era_set()
     combine_cards = kwargs.get("combine_cards", False)
 
+    # check if the fix for the fh glusplit uncertainty needs to be applied
+    fh_glusplit_fix = kwargs.get("fh_glusplit_fix", False)
+    if fh_glusplit_fix:
+        fh_manipulator = FHmanipulations()
+        fh_manipulator.apply_glusplit_scalefactors(harvester)
+    
     group_manipulator = GroupManipulator()
 
     stxs = kwargs.get("stxs", False)
@@ -668,6 +675,19 @@ def parse_arguments():
                             """.split()
                         ),
                         dest = "xs_measurement",
+                        action = "store_true",
+                        default = False
+                    )
+    
+    model_manipulations.add_option("--apply-fh-glusplit-fix",
+                        help = " ".join(
+                            """
+                            apply the scale factors for the glusplit uncertainty
+                            in the FH CR regions.
+                            Default: False
+                            """.split()
+                        ),
+                        dest = "fh_glusplit_fix",
                         action = "store_true",
                         default = False
                     )
