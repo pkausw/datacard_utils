@@ -34,6 +34,7 @@ class BinManipulator(object):
         self.__debug = 10
         self.log = ""
         self.log_path = os.path.join(os.getcwd(), "rebin.log")
+        self.__merge_n_bins = None
 
     def __del__(self):
         if self.__debug >= 10:
@@ -46,6 +47,30 @@ class BinManipulator(object):
             f.write(self.log)
         
         # super().__del__()
+
+    @property
+    def merge_n_bins(self):
+        """
+        Getter function for the merge_n_bins property
+        """
+        return self.__merge_n_bins
+    @merge_n_bins.setter
+    def merge_n_bins(self, val):
+        """
+        Setter function for the merge_n_bins property.
+        First checks wether the input is an integer value.
+        If the check passes, the value is set, otherwise raise a ValueError
+
+        Args:
+        - val:  number of bins that are to be merged at the right-hand side
+                of the distributions. Type must be int
+        """
+        if isinstance(val, int):
+            if self.__debug >= 10:
+                print("will merge the last {} bins on the right-hand side".format(val))
+            self.__merge_n_bins = int(val)
+        else:
+            raise ValueError("Input for 'merge_n_bins' must be integer!")
         
     def load_edges(self, proc):
         if isinstance(proc, ROOT.TH1):
@@ -81,6 +106,8 @@ class BinManipulator(object):
             edges += self.bin_edges[::3]
         elif self.scheme == "dl":
             edges = [-1, 0, 1]
+        elif isinstance(self.scheme, int):
+            edges = self.bin_edges[:int(-self.scheme)]
         else:
             print(("ERROR: did not recognice scheme '{}'".format(self.scheme)))
             print("Will not rebin")
@@ -286,7 +313,14 @@ class BinManipulator(object):
                         print(b)
                         print(("\n".join(["\t{}".format(x) for x in self.bin_edges])))
 
-                    self.bin_edges = self.apply_scheme()
+                    if all(x == None for x in [self.scheme, self.__merge_n_bins]):
+                        print("specified no scheme and no merge bins, skipping")
+                        return harvester
+                    if self.scheme is not None:
+                        self.bin_edges = self.apply_scheme()
+                    if self.merge_n_bins is not None:
+                        index = -self.merge_n_bins
+                        self.bin_edges = self.bin_edges[:index] + [self.bin_edges[-1]]
 
                     log_lines.append("bin edges after rebinning:")
                     log_lines.append(", ".join([str(x) for x in self.bin_edges]))
@@ -400,6 +434,17 @@ def parse_arguments():
                         choices = BinManipulator.choices,
                         default = "all",
                         # type = "str"
+                    )
+    parser.add_option("-m", "--mergeLastNbins",
+                        help = " ".join("""
+                            merge the last N bins of the distributions.
+                            The logic is based on the python list comprehension.
+                            For example, to merge the last two bins, i.e. N=2,
+                            the bin edge at position [-2] will be removed.
+                        """.split()),
+                        metavar = "N",
+                        dest = "merge_n_bins",
+                        type = "int"
                     )
     
 
