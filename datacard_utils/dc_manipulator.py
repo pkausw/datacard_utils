@@ -339,9 +339,10 @@ def main(**kwargs):
     check_mc = kwargs.get("check_mc", False)
     check_mc_data = kwargs.get("check_mc_data", False)
     binning_groups = kwargs.get("binning_groups", None)
+    merge_n_bins = kwargs.get("merge_n_bins", None)
     if binning_groups:
         transpose_binning(harvester, binning_groups)
-    if rebin_scheme or check_mc or check_mc_data:
+    if rebin_scheme or check_mc or check_mc_data or merge_n_bins:
         bin_manipulator = BinManipulator()
         bin_manipulator.log_path = os.path.join(outdir, "rebin.log")
         if check_mc_data:
@@ -351,8 +352,9 @@ def main(**kwargs):
             threshold = kwargs.get("check_mc_threshold", 15)
             bin_manipulator.threshold = threshold
             harvester = bin_manipulator.do_statistical_rebinning(harvester)
-        if rebin_scheme:
+        if rebin_scheme or merge_n_bins:
             bin_manipulator.scheme = rebin_scheme
+            bin_manipulator.merge_n_bins = merge_n_bins
             harvester = bin_manipulator.rebin_shapes(harvester = harvester)
     
     remove_minor_jec = kwargs.get("remove_minor_jec", False)
@@ -565,6 +567,18 @@ def parse_arguments():
                         dest = "check_mc_data",
                         action = "store_true",
                         default = False
+                    )
+
+    binning_options.add_option("-m", "--mergeLastNbins",
+                        help = " ".join("""
+                            merge the last N bins of the distributions.
+                            The logic is based on the python list comprehension.
+                            For example, to merge the last two bins, i.e. N=2,
+                            the bin edge at position [-2] will be removed.
+                        """.split()),
+                        metavar = "N",
+                        dest = "merge_n_bins",
+                        type = "int"
                     )
     text = "Options regarding the validation of datacards"
     validation_options = OptionGroup(parser, text)
