@@ -69,6 +69,10 @@ class BinManipulator(object):
             if self.__debug >= 10:
                 print("will merge the last {} bins on the right-hand side".format(val))
             self.__merge_n_bins = int(val)
+        elif val == None:
+            if self.__debug >= 10:
+                print("merge_n_bins deactivated")
+            self.__merge_n_bins = None
         else:
             raise ValueError("Input for 'merge_n_bins' must be integer!")
         
