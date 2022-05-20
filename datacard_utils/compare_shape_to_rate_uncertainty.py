@@ -354,13 +354,17 @@ def main(*files, **kwargs):
             print("File '{}' does not exist, skipping")
             continue
         start_comparison(f, compatible_dict = compatible_dict, **kwargs)
-    outdir = kwargs.get("outdir")
-    json_outname = os.path.join(outdir, "compatibility.json")
 
     # if there were any uncertainties that are compatible with a flat rate
     # change, safe them in the correct format. This requires an additional
     # layer in the dictionary, 'smallShapeEff'
     if len(compatible_dict) > 0:
+        
+        # construct output path for json file
+        outdir = kwargs.get("outdir")
+        json_outname = kwargs.get("json_outname", "compatible")
+        json_outname = os.path.join(outdir, json_outname)
+        if not json_outname.endswith(".json"): json_outname += ".json"
         final_dict = {"smallShapeEff": compatible_dict}
         print("will save compatibility json here: '{}'".format(json_outname))
         with open(json_outname, "w") as f:
@@ -448,6 +452,20 @@ def parse_arguments():
                         type = "str",
                         default = "comparison"
                     )
+
+    optional_group.add_option("-j", "--json-outname",
+                        help = " ".join(
+                            """
+                            output file name to use for .json file containing
+                            the final list of uncertainties compatible with a 
+                            flat rate change. Default: compatible_uncertainties
+                            """.split()
+                        ),
+                        dest = "json_outname",
+                        type = "str",
+                        default = "compatible_uncertainties"
+                    )
+    
     
     parser.add_option_group(optional_group)
     options, files = parser.parse_args()
