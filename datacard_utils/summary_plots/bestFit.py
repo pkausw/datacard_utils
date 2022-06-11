@@ -9,73 +9,129 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 fontsize = 0.04
 
-def get_table_head(table_format = "tex"):
-    if table_format == "tex":
-        return """\\begin{tabular}{lccc}
-    \\hline\\hline
-    Parameter & Stat+Syst & Stat-Only & Significance \\\\
-    \\hline"""
-    elif table_format == "md":
-        return """| Parameter | Stat+Syst | Stat-Only | Significance |
-    | --- | --- | --- | --- |"""
+def is_separator(str):
+    return str == "LINE" or str.startswith("SEPARATOR")
 
-def get_table_line(table_format = "tex"):
-    if table_format == "tex":
-        return """{parameter} & {bestfit} & {statonly} & {signi}\\\\"""
-    elif table_format == "md":
-        return """| {parameter} | {bestfit} | {statonly} | {signi} |"""
-
-def get_table_footer(table_format = "tex"):
-    if table_format == "tex":
-        return """\\hline\\hline
-    \\end{tabular}"""
+def get_separator_decoration(str):
+    if ":" in str:
+        return str.split(":")[1]
     else:
-        return ""
+        return None
 
-def parse_results(mu, upper, lower, upper_stat, lower_stat,\
-                    order, significance, table_format="tex"):
-    
-    lines = []
-    fitresult_template = "{val:+.2f}  {up:+.2f}/{down:+.2f}"
-    line = get_table_line(table_format)
+def get_table_rows_standard(fit_results, table_format):
+    rows = []
+
+    # table header
+    if table_format == "tex":
+        rows.append("\\begin{tabular}{lccc}")
+        rows.append("\\hline\\hline")
+        rows.append("Parameter & Stat+Syst & Stat-Only & Significance \\\\")
+        rows.append("\\hline")
+    elif table_format == "md":
+        rows.append("| Parameter | Stat+Syst | Stat-Only | Significance |")
+        rows.append("| --- | --- | --- | --- |")
+
+    # table content
+    row_template = "STARTLINE {parameter} COLSEP {bestfit} COLSEP {statonly} COLSEP {signi} ENDLINE"
+    entry_template = "{val:+.2f}  {up:+.2f}/{dn:+.2f}"
     counter = 0
-    for name in order:
-        if name == "LINE":
+    for name in fit_results["names"]:
+        if is_separator(name):
             if table_format == "tex":
-                lines.append("\\hline")
+                rows.append("\\hline")
             continue
-        bestfit_text = fitresult_template.format(
-                val = mu[counter],
-                up = upper[counter],
-                down = lower[counter]
+        bestfit_text = entry_template.format(
+                val = fit_results["mu"][counter],
+                up = fit_results["up"][counter],
+                dn = fit_results["dn"][counter]
             )
-        stat_only_text = fitresult_template.format(
-                val = mu[counter],
-                up = upper_stat[counter],
-                down = lower_stat[counter]
+        stat_only_text = entry_template.format(
+                val = fit_results["mu"][counter],
+                up = fit_results["up_stat"][counter],
+                dn = fit_results["dn_stat"][counter]
             )
-        signi_text = str(round(significance[counter], 1)) \
-                        if isinstance(significance[counter], float) \
-                            else significance[counter]
-        # latex format requires additional pollishing of the combination name
+        signi_text = str(round(fit_results["sigma"][counter], 1)) \
+                        if isinstance(fit_results["sigma"][counter], float) \
+                            else fit_results["sigma"][counter]
+
         if table_format == "tex":
+            row_template = row_template.replace("STARTLINE", "")
+            row_template = row_template.replace("COLSEP","&")
+            row_template = row_template.replace("ENDLINE", "\\\\")
             name = name.replace("#", "\\")
             if any(x in name for x in "[ ]".split()):
                 name = "${}$".format(name)
             name = name.replace("_", "\\_")
-        lines.append(line.format(
+        elif table_format == "md":
+            row_template = row_template.replace("STARTLINE", "|")
+            row_template = row_template.replace("COLSEP","|")
+            row_template = row_template.replace("ENDLINE", "|")
+
+        rows.append(row_template.format(
             parameter = name,
             bestfit = bestfit_text,
             statonly = stat_only_text,
             signi = signi_text
         ))
         counter += 1
-    return lines
+
+    if table_format == "tex":
+        rows.append("\\hline\\hline")
+        rows.append("\\end{tabular}")
+
+    return rows
+
+
+def get_table_rows_paper(fit_results):
+    rows = []
+
+    # table header
+    rows.append("\\begin{tabular}{lrc}")
+    rows.append("  \\hline")
+    rows.append("  & $\\hat{\\mu}\\,\\pm\\text{tot}\\,(\\pm\\text{stat}\\,\\,\\pm\\text{syst})$ & significance obs (exp) \\\\")
+    rows.append("  \\hline")
+
+    # table content
+    row_template = "  {label} & ${bestfit:+.2f} ^{{{up:+.2f}}}_{{{dn:+.2f}}}$ \\;\\left( ^{{{up_stat:+.2f}}}_{{{dn_stat:+.2f}}} \\,\\, ^{{{up_syst:+.2f}}}_{{{dn_syst:+.2f}}} \\right)$ & ${signi:.1f}\\,\\sigma \\;\\left( {signi_asimov:.1f}\\,\\sigma \\right)$ \\\\"
+    counter = 0
+    for name in fit_results["names"]:
+        if is_separator(name):
+            rows[-1] += "[\\cmsTabSkip]"
+            text = get_separator_decoration(name)
+            if text is not None:
+                rows.append(f"  {text} & & \\\\")
+            continue
+
+        # clean label for tex
+        label = fit_results["labels"][name]
+        label = label.replace("#", "\\")
+        label = label.replace("_", "\\_")
+
+        rows.append(row_template.format(
+            label = label,
+            bestfit = fit_results["mu"][counter],
+            up = fit_results["up"][counter],
+            dn = fit_results["dn"][counter],
+            up_stat = fit_results["up_stat"][counter],
+            dn_stat = fit_results["dn_stat"][counter],
+            up_syst = fit_results["up_syst"][counter],
+            dn_syst = fit_results["dn_syst"][counter],
+            signi = fit_results["sigma"][counter],
+            signi_asimov = fit_results["sigma_exp"][counter]
+        ))
+        counter += 1
+
+    # table footer
+    rows.append("  \\hline")
+    rows.append("\\end{table}")
+
+    return rows
+
 
 def load_values(result_dict, result_set, value_keyword, order, default = "--"):
     values = []
     for name in order:
-        if name == "LINE": continue
+        if is_separator(name): continue
         subdict = result_dict.get(name, {})
         if len(subdict) == 0: continue
         set_dict = subdict.get(result_set, {})
@@ -91,25 +147,22 @@ def load_values(result_dict, result_set, value_keyword, order, default = "--"):
     return np.array(values)
 
 
-def create_table(mu, upper, lower, upper_stat, lower_stat,\
-                    entry_names, significance, outname,\
-                    table_format = "tex"):
+def create_table(fit_results, outname, table_format = "tex"):
 
-    header = get_table_head(table_format)
-    
-    footer = get_table_footer(table_format)
+    rows = []
+    if table_format == "paper":
+        rows += get_table_rows_paper(fit_results=fit_results)
+    else:
+        rows += get_table_rows_standard(fit_results=fit_results, table_format=table_format)
 
-    lines = [header]
-    lines += parse_results(mu = mu, upper = upper, lower = lower,
-                            upper_stat = upper_stat, lower_stat = lower_stat,\
-                            order = entry_names, significance = significance,\
-                            table_format = table_format)
-    lines.append(footer)
-    if not outname.endswith(table_format):
-        outpath = ".".join([outname, table_format])
+    file_ending = "tex" if table_format in ["tex","paper"] else table_format
+    outpath = outname
+    if not outpath.endswith(file_ending):
+        outpath = ".".join([outpath,file_ending])
     print("writing table to {}".format(outpath))
     with open(outpath, "w") as f:
-        f.write("\n".join(lines))
+        f.write("\n".join(rows))
+
 
 def bestfit( **kwargs ):
 
@@ -124,45 +177,53 @@ def bestfit( **kwargs ):
     order = res.get("order")
     if not order:
         order = values.keys()
-    
-    mu = load_values(   result_dict = values, 
-                        result_set = "bestfit", 
-                        value_keyword = "value", 
+    labels = res.get("labels")
+    if not labels:
+        labels = { x:x for x in values.key() }
+
+    mu = load_values(   result_dict = values,
+                        result_set = "bestfit",
+                        value_keyword = "value",
                         order = order)
     print(mu)
-    expected = load_values(   result_dict = values, 
-                        result_set = "expected", 
-                        value_keyword = "value", 
+    expected = load_values(   result_dict = values,
+                        result_set = "expected",
+                        value_keyword = "value",
                         order = order, default = 1)
-    upper = load_values(   result_dict = values, 
-                        result_set = "bestfit", 
-                        value_keyword = "up", 
+    upper = load_values(   result_dict = values,
+                        result_set = "bestfit",
+                        value_keyword = "up",
                         order = order)
-    lower = load_values(   result_dict = values, 
-                        result_set = "bestfit", 
-                        value_keyword = "down", 
+    lower = load_values(   result_dict = values,
+                        result_set = "bestfit",
+                        value_keyword = "down",
                         order = order)
     print(mu)
-    upper_stat = load_values(   result_dict = values, 
-                        result_set = "stat_only", 
-                        value_keyword = "up", 
+    upper_stat = load_values(   result_dict = values,
+                        result_set = "stat_only",
+                        value_keyword = "up",
                         order = order)
-    lower_stat = load_values(   result_dict = values, 
-                        result_set = "stat_only", 
-                        value_keyword = "down", 
+    lower_stat = load_values(   result_dict = values,
+                        result_set = "stat_only",
+                        value_keyword = "down",
                         order = order)
-    significance = load_values(   result_dict = values, 
-                        result_set = "significance", 
-                        value_keyword = None, 
+    significance = load_values(   result_dict = values,
+                        result_set = "significance",
+                        value_keyword = None,
+                        order = order)
+    significance_expected = load_values(   result_dict = values,
+                        result_set = "significance_expected",
+                        value_keyword = None,
                         order = order)
 
-    
+
     assert(len(upper) == len(upper_stat))
     assert(len(lower) == len(lower_stat))
     assert(len(mu) == len(upper))
     assert(len(significance) == len(mu))
     assert(len(upper) == len(lower))
-    
+    assert(len(significance_expected) == len(significance))
+
     upper_syst = np.sqrt(upper**2 - upper_stat**2)
     lower_syst = -np.sqrt(lower**2 - lower_stat**2)
     print(upper)
@@ -176,27 +237,34 @@ def bestfit( **kwargs ):
     outname = kwargs.get("outname", "test")
     display_style = kwargs.get("display_style")
 
-    entry_names = [x for x in order if x in values.keys() or x == "LINE"]
+    entry_names = [x for x in order if x in values.keys() or is_separator(x)]
 
-    create_plot(mu = mu, expected = expected, upper = upper, lower = lower,
-                upper_stat = upper_stat, lower_stat = lower_stat,
-                upper_syst = upper_syst, lower_syst = lower_syst, 
-                entry_names = entry_names, outname = outname,
-                include_signi = include_signi, style = kwargs, display_style = display_style)
+    fit_results = {
+        "names" : entry_names,
+        "labels" : labels,
+        "expected" : expected,
+        "mu" : mu,
+        "up" : upper,
+        "dn" : lower,
+        "up_stat" : upper_stat,
+        "dn_stat" : lower_stat,
+        "up_syst" : upper_syst,
+        "dn_syst" : lower_syst,
+        "sigma" : significance,
+        "sigma_exp" : significance_expected
+    }
+
+    create_plot(fit_results, outname=outname,
+                include_signi=include_signi, style=kwargs, display_style=display_style)
 
     skip_table = kwargs.get("skip_table", False)
     table_format = kwargs.get("table_format", "tex")
     if not skip_table:
-        create_table(mu = mu, upper = upper, lower = lower,
-                upper_stat = upper_stat, lower_stat = lower_stat,
-                entry_names = entry_names, outname = outname,
-                significance = significance, table_format = table_format)
+        create_table(fit_results=fit_results, outname=outname, table_format=table_format)
 
-def create_plot(mu, expected, upper, lower, upper_stat, lower_stat,\
-    upper_syst, lower_syst , entry_names, outname, style, include_signi = False,
-    display_style = "poi"):
+def create_plot(fit_results, outname, style, include_signi = False, display_style = "poi"):
 
-    nchannels = mu.size
+    nchannels = fit_results["mu"].size
     print(nchannels)
 
     # calculate coordinates
@@ -206,8 +274,8 @@ def create_plot(mu, expected, upper, lower, upper_stat, lower_stat,\
     print(channels)
     zero = np.zeros(nchannels)
 
-    xmin = np.min(mu - np.abs(lower))
-    xmax = np.max(mu + np.abs(upper))
+    xmin = np.min(fit_results["mu"] - np.abs(fit_results["dn"]))
+    xmax = np.max(fit_results["mu"] + np.abs(fit_results["up"]))
     xmax = max(xmax, 10)
     print(xmin)
     print(xmax)
@@ -215,23 +283,24 @@ def create_plot(mu, expected, upper, lower, upper_stat, lower_stat,\
     if display_style == "XS":
         title = "#sigma in fb"
     upper_stretch = 1.2 if not display_style == "XS" else 1.2*2.5
-    c,h = draw_canvas_histo(    nchannels = nchannels, 
-                                xmin = abs(xmin)*(-1.2), xmax = xmax*upper_stretch, 
+    c,h = draw_canvas_histo(    nchannels = nchannels,
+                                xmin = abs(xmin)*(-1.2), xmax = xmax*upper_stretch,
                                 title = title,
                                 positions = channels,
-                                entry_names = entry_names ,
+                                entry_names = fit_results["names"],
+                                labels = fit_results["labels"],
                                 lumilabel = style.get("lumilabel", ""))
 
     # line at SM expectation (default = 1)
     lines = []
-    for i, exp_val in enumerate(reversed(expected), 1):
+    for i, exp_val in enumerate(reversed(fit_results["expected"]), 1):
         lines.append(ROOT.TLine())
         l = lines[-1]
         l.SetLineStyle( 2 )
         l.DrawLine( exp_val, 3*(i-1), exp_val, 3*i)
 
-    print(mu)
-    gmu_tot = ROOT.TGraphAsymmErrors( nchannels, mu, channels, np.abs(lower), np.abs(upper), zero, zero )
+    print(fit_results["mu"])
+    gmu_tot = ROOT.TGraphAsymmErrors( nchannels, fit_results["mu"], channels, np.abs(fit_results["dn"]), np.abs(fit_results["up"]), zero, zero )
     gmu_tot.SetMarkerStyle( 1 )
     gmu_tot.SetMarkerSize( 1 )
     gmu_tot.SetMarkerColor( 4 )
@@ -240,7 +309,7 @@ def create_plot(mu, expected, upper, lower, upper_stat, lower_stat,\
     gmu_tot.Draw( "p" )
     gmu_tot.Print("range")
 
-    gmu = ROOT.TGraphAsymmErrors( nchannels, mu, channels, np.abs(lower_stat), np.abs(upper_stat), zero, zero )
+    gmu = ROOT.TGraphAsymmErrors( nchannels, fit_results["mu"], channels, np.abs(fit_results["dn_stat"]), np.abs(fit_results["up_stat"]), zero, zero )
     gmu.SetMarkerStyle( 21 )
     gmu.SetMarkerSize( 1.5 )
     gmu.SetMarkerColor( 1 )
@@ -278,38 +347,38 @@ def create_plot(mu, expected, upper, lower, upper_stat, lower_stat,\
         res.SetTextFont( 42 )
         res.SetTextSize( 0.045 )
         res.SetTextAlign( 31 )
-        uncertainties = uncertainty_template.format(upper[ich],lower[ich])
+        uncertainties = uncertainty_template.format(fit_results["up"][ich],fit_results["dn"][ich])
         latex_parts = ["{val:.2f} #color[4]{{ {uncertainties: ^{width}} }}".\
-                        format(val = mu[ich],uncertainties = uncertainties, width = width)]
+                        format(val = fit_results["mu"][ich],uncertainties = uncertainties, width = width)]
         uncertainties = uncertainty_template.\
-                        format(upper_stat[ich],lower_stat[ich])
+                        format(fit_results["up_stat"][ich],fit_results["dn_stat"][ich])
         latex_parts += ["#color[2]{{ {uncertainties: ^{width}} }}".\
                         format(uncertainties = uncertainties, width = width)]
         uncertainties = uncertainty_template.\
-                        format(upper_syst[ich],lower_syst[ich])
+                        format(fit_results["up_syst"][ich],fit_results["dn_syst"][ich])
         latex_parts += ["{uncertainties: ^{width}}".\
                         format(uncertainties = uncertainties, width = width)]
         if include_signi:
-            latex_parts += ["{:.1f} #sigma".format(significance[ich])]
-        
+            latex_parts += ["{:.1f} #sigma".format(fit_results["sigma"][ich])]
+
         res.DrawLatex( body_position, channel-0.2, " ".join(latex_parts))
 
-  
-    
+
+
     #draw_disclaimer()
 
-    c.RedrawAxis()    
+    c.RedrawAxis()
     c.Modified()
     c.Update()
     exts = ["pdf", "png"]
     for ext in exts:
         c.SaveAs(".".join([outname, ext]), ext)
 
-def draw_canvas_histo( nchannels, xmin, xmax, title, entry_names, positions, \
+def draw_canvas_histo( nchannels, xmin, xmax, title, entry_names, labels, positions, \
     lumilabel):
     c = ROOT.TCanvas( "c", "Canvas",800,750)
     c.Draw()
-    
+
     #h = ROOT.TH2F( "h", "", 10, xmin, xmax, 3*nchannels+2, 0, 3*nchannels+2 )
     h = ROOT.TH2F( "h", "", 10, xmin, xmax, int(3.5*nchannels), 0, int(3.5*nchannels) )
     h.Draw()
@@ -326,7 +395,7 @@ def draw_canvas_histo( nchannels, xmin, xmax, title, entry_names, positions, \
         if n_entry > nchannels:
             raise ValueError("Number of entries is larger than \
                 number of channels!")
-        if name == "LINE":
+        if is_separator(name):
             if not n_entry == 0:
                 y_pos = (positions[n_entry-1] - positions[n_entry])/2.
                 y_pos += positions[n_entry]
@@ -334,8 +403,8 @@ def draw_canvas_histo( nchannels, xmin, xmax, title, entry_names, positions, \
                 l.DrawLine(xmin, y_pos, xmax, y_pos)
             continue
         nbin = yaxis.FindBin(positions[n_entry])
-        print("Setting label for bin {} to '{}'".format(nbin, name))
-        yaxis.SetBinLabel(nbin, name)
+        print("Setting label for bin {} to '{}'".format(nbin,labels[name]))
+        yaxis.SetBinLabel(nbin,labels[name])
         n_entry += 1
 
 
@@ -361,7 +430,7 @@ def draw_canvas_histo( nchannels, xmin, xmax, title, entry_names, positions, \
 
 
 def my_style():
-    
+
     ROOT.gStyle.SetTitleOffset( 1.5, "xy" )
     ROOT.gStyle.SetTitleFont( 62, "bla" )
 
@@ -389,38 +458,38 @@ def my_style():
     ROOT.gStyle.SetPadTickX(1)
     ROOT.gStyle.SetEndErrorSize(6)
 
-    ROOT.gStyle.SetCanvasColor(-1) 
-    ROOT.gStyle.SetPadColor(-1) 
-    ROOT.gStyle.SetFrameFillColor(-1) 
-    ROOT.gStyle.SetTitleFillColor(-1) 
-    ROOT.gStyle.SetFillColor(-1) 
-    ROOT.gStyle.SetFillStyle(4000) 
-    ROOT.gStyle.SetStatStyle(0) 
-    ROOT.gStyle.SetTitleStyle(0) 
-    ROOT.gStyle.SetCanvasBorderSize(0) 
-    ROOT.gStyle.SetFrameBorderSize(0) 
-    ROOT.gStyle.SetLegendBorderSize(0) 
-    ROOT.gStyle.SetStatBorderSize(0) 
-    ROOT.gStyle.SetTitleBorderSize(0) 
-    
+    ROOT.gStyle.SetCanvasColor(-1)
+    ROOT.gStyle.SetPadColor(-1)
+    ROOT.gStyle.SetFrameFillColor(-1)
+    ROOT.gStyle.SetTitleFillColor(-1)
+    ROOT.gStyle.SetFillColor(-1)
+    ROOT.gStyle.SetFillStyle(4000)
+    ROOT.gStyle.SetStatStyle(0)
+    ROOT.gStyle.SetTitleStyle(0)
+    ROOT.gStyle.SetCanvasBorderSize(0)
+    ROOT.gStyle.SetFrameBorderSize(0)
+    ROOT.gStyle.SetLegendBorderSize(0)
+    ROOT.gStyle.SetStatBorderSize(0)
+    ROOT.gStyle.SetTitleBorderSize(0)
+
 
 def parse_arguments():
     usage = """
     Script to generate mu summary plots. Required input is a json file
     containing the fit results for syst+stat and stat-only.
-    Additionally, you can provide a list 'order' in which these keys 
+    Additionally, you can provide a list 'order' in which these keys
     are to be displayed. The file should be structured as follows:
     {
         "results": {
             NAME1: {
                 "bestfit": {
-                    "down": val, 
-                    "up": val, 
+                    "down": val,
+                    "up": val,
                     "value": val
-                }, 
+                },
                 "stat_only": {
-                    "down": val, 
-                    "up": val, 
+                    "down": val,
+                    "up": val,
                     "value": val
                 }
             },
@@ -433,7 +502,7 @@ def parse_arguments():
             ...
         ]
     }
-    The key 'NAME' will be used in the plot. 
+    The key 'NAME' will be used in the plot.
     python %prog [options]
     """
     parser = OptionParser(usage = usage)
@@ -456,13 +525,13 @@ def parse_arguments():
                         type = "str"
                     )
     parser.add_option_group(required_group)
-    
+
     style_group = OptionGroup(parser, "Style Options")
     style_group.add_option("-s", "--stepsize",
                         help = " ".join("""
                             change this number to adjust the space between
-                            the entries. The distance between entries is 
-                            calculated with 
+                            the entries. The distance between entries is
+                            calculated with
                             '1.5*i for i in range(0, nentires, stepsize)'
                             Default: 2
                         """.split()),
@@ -502,11 +571,11 @@ def parse_arguments():
     style_group.add_option("-t", "--table-format",
                         help = " ".join("""
                             output format for results table.
-                            Current choices: tex, md.
+                            Current choices: tex, md, paper.
                             Defaults to tex
                         """.split()),
                         dest = "table_format",
-                        choices = "tex md".split(),
+                        choices = "tex md paper".split(),
                         default = "tex"
                     )
     style_group.add_option("--display-style",
