@@ -9,14 +9,19 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 fontsize = 0.04
 
+# Parse separators
 def is_separator(str):
     return str == "LINE" or str.startswith("SEPARATOR")
 
-def get_separator_decoration(str):
-    if ":" in str:
+def separator_has_description(str):
+    return ":" in str
+
+def get_separator_description(str):
+    if separator_has_description(str):
         return str.split(":")[1]
     else:
         return None
+
 
 def get_table_rows_standard(fit_results, table_format):
     rows = []
@@ -85,20 +90,29 @@ def get_table_rows_standard(fit_results, table_format):
 def get_table_rows_paper(fit_results):
     rows = []
 
+    has_sigma_exp = "sigma_exp" in fit_results.keys()
+
     # table header
     rows.append("\\begin{tabular}{lrc}")
     rows.append("  \\hline")
-    rows.append("  & $\\hat{\\mu}\\,\\pm\\text{tot}\\,(\\pm\\text{stat}\\,\\,\\pm\\text{syst})$ & significance obs (exp) \\\\")
+    rows.append("  & $\\hat{\\mu}\\,\\pm\\text{tot}\\,(\\pm\\text{stat}\\,\\,\\pm\\text{syst})$ & significance \\\\")
+    if has_sigma_exp:
+        rows[-1] = rows[-1].replace("significance","significance obs (exp)")
     rows.append("  \\hline")
 
     # table content
-    row_template = "  {label} & ${bestfit:+.2f} ^{{{up:+.2f}}}_{{{dn:+.2f}}}$ \\;\\left( ^{{{up_stat:+.2f}}}_{{{dn_stat:+.2f}}} \\,\\, ^{{{up_syst:+.2f}}}_{{{dn_syst:+.2f}}} \\right)$ & ${signi:.1f}\\,\\sigma \\;\\left( {signi_asimov:.1f}\\,\\sigma \\right)$ \\\\"
+    row_template = "  {label} & ${bestfit:+.2f} ^{{{up:+.2f}}}_{{{dn:+.2f}}} \\;\\left( ^{{{up_stat:+.2f}}}_{{{dn_stat:+.2f}}} \\,\\, ^{{{up_syst:+.2f}}}_{{{dn_syst:+.2f}}} \\right)$ & ${signi:.1f}\\,\\sigma "
+    if has_sigma_exp:
+        row_template += "\\;\\left( {signi_asimov:.1f}\\,\\sigma \\right)$ "
+    row_template += "\\\\"
+
     counter = 0
-    for name in fit_results["names"]:
+    for i,name in enumerate(fit_results["names"]):
         if is_separator(name):
-            rows[-1] += "[\\cmsTabSkip]"
-            text = get_separator_decoration(name)
-            if text is not None:
+            if i > 0:
+                rows[-1] += "[\\cmsTabSkip]"
+            if separator_has_description(name):
+                text = get_separator_description(name)
                 rows.append(f"  {text} & & \\\\")
             continue
 
@@ -107,23 +121,37 @@ def get_table_rows_paper(fit_results):
         label = label.replace("#", "\\")
         label = label.replace("_", "\\_")
 
-        rows.append(row_template.format(
-            label = label,
-            bestfit = fit_results["mu"][counter],
-            up = fit_results["up"][counter],
-            dn = fit_results["dn"][counter],
-            up_stat = fit_results["up_stat"][counter],
-            dn_stat = fit_results["dn_stat"][counter],
-            up_syst = fit_results["up_syst"][counter],
-            dn_syst = fit_results["dn_syst"][counter],
-            signi = fit_results["sigma"][counter],
-            signi_asimov = fit_results["sigma_exp"][counter]
-        ))
+        if has_sigma_exp:
+            rows.append(row_template.format(
+                label = label,
+                bestfit = fit_results["mu"][counter],
+                up = fit_results["up"][counter],
+                dn = fit_results["dn"][counter],
+                up_stat = fit_results["up_stat"][counter],
+                dn_stat = fit_results["dn_stat"][counter],
+                up_syst = fit_results["up_syst"][counter],
+                dn_syst = fit_results["dn_syst"][counter],
+                signi = fit_results["sigma"][counter],
+                signi_asimov = fit_results["sigma_exp"][counter]
+            ))
+        else:
+            rows.append(row_template.format(
+                label = label,
+                bestfit = fit_results["mu"][counter],
+                up = fit_results["up"][counter],
+                dn = fit_results["dn"][counter],
+                up_stat = fit_results["up_stat"][counter],
+                dn_stat = fit_results["dn_stat"][counter],
+                up_syst = fit_results["up_syst"][counter],
+                dn_syst = fit_results["dn_syst"][counter],
+                signi = fit_results["sigma"][counter]
+            ))
+
         counter += 1
 
     # table footer
     rows.append("  \\hline")
-    rows.append("\\end{table}")
+    rows.append("\\end{tabular}")
 
     return rows
 
@@ -134,6 +162,8 @@ def load_values(result_dict, result_set, value_keyword, order, default = "--"):
         if is_separator(name): continue
         subdict = result_dict.get(name, {})
         if len(subdict) == 0: continue
+        if not result_set in subdict.keys():
+            return None
         set_dict = subdict.get(result_set, {})
         val = None
         if not isinstance(set_dict, dict):
@@ -216,13 +246,17 @@ def bestfit( **kwargs ):
                         value_keyword = None,
                         order = order)
 
-
     assert(len(upper) == len(upper_stat))
     assert(len(lower) == len(lower_stat))
     assert(len(mu) == len(upper))
     assert(len(significance) == len(mu))
     assert(len(upper) == len(lower))
-    assert(len(significance_expected) == len(significance))
+    if expected is not None:
+        assert(len(expected) == len(mu))
+    else:
+        expected = np.full(len(mu),1.)
+    if significance_expected is not None:
+        assert(len(significance_expected) == len(significance))
 
     upper_syst = np.sqrt(upper**2 - upper_stat**2)
     lower_syst = -np.sqrt(lower**2 - lower_stat**2)
@@ -251,8 +285,10 @@ def bestfit( **kwargs ):
         "up_syst" : upper_syst,
         "dn_syst" : lower_syst,
         "sigma" : significance,
-        "sigma_exp" : significance_expected
     }
+    if significance_expected is not None:
+        fit_results["sigma_exp"] = significance_expected
+
 
     create_plot(fit_results, outname=outname,
                 include_signi=include_signi, style=kwargs, display_style=display_style)
