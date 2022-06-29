@@ -1,0 +1,117 @@
+{
+    "ljets_ge6j_ge4t_ttH_ttmb_ratioObservable": {
+        "top": "SL \\geq 6 jets \\geq 4 tags",
+        "bottom": "ttH+ttb/bb node",
+        "xtitle": "Ratio Observable"
+    },
+    "ljets_5j_ge4t_ttH_ttmb_ratioObservable": {
+        "top": "SL 5 jets \\geq 4 tags",
+        "bottom": "ttH+ttb/bb node",
+        "xtitle": "Ratio Observable"
+    },
+    "ljets_ge5j_ge4t_ttH_ttmb_ratioObservable": {
+        "top": "SL \\geq 5 jets \\geq 4 tags",
+        "bottom": "ttH+ttb/bb node",
+        "xtitle": "Ratio Observable"
+    },
+    "ljets_ge6j_ge4t_ttlf_node": {
+        "top": "SL \\geq 6 jets \\geq 4 tags",
+        "bottom": "ttlf node",
+        "range": 0.0
+    },
+    "ljets_ge5j_ge4t_ttlf_node": {
+        "top": "SL \\geq 5 jets \\geq 4 tags",
+        "bottom": "ttlf node",
+        "range": 0.0
+    },
+    "ljets_5j_ge4t_ttlf_node": {
+        "top": "SL 5 jets \\geq 4 tags",
+        "bottom": "ttlf node",
+        "range": 0.0
+    },
+    "fh_j9_t4_DNN_Node0": {
+        "top": "FH \\geq 9 jets \\geq 4 tags",
+        "bottom": "binary ANN",
+        "range": 0.0
+    },
+    "ljets_ge6j_ge4t_tHq_node": {
+        "top": "SL \\geq 6 jets \\geq 4 tags",
+        "bottom": "tHq node"
+    },
+    "ljets_ge5j_ge4t_tHq_node": {
+        "top": "SL \\geq 5 jets \\geq 4 tags",
+        "bottom": "tHq node"
+    },
+    "ljets_5j_ge4t_tHq_node": {
+        "top": "SL 5 jets \\geq 4 tags",
+        "bottom": "tHq node"
+    },
+    "ttH_hbb_13TeV_dl_4j3b_DNN_ttlf": {
+        "top": "DL \\geq 4 jets \\geq 3 tags",
+        "bottom": "ttlf node",
+        "range": 0.0
+    },
+    "ttH_hbb_13TeV_dl_4j3b_DNN_ttHbb_ratioObservable": {
+        "top": "DL \\geq 4 jets \\geq 3 tags",
+        "bottom": "ttH + ttbb node",
+        "range": 0.0,
+        "xtitle": "Ratio Observable"
+    },
+    "ljets_ge6j_ge4t_tt2b_node": {
+        "top": "SL \\geq 6 jets \\geq 4 tags",
+        "bottom": "tt2b node",
+        "range": 0.0
+    },
+    "ljets_5j_ge4t_tt2b_node": {
+        "top": "SL 5 jets \\geq 4 tags",
+        "bottom": "tt2b node",
+        "range": 0.0
+    },
+    "ljets_ge5j_ge4t_tt2b_node": {
+        "top": "SL \\geq 5 jets \\geq 4 tags",
+        "bottom": "tt2b node",
+        "range": 0.0
+    },
+    "ljets_ge6j_ge4t_tHW_node": {
+        "top": "SL \\geq 6 jets \\geq 4 tags",
+        "bottom": "tHW node"
+    },
+    "ljets_5j_ge4t_tHW_node": {
+        "top": "SL 5 jets \\geq 4 tags",
+        "bottom": "tHW node"
+    },
+    "ljets_ge5j_ge4t_tHW_node": {
+        "top": "SL \\geq 5 jets \\geq 4 tags",
+        "bottom": "tHW node"
+    },
+    "ljets_ge6j_ge4t_ttcc_node": {
+        "top": "SL \\geq 6 jets \\geq 4 tags",
+        "bottom": "ttcc node",
+        "range": 0.0
+    },
+    "ljets_5j_ge4t_ttcc_node": {
+        "top": "SL 5 jets \\geq 4 tags",
+        "bottom": "ttcc node",
+        "range": 0.0
+    },
+    "ljets_ge5j_ge4t_ttcc_node": {
+        "top": "SL \\geq 5 jets \\geq 4 tags",
+        "bottom": "ttcc node",
+        "range": 0.0
+    },
+    "fh_j8_t4_DNN_Node0": {
+        "top": "FH 8 jets \\geq 4 tags",
+        "bottom": "binary ANN",
+        "range": 0.0
+    },
+    "fh_j7_t4_DNN_Node0": {
+        "top": "FH 7 jets \\geq 4 tags",
+        "bottom": "binary ANN",
+        "range": 0.0
+    },
+    "ttH_hbb_13TeV_dl_4j3b_DNN_ttcc": {
+        "top": "DL \\geq 4 jets \\geq 3 tags",
+        "bottom": "ttcc node",
+        "range": 0.0
+    }
+}
