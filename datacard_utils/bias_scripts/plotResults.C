@@ -1063,19 +1063,17 @@ void plotResults(TString pathname, TString pathToShapeExpectationRootfile = "", 
     TString temp;
     for(auto& exp : expSet){
       std::cout << "label " << exp() << std::endl;
-      outputString = "Parameter Mean MeanError RMS MeanPost-fit (MeanPost-fitLo MeanPost-fitUp) Median";
+      std::cout << outputString << std::endl;
+      outputString = "Parameter Mean MeanError RMS MeanPost-fit (MeanPost-fitLo MeanPost-fitUp) Median\n";
       for(auto& poi : exp.pois())
       {
-          if(outputString.EqualTo("")) 
-          {
-              outputString.Form("#Entries: %f\n",exp.postfitS(poi)->GetEntries());
-              std::cout << outputString << std::endl;
-          }
+        temp.Form("#Entries: %f\n",exp.postfitS(poi)->GetEntries());
+        outputString += temp;
           temp.Form("%s %f +- %f +- %f +- %f (%f + %f)\t%f\n", poi.Data(), exp.postfitSMean(poi), exp.postfitSMeanError(poi), exp.postfitSRMS(poi), exp.postfitSerror(poi), exp.postfitSerrorLo(poi), exp.postfitSerrorHi(poi), helperFuncs::getMedian(exp.postfitS(poi)));
           outputString += temp;
           std::cout << "\t" << temp.Data() << std::endl;
           std::cout << "\tmedian = " << helperFuncs::getMedian(exp.postfitS(poi)) << std::endl;
-          temp.Form("\tbias = %f +- %f\n", exp.biasfitSMean(poi), exp.biasfitSMeanError(poi));
+          temp.Form("\tbias = %f +- %f (stat) +- %f (RMS)\n", exp.biasfitSMean(poi), exp.biasfitSMeanError(poi), helperFuncs::getMedian(exp.biasfitS(poi)));
           std::cout << temp.Data();
           outputString += temp;
           
