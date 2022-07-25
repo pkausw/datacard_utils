@@ -2,7 +2,6 @@ from __future__ import absolute_import
 from __future__ import print_function
 import os
 import sys
-from turtle import update
 import ROOT
 import json
 cmssw_base = os.environ["CMSSW_BASE"]
@@ -309,6 +308,8 @@ def do_shape_comparisons(
                         )
                 )
             
+            # update the dictionary with the parameters that are compatible 
+            # with a flat rate change
             update_compatible_dict(
                 compatible_dict=compatible_dict,
                 uncertainties=compatible_uncertainties,
@@ -346,9 +347,27 @@ def start_comparison(filepath, **kwargs):
         compatible_dict=compatible_dict
     )
 
-def main(*files, **kwargs):
+def write_output_file(final_dict, json_outname, outdir):
+        
+    # construct output path for json file
+    json_outname = os.path.join(outdir, json_outname)
+    if not json_outname.endswith(".json"): json_outname += ".json"
 
+    print("will save compatibility json here: '{}'".format(json_outname))
+    with open(json_outname, "w") as f:
+        json.dump(final_dict, f, indent = 4, separators = (',', ': '))
+
+def main(*files, **kwargs):
+    # setup directory for outputs
+    outdir = kwargs.get("outdir")
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
+    
+    # first, create dictionary that saves the parameters that are
+    # compatible with a flat rate change using a KS score
     compatible_dict = {}
+
+    # now loop through all files (the datacards) and do the comparison
     for f in files:
         if not os.path.exists(f):
             print("File '{}' does not exist, skipping")
@@ -358,37 +377,36 @@ def main(*files, **kwargs):
     # if there were any uncertainties that are compatible with a flat rate
     # change, safe them in the correct format. This requires an additional
     # layer in the dictionary, 'smallShapeEff'
+    comparison_outname = kwargs.get("json_outname", "compatible")
     if len(compatible_dict) > 0:
-        
-        # construct output path for json file
-        outdir = kwargs.get("outdir")
-        json_outname = kwargs.get("json_outname", "compatible")
-        json_outname = os.path.join(outdir, json_outname)
-        if not json_outname.endswith(".json"): json_outname += ".json"
-        final_dict = {"smallShapeEff": compatible_dict}
-        print("will save compatibility json here: '{}'".format(json_outname))
-        with open(json_outname, "w") as f:
-            json.dump(final_dict, f, indent = 4, separators = (',', ': '))
 
+        write_output_file(final_dict = {"smallShapeEff": compatible_dict}, 
+                            json_outname = comparison_outname, 
+                            outdir = outdir
+        )
 
 def parse_arguments():
     usage = " ".join("""
-    This tool combines multiple manipulator methods.
-    Current list of implemented methods:
-    apply_validation, group_manipulator, nuisance_manipulator, 
-    rebin_distributions, scale_higgs_mass. 
+    This tool compares shapes uncertainties with a 'flat' rate variation.
+    First, the shapes are extracted from the datacard(s). Afterwards, the
+    nominal shape for the respective (sum of) processes are scaled to match the
+    integral of the varied templates. This is a 'flat' rate variation since
+    this does not account for any shape effect introduced by the nuisance
+    parameter.
+    Finally, the flat rate variation is compared to the 'real' shape variation
+    using a KS score. The script directly saves the list of uncertainties
+    that are compatible with a flat rate change for further processing.
+
     This tool employs functions from the CombineHarvester package. 
     Please make sure that you have installed it!
-
-    The script will first scale the higgs mass and will then proceed
-    with other manipulations.
     """.split())
 
     usage += """
 
-    python %prog [options]
+    python %prog [options] path/to/datacards.txt
     """
     parser = OptionParser(usage = usage)
+
     parser.add_option("-i", "--input",
                         help = " ".join(
                             """
@@ -444,7 +462,8 @@ def parse_arguments():
                         help = " ".join(
                             """
                             prefix to use in the naming of the final plots.
-                            The format of the plot names is 'PREFIX_SYSTNAME.pdf'
+                            The format of the plot names is 
+                            'PREFIX__CHANNEL__PROCESS__SYSTNAME.pdf'
                             Default for PREFIX is 'comparison'
                             """.split()
                         ),
