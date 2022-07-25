@@ -67,6 +67,13 @@ cd -
                 else:
                     cmds.append(keyword)
         return cmds
+    
+    def get_value(self, cmds, keyword, default=None):
+        if keyword in cmds:
+            key_index = cmds.index(keyword)
+            return cmds[key_index+1]
+        else:
+            return default
 
     def create_folder(self, folder, reset = False):
         if reset:
