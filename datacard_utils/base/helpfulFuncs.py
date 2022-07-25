@@ -15,7 +15,7 @@ class helpfulFuncs(object):
         return tests
 
 
-    def getCanvas(self, name='c',ratiopad=False):
+    def getCanvas(self, name='c'):
         c=ROOT.TCanvas(name,name,1024,1024)
         c.SetRightMargin(0.14)
         c.SetTopMargin(0.12)
@@ -24,17 +24,60 @@ class helpfulFuncs(object):
         c.SetTicks(1,1)
 
         return c
+
+    def getRatioCanvas(self, name="c"):
+        """Setup TCanvas for plots. Generate a TCanvas with two pads and adjusts margins
+
+        Args:
+            name (str): Name of the TCanvas
+
+        Returns:
+            TCanvas: TCanvas to draw histograms
+        """
+        c = ROOT.TCanvas(name, name, 1024, 1024)
+        c.Divide(1, 2)
+        c.cd(1).SetPad(0.0, 0.3, 1.0, 1.0)
+        c.cd(1).SetBottomMargin(0.0)
+        c.cd(2).SetPad(0.0, 0.0, 1.0, 0.3)
+        c.cd(2).SetTopMargin(0.0)
+        c.cd(1).SetTopMargin(0.07)
+        c.cd(2).SetBottomMargin(0.4)
+        c.cd(1).SetRightMargin(0.05)
+        c.cd(1).SetLeftMargin(0.15)
+        c.cd(2).SetRightMargin(0.05)
+        c.cd(2).SetLeftMargin(0.15)
+        c.cd(2).SetTicks(1, 1)
+        c.cd(1).SetTicks(1, 1)
+        return c
+
+
+    def setup_hist_style(hist, color=ROOT.kRed, marker=21, linestyle=1, linewidth=2):
+        """Sets the style of a ROOT.TH1 object.
+
+        Args:
+            hist (ROOT.TH1): Histogram to modify
+            color (ROOT enum, optional): ROOT color for the histograms. Defaults to ROOT.kRed.
+            marker (int, optional): Marker style for points. Defaults to 21.
+            linestyle (int, optional): Line style for histogram. Defaults to 1.
+            linewidth (int, optional): Line width for histogram. Defaults to 2.
+        """
+        hist.SetLineColor(color)
+        hist.SetMarkerColor(color)
+        hist.SetLineStyle(linestyle)
+        hist.SetLineWidth(linewidth)
+
+
     def getLegend(self):
         legend=ROOT.TLegend()
         legend.SetX1NDC(0.15)
         legend.SetX2NDC(0.45)
         legend.SetY1NDC(0.68)
         legend.SetY2NDC(0.86)
-        legend.SetBorderSize(0);
-        legend.SetLineStyle(0);
-        legend.SetTextFont(42);
-        legend.SetTextSize(0.04);
-        legend.SetFillStyle(1001); #1001 -> solid, 0 -> hollow
+        legend.SetBorderSize(0)
+        legend.SetLineStyle(0)
+        legend.SetTextFont(42)
+        legend.SetTextSize(0.04)
+        legend.SetFillStyle(1001) #1001 -> solid, 0 -> hollow
         return legend
 
 
