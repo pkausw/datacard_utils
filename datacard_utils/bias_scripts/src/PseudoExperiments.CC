@@ -10,7 +10,7 @@ PseudoExperiments::PseudoExperiments(const TString& label, const Double_t inject
 : debug_(false),
 fitBmustConverge_(false),
 fitSBmustConverge_(true),
-accurateCovariance_(false),
+accurateCovariance_(true),
 noBinByBin_(noBinByBin),
 label_(label), injectedMu_(injectedMu), color_(kGray){
   if( debug_ ) std::cout << "DEBUG " << this << ": constructor" << std::endl;
@@ -149,7 +149,18 @@ void PseudoExperiments::addExperimentFromRoofit(const TString& mlfit) {
         TStopwatch overallTime;
         overallTime.Start();
         if(fitSBmustConverge_ || fitBmustConverge_) storeExperiment = checkFitStatus(file);
+        if(debug_) 
+	{
+		std::cout << "DEBUG: storExperiment = " ;
+        	if (storeExperiment) std::cout << "true" << std::endl;
+        	else std::cout << "false" << std::endl;
+	}
         if(storeExperiment && accurateCovariance_) storeExperiment = checkCovarianceMatrix(file);
+        if(debug_){
+		std::cout << "DEBUG: after covariance check: storExperiment = " ;
+        	if (storeExperiment) std::cout << "true" << std::endl;
+        	else std::cout << "false" << std::endl;
+	}
         // store POI value
         if(storeExperiment)
         {
@@ -624,11 +635,14 @@ void PseudoExperiments::storePrefitValues(std::map<TString,TH1*>& hists, std::ma
 void PseudoExperiments::storeRooFitResults(std::map<TString,TH1*>& hists, std::map<TString, TH1*>& hErrors, std::map<TString,TH1*>& hErrorsHi, std::map<TString,TH1*>& hErrorsLo, TFile* file, const RooFitResult* result, std::map<TString, std::map<TString, TH1*> >& correlations) {
 
   TStopwatch watch;
-  if( nps_.empty() ) {
+  int n_parameters = result->floatParsFinal().getSize();
+  if(debug_) std::cout << "DEBUG: ENTERING 'storeRooFitResults'" << std::endl;
+  if( n_parameters != 1 && nps_.empty() ) {
     if( debug_ ) std::cout << "  DEBUG: initialize NPs" << std::endl;
     initContainers(file, result);
   }
-  else{
+  else if(n_parameters == 1 || pois_.empty()){
+    std::cout << "found only one parameter in RooFitResult, will assume it's the poi\n";
     if( pois_.empty()){
         if( debug_ ) std::cout << "  DEBUG: initialize POIs\n";
         TIter it = result->floatParsFinal().createIterator();
@@ -665,11 +679,12 @@ void PseudoExperiments::storeRooFitResults(std::map<TString,TH1*>& hists, std::m
 void PseudoExperiments::storeRooFitResults(std::map<TString,TH1*>& hists, std::map<TString, TH1*>& hErrors, std::map<TString,TH1*>& hErrorsHi, std::map<TString,TH1*>& hErrorsLo, TFile* file, const RooFitResult* result, std::map<TString, std::map<TString, std::vector<double> > >& correlations) {
 
   TStopwatch watch;
-  if( nps_.empty() ) {
+  int n_parameters = result->floatParsFinal().getSize();
+  if( n_parameters != 1 && nps_.empty() ) {
     if( debug_ ) std::cout << "  DEBUG: initialize NPs" << std::endl;
     initContainers(file, result);
   }
-  else{
+  else if(n_parameters == 1 || pois_.empty()){
     if( pois_.empty()){
         if( debug_ ) std::cout << "  DEBUG: initialize POIs\n";
         TIter it = result->floatParsFinal().createIterator();
