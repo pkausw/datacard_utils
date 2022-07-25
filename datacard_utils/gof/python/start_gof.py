@@ -41,9 +41,13 @@ else
 fi
 
 """
-base_gof_cmd = 'combine -M GoodnessOfFit --algo "saturated"'
+base_gof_cmd = 'combine -M GoodnessOfFit --algo "{ALGO}"'
 base_bestfit_cmd = 'combine -M FitDiagnostics'
+
+
 def parse_arguments():
+    global base_gof_cmd
+
     usage = """
     usage: %prog [options] path/to/datacards OR path/to/workspaces
 
@@ -151,15 +155,29 @@ def parse_arguments():
                         type = "int",
                         default = -1
                     )
+    parser.add_option( "--skip-submit",
+                        help = """Just generate the files to generate the toys but do not submit anything (Default: False)""",
+                        dest = "skip_submit",
+                        default = False,
+                        action = "store_true"
+                    )
+    parser.add_option( "--algorithm", "--algo",
+                        help = """Use this method for the GoF test. Choices: saturated, KS, AD. Defaults to saturated""",
+                        dest = "algorithm",
+                        default = "saturated",
+                        choices = "saturated KS AD".split(),
+                    )
     
     (options, args) = parser.parse_args()
 
+    base_gof_cmd = base_gof_cmd.format(ALGO=options.algorithm)
     if not options.postfit_results is None:
         filepath, result_object = options.postfit_results.split(":")
         if not (filepath and os.path.exists(filepath)):
             parser.error("ERROR: Path '%s' does not exist!" % filepath)
         filepath = os.path.abspath(filepath)
         options.postfit_results = ":".join([filepath, result_object])
+    batch.dry_run = options.skip_submit
     
     if options.background_only:
         options.signal_strength = 0
@@ -463,7 +481,8 @@ def main(options, datacard_paths):
                     os.chdir(batchdir)
                     suffix = os.path.basename(datacard)
                     suffix = helper.remove_extension(suffix)
-                    arrayscriptname = "arrayScript_%s.sh" % suffix
+                    # arrayscriptname = "arrayScript_%s.sh" % suffix
+                    arrayscriptname = "arrayJob.sh"
                     # batch.runtime = 60*60*5
                     batch.submitArrayToBatch(   scripts = scripts, 
                                             arrayscriptpath = arrayscriptname)
