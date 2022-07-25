@@ -81,28 +81,31 @@ def remove_minor_JEC(harvester):
         np_manipulator.remove_nuisances_from_procs(harvester = harvester,
                                                     bins = bins)
 
-def do_validation(harvester, cardpaths, jsonpath):
+def do_validation(harvester, cardpaths, jsonpath, combine_channels=[]):
     val_interface = ValidationInterface()
     val_interface.remove_small_signals = True
     val_interface.remove_small_backgrounds = False
+    val_interface.channels_to_combine = combine_channels
     harvester.SetFlag("filters-use-regex", True)
     # val_interface.verbosity = 80
     for era in cardpaths:
         cards = cardpaths[era]
         print("applying validation to paths")
         print(("\n".join(cards)))
-        for cardpath in cardpaths[era]:
-            if not jsonpath:
+        if not jsonpath:
+            for cardpath in cardpaths[era]:
                 val_interface.generate_validation_output(cardpath)
-            else:
-                val_interface.jsonpath = jsonpath
-            
+                val_interface.apply_validation(harvester, eras = [era])
+
+        else:
+            val_interface.jsonpath = jsonpath
             val_interface.apply_validation(harvester, eras = [era])
 
-            print(("="*130))
-            print("after validation interface")
-            harvester.cp().era([era]).PrintProcs()
-            print(("="*130))
+
+        print(("="*130))
+        print("after validation interface")
+        harvester.cp().era([era]).PrintProcs()
+        print(("="*130))
 
 def remove_minor_bkgs(harvester):
     val_interface = ValidationInterface()
@@ -204,11 +207,9 @@ def load_datacards(groups, harvester):
 
 def write_harvester(harvester, cardname, outfile, group_manipulator):
     scale_higgs_mass(harvester)
-    
     print(group_manipulator)
     group_manipulator.add_groups_to_harvester(harvester)
     print(("writing card '{}'".format(cardname)))
-
     # harvester.WriteDatacardWithFile(cardname, outfile)
     harvester.WriteDatacard(cardname, outfile)
 
@@ -363,12 +364,14 @@ def main(**kwargs):
 
     apply_validation = kwargs.get("apply_validation")
     prune_backgrounds = kwargs.get("remove_minor_bkgs", False)
+    combine_channels = kwargs.get("combine_channels", [])
     if apply_validation:
         jsonpath = kwargs.get("validation_jsonpath")
 
         do_validation(  harvester = harvester,
                         cardpaths = cardpaths,
-                        jsonpath = jsonpath)
+                        jsonpath = jsonpath,
+                        combine_channels = combine_channels)
     if prune_backgrounds:
         remove_minor_bkgs(harvester)
 
@@ -602,6 +605,21 @@ def parse_arguments():
                         ),
                         dest = "validation_jsonpath",
                         type = "str"
+                    )
+    validation_options.add_option("--combine-channels",
+                        help = " ".join(
+                            """
+                            combine these channels when ratifying shape uncertainties.
+                            Syntax should be a regular expression that matches
+                            the channels you want to combine in the calculation
+                            of the lnN factors, e.g. 'ljets_ge6j_.*STXS(0|1).*'.
+                            When called multiple times, each entry is treated
+                            independently. Therefore, the corresponding regexes
+                            **must** be orthogonal!
+                            """.split()
+                        ),
+                        action="append",
+                        dest = "combine_channels",
                     )
     text = "Options to modify the stat. model in general"
     model_manipulations = OptionGroup(parser, text)

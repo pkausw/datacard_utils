@@ -2,8 +2,10 @@ from __future__ import absolute_import
 from __future__ import print_function
 import os
 import sys
+from types import NoneType
 import ROOT
 import json
+import numpy as np
 cmssw_base = os.environ["CMSSW_BASE"]
 ROOT.gROOT.SetBatch(True)
 ROOT.PyConfig.IgnoreCommandLineOptions = True
@@ -20,6 +22,7 @@ except:
 
 from optparse import OptionParser, OptionGroup
 from subprocess import call
+from tqdm import tqdm
 from .nuisance_manipulator import NuisanceManipulator
 from .process_manipulator import ProcessManipulator
 
@@ -38,6 +41,8 @@ class ValidationInterface(ProcessManipulator):
         self.__np_manipulator = NuisanceManipulator()
         self.__bkg_threshold = 0.001
         self.__do_smallBkgCut = True
+        self.__symmetrize = False
+        self.__channels_to_combine = []
     
     @property
     def verbosity(self):
@@ -52,6 +57,17 @@ class ValidationInterface(ProcessManipulator):
         except:
             print(("Could not convert value '{}' to integer!".format(val)))
             print(("Verbosity level will stay at '{}'".format(self.verbosity)))
+
+    @property
+    def channels_to_combine(self):
+        return self.__channels_to_combine
+
+    @channels_to_combine.setter
+    def channels_to_combine(self, varlist):
+        if not isinstance(varlist, (list, NoneType)):
+            raise ValueError("'channels_to_combine' must be a list of channels or None!")
+        else:
+            self.__channels_to_combine = varlist
 
     @property
     def jsonpath(self):
@@ -121,12 +137,59 @@ class ValidationInterface(ProcessManipulator):
     @property
     def validation_dict(self):
         return self.__validation_dict
+
+    @property
+    def symmetrize(self):
+        return self.__symmetrize
+
+    @symmetrize.setter
+    def symmetrize(self, val):
+        if not isinstance(val, bool):
+            raise ValueError("Input for symmetrize must be boolean!")
+        self.__symmetrize = val
+    
+    
+    def fill_syst_value_array(self, syst, val_array, norm_array = None):
         
+        result_vector = [syst.value_u(), syst.value_d()]
+        val_array.append(result_vector)
+        if isinstance(norm_array, list):
+            norm_array.append([syst.scale()])
+
+
     def load_rate_values(self, harvester, uncertainty, channel, process):
         vals = []
-        harvester.cp().bin([str(channel)]).process([str(process)]).\
-            syst_name([str(uncertainty)]).ForEachSyst(\
-                lambda x: vals.append([x.value_u(), x.value_d()]))
+        if len(channel) >1:
+            val_list = []
+            norm_list = []
+            real_channels = harvester.cp().process([str(process)]).\
+                                bin([str(x) for x in channel]).bin_set()
+            for b in real_channels:
+                harvester.cp().bin([str(b)]).process([str(process)]).\
+                    syst_type(["shape"]).syst_name([str(uncertainty)]).\
+                        ForEachSyst(lambda x: self.fill_syst_value_array(
+                            x, 
+                            val_list
+                        ))
+                harvester.cp().bin([str(b)]).process([str(process)]).\
+                    syst_type(["shape"]).syst_name([str(uncertainty)]).\
+                        ForEachProc(lambda p: norm_list.append([p.rate()]))
+
+            if len(val_list) > 0:
+                # calculate the average lnN factors
+                val_array = np.array(val_list, dtype = "f")
+                norm_array = np.array(norm_list, dtype = "f")
+                summed_values = np.sum(val_array * norm_array, axis=0, dtype = "f")
+                norm_sum = np.sum(norm_array, axis=0, dtype = "f")
+                vals = [(summed_values/norm_sum).tolist()]
+
+        else:
+            harvester.cp().bin(channel).process([str(process)]).\
+                syst_type(["shape"]).syst_name([str(uncertainty)]).\
+                        ForEachSyst(lambda x: self.fill_syst_value_array(
+                            x, 
+                            vals
+                        ))
         # print(vals)
         if len(vals) > 0:
             vals = vals[0]
@@ -136,78 +199,153 @@ class ValidationInterface(ProcessManipulator):
             if all(v <= 1. for v in vals):
                 if self.verbosity > 10:
                     print("Found purely down fluctuation!")
-
-                vals[0] = 1.
-                vals[1] = (val_u + val_d)/2.
-                vals[0] = 1./vals[1]
+                if self.symmetrize:
+                    vals[0] = 1.
+                    vals[1] = (val_u + val_d)/2.
+                    vals[0] = 1./vals[1]
             elif all(v >= 1. for v in vals):
                 if self.verbosity > 10:
                     print("Found purely up fluctuation!")
-
-                vals[1] = 1.
-                vals[0] = (val_u + val_d)/2.
-                vals[1] = 1./vals[0]
+                
+                if self.symmetrize:
+                    vals[1] = 1.
+                    vals[0] = (val_u + val_d)/2.
+                    vals[1] = 1./vals[0]
             elif not val_u == 1. and val_d == 1.:
                 vals[1] = 1./val_u
             elif not val_d == 1. and val_u == 1.:
                 vals[0] = 1./val_d
         return vals
 
+
+    def ratify_uncertainty_in_channels(
+        self,
+        harvester,
+        dict_unc,
+        unc,
+        eras = [".*"],
+        channels = [".*"],
+        ):
+        era_harvester = harvester.cp().era(eras)
+        processes = []
+        for channel in channels:
+            processes = list(set(processes + list(dict_unc[channel])))
+
+        pbar_proc = tqdm(processes)
+        for process in pbar_proc:
+            pbar_proc.set_description("Processing process '{}'".format(process))
+            if self.verbosity > 5:
+                print(("\t\tProcess: {}".format(process)))
+            harvester_processes = era_harvester.cp().bin(channels).process_set()
+            if not process in harvester_processes:
+                if self.verbosity > 5:
+                    print((" ".join("""Process '{}' is not part of the 
+                                        current harvester instance, 
+                                        skipping
+                                    """.format(process)
+                                    )
+                            )
+                        )
+                continue
+            if self.verbosity > 20:
+                print("="*130)
+                print("current list of nuisances")
+                era_harvester.cp().bin(channels).process([str(process)]).PrintSysts()
+                print("="*130)
+            vals = self.load_rate_values(harvester = era_harvester,
+                                        uncertainty = unc,
+                                        channel = channels,
+                                        process = process)
+            # print(vals)
+            # harvester.bin([str(channel)]).process([str(process)]).syst_name([str(unc)], False)
+            # harvester.PrintAll()
+            if len(vals) > 0:
+                if any(abs(1.-x)>= 1e-3 for x in vals):
+                    harvester.cp().era(eras).\
+                        bin(channels).\
+                        process([str(process)]).\
+                        syst_name([str(unc)]).\
+                        syst_type(["shape"]).\
+                        ForEachSyst(lambda x: x.set_type("lnN"))
+
+                    harvester.cp().era(eras).\
+                        bin(channels).\
+                        process([str(process)]).\
+                        syst_name([str(unc)]).\
+                        syst_type(["lnN"]).\
+                        ForEachSyst(lambda x: x.set_value_u(vals[0]))
+                    harvester.cp().era(eras).\
+                        bin(channels).\
+                        process([str(process)]).\
+                        syst_name([str(unc)]).\
+                        syst_type(["lnN"]).\
+                        ForEachSyst(lambda x: x.set_value_d(vals[1]))
+                else:
+                    print("Detected uncertainty with less than 0.1% yield effect!")
+                    print(("will drop '{}' for process '({})/{}'"\
+                            .format(unc, ", ".join(channels), process)))
+                    # self.__np_manipulator.debug = 3
+                    self.__np_manipulator.to_remove = {unc: [str(process)]}
+                    self.__np_manipulator.remove_nuisances_from_procs(
+                                            harvester = harvester,
+                                            bins = channels,
+                                            eras = eras)
+            else:
+                print(("="*130))
+                print(("Could not find uncertainty '{}' in '({})/{}'".\
+                        format(unc, ", ".join(channels), process)))
+
+
     def ratify(self, harvester, change_dict, eras = [".*"]):
-        for unc in change_dict:
+        
+        harvester_channels = harvester.cp().era(eras).bin_set()
+        pbar_unc = tqdm(change_dict)
+        for unc in pbar_unc:
+            pbar_unc.set_description("Processing uncertainty '{}'".format(unc))
             if self.verbosity > 5:
                 print(("Uncertainty: {}".format(unc)))
             dict_unc = change_dict[unc]
-            for channel in dict_unc:
-                if self.verbosity > 5:
-                    print(("\tChannel: {}".format(channel)))
-                dict_chan = dict_unc[channel]
-                for process in dict_chan:
+            channels_to_change = dict_unc.keys()
+            already_changed_channels = []
+            pbar_combined_channels = tqdm(self.channels_to_combine or [])
+            for channel_wildcard in pbar_combined_channels:
+                # evaluate real channel names
+                channel_wildcard = str(channel_wildcard)
+                channels = harvester.cp().bin([channel_wildcard]).bin_set()
+                pbar_combined_channels.set_description("Consider combination of '{}'".format(", ".join(channels)))
+
+                if not all(x in channels_to_change for x in channels):
+                    print("Not all of the following channels are marked for changes")
+                    print(", ".join(channels))
+                    print("Will treat them individually instead")
+                    continue
+                self.ratify_uncertainty_in_channels(
+                    harvester=harvester,
+                    dict_unc=dict_unc,
+                    unc=unc,
+                    eras=eras,
+                    channels=channels
+                )
+                already_changed_channels = list(set(already_changed_channels + channels))
+
+            untouched_channels = set(already_changed_channels).symmetric_difference(channels_to_change)
+            pbar_chan = tqdm(untouched_channels)
+            for channel in pbar_chan:
+                pbar_chan.set_description("Processing remaining single channel '{}'".format(channel))
+                if not channel in harvester_channels:
                     if self.verbosity > 5:
-                        print(("\t\tProcess: {}".format(process)))
-                    era_harvester = harvester.cp().era(eras)
-                    vals = self.load_rate_values(harvester = era_harvester,
-                                                uncertainty = unc,
-                                                channel = channel,
-                                                process = process)
-                    # print(vals)
-                    # harvester.bin([str(channel)]).process([str(process)]).syst_name([str(unc)], False)
-                    # harvester.PrintAll()
-                    if len(vals) > 0:
-                        if any(abs(1.-x)>= 1e-3 for x in vals):
-                            harvester.cp().era(eras).\
-                                bin([str(channel)]).\
-                                process([str(process)]).\
-                                syst_name([str(unc)]).\
-                                ForEachSyst(lambda x: x.set_type("lnN"))
-
-                            harvester.cp().era(eras).\
-                                bin([str(channel)]).\
-                                process([str(process)]).\
-                                syst_name([str(unc)]).\
-                                ForEachSyst(lambda x: x.set_value_u(vals[0]))
-                            harvester.cp().era(eras).\
-                                bin([str(channel)]).\
-                                process([str(process)]).\
-                                syst_name([str(unc)]).\
-                                ForEachSyst(lambda x: x.set_value_d(vals[1]))
-                        else:
-                            print("Detected uncertainty with less than 0.1% yield effect!")
-                            print(("will drop '{}' for process '{}/{}'"\
-                                    .format(unc, channel, process)))
-                            # self.__np_manipulator.debug = 3
-                            self.__np_manipulator.to_remove = {unc: [str(process)]}
-                            self.__np_manipulator.remove_nuisances_from_procs(
-                                                    harvester = harvester,
-                                                    bins = [str(channel)],
-                                                    eras = eras)
-                    else:
-                        print(("="*130))
-                        print(("Could not find uncertainty '{}' in '{}/{}'".\
-                                format(unc, channel, process)))
-
-                    # harvester.PrintSysts()
-                    # sys.exit()
+                        print((" ".join("""Could not find channel '{}' 
+                                    in current harvester instance, skipping"
+                                """.format(channel))))
+                    continue
+                self.ratify_uncertainty_in_channels(
+                    harvester=harvester,
+                    dict_unc=dict_unc,
+                    unc=unc,
+                    eras=eras,
+                    channels=[str(channel)]
+                )
+                        
         return harvester
     
     
@@ -308,7 +446,7 @@ class ValidationInterface(ProcessManipulator):
                     self.jsonpath = outpath
                 else:
                     raise ValueError("Could not generate output \
-                        file in '{}'".format(outputpath))
+                        file in '{}'".format(outpath))
     
     
 def main(**kwargs):
