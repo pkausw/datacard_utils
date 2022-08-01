@@ -213,7 +213,7 @@ def write_harvester(harvester, cardname, outfile, group_manipulator):
     # harvester.WriteDatacardWithFile(cardname, outfile)
     harvester.WriteDatacard(cardname, outfile)
 
-def transpose_binning(harvester, binning_groups):
+def transpose_binning(harvester, binning_groups, unbind_eras=False):
     print(("will perform rebinning based on '{}'".format(binning_groups)))
     binning_harvester = ch.CombineHarvester()
     binning_harvester.SetFlag("allow-missing-shapes", False)
@@ -224,18 +224,28 @@ def transpose_binning(harvester, binning_groups):
     eras = harvester.era_set()
     
     source_eras = binning_harvester.era_set()
+    if unbind_eras and len(source_eras) != 1:
+        raise RuntimeError(" ".join(
+            """
+            you unset the era lookup for transfering binnings between datacards,
+            but the source includes multiple eras. This is not supported!
+            """.split()))
     for e in eras:
-        if not e in source_eras:
+        if not unbind_eras and not e in source_eras:
             print("Could not find era '{}' in source!")
             continue
-        source_bins = binning_harvester.cp().era([e]).bin_set()
+        if not unbind_eras:
+            current_binning_harvester = binning_harvester.cp().era([e])
+        else:
+            current_binning_harvester = binning_harvester
+        source_bins = current_binning_harvester.bin_set()
         for s in source_bins:
             print(("checking bin '{}' for matches".format(s)))
             bins = harvester.cp().era([e]).bin([".*{}.*".format(s)]).bin_set()
             if len(bins) == 0:
                 print(("WARNING: found no matches for bin {}".format(s)))
             else:
-                source = binning_harvester.cp().era([e]).bin([s])\
+                source = current_binning_harvester.cp().bin([s])\
                                 .backgrounds()
                 h = source.GetShape()
                 h.Print("Range")
@@ -341,8 +351,9 @@ def main(**kwargs):
     check_mc_data = kwargs.get("check_mc_data", False)
     binning_groups = kwargs.get("binning_groups", None)
     merge_n_bins = kwargs.get("merge_n_bins", None)
+    unbind_binning_era = kwargs.get("unbind_binning_era", False)
     if binning_groups:
-        transpose_binning(harvester, binning_groups)
+        transpose_binning(harvester, binning_groups, unbind_eras=unbind_binning_era)
     if rebin_scheme or check_mc or check_mc_data or merge_n_bins:
         bin_manipulator = BinManipulator()
         bin_manipulator.log_path = os.path.join(outdir, "rebin.log")
@@ -526,13 +537,29 @@ def parse_arguments():
                             """
                             define groups of inputs to load binning from. 
                             The format should be like
-                            'SCHEME:wildcard/to/input/files*.txt'
+                            'SCHEME:wildcard/to/input/files*.txt'.
+                            The binning will be transfered between bins of
+                            the same era by default.
                             """.split()
                         ),
                         dest = "binning_groups",
                         metavar = "SCHEME:path/to/datacard",
                         type = "str",
                         action = "append"
+                    )
+
+    binning_options.add_option("--unbind-binning-era",
+                        help = " ".join(
+                            """
+                            deactivate the assertion that the binning is
+                            transfered for bins of the same era. In this case,
+                            the source defined by option '-b, --binning' can 
+                            only contain _one_ era! Defaults to False
+                            """.split()
+                        ),
+                        dest = "unbind_binning_era",
+                        action = "store_true",
+                        default = False,
                     )
 
     binning_options.add_option("--check-mc-binning",
