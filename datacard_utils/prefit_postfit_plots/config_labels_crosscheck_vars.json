@@ -1,0 +1,395 @@
+{
+    "fh_j7_t4_RecoHiggsPt": {
+        "top": "FH 7 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "p_{T} (H) in GeV"
+    },
+    "fh_j7_t4_jetsByPt_0_pt":{
+        "top":"FH 7 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "hardest jet p_{T}"
+    },
+    "fh_j7_t4_jetsByPt_0_btag": {
+        "top":"FH 7 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "hardest jet b-tag score"
+    },
+    "fh_j7_t4_numJets": {
+        "top":"FH 7 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "N_{j}"
+    },
+    "fh_j7_t4_ht30": {
+        "top":"FH 7 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "H_{T, j}"
+    },
+    "fh_j8_t4_RecoHiggsPt": {
+        "top": "FH 8 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "p_{T} (H) in GeV"
+    },
+    "fh_j8_t4_jetsByPt_0_pt":{
+        "top":"FH 8 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "hardest jet p_{T}"
+    },
+    "fh_j8_t4_jetsByPt_0_btag": {
+        "top":"FH 8 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "hardest jet b-tag score"
+    },
+    "fh_j8_t4_numJets": {
+        "top":"FH 8 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "N_{j}"
+    },
+    "fh_j8_t4_ht30": {
+        "top":"FH 8 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "H_{T, j}"
+    },"fh_j9_t4_RecoHiggsPt": {
+        "top": "FH \\geq 9 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "p_{T} (H) in GeV"
+    },
+    "fh_j9_t4_jetsByPt_0_pt":{
+        "top":"FH \\geq 9 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "hardest jet p_{T}"
+    },
+    "fh_j9_t4_jetsByPt_0_btag": {
+        "top":"FH \\geq 9 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "hardest jet b-tag score"
+    },
+    "fh_j9_t4_numJets": {
+        "top":"FH \\geq 9 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "N_{j}"
+    },
+    "fh_j9_t4_ht30": {
+        "top":"FH \\geq 9 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "H_{T, j}"
+    },
+    "ljets_5j_ge4t_Evt_Pt_TaggedJetsAverage":{
+        "top": "SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "p^{avg}_{T; b}"
+    },
+    "ljets_ge6j_ge4t_Evt_Pt_TaggedJetsAverage":{
+        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "p^{avg}_{T; b}"
+    },
+    
+    "ljets_5j_ge4t_Evt_Pt_minDrTaggedJets": {
+        "top":"SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "p^{min #Delta R}_{T; b,b}"
+    },
+    "ljets_ge6j_ge4t_Evt_Pt_minDrTaggedJets": {
+        "top":"SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "p^{min #Delta R}_{T; b,b}"
+    },
+    
+    "ljets_5j_ge4t_Evt_blr_transformed": {
+        "top":"SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_ge6j_ge4t_Evt_blr_transformed": {
+        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    
+    "ljets_5j_ge4t_Jet_CSV_0": {
+        "top":"SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "hardest jet b-tag score"
+    },
+    "ljets_ge6j_ge4t_Jet_CSV_0": {
+        "top":"SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "hardest jet b-tag score"
+    },
+    
+    "ljets_5j_ge4t_Jet_Pt_0": {
+        "top":"SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "hardest jet p_{T}" 
+    },
+    "ljets_ge6j_ge4t_Jet_Pt_0": {
+        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "hardest jet p_{T}" 
+    },
+    "ljets_5j_ge4t_N_Jets": {
+        "top": "SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "N_{j}"
+    },
+    "ljets_ge6j_ge4t_N_Jets": {
+        "top":"SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "N_{j}"
+    },
+    "ljets_5j_ge4t_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "top": "SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "tHW reco b-tag score(b_{top})"
+    },
+    "ljets_ge6j_ge4t_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "tHW reco b-tag score(b_{top})"
+    },
+    "ljets_5j_ge4t_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "top":"SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "tHW reco #frac{p_{T}(t) + p_{T}(H) + p_{T}(Wb)}{H_{T} + p_{T}(MET) + p_{T}(lep)}"
+    },
+    "ljets_ge6j_ge4t_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "top":"SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "tHW reco #frac{p_{T}(t) + p_{T}(H) + p_{T}(Wb)}{H_{T} + p_{T}(MET) + p_{T}(lep)}"
+    },
+    "ljets_5j_ge4t_Reco_JABDT_tHq_abs_ljet_eta": {
+        "top": "SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "tHq reco |#eta|(q)"
+    },
+    "ljets_ge6j_ge4t_Reco_JABDT_tHq_abs_ljet_eta": {
+        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "tHq reco |#eta|(q)"
+    },
+    "ljets_5j_ge4t_Reco_tHq_bestJABDToutput": {
+        "top": "SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "tHq reco discr"
+    },
+    "ljets_ge6j_ge4t_Reco_tHq_bestJABDToutput": {
+        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "tHq reco discr"
+    },
+    "ljets_5j_ge4t_Reco_ttH_bestJABDToutput": {
+        "top": "SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle":"ttH reco discr"
+    },
+    "ljets_ge6j_ge4t_Reco_ttH_bestJABDToutput": {
+        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle":"ttH reco discr"
+    },
+    "ljets_5j_ge4t_Reco_ttH_h_pt": {
+        "top": "SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "p_{T} (H) in GeV"
+    },
+    "ljets_ge6j_ge4t_Reco_ttH_h_pt": {
+        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "p_{T} (H) in GeV"
+    },
+    "ljets_5j_ge4t_Reco_ttH_toplep_m": {
+        "top": "SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "ttH reco m(top_{lep})"
+    },
+    "ljets_ge6j_ge4t_Reco_ttH_toplep_m": {
+        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "ttH reco m(top_{lep})"
+    },
+    "ljets_5j_ge4t_Reco_ttbar_bestJABDToutput": {
+        "top":"SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "t#bar{t} reco discr"
+    },
+    "ljets_ge6j_ge4t_Reco_ttbar_bestJABDToutput": {
+        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "t#bar{t} reco discr"
+    },
+    "ljets_5j_ge4t_memDBp": {
+        "top": "SL 5 jets, \\geq 4 tags",
+        "bottom" : "",
+        "xtitle": "MEM"
+    },
+    "ljets_ge6j_ge4t_memDBp": {
+        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "MEM"
+    },
+    "ljets_5j_ge4t_CSV_2": {
+        "top": "SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "third highest b-tag score"
+    },
+    "ljets_ge6j_ge4t_CSV_2": {
+        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "third highest b-tag score"
+    },
+    "ljets_5j_ge4t_Evt_CSV_avg": {
+        "top": "SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "b-tag score^{avg}_{j}"
+    },
+    "ljets_ge6j_ge4t_Evt_CSV_avg": {
+        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "b-tag score^{avg}_{j}"
+    },
+    "ljets_5j_ge4t_Evt_CSV_avg_tagged": {
+        "top": "SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "b-tag score^{avg}_{b}"
+    },
+    "ljets_ge6j_ge4t_Evt_CSV_avg_tagged": {
+        "top":"SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "b-tag score^{avg}_{b}"
+    },
+    "ljets_5j_ge4t_Evt_Deta_JetsAverage": {
+        "top": "SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "#Delta #eta^{avg}_{j,j}"
+    },
+    "ljets_ge6j_ge4t_Evt_Deta_JetsAverage": {
+        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "#Delta #eta^{avg}_{j,j}"
+    },
+    "ljets_5j_ge4t_Evt_Deta_TaggedJetsAverage": {
+        "top": "SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "#Delta #eta^{avg}_{b,b}"
+    },
+    "ljets_ge6j_ge4t_Evt_Deta_TaggedJetsAverage": {
+        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "#Delta #eta^{avg}_{b,b}"
+    },
+    "ljets_5j_ge4t_Evt_Dr_minDrTaggedJets": {
+        "top": "SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "#Delta R^{min}_{b,b}"
+    },
+    "ljets_ge6j_ge4t_Evt_Dr_minDrTaggedJets": {
+        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "#Delta R^{min}_{b,b}"
+    },
+    "ttH_hbb_13TeV_2016_dl_3j3b_HT_jets": {
+        "top": "DL 3 jets, 3 tags",
+        "bottom": "",
+        "xtitle" : "H_{T, j}"
+    },
+    "ttH_hbb_13TeV_2016_dl_3j3b_N_btags": {
+        "top":"DL 3 jets, 3 tags",
+        "bottom": "",
+        "xtitle": "N_{b}"
+    },
+    "ttH_hbb_13TeV_2016_dl_3j3b_N_jets": {
+        "top":"DL 3 jets, 3 tags",
+        "bottom": "",
+        "xtitle": "N_{j}"
+    },
+    "ttH_hbb_13TeV_2016_dl_3j3b_minDeltaR_tag_tag": {
+        "top": "DL 3 jets, 3 tags",
+        "bottom": "",
+        "xtitle": "#Delta R^{min}_{b,b}"
+    },
+    "ttH_hbb_13TeV_2016_dl_3j3b_pT_tag_tag_min_deltaR": {
+        "top":"DL 3 jets, 3 tags",
+        "bottom": "",
+        "xtitle": "p^{min #Delta R}_{T; b,b}"
+    },
+    "ttH_hbb_13TeV_2016_dl_4j3b_HT_jets": {
+        "top": "DL \\geq 4 jets, 3 tags",
+        "bottom": "",
+        "xtitle" : "H_{T, j}"
+    },
+    "ttH_hbb_13TeV_2016_dl_4j3b_N_btags": {
+        "top": "DL \\geq 4 jets, 3 tags",
+        "bottom": "",
+        "xtitle": "N_{b}"
+    },
+    "ttH_hbb_13TeV_2016_dl_4j3b_N_jets": {
+        "top": "DL \\geq 4 jets, 3 tags",
+        "bottom": "",
+        "xtitle": "N_{j}"
+    },
+    "ttH_hbb_13TeV_2016_dl_4j3b_minDeltaR_tag_tag": {
+        "top": "DL \\geq 4 jets, 3 tags",
+        "bottom": "",
+        "xtitle": "#Delta R^{min}_{b,b}"
+    },
+    "ttH_hbb_13TeV_2016_dl_4j3b_pT_tag_tag_min_deltaR": {
+        "top": "DL \\geq 4 jets, 3 tags",
+        "bottom": "",
+        "xtitle": "p^{min #Delta R}_{T; b,b}"
+    },
+    "ljets_5j_ge4t_Evt_HT_jets": {
+        "top": "SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "H_{T, j}"
+    },
+    "ljets_ge6j_ge4t_Evt_HT_jets": {
+        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "H_{T, j}"
+    },
+    "ttH_hbb_13TeV_2016_dl_4j3b_MEM": {
+        "top":"DL \\geq 4 jets, 3 tags",
+        "bottom": "",
+        "xtitle": "MEM"
+    },
+    "ljets_5j_ge4t_Evt_HT_tags": {
+        "top": "SL 5 jets, \\geq 4 tags",
+        "bottoms": "",
+        "xtitle": "H_{T, b}"
+    },
+    "ljets_ge6j_ge4t_Evt_HT_tags": {
+        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "bottoms": "",
+        "xtitle": "H_{T, b}"
+    },
+    "ljets_5j_ge4t_Evt_M2_minDrTaggedJets": {
+        "top": "SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "m^{min #Delta R}_{b,b}"
+    },
+    "ljets_ge6j_ge4t_Evt_M2_minDrTaggedJets": {
+        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "m^{min #Delta R}_{b,b}"
+    },
+    "ljets_5j_ge4t_Evt_M_TaggedJetsAverage": {
+        "top":"SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "m^{avg}_{b}"
+    },
+    "ljets_ge6j_ge4t_Evt_M_TaggedJetsAverage": {
+        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "m^{avg}_{b}"
+    },
+    "ljets_5j_ge4t_Evt_Pt_JetsAverage": {
+        "top": "SL 5 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "p^{avg}_{T; j}"
+    },
+    "ljets_ge6j_ge4t_Evt_Pt_JetsAverage": {
+        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "bottom": "",
+        "xtitle": "p^{avg}_{T; j}"
+    }
+}
