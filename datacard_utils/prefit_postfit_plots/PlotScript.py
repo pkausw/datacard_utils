@@ -299,9 +299,9 @@ combineIden = "$FLAG"
 
 combineflag             = getParserConfigDefaultValue(parser=options.combineflag,config="combineflag",
                                             plotoptions=plotoptions,defaultvalue=None)
-options.nominalKey      = getParserConfigDefaultValue(parser = None, config = "nominalKey",
+options.nominalKey      = getParserConfigDefaultValue(parser = options.nominalKey, config = "nominalKey",
                                             plotoptions=plotoptions,defaultvalue="$PROCESS_$CHANNEL")
-options.systematicKey   = getParserConfigDefaultValue(parser = None, config = "systematicKey",
+options.systematicKey   = getParserConfigDefaultValue(parser = options.systematicKey, config = "systematicKey",
                                             plotoptions=plotoptions,defaultvalue="$PROCESS_$CHANNEL_$SYSTEMATIC")
 
 binEdges                = None
