@@ -272,7 +272,7 @@ if __name__ == '__main__':
         for poi in pois:
             
             cmd = "plotImpacts.py -i {infile} -o {name}_{poi} --POI {poi}".format(infile = impact_file, name = impact_name, poi = poi)
-            if not fit_type=="blind":
+            if fit_type=="blind":
                 cmd += " --blind"
             
             os.system(cmd)
