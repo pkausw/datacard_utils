@@ -154,7 +154,12 @@ def calculate_missing_impacts(datacard, impact_comb_dir, params, log_file, impac
         nll_root_file = ROOT.TFile("merged_combine_output.root")
         nll_tree = nll_root_file.Get("limit")
         
+        # get list of branches
+        branches = [x.GetName() for x in nll_tree.GetListOfBranches()]
         for poi in pois:
+            if not poi in branches:
+                print("TTree has no branch '{}', skipping".format(poi))
+                continue
             param_entry.update(create_param_entry(nll_tree = nll_tree,
                                                   param = param,
                                                   poi = poi  )
