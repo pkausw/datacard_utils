@@ -83,7 +83,7 @@ python nll_merge_impact_calc.py KEYWORD path/to/submit-information.json
 ```
 
 Here, `KEYWORD` controls how the impact plot is done.
-If `KEYWORD` is `unblinded`, the impact plots are drawn without the signal strength modifier value in the top right corner.
+If `KEYWORD` is `blind`, the impact plots are drawn without the signal strength modifier value in the top right corner.
 The `path/to/submit-information.json` is the same file from the previous step.
 
 The script will automatically calculate the impacts for all POIs in the workspace.
@@ -110,3 +110,4 @@ After this precedure, you should now have impact plots that contain all paramete
   * Takes wildcard to impact plot .pdfs
   * Example: `python createLatexSlides.py path/to/impact/plots/*.pdf`
   * The script creates a .tex file containing frames for each page of the impact plot. The generated slides use latex package `pdfpages`
+
