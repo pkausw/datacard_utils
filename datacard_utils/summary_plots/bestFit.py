@@ -13,6 +13,9 @@ fontsize = 0.04
 def is_separator(str):
     return str == "LINE" or str.startswith("SEPARATOR")
 
+def separator_level(str):
+    return ( 2 if str.startswith("SEPARATOR1") else 1 )    
+
 def separator_has_description(str):
     return ":" in str
 
@@ -424,8 +427,11 @@ def draw_canvas_histo( nchannels, xmin, xmax, title, entry_names, labels, positi
     yaxis = h.GetYaxis()
     yaxis.SetLabelSize( 0.065 )
     n_entry = 0
-    l = ROOT.TLine()
-    l.SetLineStyle(1)
+    line1 = ROOT.TLine()
+    line1.SetLineStyle(1)
+    line2 = ROOT.TLine()
+    line2.SetLineStyle(1)
+    line2.SetLineWidth(1.5)
     print(entry_names)
     for name in entry_names:
         if n_entry > nchannels:
@@ -435,8 +441,12 @@ def draw_canvas_histo( nchannels, xmin, xmax, title, entry_names, labels, positi
             if not n_entry == 0:
                 y_pos = (positions[n_entry-1] - positions[n_entry])/2.
                 y_pos += positions[n_entry]
-                print("drawing line at y = {}".format(y_pos))
-                l.DrawLine(xmin, y_pos, xmax, y_pos)
+                if separator_level(name) == 1:
+                    print("drawing line (level 1) at y = {}".format(y_pos))
+                    line1.DrawLine(xmin, y_pos, xmax, y_pos)
+                if separator_level(name) == 2:
+                    print("drawing line (level 2) at y = {}".format(y_pos))
+                    line2.DrawLine(xmin, y_pos, xmax, y_pos)
             continue
         nbin = yaxis.FindBin(positions[n_entry])
         print("Setting label for bin {} to '{}'".format(nbin,labels[name]))
