@@ -113,7 +113,8 @@ def get_table_rows_paper(fit_results):
                 rows[-1] += "[\\cmsTabSkip]"
             if separator_has_description(name):
                 text = get_separator_description(name)
-                rows.append(f"  {text} & & \\\\")
+                # rows.append(f"  {text} & & \\\\")
+                rows.append("  {} & & \\\\".format(text))
             continue
 
         # clean label for tex
@@ -209,7 +210,7 @@ def bestfit( **kwargs ):
         order = values.keys()
     labels = res.get("labels")
     if not labels:
-        labels = { x:x for x in values.key() }
+        labels = { x:x for x in values.keys() }
 
     mu = load_values(   result_dict = values,
                         result_set = "bestfit",
