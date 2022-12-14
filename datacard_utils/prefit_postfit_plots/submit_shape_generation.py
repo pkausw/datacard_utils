@@ -400,7 +400,7 @@ def generate_scripts(
     arrayscriptpath = os.path.join(srcpath, arrayscriptpath)
     if runtime:
         batch.runtime = runtime
-    # batch.submitArrayToBatch(scripts = cmds, arrayscriptpath = arrayscriptpath)
+    batch.submitArrayToBatch(scripts = cmds, arrayscriptpath = arrayscriptpath)
     
         
 
