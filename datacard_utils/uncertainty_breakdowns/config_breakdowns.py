@@ -31,7 +31,7 @@ clearnames = OrderedDict([
 		("bgnorm"                                  , "    freely-floating normalisation parameters - substract from Stat"),
 		("bgnorm_ttbb_part_all"                                  , "    freely-floating ttbb normalisation - substract from Stat"),
 		("bgnorm_ttcc_part_all"                                  , "    freely-floating ttcc normalisation - substract from Stat"),
-		("bgnorm_ddQCD_part_all"                                  , "    freely-floating ddQCD normalisation - substract from Stat"),
+		("bgnorm_ddQCD"                                  , "    freely-floating ddQCD normalisation - substract from Stat"),
 ])
 
 def translate_names(breakdownname, filterstring):
