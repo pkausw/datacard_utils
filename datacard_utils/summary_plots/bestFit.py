@@ -14,7 +14,7 @@ def is_separator(str):
     return str == "LINE" or str.startswith("SEPARATOR")
 
 def separator_level(str):
-    return ( 2 if str.startswith("SEPARATOR1") else 1 )    
+    return ( 2 if str.startswith("SEPARATOR2") else 1 )    
 
 def separator_has_description(str):
     return ":" in str
@@ -439,9 +439,9 @@ def draw_canvas_histo( nchannels, xmin, xmax, title, entry_names, labels, positi
     n_entry = 0
     line1 = ROOT.TLine()
     line1.SetLineStyle(1)
+    line1.SetLineWidth(2)
     line2 = ROOT.TLine()
     line2.SetLineStyle(1)
-    line2.SetLineWidth(2)
     print(entry_names)
     for name in entry_names:
         if n_entry > nchannels:
