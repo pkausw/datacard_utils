@@ -93,12 +93,12 @@ def do_quadratic_substraction(return_dic, keyword, valkeyword = "values"):
         print "\tgroup value(%s) =" % group, groupval
         print "\t%s value =" % keyword, refval
         print "\tnew value =", newval
-        if substract_from_stat:
-            new_group = group.replace(" - substract from Stat", "")
-            return_dic[new_group] = return_dic[group]
-            del return_dic[group]
-            group = new_group
-            refval = backup_refval
+        #if substract_from_stat:
+            #new_group = group.replace(" - substract from Stat", "")
+        #    return_dic[new_group] = return_dic[group]
+        #    del return_dic[group]
+        #    group = new_group
+        refval = backup_refval
         return_dic[group][valkeyword] = newval
 
 def get_value_identifier(dic):
