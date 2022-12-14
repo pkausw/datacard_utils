@@ -25,8 +25,10 @@ except:
     msg = " ".join("""Could not find package 'CombineHarvester'. 
             Are you sure you installed it?""".split())
     raise ImportError(msg)
-
-from .common_manipulations import CommonManipulations
+thispath = os.path.realpath(os.path.dirname(__file__))
+if not thispath in sys.path:
+    sys.path.append(thispath)
+#from common_manipulations import CommonManipulations
 
 
 class MassManipulator(object):
