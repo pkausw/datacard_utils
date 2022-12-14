@@ -30,6 +30,18 @@ combined_DLSL_{}.root    combined_SL_{}_DNN.root     combined_DLFH_{}.root combi
 combined_DL_{}_DNN.root               combined_SL_{}_DNN_ge4j_3t.root
 """.split()
 
+combinations = """
+combined_DLFHSL_{}_DNN_ge5j_ge4t_no_ratio.root    combined_DL_{}_DNN.root                         combined_SL_{}_DNN_5j_ge4t_with_ratio.root
+combined_DLFHSL_{}_DNN_ge5j_ge4t_with_ratio.root  combined_DL_{}_DNN_with_ratio.root              combined_SL_{}_DNN_ge5j_ge4t_no_ratio.root
+combined_DLFHSL_{}_separate_DNN_no_ratio.root     combined_FH_{}_DNN.root                         combined_SL_{}_DNN_ge5j_ge4t_with_ratio.root
+combined_DLFHSL_{}_separate_DNN_with_ratio.root   combined_SLFH_{}_DNN_ge5j_ge4t_no_ratio.root    combined_SL_{}_DNN_ge6j_ge4t_no_ratio.root
+combined_DLSL_{}_DNN_ge5j_ge4t_no_ratio.root      combined_SLFH_{}_DNN_ge5j_ge4t_with_ratio.root  combined_SL_{}_DNN_ge6j_ge4t_with_ratio.root
+combined_DLSL_{}_DNN_ge5j_ge4t_with_ratio.root    combined_SLFH_{}_separate_DNN_no_ratio.root     combined_SL_{}_separate_DNN_no_ratio.root
+combined_DLSL_{}_separate_DNN_no_ratio.root       combined_SLFH_{}_separate_DNN_with_ratio.root   combined_SL_{}_separate_DNN_with_ratio.root
+combined_DLSL_{}_separate_DNN_with_ratio.root     combined_SL_{}_DNN_5j_ge4t_no_ratio.root
+""".split()
+
+
 #combinations = """
 #combined_SL_{}_DNN.root combined_SL_{}_DNN_ge4j_ge4t.root combined_SL_{}_DNN_ge4j_3t.root
 #""".split()
@@ -45,8 +57,8 @@ combinations = [x.replace(".root", "") for x in combinations]
 
 #combinations = "combined_SL_2017_DNN.root".split()
 #combinations = ["combined_full_{}.root"]
-years = "2016 2017 2018 1617 1718 all_years".split()
-# years = ["2016"]
+# years = "2016 2017 2018 1617 1718 all_years".split()
+years = ["all_years"]
 #combinations += ["No_minor_"+x for x in combinations]
 #combinations += ["ttbb_CR_{}.root"]
 combinations = [x.format(y) for x in combinations for y in years]
@@ -62,6 +74,14 @@ combinations = [x.format(y) for x in combinations for y in years]
 # no_4j2b_combined_DLFHSL_2016  no_4j2b_combined_DLSL_2016  no_4j2b_combined_DL_2016_DNN
 # """.split()
 combinations = [x.replace("/", "") for x in combinations]
+combinations.append("angela_noratio_allDL5464SL")
+combinations = """
+combined_DLFHSL_all_years_new_RO  
+combined_DLFHSL_all_years_old_RO  
+combined_DLSL_all_years_new_RO  
+combined_DLSL_all_years_old_RO  
+combined_SL_all_years_new_RO  
+combined_SL_all_years_old_RO""".split()
 # combinations = """
 #     combined_SL_2018_DNN
 #     combined_SL_2017_DNN
@@ -101,10 +121,13 @@ bestfit_path_template = "bestfits/fitDiagnostics_asimov_sig1*{param}_{comb}.root
 outname_template = "{comb}__{param}.json"
 
 def load_json(path):
-    return_dict = {}
+    impact_dict = {}
     with open(path) as f:
-        return_dict = json.load(f)
-    return return_dict.get("params", {})
+        impact_dict = json.load(f)
+
+    return_dict = impact_dict.get("params", {})
+    return_dict += impact_dict.get("POIs", {})
+    return return_dict
 
 def dump_json(outname, allvals):
     if len(allvals) > 0:
