@@ -19,6 +19,7 @@ poi_selection = "r"
 fontsize = 0.04
 
 paramsToDraw=[
+    "r",
     "CMS_ttHbb_bgnorm_ttbb",
     "CMS_ttHbb_bgnorm_ttcc",
     "CMS_btag_lf",
@@ -40,98 +41,210 @@ combined_DLSL_{}.root    combined_SL_{}_DNN.root     combined_DLFH_{}.root combi
 combined_DL_{}_DNN.root               combined_SL_{}_DNN_ge4j_3t.root
 """.split()
 
+combinationsToDraw = """
+combined_DLFHSL_{}_DNN_ge5j_ge4t_no_ratio.root    combined_DL_{}_DNN.root                         combined_SL_{}_DNN_5j_ge4t_with_ratio.root
+combined_DLFHSL_{}_DNN_ge5j_ge4t_with_ratio.root  combined_DL_{}_DNN_with_ratio.root              combined_SL_{}_DNN_ge5j_ge4t_no_ratio.root
+combined_DLFHSL_{}_separate_DNN_no_ratio.root     combined_FH_{}_DNN.root                         combined_SL_{}_DNN_ge5j_ge4t_with_ratio.root
+combined_DLFHSL_{}_separate_DNN_with_ratio.root   combined_SLFH_{}_DNN_ge5j_ge4t_no_ratio.root    combined_SL_{}_DNN_ge6j_ge4t_no_ratio.root
+combined_DLSL_{}_DNN_ge5j_ge4t_no_ratio.root      combined_SLFH_{}_DNN_ge5j_ge4t_with_ratio.root  combined_SL_{}_DNN_ge6j_ge4t_with_ratio.root
+combined_DLSL_{}_DNN_ge5j_ge4t_with_ratio.root    combined_SLFH_{}_separate_DNN_no_ratio.root     combined_SL_{}_separate_DNN_no_ratio.root
+combined_DLSL_{}_separate_DNN_no_ratio.root       combined_SLFH_{}_separate_DNN_with_ratio.root   combined_SL_{}_separate_DNN_with_ratio.root
+combined_DLSL_{}_separate_DNN_with_ratio.root     combined_SL_{}_DNN_5j_ge4t_no_ratio.root
+""".split()
+
 combinationsToDraw = [x.format(y) for x in combinationsToDraw for y in "2016 2017 2018 1617 1718 all_years".split()]
 combinationsToDraw = [x.replace("/", "") for x in combinationsToDraw]
 
 combinationsToDraw = [x.replace(".root", "") for x in combinationsToDraw]
+combinationsToDraw.append("angela_noratio_allDL5464SL")
+combinationsToDraw = """
+combined_DLFHSL_all_years_new_RO  
+combined_DLFHSL_all_years_old_RO  
+combined_DLSL_all_years_new_RO  
+combined_DLSL_all_years_old_RO  
+combined_SL_all_years_new_RO  
+combined_SL_all_years_old_RO""".split()
+# combinationsToDraw = ["_fixed_ttH_{}_old_RO".format(i) for i in [0, 7, 8, 11]]
+# combinationsToDraw += ["fixed_ttH_{}".format(i) for i in [1, 3, 5, 7, 9, 18, 22]]
 combinationsToDraw = sorted(combinationsToDraw)
+print(combinationsToDraw)
+combinationsToDraw.insert(0, "_double_glusplit")
+print(combinationsToDraw)
+# exit(0)
+combinationsToDraw = [
+    "_double_glusplit",
+#    "fixed_ttH_1",
+    "fixed_ttH_3",
+    "_fixed_ttH_0_old_RO",
+#    "fixed_ttH_5",
+    "fixed_ttH_7",
+    "_fixed_ttH_7_old_RO",
+#    "fixed_ttH_18",
+    "fixed_ttH_22",
+    "_fixed_ttH_11_old_RO",
+]
+
 
 naming = {
-    "combined_DLFHSL_2016_nominorDL" : "DL+FH+SL (no 3j2b,3j3b,4j2b) 2016",
-    "combined_DLSL_2016_nominorDL": "DL+SL (no 3j2b,3j3b,4j2b) 2016",
-    "combined_DL_2016_DNN_nominorDL": "DL+SL (no 3j2b,3j3b,4j2b) 2016",
-
-    "no_3j2b_3j3b_combined_DLFHSL_2016" : "DL+SL (no 3j2b,3j3b) 2016",
-    "no_3j2b_3j3b_combined_DLSL_2016" : "DL+SL (no 3j2b,3j3b) 2016",
-    "no_3j2b_3j3b_combined_DL_2016_DNN" : "DL (no 3j2b,3j3b) 2016",
-
-    "no_4j2b_combined_DLFHSL_2016" : "DL+FH+SL (no 4j2b) 2016",
-    "no_4j2b_combined_DLSL_2016": "DL+SL (no 4j2b) 2016",
-    "no_4j2b_combined_DL_2016_DNN" : "DL (no 4j2b) 2016",
-
-    "no_3j2b_combined_DLFHSL_2016" : "DL+FH+SL (no 3j2b) 2016",
-    "no_3j2b_combined_DLSL_2016": "DL+SL (no 3j2b) 2016",
-    "no_3j2b_combined_DL_2016_DNN" : "DL (no 3j2b) 2016",
-    
-    "combined_N_Jets_DLFHSL_2016": "DL+FH+SL (NJets) 2016", 
-    "combined_N_Jets_DLFH_2016": "DL+FH (NJets) 2016",
-    "combined_N_Jets_DLSL_2016": "DL+SL (NJets) 2016",  
-    "combined_N_Jets_FHSL_2016": "FH+SL (NJets) 2016", 
-    "combined_N_Jets_DL_2016": "DL (NJets) 2016", 
-    "combined_DL_2016_DNN_nominorDL": "DL (4j3b) 2016",
-    "onlyminorDL_combined_DL_2016_DNN": "DL (no 4j3b) 2016",
-    "combined_N_Jets_FH_2016": "FH (NJets) 2016", 
-    "combined_N_Jets_SL_2016": "SL (NJets) 2016", 
-
-    "combined_DLFHSL_2016": "DL+FH+SL 2016",
-    "combined_DLFHSL_2017": "DL+FH+SL 2017",
-    "combined_DLFHSL_2018": "DL+FH+SL 2018",
-    "combined_DLFHSL_1617": "DL+FH+SL 2016+2017",
-    "combined_DLFHSL_1718": "DL+FH+SL 2017+2018",
-    "combined_DLFHSL_all_years": "DL+FH+SL all years",
-    "combined_DLSL_2016": "DL+SL 2016",
-    "combined_DLSL_2017": "DL+SL 2017",
-    "combined_DLSL_2018": "DL+SL 2018",
-    "combined_DLSL_1617": "DL+SL 2016+2017",
-    "combined_DLSL_1718": "DL+SL 2017+2018",
-    "combined_DLSL_all_years": "DL+SL all years",
-    "combined_DLFH_2016": "DL+FH 2016",
-    "combined_DLFH_2017": "DL+FH 2017",
-    "combined_DLFH_2018": "DL+FH 2018",
-    "combined_DLFH_1617": "DL+FH 2016+2017",
-    "combined_DLFH_1718": "DL+FH 2017+2018",
-    "combined_DLFH_all_years": "DL+FH all years",
-    "combined_SLFH_2016": "SL+FH 2016",
-    "combined_SLFH_2017": "SL+FH 2017",
-    "combined_SLFH_2018": "SL+FH 2018",
-    "combined_SLFH_1617": "SL+FH 2016+2017",
-    "combined_SLFH_1718": "SL+FH 2017+2018",
-    "combined_SLFH_all_years": "SL+FH all years",
-    "combined_DL_2016_DNN": "DL 2016",
-    "combined_DL_2017_DNN": "DL 2017",
-    "combined_DL_2018_DNN": "DL 2018",
-    "combined_DL_1617_DNN": "DL 2016+2017",
-    "combined_DL_1718_DNN": "DL 2017+2018",
-    "combined_DL_all_years_DNN": "DL all years",
-    "combined_FH_2016_DNN": "FH 2016",
-    "combined_FH_2017_DNN": "FH 2017",
-    "combined_FH_2018_DNN": "FH 2018",
-    "combined_FH_1617_DNN": "FH 2016+2017",
-    "combined_FH_1718_DNN": "FH 2017+2018",
-    "combined_FH_all_years_DNN": "FH all years",
-    "combined_SL_2016_DNN": "SL 2016",
-    "combined_SL_2016_DNN_ge4j_3t": "SL 2016 4j3b",
-    "combined_SL_2016_DNN_ge4j_ge4t": "SL 2016 4j4b",
-    "combined_SL_2017_DNN": "SL 2017",
-    "combined_SL_2017_DNN_ge4j_3t": "SL 2017 4j3b",
-    "combined_SL_2017_DNN_ge4j_ge4t":"SL 2017 4j4b",
-    "combined_SL_2018_DNN": "SL 2018",
-    "combined_SL_2018_DNN_ge4j_3t": "SL 2018 4j3b",
-    "combined_SL_2018_DNN_ge4j_ge4t": "SL 2018 4j4b",
-    "combined_SL_1617_DNN": "SL 2016+2017",
-    "combined_SL_1617_DNN_ge4j_3t": "SL 2016+2017 4j3b",
-    "combined_SL_1617_DNN_ge4j_ge4t": "SL 2016+2017 4j4b",
-    "combined_SL_1718_DNN": "SL 2017+2018",
-    "combined_SL_1718_DNN_ge4j_3t": "SL 2017+2018 4j3b",
-    "combined_SL_1718_DNN_ge4j_ge4t": "SL 2017+2018 4j4b",
-    "combined_SL_all_years_DNN": "SL all years",
-    "combined_SL_all_years_DNN_ge4j_3t": "SL all years 4j3b",
-    "combined_SL_all_years_DNN_ge4j_ge4t": "SL all years 4j4b",
-    "combined_full_2016": "DL+FH+SL+DLCR 2016",
-    "combined_full_2017": "DL+FH+SL+DLCR 2017",
-    "combined_full_2018": "DL+FH+SL+DLCR 2018",
-    "combined_full_all_years": "DL+FH+SL+DLCR all years"
+    "combined_DLFHSL_all_years_new_RO" : "DL+FH+SL (5464)",
+    "combined_DLFHSL_all_years_old_RO" : "DL+FH+SL (4344)",
+    "combined_DLSL_all_years_new_RO" : "DL+SL (5464)",
+    "combined_DLSL_all_years_old_RO" : "DL+SL (4344)",
+    "combined_SL_all_years_new_RO" : "SL (5464)",
+    "combined_SL_all_years_old_RO" : "SL (4344)"
 }
+
+naming = {}
+dnn_configs = {
+    "DNN_ge5j_ge4t": "1 ANN",
+    "separate_DNN": "2 ANNs"
+}
+ro_configs = {
+    "_with_ratio": "w/ RO", 
+    "_no_ratio": "w/o RO"}
+
+for dnn in dnn_configs:
+    dnn_clearname = dnn_configs[dnn]
+    for ro in ro_configs:
+        ro_clearname = ro_configs[ro]
+        subdict = {
+            "combined_DLFHSL_all_years_{}{}".format(dnn, ro): "DL+FH+SL all years {} {}".format(dnn_clearname, ro_clearname),
+            "combined_DLSL_all_years_{}{}".format(dnn, ro): "DL+SL all years {} {}".format(dnn_clearname, ro_clearname),
+            "combined_SLFH_all_years_{}{}".format(dnn, ro): "SL+FH all years {} {}".format(dnn_clearname, ro_clearname),
+            "combined_DL_all_years_DNN{}".format(ro): "DL all years {}".format(ro_clearname),
+
+        }
+        naming.update(subdict)
+naming.update({            
+    "combined_DL_all_years_DNN": "DL all years w/o RO",
+    "combined_FH_all_years_DNN": "FH all years"})
+
+dnn_configs = {
+    "DNN_ge5j_ge4t": ">=5j, >=4t",
+    "DNN_ge6j_ge4t": ">=6j, >=4t",
+    "DNN_5j_ge4t": "5j, >=4t",
+    "separate_DNN": "2 ANNs"
+}
+
+for dnn in dnn_configs:
+    dnn_clearname = dnn_configs[dnn]
+    for ro in ro_configs:
+        ro_clearname = ro_configs[ro]
+        subdict = {
+            "combined_SL_all_years_{}{}".format(dnn, ro) : "SL all years {} {}".format(dnn_clearname, ro_clearname)
+        }
+        naming.update(subdict)
+naming["angela_noratio_allDL5464SL"] = "DL+FH+SL original ANN w/o RO"
+naming = {
+    "combined_DLFHSL_all_years_new_RO" : "DL+FH+SL (5464)",
+    "combined_DLFHSL_all_years_old_RO" : "DL+FH+SL (4344)",
+    "combined_DLSL_all_years_new_RO" : "DL+SL (5464)",
+    "combined_DLSL_all_years_old_RO" : "DL+SL (4344)",
+    "combined_SL_all_years_new_RO" : "SL (5464)",
+    "combined_SL_all_years_old_RO" : "SL (4344)",
+    "_double_glusplit": "DL+FH+SL (5464), 2x glusplit",
+}
+naming = {
+    "_fixed_ttH_0_old_RO" : "DL+FH+SL (4344)",
+    "_fixed_ttH_7_old_RO" : "DL+SL (4344)",
+    "_fixed_ttH_8_old_RO" : "DL",
+    "_fixed_ttH_11_old_RO" : "SL (4344)",
+
+    "fixed_ttH_1" : "DL+FH+SL (>=54)",
+    "fixed_ttH_3" : "DL+FH+SL (5464)",
+    "fixed_ttH_5" : "DL+SL (>=54)",
+    "fixed_ttH_7" : "DL+SL (5464)",
+    "fixed_ttH_9" : "DL",
+    "fixed_ttH_18" : "SL (>=54)",
+    "fixed_ttH_22" : "SL (5464)",
+    "_double_glusplit": "DL+FH+SL (5464), 2x glusplit",
+}
+# naming = {
+#     "combined_DLFHSL_2016_nominorDL" : "DL+FH+SL (no 3j2b,3j3b,4j2b) 2016",
+#     "combined_DLSL_2016_nominorDL": "DL+SL (no 3j2b,3j3b,4j2b) 2016",
+#     "combined_DL_2016_DNN_nominorDL": "DL+SL (no 3j2b,3j3b,4j2b) 2016",
+
+#     "no_3j2b_3j3b_combined_DLFHSL_2016" : "DL+SL (no 3j2b,3j3b) 2016",
+#     "no_3j2b_3j3b_combined_DLSL_2016" : "DL+SL (no 3j2b,3j3b) 2016",
+#     "no_3j2b_3j3b_combined_DL_2016_DNN" : "DL (no 3j2b,3j3b) 2016",
+
+#     "no_4j2b_combined_DLFHSL_2016" : "DL+FH+SL (no 4j2b) 2016",
+#     "no_4j2b_combined_DLSL_2016": "DL+SL (no 4j2b) 2016",
+#     "no_4j2b_combined_DL_2016_DNN" : "DL (no 4j2b) 2016",
+
+#     "no_3j2b_combined_DLFHSL_2016" : "DL+FH+SL (no 3j2b) 2016",
+#     "no_3j2b_combined_DLSL_2016": "DL+SL (no 3j2b) 2016",
+#     "no_3j2b_combined_DL_2016_DNN" : "DL (no 3j2b) 2016",
+    
+#     "combined_N_Jets_DLFHSL_2016": "DL+FH+SL (NJets) 2016", 
+#     "combined_N_Jets_DLFH_2016": "DL+FH (NJets) 2016",
+#     "combined_N_Jets_DLSL_2016": "DL+SL (NJets) 2016",  
+#     "combined_N_Jets_FHSL_2016": "FH+SL (NJets) 2016", 
+#     "combined_N_Jets_DL_2016": "DL (NJets) 2016", 
+#     "combined_DL_2016_DNN_nominorDL": "DL (4j3b) 2016",
+#     "onlyminorDL_combined_DL_2016_DNN": "DL (no 4j3b) 2016",
+#     "combined_N_Jets_FH_2016": "FH (NJets) 2016", 
+#     "combined_N_Jets_SL_2016": "SL (NJets) 2016", 
+
+#     "combined_DLFHSL_2016": "DL+FH+SL 2016",
+#     "combined_DLFHSL_2017": "DL+FH+SL 2017",
+#     "combined_DLFHSL_2018": "DL+FH+SL 2018",
+#     "combined_DLFHSL_1617": "DL+FH+SL 2016+2017",
+#     "combined_DLFHSL_1718": "DL+FH+SL 2017+2018",
+#     "combined_DLFHSL_all_years": "DL+FH+SL all years",
+#     "combined_DLSL_2016": "DL+SL 2016",
+#     "combined_DLSL_2017": "DL+SL 2017",
+#     "combined_DLSL_2018": "DL+SL 2018",
+#     "combined_DLSL_1617": "DL+SL 2016+2017",
+#     "combined_DLSL_1718": "DL+SL 2017+2018",
+#     "combined_DLSL_all_years": "DL+SL all years",
+#     "combined_DLFH_2016": "DL+FH 2016",
+#     "combined_DLFH_2017": "DL+FH 2017",
+#     "combined_DLFH_2018": "DL+FH 2018",
+#     "combined_DLFH_1617": "DL+FH 2016+2017",
+#     "combined_DLFH_1718": "DL+FH 2017+2018",
+#     "combined_DLFH_all_years": "DL+FH all years",
+#     "combined_SLFH_2016": "SL+FH 2016",
+#     "combined_SLFH_2017": "SL+FH 2017",
+#     "combined_SLFH_2018": "SL+FH 2018",
+#     "combined_SLFH_1617": "SL+FH 2016+2017",
+#     "combined_SLFH_1718": "SL+FH 2017+2018",
+#     "combined_SLFH_all_years": "SL+FH all years",
+#     "combined_DL_2016_DNN": "DL 2016",
+#     "combined_DL_2017_DNN": "DL 2017",
+#     "combined_DL_2018_DNN": "DL 2018",
+#     "combined_DL_1617_DNN": "DL 2016+2017",
+#     "combined_DL_1718_DNN": "DL 2017+2018",
+#     "combined_DL_all_years_DNN": "DL all years",
+#     "combined_FH_2016_DNN": "FH 2016",
+#     "combined_FH_2017_DNN": "FH 2017",
+#     "combined_FH_2018_DNN": "FH 2018",
+#     "combined_FH_1617_DNN": "FH 2016+2017",
+#     "combined_FH_1718_DNN": "FH 2017+2018",
+#     "combined_FH_all_years_DNN": "FH all years",
+#     "combined_SL_2016_DNN": "SL 2016",
+#     "combined_SL_2016_DNN_ge4j_3t": "SL 2016 4j3b",
+#     "combined_SL_2016_DNN_ge4j_ge4t": "SL 2016 4j4b",
+#     "combined_SL_2017_DNN": "SL 2017",
+#     "combined_SL_2017_DNN_ge4j_3t": "SL 2017 4j3b",
+#     "combined_SL_2017_DNN_ge4j_ge4t":"SL 2017 4j4b",
+#     "combined_SL_2018_DNN": "SL 2018",
+#     "combined_SL_2018_DNN_ge4j_3t": "SL 2018 4j3b",
+#     "combined_SL_2018_DNN_ge4j_ge4t": "SL 2018 4j4b",
+#     "combined_SL_1617_DNN": "SL 2016+2017",
+#     "combined_SL_1617_DNN_ge4j_3t": "SL 2016+2017 4j3b",
+#     "combined_SL_1617_DNN_ge4j_ge4t": "SL 2016+2017 4j4b",
+#     "combined_SL_1718_DNN": "SL 2017+2018",
+#     "combined_SL_1718_DNN_ge4j_3t": "SL 2017+2018 4j3b",
+#     "combined_SL_1718_DNN_ge4j_ge4t": "SL 2017+2018 4j4b",
+#     "combined_SL_all_years_DNN": "SL all years",
+#     "combined_SL_all_years_DNN_ge4j_3t": "SL all years 4j3b",
+#     "combined_SL_all_years_DNN_ge4j_ge4t": "SL all years 4j4b",
+#     "combined_full_2016": "DL+FH+SL+DLCR 2016",
+#     "combined_full_2017": "DL+FH+SL+DLCR 2017",
+#     "combined_full_2018": "DL+FH+SL+DLCR 2018",
+#     "combined_full_all_years": "DL+FH+SL+DLCR all years"
+# }
 
 def draw_Evolution( results_json, paramToDraw = "CMS_ttHbb_bgnorm_ttbb"):
 
@@ -161,6 +274,8 @@ def draw_Evolution( results_json, paramToDraw = "CMS_ttHbb_bgnorm_ttbb"):
             param_dict = res[combination].get(paramToDraw, {})
             print(json.dumps(param_dict, indent=4))
             bestfit_dict = param_dict.get("bestfit", {})
+            if len(bestfit_dict) == 0:
+                bestfit_dict = param_dict
             bestfit.append(bestfit_dict["value"])
             upper.append(bestfit_dict["up"])
             lower.append(abs(bestfit_dict["down"]))
@@ -177,7 +292,7 @@ def draw_Evolution( results_json, paramToDraw = "CMS_ttHbb_bgnorm_ttbb"):
             exit()
 
 
-
+    print(bestfit)
     # upper, bestfit, combs, lower = zip(*sorted(zip(upper, bestfit, combs, lower)))
     # combs, upper, bestfit,lower = zip(*sorted(zip(combs, upper, bestfit, lower)))
     zero = np.zeros(nCombs)
