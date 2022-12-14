@@ -87,6 +87,10 @@ def make_mdf_command(   datacard, nPoints, unconstrained, params, xVar,
                                             toinsert = "125.38", 
                                             joinwith="insert"
                                         )
+    multidimfitcmd = helper.insert_values(   cmds = multidimfitcmd, 
+                                            keyword = "--exclude", 
+                                            joinwith="remove"
+                                        )
     if "--firstPoint=0" in additionalCmds or not any("--firstPoint" in x for x in additionalCmds):
          multidimfitcmd.append('--saveWorkspace')
     
@@ -1032,7 +1036,8 @@ if __name__ == '__main__':
     suffix = options.suffix
     outputDirectory = os.path.abspath(options.outputDirectory)
     if not os.path.exists(outputDirectory):
-        parser.error("output directory does not exist!")
+        # parser.error("output directory does not exist!")
+        os.makedirs(outputDirectory)
     
     
     if scan2D and not len(params)>1:
