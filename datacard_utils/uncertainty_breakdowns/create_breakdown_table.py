@@ -8,7 +8,7 @@ import imp
 header = """
 \\begin{tabular}{cc}
 \hline\hline
-Group & \Delta \mu \\
+Group & \Delta \mu \\\\
 \hline\hline
 """
 line_template = "{group} & {valup:+.2f}/{valdown:+.2f}\\\\"
@@ -56,6 +56,7 @@ def create_table(val_dict, outname, order = []):
         order += ["Total-Stat","Total"] 
     for group in order:
         group_dict = val_dict.get(group, None)
+        group = group.replace(" - substract from Stat", "")
         if group_dict:
             line = line_template.format(group=group,
                                 valup = group_dict["valup"],
