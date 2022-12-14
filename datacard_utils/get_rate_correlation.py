@@ -70,6 +70,18 @@ def parse_arguments():
                     type="int",
                     default=300,
     )
+    parser.add_option("-s", "--shift",
+                    help = " ".join(
+                        """
+                        evaluate rate evolution for this shift. 
+                        Choices: [up (u), down(d), nominal(n)].
+                        Default: nominal
+                        """.split()
+                    ),
+                    dest = "shift",
+                    choices = ["up", "down", "nominal", "u", "d", "n"],
+                    default="nominal"
+    )
     parser.add_option("-e", "--extentions",
                     help = " ".join(
                         """
@@ -90,6 +102,18 @@ def parse_arguments():
                         """.split()
                     ),
                     dest = "process_list",
+                    action = "append",
+                    default = []
+    )
+    parser.add_option("-u", "--uncertainties",
+                    help = " ".join(
+                        """
+                        Do the evolution of the rates for these uncertainties.
+                        Can be called multiple times.
+                        regex is allowed
+                        """.split()
+                    ),
+                    dest = "uncertainty_list",
                     action = "append",
                     default = []
     )
@@ -115,13 +139,25 @@ def parse_arguments():
     procs = options.process_list
     if not isinstance(procs, list) or len(procs) == 0:
         options.process_list = [".*"]
+    uncertainties = options.uncertainty_list
+    if not isinstance(uncertainties, list) or len(uncertainties) == 0:
+        options.uncertainty_list = [".*"]
+
+    # convert short cuts for shifts into real names
+    shift = options.shift
+    if shift == "u":
+        options.shift = "up"
+    elif shift == "d":
+        options.shift = "down"
+    elif shift == "n":
+        options.shift = "nominal"
 
     return options, files
 
-def get_rate_evolution(harvester, fit):
+def get_rate_evolution(harvester, fit, shift = "nominal"):
     parameters = fit.floatParsFinal().contentsString().split(",")
     rate = harvester.GetRate()
-    rate_dict = harvester.RateEvolution(fit)
+    rate_dict = harvester.RateEvolution(fit, shift)
     return rate_dict
         
 
@@ -183,7 +219,7 @@ def create_2D_map(value_dict, outname, extensions):
                 extensions=extensions)
 
 
-def rate_evolution_per_process(harvester, process_list, fit, outpath, extensions):
+def rate_evolution_per_process(harvester, process_list, fit, outpath, extensions, shift = "nominal"):
     bins = harvester.bin_set()
     for b in bins:
         bin_dict = {}
@@ -192,10 +228,10 @@ def rate_evolution_per_process(harvester, process_list, fit, outpath, extensions
             if len(proc_harvester.process_set()) == 0:
                 print("Could not load processes '{}' for bin '{}'".format(procs, b))
                 continue
-            bin_dict[procs] = get_rate_evolution(proc_harvester, fit)
+            bin_dict[procs] = get_rate_evolution(proc_harvester, fit, shift = shift)
             print(json.dumps(bin_dict[procs], indent=4, sort_keys= lambda x: x[1]))
         
-        outname = "rate_pull_{}".format(b)
+        outname = "rate_pull_{}_{}".format(b, shift)
         outname = os.path.join(outpath, outname)
         create_2D_map(value_dict = bin_dict, 
                         outname = outname, 
@@ -229,6 +265,8 @@ def main(*files, **kwargs):
     exts = kwargs.get("extensions", "root pdf png".split())
     process_list = kwargs.get("process_list", [".*"])
     do_correlations = kwargs.get("do_correlations", False)
+    shift = kwargs.get("shift", "nominal")
+    uncertainties = kwargs.get("uncertainty_list", [".*"])
     # check if outpath exists
     if not os.path.exists(outpath):
         os.makedirs(outpath)
@@ -249,11 +287,13 @@ def main(*files, **kwargs):
 
         rate_evolution_func = getattr(cmb, "RateEvolution", None)
         if callable(rate_evolution_func):
-            rate_evolution_per_process(harvester=cmb,
+            this_cmb = cmb.cp().syst_name(uncertainties)
+            rate_evolution_per_process(harvester=this_cmb,
                                     process_list=process_list,
                                     fit=fit,
                                     outpath=outpath, 
-                                    extensions=exts
+                                    extensions=exts,
+                                    shift = shift
                                     )
         else:
             msg = " ".join("""
