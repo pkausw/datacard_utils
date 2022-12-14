@@ -5,6 +5,7 @@ import json
 
 from fnmatch import filter
 from optparse import OptionParser
+from copy import deepcopy
 
 skip_fit_status = False
 def parse_arguments():
@@ -238,35 +239,38 @@ def main(options, files):
         print("="*130)
         print("Collecting results for param {}".format(p))
         print("="*130)
-        if not p in results:
-            results[p] = {}
+        # if not p in results:
+        #     results[p] = {}
         others = [par for par in parameters if not par == p]
         if "r" in others:
             others.pop(others.index("r"))
         #load bestfits
         # infiles = filter_files(infiles = files, exclude_crits = others, must_include= [p])
         infiles = filter_files(infiles = files, exclude_crits = others)
+        pardict = dict()
         if do_bestfits:
             print("="*130)
             print("Collecting bestfits")
             print("="*130)
             files_bestfit = filter(infiles, "*{}*".format(key_bestfit))
             files_bestfit = filter_files(infiles = files_bestfit, exclude_crits = [key_statonly, key_signi])
-            load_bestfit(files = files_bestfit, paramname = p, results = results[p], keyword = "bestfit")
+            load_bestfit(files = files_bestfit, paramname = p, results = pardict, keyword = "bestfit")
         if do_statonly:
             print("="*130)
             print("Collecting stat-only")
             print("="*130)
             files_statonly = filter(infiles, "*{}*".format(key_statonly))
             files_statonly = filter_files(infiles = files_statonly, exclude_crits = [key_bestfit, key_signi])
-            load_bestfit(files = files_statonly, paramname = p, results = results[p], keyword = "stat_only")
+            load_bestfit(files = files_statonly, paramname = p, results = pardict, keyword = "stat_only")
         if do_signi:
             print("="*130)
             print("Collecting significances")
             print("="*130)
             files_signi = filter(infiles, "*{}*".format(key_signi))
             files_signi = filter_files(infiles = files_signi, exclude_crits = [key_bestfit, key_statonly])
-            load_significance(files = files_signi, paramname = p, results = results[p], keyword = "significance")
+            load_significance(files = files_signi, paramname = p, results = pardict, keyword = "significance")
+        if not len(pardict) == 0:
+            results[p] = deepcopy(pardict)
     dump_json(outname = outname, allvals = results)
 
 if __name__ == '__main__':
