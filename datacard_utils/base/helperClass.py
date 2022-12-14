@@ -163,6 +163,12 @@ cd -
                 if self._debug >= 99:
                     print ("ERROR: file '%s' is not open" % f.GetName())
         return False
+
+    def open_root_file(self, fpath):
+        f = ROOT.TFile.Open(fpath)
+        if self.intact_root_file(f):
+            return f
+        
     
     def is_good_fit(self, result):
         if result.status() == 0 and result.covQual() == 3:
