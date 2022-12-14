@@ -432,7 +432,7 @@ def draw_canvas_histo( nchannels, xmin, xmax, title, entry_names, labels, positi
     line1.SetLineStyle(1)
     line2 = ROOT.TLine()
     line2.SetLineStyle(1)
-    line2.SetLineWidth(1.5)
+    line2.SetLineWidth(2)
     print(entry_names)
     for name in entry_names:
         if n_entry > nchannels:
