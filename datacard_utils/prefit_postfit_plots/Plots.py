@@ -788,7 +788,7 @@ class DrawHistograms:
                 else:
                     self.yMinMax = temp_min
         print("Minimum Value in templates: {}".format(self.yMinMax))
-        self.yMinMax = max(self.yMinMax, 1e-7)
+        self.yMinMax = 5e-2
 
     def normalizePlot(self, PlotHist):
 
@@ -816,7 +816,7 @@ class DrawHistograms:
         line.GetYaxis().SetRangeUser(   self.ratio_lower_bound-0.2,
                                         self.ratio_upper_bound+0.2)
         line.GetYaxis().SetTitle(self.ratio)
-
+        line.GetYaxis().CenterTitle(True)
         line.SetTitle("")
 
         line.GetXaxis().SetLabelSize(line.GetXaxis().GetLabelSize()*2.4)
@@ -824,7 +824,7 @@ class DrawHistograms:
         line.GetXaxis().SetTitle(canvaslabel)
 
         line.GetXaxis().SetTitleSize(line.GetXaxis().GetTitleSize()*3)
-        line.GetYaxis().SetTitleSize(line.GetYaxis().GetTitleSize()*2.5)
+        line.GetYaxis().SetTitleSize(line.GetYaxis().GetTitleSize()*2)
 
         line.GetYaxis().SetTitleOffset(0.5)
         line.GetYaxis().SetNdivisions(505)
@@ -833,6 +833,7 @@ class DrawHistograms:
             line.SetBinError(i, 1)
         line.SetLineWidth(1)
         line.SetLineColor(ROOT.kBlack)
+        line.GetYaxis().CenterTitle(True)
         line.DrawCopy("histo")
 
     def drawRatio(self,stackhist,canvaslabel=""):
@@ -846,6 +847,7 @@ class DrawHistograms:
         ratioPlot.SetLineWidth(1)
         ratioPlot.SetMarkerStyle(20)
         ROOT.gStyle.SetErrorX(0)
+        ratioPlot.GetYaxis().CenterTitle(True)
         ratioPlot.DrawCopy("sameP0")
 
         self.generateRatioErrorband()
@@ -859,6 +861,7 @@ class DrawHistograms:
                 self.ratio_error_graph.SetPoint(i,self.errorband.GetX()[i],1)
                 self.ratio_error_graph.SetPointEYhigh(i,self.errorband.GetErrorYhigh(i)/self.errorband.GetY()[i])
                 self.ratio_error_graph.SetPointEYlow(i,self.errorband.GetErrorYlow(i)/self.errorband.GetY()[i])
+            self.ratio_error_graph.GetYaxis().CenterTitle(True)
             self.ratio_error_graph.Draw("same02")
 
         if self.data:
@@ -868,6 +871,7 @@ class DrawHistograms:
                 self.ratioPlot.SetPointError(i-1,0.,0.,
                     (self.data.GetBinErrorLow(i))/self.background.GetBinContent(i),(self.data.GetBinErrorUp(i))/self.background.GetBinContent(i))
             self.ratioPlot.SetMarkerStyle(20)
+            self.ratioPlot.GetYaxis().CenterTitle(True)
             self.ratioPlot.Draw("P02 same")
         self.canvas.cd(1)
 
