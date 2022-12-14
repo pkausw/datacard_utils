@@ -30,9 +30,14 @@ combined_DLSL_{}_baseline_v01.root    combined_SL_{}_DNN.root          combined_
 combined_DL_{}_DNN.root               combined_SL_{}_DNN_ge4j_3t.root
 """.split()
 
-#combinations = """
-#combined_SL_{}_DNN.root combined_SL_{}_DNN_ge4j_ge4t.root combined_SL_{}_DNN_ge4j_3t.root
-#""".split()
+combinations = """
+combined_SL_{}_DNN.root combined_SL_{}_DNN_ge4j_ge4t.root combined_SL_{}_DNN_ge4j_3t.root
+""".split()
+
+combinations = ["_fixed_ttH_{}_old_RO.root".format(i) for i in [0, 7, 8, 11]]
+# combinations += ["fixed_ttH_{}.root".format(i) for i in [1, 3, 5, 7, 9, 18, 22]]
+combinations += ["fixed_ttH_{}.root".format(i) for i in [3, 7, 9, 22]]
+combinations += ["_double_glusplit"]
 #combinations = """
 #combined_full_{}_baseline_v01_packaged_mus_channels.root
 #""".split()
@@ -81,15 +86,15 @@ params = [
     #"r_ttbbCR",
     "CMS_ttHbb_bgnorm_ttbb",
     "CMS_ttHbb_bgnorm_ttcc",
-    "CMS_btag_lf",
-    "CMS_ttHbb_scaleMuF_ttbbNLO",
-    "CMS_ttHbb_scaleMuR_ttbbNLO",
-    "CMS_btag_cferr2",
-    "CMS_eff_e_2018"
+    # "CMS_btag_lf",
+    # "CMS_ttHbb_scaleMuF_ttbbNLO",
+    # "CMS_ttHbb_scaleMuR_ttbbNLO",
+    # "CMS_btag_cferr2",
+    # "CMS_eff_e_2018"
     # "CMS_ttHbb_bgnorm_ttbarPlusBBbar"
 ]
 
-bestfit_path_template = "bestfits/fitDiagnostics_asimov_sig1*{param}_{comb}.root"
+bestfit_path_template = "multidimfit{comb}.root"
 # bestfit_path_template = "bestfits/fitDiagnostics_asimov_sig1_*r*{comb}.root"
 outname_template = "{comb}__{param}.json"
 
@@ -98,7 +103,7 @@ def is_good_fit(result):
         return True
     print "WARNING: This is not a good fit!"
     print "\tStatus: {0}\tQuality: {1}".format(result.status(), result.covQual())
-    return False #DANGERZONE!
+    return True #DANGERZONE!
 
 def load_roofitresult(rfile, fitres = "fit_s"):
     result = rfile.Get(fitres)
@@ -111,44 +116,49 @@ def load_roofitresult(rfile, fitres = "fit_s"):
     
     return result
 
+def is_good_rootfile(fpath):
+    if os.path.exists(fpath):
+        f = ROOT.TFile.Open(fpath)
+        if (f.IsOpen() and not f.IsZombie() and not f.TestBit(ROOT.TFile.kRecovered)):
+            return True
+        else:
+                print("File '{}' is broken, skipping".format(fpath)) 
+    else:
+        print("WARNING: file {} does not exist!".format(fpath))
+    return False
+
 def load_variable(result, parname):
     var = result.floatParsFinal().find(parname)
     if isinstance(var, ROOT.RooRealVar):
         return var
 
-def load_bestfit(files, paramname, results, keyword):
-    print("Loading from files:")
-    print(files)
-    for fpath in files:
-        # if not paramname in fpath:
-        #     print("WARNING: Could not find '{param}' in path name '{fpath}'! Skipping".format(
-        #         param = paramname,
-        #         fpath = fpath
-        #     ))
-        #     continue
-        if not os.path.exists(fpath):
-            print("WARNING: file {} does not exist!".format(fpath))
-            continue
-        f = ROOT.TFile.Open(fpath)
-        if not (f.IsOpen() and not f.IsZombie() and not f.TestBit(ROOT.TFile.kRecovered)):
-            print("File '{}' is broken, skipping".format(fpath))
-            continue
-        fit = load_roofitresult(rfile = f)
-        if fit is None:
-            print("Fit in file '{}' is broken, skipping".format(fpath))
-            continue
+def load_bestfit(fpath, paramname):
+    print("Loading from infile:")
+    print(fpath)
+    
+    values = {}
+    f = ROOT.TFile.Open(fpath)
+    fit = load_roofitresult(rfile = f)
+    if not fit is None:
         par = load_variable(result = fit, parname = paramname)
         if par is None:
             print(" ".join(
                 """WARNING: Could not load parameter '{par}'
                 from file {file}""".format(par=paramname, file = fpath).split()
                     )   
-                  )
-            continue
-        if keyword in results:
-            print("WARNING: keyword '{}' is already in results dict!".format(keyword))
-            keyword += "_new"
-        results[keyword] = {"value" : par.getVal(), "down" : par.getErrorLo(), "up" : par.getErrorHi()}
+                    )
+        else:
+            values = {  "value" : par.getVal(), 
+                        "down" : par.getErrorLo(), 
+                        "up" : par.getErrorHi()
+                    }
+
+    else:
+        print("Fit in file '{}' is broken, skipping".format(fpath))
+    
+    f.Close()
+    
+    return values
 
 def dump_json(outname, allvals):
     if len(allvals) > 0:
@@ -158,121 +168,78 @@ def dump_json(outname, allvals):
     else:
         print "given dictionary is empty, will not create '%s'" % outname
 
-def prepare_files(infiles):
-    return_dict = {}
-    for f in infiles:
-        tmp = os.path.basename(f)
-        #remove root extension
-        tmp = tmp.split(".")[0]
-        if tmp.endswith("2D"):
-            tmp = "_".join(tmp.split("_")[:-4])
-        return_dict[f] = tmp
-    return return_dict
 
-def filter_files(infiles, exclude_crits, must_include = []):
-    print("FILTER_FILES: input")
-    print(infiles)
-    tmp = prepare_files(infiles)
-    l = [f for f in tmp if not any(c in tmp[f] for c in exclude_crits)]
-    l = [f for f in l if all(c in tmp[f] for c in must_include)]
-    print("FILTER_FILES: output")
-    print(l)
-    return l
-
-def create_jsons(combinations, params):
+def create_jsons(combinations, files, outname_prefix):
+    
+    params = load_parameters(files)
+    
     results = {}
-    for p in POIs:
+    all_results = {}
+    all_results["allParams"] = params
+    for comb in combinations:
+    
         results_ = {}
-        for comb in combinations:
-            files = []
-            outname = outname_template.format(
-                comb = comb,
-                param = p
-            )
-            if multisignal:
-                files.append(bestfit_path_template.format(
-                    param = p,
-                    comb = comb,
-                ))
-            else:
-                files.append(bestfit_path_template.format(
-                    param = "",
-                    comb = comb,
-                ))
-            # print("-----------")
-            # for f in files:
-            #     print(f)     
-            results_[comb] = collect_results(
-                    parameters = params,
-                    do_bestfits = do_bestfits,
-                    do_statonly = do_statonly,
-                    key_bestfit = key_bestfit,
-                    key_statonly = key_statonly,
-                    key_signi = key_signi,
-                    outname = outname,
-                    files=files
-                )
-        results[p] = results_
+        key_bestfit = bestfit_path_template.format(comb = comb)
+        files_bestfit = filter(files, "*{}*".format(key_bestfit))
+        
+        if not len(files_bestfit) == 1:
+            raise ValueError("Found no clear match for combination '{}'".format(comb))
+        bestfit_file = files_bestfit[0]
+        for p in params:
+            
+            tmp = load_bestfit(bestfit_file, p)
+            if len(tmp) != 0:
+                results_[p] = tmp 
+        if not len(results_) == 0:
+            results[comb] = results_
     pprint(results)
-    dump_json(outname = "ParamEvolution.json", allvals = results)
+    all_results["r"] = results
+    dump_json(outname = "{}_ParamEvolution.json".format(outname_prefix), allvals = all_results)
 
+def load_parameters(files):
+    params = []
+    for f in files:
+        try:
+            rfile = ROOT.TFile.Open(f)
+            f = load_roofitresult(rfile)
+            params = list(set(params + f.floatParsFinal().contentsString().split(",")))
+            rfile.Close()
+        except:
+            print("Could not load parameters from file '{}'".format(f))
+    params = [p for p in params if not p.startswith("prop_bin")]
+    return params
 
-def collect_results(**kwargs):
+def collect_results(*infiles, **kwargs):
     #load options
     parameters = kwargs.get("parameters")
-    do_bestfits = kwargs.get("do_bestfits")
-    do_statonly = kwargs.get("do_statonly")
     key_bestfit = kwargs.get("key_bestfit")
-    key_statonly = kwargs.get("key_statonly")
-    key_signi = kwargs.get("key_signi")
     outname = kwargs.get("outname")
-    files_ = kwargs.get("files")
-
-    files = []
-    for f in files_:
-        files+=glob.glob(f)
-    print(files)
+    # files = kwargs.get("files")
     # exit()
     #initialize dictionary for results
     results = {}
-    for p in parameters:
+    for p in params:
         print("="*130)
         print("Collecting results for param {}".format(p))
         print("="*130)
-        if not p in results:
-            results[p] = {}
-        others = [par for par in parameters if not par == p]
-        if "r" in others:
-            others.pop(others.index("r"))
+        
         #load bestfits
         # infiles = filter_files(infiles = files, exclude_crits = others, must_include= [p])
-        infiles = filter_files(infiles = files, exclude_crits = others)
-        if do_bestfits:
-            print("="*130)
-            print("Collecting bestfits")
-            print("="*130)
-            files_bestfit = filter(infiles, "*{}*".format(key_bestfit))
-            files_bestfit = filter_files(infiles = files_bestfit, exclude_crits = [key_statonly, key_signi])
-            load_bestfit(files = files_bestfit, paramname = p, results = results[p], keyword = "bestfit")
-        if do_statonly:
-            print("="*130)
-            print("Collecting stat-only")
-            print("="*130)
-            files_statonly = filter(infiles, "*{}*".format(key_statonly))
-            files_statonly = filter_files(infiles = files_statonly, exclude_crits = [key_bestfit, key_signi])
-            load_bestfit(files = files_statonly, paramname = p, results = results[p], keyword = "stat_only")
-    dump_json(outname = outname, allvals = results)
+        print("="*130)
+        print("Collecting bestfits")
+        print("="*130)
+        load_bestfit(files = files_bestfit, paramname = p, results = results[p], keyword = "bestfit")
+    # dump_json(outname = outname, allvals = results)
     return results
 
 
-def main(indir = sys.argv[1]):
+def main(prefix = sys.argv[1], files = sys.argv[2:]):
     global bestfit_path_template
-    if os.path.exists(indir) and os.path.isdir(indir):
-        bestfit_path_template = os.path.join(indir, bestfit_path_template)
-    else:
-        raise ValueError("Directory {} does not exist!".format(indir))
+    # filter out bad root files
+    files = [f for f in files if is_good_rootfile(f)]
     create_jsons(combinations = combinations,
-                 params = params
+                    files = files,
+                    outname_prefix = prefix
                  )
     
     
