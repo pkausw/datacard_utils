@@ -283,7 +283,21 @@ def doRebinning(rootfile, histolist, threshold, channel):
     while minPop < threshold:
         nbinsX = combinedHist.GetNbinsX()
         nbinsY = combinedHist.GetNbinsY()
+        backupHist = combinedHist.Clone("backup_{}_{}".format(combinedHist.GetName(), divFac))
+        print("Current divFac: {}".format(divFac))
+        print("nbinsX: {}".format(nbinsX))
+        print("nbinsY: {}".format(nbinsY))
+        if any(divFac >= x for x in [nbinsX, nbinsY]):
+            print("WARNING! Something went wrong when rebinning channel '{}'".format(channel))
+            dic["warning"] = True
+            rebinnedHist = backupHist
+            break
         rebinnedHist = combinedHist.Rebin2D(divFac, divFac, "rebinned")
+        if not isinstance(rebinnedHist, ROOT.TH2):
+            print("WARNING! Something went wrong when rebinning channel '{}'".format(channel))
+            dic["warning"] = True
+            rebinnedHist = backupHist
+            break
         rebinnedHist = addOverflows(rebinnedHist)
         # rebinned_Hist = rebin_histo(combinedHist, divFac)
         nbinsX = rebinnedHist.GetNbinsX()
@@ -363,6 +377,13 @@ def getOptimizedBinEdges(label, opts):
     print("Didn't find {notFound}/{all} channels:".format(notFound= len(notFound), all = len(channels)))
     for i in notFound:
         print(i)
+    if any(isinstance(dic[c], dict) and dic[c].get("warning", False)==True for c in dic):
+        print("Please check the binning for the following channels:")
+        print(json.dumps(dic, indent=4))
+        for c in dic:
+            if not isinstance(dic[c], dict): continue
+            if dic[c].get("warning", False) == True:
+                print(c)
     return dic
 
 
