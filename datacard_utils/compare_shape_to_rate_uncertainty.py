@@ -3,6 +3,7 @@ from __future__ import print_function
 import os
 import sys
 import ROOT
+from tqdm import tqdm
 import json
 cmssw_base = os.environ["CMSSW_BASE"]
 ROOT.gROOT.SetBatch(True)
@@ -53,7 +54,7 @@ def load_datacards(groups, harvester):
                         cardpaths[e] = []
                     print(("saving path '{}' for era '{}'".format(f, e)))
                     cardpaths[e].append(f)
-    print((json.dumps(cardpaths, indent = 4)))
+    # print((json.dumps(cardpaths, indent = 4)))
     # exit()
     return cardpaths
 
@@ -154,7 +155,7 @@ def create_shape_comparison(
         # restore original varied template
         var_shape.Scale(var_value*nom_int)
         newname = "clone_{}_{}".format(var_shape.GetName(), var)
-        print("creating new histogram '{}'".format(newname))
+        # print("creating new histogram '{}'".format(newname))
         hists.append(var_shape.Clone(newname))
         var_shape = hists[-1]
         var_shape.Draw("SameHISTE")
@@ -209,7 +210,7 @@ def create_shape_comparison(
     #save the plots
     for ext in "pdf png".split():
         final_name = "{}.{}".format(outname,ext)
-        print("saving {}".format(final_name))
+        # print("saving {}".format(final_name))
         canvas.SaveAs(final_name)
     
     # reset canvas for next systematic
@@ -234,9 +235,11 @@ def update_compatible_dict(
     }
     """
     # loop through all uncertainties that are compatible with a flat rate
-    print(json.dumps(compatible_dict, indent=4))
-    for unc in uncertainties:
-
+    # print(json.dumps(compatible_dict, indent=4))
+    print("updating comparison json")
+    pbar_unc = tqdm(uncertainties)
+    for unc in pbar_unc:
+        pbar_unc.set_description("updating uncertainty '{}'".format(unc))
         # check if this uncertainty is already recorded. If yes, add the current 
         # list of processes. If not, create a new entry
         toplevel = compatible_dict.get(unc)
@@ -248,16 +251,16 @@ def update_compatible_dict(
             # of processes
             binlevel = toplevel.get(bin_name)
             if isinstance(binlevel, list):
-                print("found existing list of processes, will combine")
-                print(binlevel)
-                print(processes)
+                # print("found existing list of processes, will combine")
+                # print(binlevel)
+                # print(processes)
                 compatible_dict[unc][bin_name] = list(set(binlevel + processes))
             else:
-                print("adding new list of processes for bin name '{}'".format(bin_name))
-                print(processes)
+                # print("adding new list of processes for bin name '{}'".format(bin_name))
+                # print(processes)
                 toplevel[bin_name] = processes
         else:
-            print("adding new uncertainty '{}'".format(unc))
+            # print("adding new uncertainty '{}'".format(unc))
             compatible_dict[unc] = dict()
             compatible_dict[unc][bin_name] = processes
 
@@ -278,12 +281,14 @@ def do_shape_comparisons(
     *uncertainties*.
     """
 
-    bins = harvester.bin_set()
-    for b in bins:
+    pbar_bins = tqdm(harvester.bin_set())
+    for b in pbar_bins:
         bin_harvester = harvester.cp().bin([b])
-        print("doing bin {}".format(b))
-        for proc in processes:
-
+        pbar_bins.set_description("doing bin {}".format(b))
+        pbar_procs = tqdm(processes)
+        for proc in pbar_procs:
+            # print("hello")
+            pbar_procs.set_description("doing processes {}".format(proc))
             # slice harvester instance to processes that match *proc* 
             process_harvester = bin_harvester.cp().process([proc])
             process_list = process_harvester.process_set()
@@ -295,8 +300,10 @@ def do_shape_comparisons(
             compatible_uncertainties = list()
 
             #create the comparison for each uncertainty
-            for unc in uncertainties:
-                print("doing uncertainty '{}'".format(unc))
+            pbar_unc = tqdm(uncertainties)
+            for unc in pbar_unc:
+                # print("unc hello")
+                pbar_unc.set_description("doing uncertainty '{}'".format(unc))
                 parts = [outname, b, helper.treat_special_chars(proc), '{}']
                 final_outname = os.path.join(outdir, "__".join(parts))
                 process_harvester.cp().syst_type(["shape"]).syst_name([unc]).ForEachSyst(
@@ -353,7 +360,7 @@ def write_output_file(final_dict, json_outname, outdir):
     json_outname = os.path.join(outdir, json_outname)
     if not json_outname.endswith(".json"): json_outname += ".json"
 
-    print("will save compatibility json here: '{}'".format(json_outname))
+    # print("will save compatibility json here: '{}'".format(json_outname))
     with open(json_outname, "w") as f:
         json.dump(final_dict, f, indent = 4, separators = (',', ': '))
 
@@ -384,6 +391,8 @@ def main(*files, **kwargs):
                             json_outname = comparison_outname, 
                             outdir = outdir
         )
+    else:
+        print("comparison json does not contain any entries")
 
 def parse_arguments():
     usage = " ".join("""
