@@ -58,7 +58,7 @@ process_commands = {
 }
 
 sub_category_commands = {
-    "Ratio Observable (ttH, ttmb)"  : "Ratio Observable (\\ttH, \\ttborbb",
+    "Ratio Observable (ttH, ttmb)"  : "Ratio Observable (\\ttH, \\ttborbb)",
     "ttlf" : "\\ttlf",
     "ttcc" : "\\ttcc",
     "ttmb" : "\\ttbb",
