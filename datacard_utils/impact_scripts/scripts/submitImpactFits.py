@@ -63,8 +63,10 @@ def create_impacts(outputPath, datacard, impactList):
             additionalCmd = " ".join(additionalCmds)
             additionalCmd = additionalCmd.replace("  ", " ")
 
+        print("additionalCmd before replace")
         print(additionalCmd)
         additionalCmd = additionalCmd.replace('"', '\\"').replace("'", "\\'")
+        print("additionalCmd after replace")
         print(additionalCmd)
         
         cmd += " " + additionalCmd
@@ -74,13 +76,14 @@ def create_impacts(outputPath, datacard, impactList):
         if not "--robustHesse" in cmdlist:
             helpfulFuncs.insert_values(cmds = cmdlist, keyword = "--robustFit", toinsert = "1", joinwith = "insert")
         cmd = " ".join(cmdlist)
-        print cmd
+        print(cmd)
         outfile.write("initial fit:\n" + cmd + "\n")
         subprocess.call([cmd], shell = True)
         
         print "starting nuisance parameter fits"
         taskname = os.path.basename(datacard).replace(".root", "")
         
+        additionalCmd = additionalCmd.replace("\\", "")
         cmd = "combineTool.py -M Impacts -m 125.38 --doFits"
         cmd += " -d " + datacard
         cmd += " " + additionalCmd
