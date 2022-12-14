@@ -241,7 +241,7 @@ def transpose_binning(harvester, binning_groups, unbind_eras=False):
         source_bins = current_binning_harvester.bin_set()
         for s in source_bins:
             print(("checking bin '{}' for matches".format(s)))
-            bins = harvester.cp().era([e]).bin([".*{}.*".format(s)]).bin_set()
+            bins = harvester.cp().era([e]).bin([".*{}".format(s)]).bin_set()
             if len(bins) == 0:
                 print(("WARNING: found no matches for bin {}".format(s)))
             else:
