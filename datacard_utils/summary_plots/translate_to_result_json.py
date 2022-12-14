@@ -67,10 +67,13 @@ def main(*files, **kwargs):
             continue
         entry = create_entry(filepath = fpath, naming = naming)
         final_dict["results"].update(entry)
-    # load optional order
+    # load optional order, labels
     order = load_property(config, "order")
     if order:
         final_dict["order"] = order
+    labels = load_property(config, "labels")
+    if labels:
+        final_dict["labels"] = labels
     print(json.dumps(final_dict, indent = 4))
     with open(outname, "w") as f:
         json.dump(final_dict, f, indent = 4)

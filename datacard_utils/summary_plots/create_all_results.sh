@@ -10,8 +10,7 @@ done
 python ${THISDIR}/translate_to_result_json.py -o all_years_packaged_fits.json -c ${THISDIR}/naming_config_packaged_fit_with_ratio.py ${resultsdir}/combined_DLFHSL_all_years_packaged_mus__r_{FH,DL,SL}.json ${resultsdir}/combined_DLFHSL_all_years_separate_DNN_with_ratio__r.json
 python ${THISDIR}/translate_to_result_json.py -o all_years_packaged_fits_per_year.json -c ${THISDIR}/naming_config_packaged_fit_per_year_with_ratio.py ${resultsdir}/combined_DLFHSL_all_years_packaged_mus_per_year__r_201?.json ${resultsdir}/combined_DLFHSL_all_years_separate_DNN_with_ratio__r.json
 python ${THISDIR}/translate_to_result_json.py -o all_years_packaged_fits_per_year_per_channel.json -c ${THISDIR}/naming_config_packaged_fit_per_year_per_channel_with_ratio.py ${resultsdir}/combined_DLFHSL_all_years_packaged_mus_per_year_per_channel__r_??_201?.json ${resultsdir}/combined_DLFHSL_all_years_separate_DNN_with_ratio__r.json
-
-
+python ${THISDIR}/translate_to_result_json.py -o all_years_bgnorms.json -c ${THISDIR}/naming_config_bgnorms.py ${resultsdir}/combined_DLFHSL_all_years_separate_DNN_with_ratio__CMS_ttHbb_bgnorm_tt??.json ${resultsdir}/combined_DLFHSL_20??_separate_DNN_with_ratio__CMS_ttHbb_bgnorm_tt??.json
 
 
 for f in md tex; do
@@ -30,6 +29,8 @@ for f in md tex; do
     python ${THISDIR}/bestFit.py -j all_years_packaged_fits_per_year_per_channel.json -o HIG-19-011_packaged_all_years_per_year_per_channel -l `echo $((36+41+59))` -t $f
 
 done
+
+python ${THISDIR}/bestFit.py -j all_years_bgnorms.json -o HIG-19-011_bgnorms_summary -l `echo $((36+41+59))` -t paper
 
 
 # The FH-only fits are done with 50% prior on ttB/C: mark with dagger in tables

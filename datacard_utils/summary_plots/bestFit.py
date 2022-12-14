@@ -250,15 +250,24 @@ def bestfit( **kwargs ):
                         value_keyword = None,
                         order = order)
 
-    assert(len(upper) == len(upper_stat))
-    assert(len(lower) == len(lower_stat))
     assert(len(mu) == len(upper))
-    assert(len(significance) == len(mu))
     assert(len(upper) == len(lower))
+    if upper_stat is not None:
+        assert(len(upper) == len(upper_stat))
+    else:
+        upper_stat = np.full(len(mu),0.)
+    if lower_stat is not None:
+        assert(len(lower) == len(lower_stat))
+    else:
+        lower_stat = np.full(len(mu),0.)
     if expected is not None:
         assert(len(expected) == len(mu))
     else:
         expected = np.full(len(mu),1.)
+    if significance is not None:
+        assert(len(significance) == len(mu))
+    else:
+        significance = np.full(len(mu),0.)
     if significance_expected is not None:
         assert(len(significance_expected) == len(significance))
 
