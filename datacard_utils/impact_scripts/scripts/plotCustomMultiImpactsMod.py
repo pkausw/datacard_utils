@@ -185,8 +185,9 @@ for page in xrange(n):
         asipnumfound = False
         while not asipnumfound:
             asipnum +=1
-            if asipnum >= len(asipdata)-1:
+            if asipnum > len(asipdata)-1:
                 print "too many vars in asimov data ", thisname,asipnum,p,i
+                from IPython import embed; embed()
                 break
                 # raise Exception('ERROR: the parameter with name {}'.format(thisname)
                 #        +' has no counterpart in the expected results!')
@@ -261,7 +262,7 @@ for page in xrange(n):
 
         imp = [pdata[p][poi] for poi in POIs]
         impA = [asipdata[asipnum][poi] for poi in POIs]
-
+        # print(p)
         for j in range(nPOIs):
             max_impact[j] = max(max_impact[j], abs(imp[j][1] - imp[j][0]), abs(imp[j][2] - imp[j][1]))
             max_impactA[j] = max(max_impactA[j], abs(impA[j][1] - impA[j][0]), abs(impA[j][2] - impA[j][1]))
@@ -316,26 +317,31 @@ for page in xrange(n):
         latex.DrawLatex(*entry)
 
 
-	ndivs = [505, 505, 404, 505]
-	# ratioAxis = [1.35, 1.5, 1.65, 1.065]
-	ratioAxis = [1.35, 1.5, 1.65, 1.05]
+    ndivs = [505, 505, 404, 505, 505]
+    # ratioAxis = [1.35, 1.5, 1.65, 1.065]
+    ratioAxis = [1.35, 1.5, 1.65, 1.8, 1.05]
 
     h_impacts = []
-    for j, poi in enumerate(POIs):
-        # Go to the other pad and draw the impacts histo
-        pads[j+1].cd()
-        if max_impact[j] == 0.:
-            max_impact[j] = 1E-6  # otherwise the plotting gets screwed up
+    try:
+        for j, poi in enumerate(POIs):
+            # Go to the other pad and draw the impacts histo
+            pads[j+1].cd()
+            if max_impact[j] == 0.:
+                max_impact[j] = 1E-6  # otherwise the plotting gets screwed up
 
-        # h_impact = ROOT.TH2F("impacts_%s" % poi, "impacts", 6, -max_impact[j] * 1.31, max_impact[j] * 1.31, n_params, 0, n_params)
-        h_impact = ROOT.TH2F("impacts_%s" % poi, "impacts", 6, -max_impact[j] * ratioAxis[j], max_impact[j] * ratioAxis[j], n_params, 0, n_params)
-        # plot.Set(h_impact.GetXaxis(), LabelSize=0.02, TitleSize=0.035, Ndivisions=505, Title='#Delta#hat{%s}' % (Translate(poi, translate)))
-        plot.Set(h_impact.GetXaxis(), LabelSize=0.03, TitleSize=0.035, Ndivisions=ndivs[j], Title='#Delta#hat{%s}' % (Translate(poi, translate)))
-        h_impact.GetXaxis().CenterTitle(ROOT.kTRUE)
-        h_impact.GetXaxis().SetTitleOffset(1.2)
-        plot.Set(h_impact.GetYaxis(), LabelSize=0, TickLength=0.0)
-        h_impact.Draw()
-        h_impacts.append(h_impact)
+            # h_impact = ROOT.TH2F("impacts_%s" % poi, "impacts", 6, -max_impact[j] * 1.31, max_impact[j] * 1.31, n_params, 0, n_params)
+            h_impact = ROOT.TH2F("impacts_%s" % poi, "impacts", 6, -max_impact[j] * ratioAxis[j], max_impact[j] * ratioAxis[j], n_params, 0, n_params)
+            # plot.Set(h_impact.GetXaxis(), LabelSize=0.02, TitleSize=0.035, Ndivisions=505, Title='#Delta#hat{%s}' % (Translate(poi, translate)))
+            plot.Set(h_impact.GetXaxis(), LabelSize=0.03, TitleSize=0.035, Ndivisions=ndivs[j], Title='#Delta#hat{%s}' % (Translate(poi, translate)))
+            h_impact.GetXaxis().CenterTitle(ROOT.kTRUE)
+            h_impact.GetXaxis().SetTitleOffset(1.2)
+            plot.Set(h_impact.GetYaxis(), LabelSize=0, TickLength=0.0)
+            h_impact.Draw()
+            h_impacts.append(h_impact)
+    except Exception as e:
+        print(e)
+        print("start debug shell")
+        from IPython import embed; embed()
 
     #-- Draw the pulls graph
     pads[0].cd()
