@@ -359,7 +359,7 @@ def submit_fit_cmds(ws, paramgroups = ["all"], mu = None, cmdbase = None, murang
             sys.exit("could not create script for nominal scan! Aborting")
 
     #do bestfit
-    cmd = "combine -M MultiDimFit --saveWorkspace --algo none".split()
+    cmd = "combine -M MultiDimFit --saveWorkspace --algo singles".split()
     if cmdbase:
         cmd += cmdbase
     add_basic_commands(cmd = cmd, mu = mu, murange = murange, suffix = "_bestfit_" + foldername)
