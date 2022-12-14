@@ -19,4 +19,4 @@ prefix_clearname = "Full Run-II"
 
 logfile = "json_creation.log"
 
-texfile = "{}_impacts.tex"
+texfile = "{}_impacts_r.tex"

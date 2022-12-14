@@ -1,3 +1,75 @@
+
+naming = {}
+dnn_configs = {
+    "DNN_ge5j_ge4t": "1 ANN",
+    "separate_DNN": "2 ANNs"
+}
+ro_configs = {
+    "": "w/ RO", 
+    "_no_ratio": "w/o RO"}
+subdict = {}
+for dnn in dnn_configs:
+    dnn_clearname = dnn_configs[dnn]
+    for ro in ro_configs:
+        ro_clearname = ro_configs[ro]
+
+		key = "combined_DLFHSL_all_years_{}{}".format(dnn, ro)
+		label = "{}::" + key.lower()
+		clearname = "{}\\\\ FH+DL+SL all years {} {}".format(dnn_clearname, ro_clearname)
+        subdict [key]= {
+				"label": label,
+				"clearname": clearname
+			}
+
+		key = "combined_DLSL_all_years_{}{}".format(dnn, ro)
+		label = "{}::" + key.lower()
+		clearname = "{}\\\\ DL+SL all years {} {}".format(dnn_clearname, ro_clearname)
+        subdict [key]= {
+				"label": label,
+				"clearname": clearname
+			}
+
+		key = "combined_SLFH_all_years_{}{}".format(dnn, ro)
+		label = "{}::" + key.lower()
+		clearname = "{}\\\\ SL+FH all years {} {}".format(dnn_clearname, ro_clearname)
+        subdict [key]= {
+				"label": label,
+				"clearname": clearname
+			}
+
+keyword_dict.update(subdict)
+keyword_dict.update({            
+    "combined_DL_all_years_DNN": {
+		"label": "{}::" + "combined_DL_all_years_DNN".lower(),
+		"clearname": "{}\\\\ DL all years"
+	},
+
+    "combined_FH_all_years_DNN": {
+		"label": "{}::" + "combined_FH_all_years_DNN".lower(),
+		"clearname": "{}\\\\ FH all years"
+		},
+	})
+
+dnn_configs = {
+    "DNN_ge5j_ge4t": ">=5j, >=4t",
+    "DNN_ge6j_ge4t": ">=6j, >=4t",
+    "DNN_5j_ge4t": "5j, >=4t",
+    "separate_DNN": "2 ANNs"
+}
+subdict = {}
+for dnn in dnn_configs:
+    dnn_clearname = dnn_configs[dnn]
+    for ro in ro_configs:
+        ro_clearname = ro_configs[ro]
+        key = "combined_SL_all_years_{}{}".format(dnn, ro)
+		label = "{}::" + key.lower()
+		clearname = "{}\\\\ SL all years {} {}".format(dnn_clearname, ro_clearname)
+        subdict [key]= {
+				"label": label,
+				"clearname": clearname
+			}
+naming.update(subdict)
+
 keyword_dict = {
 
 	"combined_DLFHSL_all_years": {
