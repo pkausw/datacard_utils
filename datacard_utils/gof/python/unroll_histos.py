@@ -37,7 +37,7 @@ fi
 """
 shell_template = head + body
 
-cmd_template = "python " + thisfile + " -i %(INPUTFILE)s -o %(OUTPUTFILE)s --binJson %(BINJSON)s -k %(KEYLIST)s "
+cmd_template = "python " + thisfile + " -i %(INPUTFILE)s -o %(OUTPUTFILE)s -k %(KEYLIST)s "
 
 # deprecated -> Use Rebin Function from TH2 in addition with addOverflows
 def rebin_histo(h, division_factor = 2):
@@ -135,9 +135,9 @@ def do_unrolling(h):
             hist.SetBinError(bincounter, current_error)
             bincounter +=1
     norm = hist.Integral()
-    if norm <= 0:
-        print("WARNING: HISTOGRAM HAS NEGATIV INTEGRAL ({})! Will skip {}".format(norm, h.GetName()))
-        return None
+    #if norm <= 0:
+    #    print("WARNING: HISTOGRAM HAS NEGATIV INTEGRAL ({})! Will skip {}".format(norm, h.GetName()))
+    #    return None
     if verbosity > 5: print ("allbins = {0}\tcounted bins = {1}".format(allbins, len(bins)))
     # cross_check(orig = h, unrolled = hist)
     return hist
@@ -152,8 +152,11 @@ def write_file(input_lines, outname):
 
 def unroll_histos(path_to_file, outfilepath, keylist, binJson):
     infile = ROOT.TFile.Open(path_to_file)
-    with open(binJson) as json_file: 
-        rebinDict = json.load(json_file) 
+    if binJson and not binJson == "":
+        with open(binJson) as json_file: 
+            rebinDict = json.load(json_file) 
+    else:
+        rebinDict = None
 
     if not helper.intact_root_file(infile):
         print ("ERROR: file '%s' is corrupted!" % path_to_file)
@@ -183,13 +186,14 @@ def unroll_histos(path_to_file, outfilepath, keylist, binJson):
                 nomName = "__".join(key.split("__")[0:-1])
         else:
             nomName = key.split("__")[0].strip("_")
-        try:
-            divFactor = rebinDict[nomName]["divFac"]
-        except:
-            print("Could't find entry in BinJson for {}".format(nomName))
-            broken.append(key)
+        if rebinDict:
+            try:
+                divFactor = rebinDict[nomName]["divFac"]
+            except:
+                print("Could't find entry in BinJson for {}".format(nomName))
+                broken.append(key)
             
-        if verbosity > 5: print("Rebinning with division Factor of {n} for {key}".format(n=divFactor, key = key))
+            if verbosity > 5: print("Rebinning with division Factor of {n} for {key}".format(n=divFactor, key = key))
         
         if keycounter % 50 == 0:
             print ("reading key {0}/{1}".format(keycounter, nkeys))
@@ -203,8 +207,9 @@ def unroll_histos(path_to_file, outfilepath, keylist, binJson):
         # print(h.Integral())
         if isinstance(h, ROOT.TH2):
             # print(divFactor)
-            h = h.Rebin2D(divFactor, divFactor)
-            h = addOverflows(h)
+            if rebinDict:
+                h = h.Rebin2D(divFactor, divFactor)
+                h = addOverflows(h)
             # h.Print("Range")
             tmp = do_unrolling(h)
             # tmp.Print("Range")
@@ -243,7 +248,8 @@ def split_unrolling(infilepath, outfilepath, nHists, binJson, runLocally = False
     keys = [x.GetName() for x in infile.GetListOfKeys()]
     if veto:
         keys = [x for x in keys if not veto in x]
-    binJson = opath.abspath(binJson)
+    if binJson and not binJson == "":
+        binJson = opath.abspath(binJson)
     outfiledir = opath.dirname(outfilepath)
     basename = opath.basename(outfilepath)
     parts_folder = opath.join(outfiledir, "parts_" + ".".join(basename.split(".")[:-1]))
@@ -271,6 +277,8 @@ def split_unrolling(infilepath, outfilepath, nHists, binJson, runLocally = False
                     "KEYLIST" : ",".join(keylist),
                     "BINJSON": binJson
                 })
+        if binJson:
+            cmd += " -b {}".format(binJson)
         skriptpath = os.path.join(parts_folder, ".".join(outpartname.split(".")[:-1])+".sh")
         tmp = write_skript(cmd = cmd, outname = skriptpath, targetdir = parts_folder)
         if not tmp is None:
