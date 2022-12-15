@@ -480,7 +480,11 @@ def draw_canvas_histo( nchannels, xmin, xmax, title, entry_names, labels, positi
         lumi.SetTextFont( 42 )
         lumi.SetTextSize( 0.035 )
         lumi.SetTextAlign( 31 )
-        lumi.DrawLatex( 1-ROOT.gStyle.GetPadRightMargin(), 0.965, "{:.1f} fb^{{-1}} (13 TeV)".format(float(lumilabel)) )
+        lumival = float(lumilabel)
+        lumistr = "{:.1f} fb^{{-1}} (13 TeV)".format(lumival)
+        if lumival > 100:
+            lumistr = "{:.0f} fb^{{-1}} (13 TeV)".format(lumival)
+        lumi.DrawLatex( 1-ROOT.gStyle.GetPadRightMargin(), 0.965, lumistr )
 
     return c,h
 
