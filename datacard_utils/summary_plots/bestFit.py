@@ -106,8 +106,8 @@ def get_table_rows_paper(fit_results):
     # table content
     row_template = "  {label} & ${bestfit:+.2f} ^{{{up:+.2f}}}_{{{dn:+.2f}}} \\;\\left( ^{{{up_stat:+.2f}}}_{{{dn_stat:+.2f}}} \\,\\, ^{{{up_syst:+.2f}}}_{{{dn_syst:+.2f}}} \\right)$ & ${signi:.1f}\\,\\sigma "
     if has_sigma_exp:
-        row_template += "\\;\\left( {signi_asimov:.1f}\\,\\sigma \\right)$ "
-    row_template += "\\\\"
+        row_template += "\\;\\left( {signi_asimov:.1f}\\,\\sigma \\right) "
+    row_template += "$ \\\\"
 
     counter = 0
     for i,name in enumerate(fit_results["names"]):
