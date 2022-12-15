@@ -24,14 +24,15 @@ naming = {
 }
 
 order = [
+    "SEPARATOR:Individual fits",
     "FH",
     "SL",
     "DL",
-    "SEPARATOR:Individual fits",
+    "SEPARATOR:Fit with correlated uncertainties",
     "FH_correlated",
     "SL_correlated",
     "DL_correlated",
-    "SEPARATOR:Fit with correlated uncertainties",
+    "SEPARATOR",
     "Combined",
 ]
 
