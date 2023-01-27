@@ -389,12 +389,14 @@ for sample in samples:
             continue
         elif typ == "signal":
             if combineflag=="shapes_fit_s":
-               entry = Plots.getHistogramAndErrorband(rootFile=rootFile,sample=sample,
+                if options.hide_signal: continue
+
+                entry = Plots.getHistogramAndErrorband(rootFile=rootFile,sample=sample,
                                                 color=color,typ="bkg",label=label,
                                                 nominalKey=nominalKey,procIden=procIden,
                                                 binEdges=binEdges,newTitle=xLabel)
             else:
-               entry = Plots.getHistogramAndErrorband(rootFile=rootFile,sample=sample,
+                entry = Plots.getHistogramAndErrorband(rootFile=rootFile,sample=sample,
                                                 color=color,typ=typ,label=label,
                                                 nominalKey=nominalKey,procIden=procIden,
                                                 binEdges=binEdges,newTitle=xLabel)                
@@ -426,6 +428,8 @@ for sample in plottingsamples:
             continue
         elif typ == "signal":
             if combineflag=="shapes_fit_s":
+                if options.hide_signal: continue
+
                 label       = plottingsamples[sample]['label']
                 addsamples  = plottingsamples[sample].get('addSamples', [])
                 print(PlotList)
