@@ -121,7 +121,7 @@ def get_table_rows_paper(fit_results):
             continue
 
         # clean label for tex
-        label = fit_results["labels"][name]
+        label = fit_results["labels"].get(name, name)
         label = label.replace("#", "\\")
         label = label.replace("_", "\\_")
 
@@ -459,8 +459,9 @@ def draw_canvas_histo( nchannels, xmin, xmax, title, entry_names, labels, positi
                     line2.DrawLine(xmin, y_pos, xmax, y_pos)
             continue
         nbin = yaxis.FindBin(positions[n_entry])
-        print("Setting label for bin {} to '{}'".format(nbin,labels[name]))
-        yaxis.SetBinLabel(nbin,labels[name])
+        label_clearname = labels.get(name, name)
+        print("Setting label for bin {} to '{}'".format(nbin,label_clearname))
+        yaxis.SetBinLabel(nbin,label_clearname)
         n_entry += 1
 
 
