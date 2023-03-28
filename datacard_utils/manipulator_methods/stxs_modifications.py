@@ -28,7 +28,11 @@ ROOT.TH1.AddDirectory(False)
 class STXSModifications(object):
 
     def __init__(self):
-        self.__migration_dict = {}
+        self.__migration_dict = dict()
+        
+        self.__partial_deco_channel_dict = dict()
+        self.__partial_deco_channel_dict = list()
+        self.__partial_deco_nuisance_list = list()
         self.__debug = 0
         self.removal_dict = {
             "*FSR_ttH" : [".*"],
@@ -38,6 +42,9 @@ class STXSModifications(object):
             "QCDscale_ttH": [".*"] 
         }
         self.setup_default_migrations()
+        self.setup_default_partial_decorrelation()
+        self.np_manipulator = NuisanceManipulator()
+
 
         
     
@@ -95,6 +102,39 @@ class STXSModifications(object):
                         """.split())
             raise ValueError(s)
     
+    @property
+    def partial_deco_channel_dict(self):
+        return self.__partial_deco_channel_dict
+
+    @partial_deco_channel_dict.setter
+    def partial_deco_channel_dict(self, input_dict):
+        if isinstance(input_dict, dict):
+            self.__partial_deco_channel_dict = input_dict
+        else:
+            print("partial_deco_channel_dict must be of type 'dict'! Skipping")
+
+    @property
+    def partial_deco_process_list(self):
+        return self.__partial_deco_process_list
+
+    @partial_deco_process_list.setter
+    def partial_deco_process_list(self, input_list):
+        if isinstance(input_list, list):
+            self.__partial_deco_process_list = input_list
+        else:
+            print("partial_deco_process_list must be of type 'list'! Skipping")
+
+    @property
+    def partial_deco_nuisance_list(self):
+        return self.__partial_deco_nuisance_list
+
+    @partial_deco_nuisance_list.setter
+    def partial_deco_nuisance_list(self, input_list):
+        if isinstance(input_list, list):
+            self.__partial_deco_nuisance_list = input_list
+        else:
+            print("partial_deco_nuisance_list must be of type 'list'! Skipping")
+    
     def setup_default_migrations(self):
         scheme = "default_k0p7"
         thisdir = os.path.realpath(os.path.dirname(__file__))
@@ -110,12 +150,27 @@ class STXSModifications(object):
                             '{}'""".format(jsonpath).split())
             print(s)
 
+    def setup_default_partial_decorrelation(self):
+        self.partial_deco_channel_dict = {
+            "((.*ljets|.*fh).*STXS_0.*|.*dl.*STXSbin1)": "STXS_0",
+            "((.*ljets|.*fh).*STXS_1.*|.*dl.*STXSbin2)": "STXS_1",
+            "((.*ljets|.*fh).*STXS_2.*|.*dl.*STXSbin3)": "STXS_2",
+            "((.*ljets|.*fh).*STXS_3.*|.*dl.*STXSbin4)": "STXS_3",
+            "((.*ljets|.*fh).*STXS_4.*|.*dl.*STXSbin5)": "STXS_4",
+        }
+        self.partial_deco_nuisance_list = """
+            .*HDAMP.*
+            .*ISR_(ttbb|ttcc|ttlf)
+            .*FSR_(ttbb|ttcc|ttlf)
+            .*_glusplit
+        """.split()
+    
+        self.partial_deco_process_list = ["tt(bb|cc|lf).*"]
 
     def remove_signal_theory_nuisances(self, harvester):
-        np_manipulator = NuisanceManipulator()
-        np_manipulator.to_remove = self.removal_dict
+        self.np_manipulator.to_remove = self.removal_dict
 
-        np_manipulator.remove_nuisances_from_procs(harvester)
+        self.np_manipulator.remove_nuisances_from_procs(harvester)
 
     def add_migration_nuisances(self, harvester):
         for unc in self.migration_dict:
@@ -130,11 +185,34 @@ class STXSModifications(object):
                 harvester.cp().process([proc_wildcard])\
                     .AddSyst(harvester, str(unc), "lnN", ch.SystMap()(round(1+value, 2)))
 
+    def do_partial_decorrelation(self, harvester):
+        # first, remove already existing parameters, just to make sure
+        print("="*130)
+        print("PARTIAL DECORRELATION")
+        print("remove existing parameters")
+        for channel, suffix in self.partial_deco_channel_dict.items():
+            self.np_manipulator.to_remove = {
+                "{}_{}".format(param, suffix): self.partial_deco_process_list
+                for param in self.partial_deco_nuisance_list
+            }
+            self.np_manipulator.remove_nuisances_from_procs(harvester, bins=[channel])
+
+        # now do the partial decorrelation
+        print("adding new parameters")
+        self.np_manipulator.partially_decorrelate_nuisances(
+            harvester = harvester,
+            channel_suffixes=self.partial_deco_channel_dict,
+            problematic_nps=self.partial_deco_nuisance_list,
+            processes=self.partial_deco_process_list,
+        )
+
     def do_stxs_modifications(self, harvester):
         harvester.SetFlag("filters-use-regex", True)
         self.remove_signal_theory_nuisances(harvester)
 
         self.add_migration_nuisances(harvester)
+
+        self.do_partial_decorrelation(harvester)
 
 def main(**kwargs):
 

@@ -48,6 +48,60 @@ class NuisanceManipulator(object):
                 and (p.channel()==s.channel()) and (p.bin_id()==s.bin_id()) \
                 and (p.mass()==s.mass()))
 
+    def copy_and_rename(self, syst, suffix):
+        copy_func = getattr(syst, "Copy", None)
+        if not callable(copy_func):
+            msg = " ".join("""This version of CombineHarvester does not include the 
+                    ch.Systematic.Copy function, cannot copy systematics!
+                    """.split())
+            raise NotImplementedError(msg)
+        new = syst.Copy()
+        name = new.name()
+        name = "_".join([name, suffix])
+        new.set_name(name)
+        return new
+
+    def partially_decorrelate_nuisances(
+        self,
+        harvester,
+        channel_suffixes,
+        problematic_nps,
+        processes,
+        syst_types=["lnN", "shape"],
+    ):
+        if "rateParam" in syst_types:
+            raise ValueError("You cannot partially decorrelate rateParams! Please use the add function.")
+        for c in channel_suffixes:
+            suffix = channel_suffixes[c]
+            sub_harvester = harvester.cp().bin([c])
+            syst_harvester = sub_harvester.cp().syst_type(
+                syst_types).syst_name(problematic_nps)
+            to_decorrelate = syst_harvester.syst_name_set()
+    #       for param in to_decorrelate:
+    #            these_pars = filter(harvester_params, param)
+            bins = sub_harvester.cp().bin_set()
+            
+            if self.debug >= 3:
+                print("partially decorrelating bin '{}'".format(bins))
+                print("\tprocesses: '{}'".format(", ".join(processes)))
+                print("\tsystematics: '{}'".format(to_decorrelate))
+            syst_harvester.cp().bin(bins).process(processes).ForEachSyst(
+                lambda syst: harvester.InsertSystematic(self.copy_and_rename(syst, suffix))
+            )
+
+    def add_nuisances(self, harvester, nuisance_dictionary):
+        for parname in nuisance_dictionary:
+            this_dict = nuisance_dictionary[parname]
+            syst_type = this_dict.get("type", "lnN")
+            value = this_dict.get("value", 1.5)
+            processes = this_dict.get("processes", [])
+            channels = this_dict.get("channels", [])
+            harvester.cp().bin(channels).process(processes)\
+                            .AddSyst(harvester, parname, syst_type, ch.SystMap()(value))
+            if parname in harvester.cp().syst_type(["rateParam"]).syst_name_set():
+                harvester.GetParameter(parname).set_range(-5, 5)
+
+
     def drop_syst(self, harvester,proc, parameter_to_drop):
         # print("dropping sys {}".format(parameter_to_drop))
         harvester.FilterSysts(lambda syst: self.matching_proc(proc, syst) and syst.name() == parameter_to_drop)
