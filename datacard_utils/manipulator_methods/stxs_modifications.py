@@ -212,7 +212,11 @@ class STXSModifications(object):
 
         self.add_migration_nuisances(harvester)
 
-        self.do_partial_decorrelation(harvester)
+        try:
+            self.do_partial_decorrelation(harvester)
+        except NotImplementedError as e:
+            print(e)
+            
 
 def main(**kwargs):
 
