@@ -35,10 +35,10 @@ class STXSModifications(object):
         self.__partial_deco_nuisance_list = list()
         self.__debug = 0
         self.removal_dict = {
-            "*FSR_ttH" : [".*"],
-            "*ISR_ttH" : [".*"],
-            "*MuF_ttH" : [".*"],
-            "*MuR_ttH" : [".*"],
+            ".*FSR_ttH" : [".*"],
+            ".*ISR_ttH" : [".*"],
+            ".*MuF_ttH" : [".*"],
+            ".*MuR_ttH" : [".*"],
             "QCDscale_ttH": [".*"] 
         }
         self.setup_default_migrations()
@@ -205,6 +205,17 @@ class STXSModifications(object):
             problematic_nps=self.partial_deco_nuisance_list,
             processes=self.partial_deco_process_list,
         )
+
+        # also decorrelate rateParams by adding new ones
+        nuisance_dict = {
+            "CMS_ttHbb_bgnorm_ttbb_{}".format(suffix): {
+                "channels": [channels],
+                "processes": ["ttbb.*"],
+                "type": "rateParam",
+                "value": float(1)
+            } for channels, suffix in self.partial_deco_channel_dict.items()
+        }
+        self.np_manipulator.add_nuisances(harvester, nuisance_dict)
 
     def do_stxs_modifications(self, harvester):
         harvester.SetFlag("filters-use-regex", True)
