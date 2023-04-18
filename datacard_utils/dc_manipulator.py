@@ -323,6 +323,37 @@ def invert_nuisance_directions(harvester, invertion_list):
     harvester.cp().syst_name(invertion_list).ForEachSyst(lambda x: x.SwapUpAndDown())
     harvester.cp().syst_name(invertion_list).PrintSysts()
 
+def transfer_ue(target, transfer_from):
+    source_harvester = ch.CombineHarvester()
+    source_harvester.SetFlag("allow-missing-shapes", False)
+    source_harvester.SetFlag("workspaces-use-clone", True)
+
+    _ = load_datacards(transfer_from, source_harvester)
+    eras = source_harvester.era_set()
+    target_eras = target.era_set()
+    if len(eras) != 1:
+        raise NotImplementedError("Can only transfer UE uncertainty if one source era is given!")
+    
+    np_manipulator = NuisanceManipulator()
+
+    # loop through the available source bins
+    source_bins = source_harvester.bin_set()
+    ue_wildcard = "CMS_ttHbb_UE.*"
+            
+
+    for b in source_bins:
+        # load the processes for which UE is available in the source
+        sub_source = source_harvester.cp().bin([b]).syst_name([ue_wildcard])
+        np_manipulator.to_remove = {
+            ue_wildcard: sub_source.process_set()
+        }
+        np_manipulator.remove_nuisances_from_procs(target, bins=[str(b)])
+
+        for e in target_eras:
+            sub_source.ForEachSyst(
+                lambda s: target.InsertSystematic(np_manipulator.copy_and_rename(s, era=e))
+            )
+
 def main(**kwargs):
 
     harvester = ch.CombineHarvester()
@@ -345,6 +376,11 @@ def main(**kwargs):
     harvester.cp().process(["tH.*"])\
         .ForEachSyst(lambda x: x.set_signal(make_tH_signal))
     
+    transfer_ue_from = kwargs.get("transfer_ue_from", None)
+    if transfer_ue_from:
+        transfer_ue(target=harvester, transfer_from=transfer_ue_from)
+
+
     # binning related manipulations
     rebin_scheme = kwargs.get("scheme", None)
     check_mc = kwargs.get("check_mc", False)
@@ -750,6 +786,20 @@ def parse_arguments():
                         action = "store_true",
                         default = False
                     )
+    model_manipulations.add_option("--transfer-ue-from",
+                        help = " ".join(
+                            """
+                            transfor lnN factors for UE from these 
+                            datacards. Input is similar wildcard to 
+                            option '-i'. Should contain only *one* era
+                            to avoid ambiguities.
+                            """.split()
+                        ),
+                        dest="transfer_ue_from",
+                        metavar = "SCHEME:path/to/datacard",
+                        type = "str",
+                        action = "append",
+    )
     optional_group.add_option("--combine-cards",
                         help = " ".join(
                             """
