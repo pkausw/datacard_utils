@@ -9,18 +9,8 @@
         "bottom": "ttH+ttb/bb node",
         "xtitle": "Ratio Observable"
     },
-    "ljets_ge5j_ge4t_ttH_ttmb_ratioObservable": {
-        "top": "SL \\geq 5 jets \\geq 4 tags",
-        "bottom": "ttH+ttb/bb node",
-        "xtitle": "Ratio Observable"
-    },
     "ljets_ge6j_ge4t_ttlf_node": {
         "top": "SL \\geq 6 jets \\geq 4 tags",
-        "bottom": "ttlf node",
-        "range": 0.0
-    },
-    "ljets_ge5j_ge4t_ttlf_node": {
-        "top": "SL \\geq 5 jets \\geq 4 tags",
         "bottom": "ttlf node",
         "range": 0.0
     },
@@ -36,10 +26,6 @@
     },
     "ljets_ge6j_ge4t_tHq_node": {
         "top": "SL \\geq 6 jets \\geq 4 tags",
-        "bottom": "tHq node"
-    },
-    "ljets_ge5j_ge4t_tHq_node": {
-        "top": "SL \\geq 5 jets \\geq 4 tags",
         "bottom": "tHq node"
     },
     "ljets_5j_ge4t_tHq_node": {
@@ -67,21 +53,12 @@
         "bottom": "tt2b node",
         "range": 0.0
     },
-    "ljets_ge5j_ge4t_tt2b_node": {
-        "top": "SL \\geq 5 jets \\geq 4 tags",
-        "bottom": "tt2b node",
-        "range": 0.0
-    },
     "ljets_ge6j_ge4t_tHW_node": {
         "top": "SL \\geq 6 jets \\geq 4 tags",
         "bottom": "tHW node"
     },
     "ljets_5j_ge4t_tHW_node": {
         "top": "SL 5 jets \\geq 4 tags",
-        "bottom": "tHW node"
-    },
-    "ljets_ge5j_ge4t_tHW_node": {
-        "top": "SL \\geq 5 jets \\geq 4 tags",
         "bottom": "tHW node"
     },
     "ljets_ge6j_ge4t_ttcc_node": {
@@ -91,11 +68,6 @@
     },
     "ljets_5j_ge4t_ttcc_node": {
         "top": "SL 5 jets \\geq 4 tags",
-        "bottom": "ttcc node",
-        "range": 0.0
-    },
-    "ljets_ge5j_ge4t_ttcc_node": {
-        "top": "SL \\geq 5 jets \\geq 4 tags",
         "bottom": "ttcc node",
         "range": 0.0
     },
