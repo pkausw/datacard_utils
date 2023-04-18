@@ -48,7 +48,7 @@ class NuisanceManipulator(object):
                 and (p.channel()==s.channel()) and (p.bin_id()==s.bin_id()) \
                 and (p.mass()==s.mass()))
 
-    def copy_and_rename(self, syst, suffix):
+    def copy_and_rename(self, syst, suffix=None, era=None):
         copy_func = getattr(syst, "Copy", None)
         if not callable(copy_func):
             msg = " ".join("""This version of CombineHarvester does not include the 
@@ -57,8 +57,13 @@ class NuisanceManipulator(object):
             raise NotImplementedError(msg)
         new = syst.Copy()
         name = new.name()
-        name = "_".join([name, suffix])
+        if suffix:
+            name = "_".join([name, suffix])
         new.set_name(name)
+
+        if era:
+            new.set_era = era
+
         return new
 
     def partially_decorrelate_nuisances(
@@ -119,7 +124,7 @@ class NuisanceManipulator(object):
             print(wildcard_par)
             procs = self.to_remove[wildcard_par]
             procs = [str(x) for x in procs]
-            these_pars = filter(harvester_params, wildcard_par)
+            these_pars = harvester.cp().process(procs).syst_name([str(wildcard_par)]).syst_name_set()
             print(these_pars)
             for par in these_pars:
                 # print(self.__debug)
