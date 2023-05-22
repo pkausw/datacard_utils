@@ -77,6 +77,10 @@ def add_basic_commands(cmd, mu, murange, suffix = ""):
         cmd = helpfulFuncs.insert_values(cmds = cmd, keyword = "--floatOtherPOIs",
                                             toinsert=str(1), joinwith="insert"
                                         )
+        
+        cmd = helpfulFuncs.insert_values(cmds = cmd, keyword = "--floatOtherPOIs",
+                                            toinsert=str(1), joinwith="insert"
+                                        )
     
 
 def create_script(cmd, scriptname, outfolder = None, wsfile = None):
@@ -317,9 +321,38 @@ def create_folders_and_scripts(foldername, combineInput, paramgroup, suffix,
                         mu = mu, scripts = scripts, cmdbase = cmdbase, murange = murange, 
                         pois = pois, fast = fast, freeze_parameters = freeze_parameters)
 
+def add_params_for_minos(cmds, pois, parameters=None, stxs=False):
+    if parameters is None:
+        parameters = [
+            "CMS_ttHbb_bgnorm_ttbb",
+            "CMS_ttHbb_tt2b_glusplit"
+        ]
+    final_set = list()
+    if stxs:
+        final_set += parameters
+        final_set += [
+            "{}_STXS_{}".format(p, i)
+            for p in parameters
+            for i in range(5)
+        ]
+    else:
+        final_set = parameters
+    final_set.append("CMS_ttHbb_bgnorm_ttcc")
+    final_set.extend(pois)
+    cmds += ["-P {}".format(p) for p in final_set]
 
 
-def submit_fit_cmds(ws, paramgroups = ["all"], mu = None, cmdbase = None, murange = 5., suffix = "", pois = None, fast = False):
+def submit_fit_cmds(
+    ws,
+    paramgroups = ["all"],
+    mu = None,
+    cmdbase = None,
+    murange = 5.,
+    suffix = "",
+    pois = None,
+    fast = False,
+    stxs=False,
+):
     """
     Create a folder for the workspace 'ws', create the folder structure for every uncertainty group in 'paramgroups' and the
     corresponding .sh scripts and submit everything to the batch system for parallel processing.
@@ -363,7 +396,7 @@ def submit_fit_cmds(ws, paramgroups = ["all"], mu = None, cmdbase = None, murang
     if cmdbase:
         cmd += cmdbase
     add_basic_commands(cmd = cmd, mu = mu, murange = murange, suffix = "_bestfit_" + foldername)
-
+    add_params_for_minos(cmds=cmd, pois=pois, stxs=stxs)
     cmd = helpfulFuncs.insert_values(cmds = cmd, keyword = "--saveFitResult", toinsert = "", joinwith = "insert")
     cmd.append(ws)
 
@@ -419,6 +452,12 @@ def parse_arguments():
                         help = "signal strength for asimov toys",
                         dest = "mu",
                         type= "float")
+    parser.add_option( "--stxs",
+                        help= "add partially decorrelated ttbb parameters to list of POIs for bestfit",
+                        dest = "stxs",
+                        action="store_true",
+                        default=False,
+    )
     parser.add_option(  "--murange",
                         help= "+/- range around injected value to be scanned",
                         type = "float",
@@ -475,7 +514,9 @@ def main(options, wildcards):
                                             cmdbase = combineoptions,
                                             suffix = options.suffix,
                                             pois = pois,
-                                            fast = options.fast)
+                                            fast = options.fast,
+                                            stxs=options.stxs
+                                        )
                 if arrayid != -1:
                     print( "all fits submitted to batch")
                 os.chdir(base)
