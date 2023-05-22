@@ -1,4 +1,5 @@
 import os, sys, glob
+from subprocess import call
 
 if __name__ == '__main__':
     current_dir = os.path.abspath(os.getcwd())
@@ -21,6 +22,11 @@ if __name__ == '__main__':
                 print ("    ERROR: Missing fit result file, nr. of files = %d"%n_files)
             if n_broken_files>0:
                 print ("    ERROR: %d Broken fit result files"%n_broken_files)
+            if n_files == 0:
+                print("Found no .root files at all, resubmitting")
+                script_path = glob.glob(os.path.join(fit_parts_dir, "*.sub"))
+                for s in script_path:
+                    call(["condor_submit {}".format(s)], shell=True)
 
             merge_file = nuisance_dir + "/merged_combine_output.root"
             if not os.path.isfile(merge_file):
