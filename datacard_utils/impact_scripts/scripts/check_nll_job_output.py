@@ -3,8 +3,12 @@ from subprocess import call
 
 if __name__ == '__main__':
     current_dir = os.path.abspath(os.getcwd())
-    for comb_dir in glob.glob(current_dir+"/*"):
-        if not os.path.isdir(comb_dir):
+    to_check = sys.argv[1:]
+    if len(to_check) == 0:
+        glob.glob(current_dir+"/*")
+    for comb_dir in to_check:
+        if not os.path.isdir(comb_dir) or not os.path.exists(comb_dir):
+            print("{} is not a directory, skipping".format(comb_dir))
             continue
         print (comb_dir.split("/")[-1])
         for nuisance_dir in glob.glob(comb_dir+"/*"):
