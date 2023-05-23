@@ -663,7 +663,7 @@ def load_values(limit, xVar, yVar, nllcutoff, dim = 1):
     else:
         raise ValueError("Scans are defined for dimensions 1 and 2!")
 
-def do1DScan(   limit, xVar, yVar, outputDirectory, suffix, granularity,
+def do1DScanManual(   limit, xVar, yVar, outputDirectory, suffix, granularity,
                 xtitle = None, ytitle = None, pathToErrors = None,
                 doProfile = False, bonly = False, nllcutoff = 10):
     cls = { "68.27%"    : 2,  
@@ -779,6 +779,27 @@ def do1DScan(   limit, xVar, yVar, outputDirectory, suffix, granularity,
     c.SetName("canvas")
     outfile.WriteObject(c, c.GetName())
     outfile.Close()
+
+def do1DScan(file, xVar, outputDirectory, suffix, nllcutoff = None):
+    # first check if CMSSW is set up correctly
+    cmssw_base = os.environ.get("CMSSW_BASE", None)
+    if not cmssw_base:
+        raise ValueError(" ".join("""
+            You need to setup CMSSW with the CombineHarvester in order to use
+            the official 1D scan plotting tool!
+        """.split()))
+    outname=os.path.join(outputDirectory, "nllscan_{par}_{suffix}".format(
+        par=xVar, suffix=suffix
+    ))
+    cmd="plot1DScan.py --POI {par} -o {outname} {input_file}".format(
+        par=xVar,
+        input_file=file,
+        outname=outname,
+    ).split()
+    if nllcutoff:
+        cmd += "--y-cut {}".format(nllcutoff).split()
+    subprocess.call(cmd, shell=True)
+    
     
 def do2DScan(   limit, xVar, yVar, outputDirectory, suffix, 
                 xtitle= None, ytitle = None, pathToErrors = None,
@@ -956,6 +977,17 @@ if __name__ == '__main__':
                         type = "float",
                         default = 10
     )
+    parser.add_option(  "--drawManually",
+                        help = " ".join("""
+                            Instead of using the official plotting tool for 
+                            1D NLL Scans, draw the NLL scan manually in the 
+                            'old' style. Only available if 'plot2D' option is False.
+                            Defaults to False.
+                        """.split()),
+                        dest = "draw_manually",
+                        action = "store_true",
+                        default = False,
+    )
     (options, args) = parser.parse_args()
     
     directDrawPath = options.directDraw
@@ -975,6 +1007,7 @@ if __name__ == '__main__':
     doProfile = options.doProfile
     npois = options.npois
     nllcutoff = options.nllcutoff
+    draw_manually = options.draw_manually
     
     if pathToErrors is not None:
         if not os.path.exists(pathToErrors):
@@ -1091,39 +1124,43 @@ if __name__ == '__main__':
     #________________________________________________________________
 
     if fitresFile and os.path.exists(fitresFile):
-        infile = ROOT.TFile(fitresFile)
-    
-        if infile.IsOpen() and not infile.IsZombie() and not infile.TestBit(ROOT.TFile.kRecovered):
-            limit = infile.Get("limit")
-            if isinstance(limit, ROOT.TTree):
-                print "loaded limit TTree with {0} events".format(limit.GetEntries())
-    
-                if plot2D:
-                    do2DScan(   limit, xVar = xVar, yVar = yVar, 
-                                outputDirectory = outputDirectory, 
-                                suffix = suffix,
-                                xtitle = xtitle,
-                                ytitle = ytitle,
-                                pathToErrors = pathToErrors,
-                                doProfile = doProfile,
-                                npois = npois,
-                                nllcutoff = nllcutoff)
+        if not any(x for x in [draw_manually, plot2D]) and yVar == "deltaNLL":
+            do1DScan(file=fitresFile, xVar=xVar, outputDirectory=outputDirectory,
+                    suffix=suffix, nllcutoff=nllcutoff)
+        else:
+            infile = ROOT.TFile(fitresFile)
+        
+            if infile.IsOpen() and not infile.IsZombie() and not infile.TestBit(ROOT.TFile.kRecovered):
+                limit = infile.Get("limit")
+                if isinstance(limit, ROOT.TTree):
+                    print "loaded limit TTree with {0} events".format(limit.GetEntries())
+        
+                    if plot2D:
+                        do2DScan(   limit, xVar = xVar, yVar = yVar, 
+                                    outputDirectory = outputDirectory, 
+                                    suffix = suffix,
+                                    xtitle = xtitle,
+                                    ytitle = ytitle,
+                                    pathToErrors = pathToErrors,
+                                    doProfile = doProfile,
+                                    npois = npois,
+                                    nllcutoff = nllcutoff)
+                    else:
+                        do1DScanManual(   limit, xVar = xVar, yVar = yVar, 
+                                    outputDirectory = outputDirectory, 
+                                    suffix = suffix,
+                                    granularity = granularity,
+                                    xtitle = xtitle,
+                                    ytitle = ytitle,
+                                    pathToErrors = pathToErrors,
+                                    doProfile = doProfile,
+                                    bonly = bonly,
+                                    nllcutoff = nllcutoff)
+        
+        
                 else:
-                    do1DScan(   limit, xVar = xVar, yVar = yVar, 
-                                outputDirectory = outputDirectory, 
-                                suffix = suffix,
-                                granularity = granularity,
-                                xtitle = xtitle,
-                                ytitle = ytitle,
-                                pathToErrors = pathToErrors,
-                                doProfile = doProfile,
-                                bonly = bonly,
-                                nllcutoff = nllcutoff)
-    
-    
-            else:
-                print "Could not load limit tree!"
-            infile.Close()
+                    print "Could not load limit tree!"
+                infile.Close()
     else:
         print "Could not find multidim fit output", fitresFile
     os.chdir(workdir)
