@@ -8,7 +8,8 @@ In principle, there are two ways to generate the shapes that you'd like to draw.
 
 You can use `combine`'s `FitDiagnostics` method to produce the shapes directly when you're running the fit.
 To do this, add the options `--saveShapes --saveWithUncertainties`.
-For more information, check out the [combine documentation](https://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/part3/nonstandard/#plotting)
+For more information, check out the [combine documentation](https://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/part3/nonstandard/#plotting).
+Note that this way usually takes a significant amount of time, depending on the size of the workspace and the number of toys you use to generate the post-fit templates with uncertainties.
 
 If you already have a file containing a `RooFitResult` object, e.g. `fit_s` in `fitDiagnostics.root`, but didn't produce the shapes yet, you can use `PostFitShapesFromWorkspace` from the `CombineHarvester` package.
 If you have run `FitDiagnostics`, you can generate the shapes e.g. with this command:
@@ -34,16 +35,17 @@ After creating suitable workspaces, you can use `submit_shape_generation.py` to 
 Please have a look at the help function of the script for more information.
 
 **Important**: The current version of the script will only work correctly with [this](https://github.com/pkausw/CombineHarvester/tree/HIG-19-011) fork of the CombineHarvester (branch `HIG-19-011`)!
+The PR to the main version is currently ongoing.
 
 ## Generate the plots
 
-You need
+You can generate plots with [PlotScript.py](./PlotScript.py). You need
 
 1) the .root file containing the shapes you'd like to plot (`input.root`)
 2) the `plotconfig` which contains information about how to draw what. `PlotScript.py` can also generate an example config, see help function
 3) If you want the proper x-axis shown instead of anonymus numbering you also need to provide the path to the datacard belonging to the fit result file. The script will take the x-axis from the `data_obs` object belonging to the datacard
 
-For more options you can set, such as titles, logarithmic y-axis, labels printed on the canvas, etc., please consult `PlotScript.py -h`. You can specify the options either in your `plotconfig` or as options at runtime.
+For more options you can set, such as titles, logarithmic y-axis, labels printed on the canvas, etc., please consult `PlotScript.py -h`. You can specify the options either in your `plotconfig` (e.g. [plotconfig_FHCRs.py](./plotconfig_FHCRs.py)) or as options at runtime.
 
 The script has been tested for datacards from UHZ, DESY, Cornell and KIT and yielded correct plots in all cases.
 
@@ -56,7 +58,7 @@ python PlotScript.py -p plotconfig.py --combineflag shapes_prefit -r path/to/inp
 , where `CHANNEL_YOU_WANT_TO_DRAW` is the name of the channel you would like to draw as specified in the corresponding datacard.
 
 If you would like to produce the plots for all channels in one go, you can also use the wrapper `draw_prefit_postfit.py`.
-You need to provide a .json file containing the labels to draw (e.g. `config_labels.json` in this repo) and the plotconfig to be parsed to the `PlotScript` (e.g. `plotconfig_FHCRs_blinded.py`).
+You need to provide a .json file containing the labels to draw (e.g. [config_labels.json](config_labels.json) in this repo) and the plotconfig to be parsed to the `PlotScript` (e.g. [plotconfig_FHCRs.py](plotconfig_FHCRs.py)).
 For more options, please have a look at the help function of the wrapper.
 
 To draw prefit and postfit plots for the respective channels, you can use `../PreFitPostFitPlots/draw_prefit_postfit.py`.
