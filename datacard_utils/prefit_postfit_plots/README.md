@@ -26,6 +26,7 @@ You can parallelize the shape generation if you create workspaces for the indivi
 Otherwise, the mapping of parameters will not work correctly.
 
 You can generate such workspaces with the setup in the datacards repo with this recipe:
+
 - when using `makeCombinedCards.py`, specify the option `-i`. This will create datacards for the individual categories with the correct naming
 - if you want to use the full Run-II fit results, you should create a full Run-II workspace for the categories. You can do this with `build_cards_across_years.py` if you use the option `-a`
 
@@ -34,10 +35,10 @@ Please have a look at the help function of the script for more information.
 
 **Important**: The current version of the script will only work correctly with [this](https://github.com/pkausw/CombineHarvester/tree/HIG-19-011) fork of the CombineHarvester (branch `HIG-19-011`)!
 
-
 ## Generate the plots
 
 You need
+
 1) the .root file containing the shapes you'd like to plot (`input.root`)
 2) the `plotconfig` which contains information about how to draw what. `PlotScript.py` can also generate an example config, see help function
 3) If you want the proper x-axis shown instead of anonymus numbering you also need to provide the path to the datacard belonging to the fit result file. The script will take the x-axis from the `data_obs` object belonging to the datacard
@@ -51,8 +52,23 @@ If you want to produce prefit distributions with uncertainty bands, you can e.g.
 ```bash
 python PlotScript.py -p plotconfig.py --combineflag shapes_prefit -r path/to/input.root --channelname CHANNEL_YOU_WANT_TO_DRAW --combineDatacard path/to/datacard.txt
 ```
+
 , where `CHANNEL_YOU_WANT_TO_DRAW` is the name of the channel you would like to draw as specified in the corresponding datacard.
 
 If you would like to produce the plots for all channels in one go, you can also use the wrapper `draw_prefit_postfit.py`.
 You need to provide a .json file containing the labels to draw (e.g. `config_labels.json` in this repo) and the plotconfig to be parsed to the `PlotScript` (e.g. `plotconfig_FHCRs_blinded.py`).
 For more options, please have a look at the help function of the wrapper.
+
+To draw prefit and postfit plots for the respective channels, you can use `../PreFitPostFitPlots/draw_prefit_postfit.py`.
+Example:
+
+```bash
+python draw_prefit_postfit.py -l config_labels_other_SL_cats.json -p plotconfig_FHCRs_blinded.py -s path/to/file/with/prefitpostfit_shapes.root -d path/to/original/datacard
+```
+
+For additional information about the different options, please have a look at `python ../PreFitPostFitPlots/draw_prefit_postfit.py -h`
+
+If you are working on standard combinations (either inclusive or STXS), you can use the wrapper scripts:
+
+- standard inclusive ttH: `draw_all_plots.sh`
+- standard STXS: `draw_all_plots_STXS.sh`
