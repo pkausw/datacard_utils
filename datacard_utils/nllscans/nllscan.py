@@ -788,17 +788,21 @@ def do1DScan(file, xVar, outputDirectory, suffix, nllcutoff = None):
             You need to setup CMSSW with the CombineHarvester in order to use
             the official 1D scan plotting tool!
         """.split()))
-    outname=os.path.join(outputDirectory, "nllscan_{par}_{suffix}".format(
-        par=xVar, suffix=suffix
+    relpath = os.path.relpath(outputDirectory)
+    outname=os.path.join(relpath, "nllscan_{par}".format(
+        par=xVar
     ))
-    cmd="plot1DScan.py --POI {par} -o {outname} {input_file}".format(
+    if suffix:
+        outname = "_".join([outname, suffix])
+    cmd="plot1DScan.py --POI {par} -o {outname}".format(
         par=xVar,
-        input_file=file,
         outname=outname,
     ).split()
     if nllcutoff:
         cmd += "--y-cut {}".format(nllcutoff).split()
-    subprocess.call(cmd, shell=True)
+    cmd.append(file)
+    final_cmd = " ".join(cmd)
+    subprocess.call([final_cmd], shell=True)
     
     
 def do2DScan(   limit, xVar, yVar, outputDirectory, suffix, 
