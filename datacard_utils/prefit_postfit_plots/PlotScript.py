@@ -164,6 +164,8 @@ styleOptions.add_option("--yLabel", dest="yLabel", default=None,
         help="axis label of y-axis")
 styleOptions.add_option("--xLabel", dest="xLabel", default=None,
         help="axis label of x-axis (inferred from histogram if None)")
+styleOptions.add_option("--unit", dest="unit", default=None,
+        help="Unit to display on the x-axis. If 'divideByBinWidth' is used, add [1/UNIT] to y-axis.")
 styleOptions.add_option("--cmslabel", dest="cmslabel", default=None,
         help="print CMS label on canvas")
 styleOptions.add_option("--splitlegend", dest="splitlegend",  default=None,
@@ -569,6 +571,8 @@ yLabel          = getParserConfigDefaultValue(parser=options.yLabel,config="yLab
                                             plotoptions=plotoptions,defaultvalue="Events expected")
 xLabel          = getParserConfigDefaultValue(parser=options.xLabel,config="xLabel",
                                             plotoptions=plotoptions,defaultvalue=None)
+unit          = getParserConfigDefaultValue(parser=options.unit,config="unit",
+                                            plotoptions=plotoptions,defaultvalue=None)
 logarithmic     = getParserConfigDefaultBool(parser=options.logarithmic,config="logarithmic",
                                             plotoptions=plotoptions,defaultbool=False)
 splitlegend     = getParserConfigDefaultBool(parser=options.splitlegend,config="splitLegend",
@@ -604,6 +608,11 @@ if divideByBinWidth:
             PlotList[p].hist.Scale(1.,"width")
     if dataHist:
         dataHist.Scale(1., "width")
+
+if unit:
+    xLabel = xLabel+" in {}".format(unit)
+    if divideByBinWidth:
+        yLabel = yLabel+" in 1/{}".format(unit)
 print("="*130)
 print("ratio: {}".format(ratio))
 print("="*130)
