@@ -1,0 +1,4384 @@
+{
+    "fh_j7_t4_RecoHiggsPt": {
+        "bottom": "",
+        "top": "FH 7 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "fh_j7_t4_ht30": {
+        "bottom": "",
+        "top": "FH 7 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "fh_j7_t4_jetsByPt_0_btag": {
+        "bottom": "",
+        "top": "FH 7 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet b-tag score"
+    },
+    "fh_j7_t4_jetsByPt_0_pt": {
+        "bottom": "",
+        "top": "FH 7 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "fh_j7_t4_numJets": {
+        "bottom": "",
+        "top": "FH 7 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "fh_j8_t4_RecoHiggsPt": {
+        "bottom": "",
+        "top": "FH 8 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "fh_j8_t4_ht30": {
+        "bottom": "",
+        "top": "FH 8 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "fh_j8_t4_jetsByPt_0_btag": {
+        "bottom": "",
+        "top": "FH 8 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet b-tag score"
+    },
+    "fh_j8_t4_jetsByPt_0_pt": {
+        "bottom": "",
+        "top": "FH 8 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "fh_j8_t4_numJets": {
+        "bottom": "",
+        "top": "FH 8 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "fh_j9_t4_RecoHiggsPt": {
+        "bottom": "",
+        "top": "FH \\geq 9 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "fh_j9_t4_ht30": {
+        "bottom": "",
+        "top": "FH \\geq 9 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "fh_j9_t4_jetsByPt_0_btag": {
+        "bottom": "",
+        "top": "FH \\geq 9 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet b-tag score"
+    },
+    "fh_j9_t4_jetsByPt_0_pt": {
+        "bottom": "",
+        "top": "FH \\geq 9 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "fh_j9_t4_numJets": {
+        "bottom": "",
+        "top": "FH \\geq 9 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_5j_ge4t_CSV_2": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_5j_ge4t_Evt_CSV_avg": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_5j_ge4t_Evt_CSV_avg_tagged": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_5j_ge4t_Evt_Deta_JetsAverage": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_5j_ge4t_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_5j_ge4t_Evt_Dr_minDrTaggedJets": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_5j_ge4t_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_5j_ge4t_Evt_HT_jets": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_5j_ge4t_Evt_HT_tags": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_5j_ge4t_Evt_M2_minDrTaggedJets": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_5j_ge4t_Evt_M_TaggedJetsAverage": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_5j_ge4t_Evt_Pt_JetsAverage": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_5j_ge4t_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_5j_ge4t_Evt_Pt_minDrTaggedJets": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_5j_ge4t_Evt_blr": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_5j_ge4t_Evt_blr_transformed": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_5j_ge4t_Jet_CSV_0": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_5j_ge4t_Jet_Pt_0": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_5j_ge4t_N_Jets": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_5j_ge4t_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_5j_ge4t_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_5j_ge4t_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_5j_ge4t_Reco_tHq_bestJABDToutput": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_5j_ge4t_Reco_ttH_bestJABDToutput": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_5j_ge4t_Reco_ttH_h_pt": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_5j_ge4t_Reco_ttH_toplep_m": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_5j_ge4t_Reco_ttbar_bestJABDToutput": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_5j_ge4t_TaggedJet_Pt_2": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_5j_ge4t_memDBp": {
+        "bottom": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_5j_ge4t_ratio_obs_CSV_2": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_5j_ge4t_ratio_obs_Evt_CSV_avg": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_5j_ge4t_ratio_obs_Evt_CSV_avg_tagged": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_5j_ge4t_ratio_obs_Evt_Deta_JetsAverage": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_5j_ge4t_ratio_obs_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_5j_ge4t_ratio_obs_Evt_Dr_minDrTaggedJets": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_5j_ge4t_ratio_obs_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_5j_ge4t_ratio_obs_Evt_HT_jets": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_5j_ge4t_ratio_obs_Evt_HT_tags": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_5j_ge4t_ratio_obs_Evt_M2_minDrTaggedJets": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_5j_ge4t_ratio_obs_Evt_M_TaggedJetsAverage": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_5j_ge4t_ratio_obs_Evt_Pt_JetsAverage": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_5j_ge4t_ratio_obs_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_5j_ge4t_ratio_obs_Evt_Pt_minDrTaggedJets": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_5j_ge4t_ratio_obs_Evt_blr": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_5j_ge4t_ratio_obs_Evt_blr_transformed": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_5j_ge4t_ratio_obs_Jet_CSV_0": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_5j_ge4t_ratio_obs_Jet_Pt_0": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_5j_ge4t_ratio_obs_N_Jets": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_5j_ge4t_ratio_obs_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_5j_ge4t_ratio_obs_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_5j_ge4t_ratio_obs_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_5j_ge4t_ratio_obs_Reco_tHq_bestJABDToutput": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_5j_ge4t_ratio_obs_Reco_ttH_bestJABDToutput": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_5j_ge4t_ratio_obs_Reco_ttH_h_pt": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_5j_ge4t_ratio_obs_Reco_ttH_toplep_m": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_5j_ge4t_ratio_obs_Reco_ttbar_bestJABDToutput": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_5j_ge4t_ratio_obs_TaggedJet_Pt_2": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_5j_ge4t_ratio_obs_memDBp": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_5j_ge4t_tHW_node_CSV_2": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_5j_ge4t_tHW_node_Evt_CSV_avg": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_5j_ge4t_tHW_node_Evt_CSV_avg_tagged": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_5j_ge4t_tHW_node_Evt_Deta_JetsAverage": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_5j_ge4t_tHW_node_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_5j_ge4t_tHW_node_Evt_Dr_minDrTaggedJets": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_5j_ge4t_tHW_node_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_5j_ge4t_tHW_node_Evt_HT_jets": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_5j_ge4t_tHW_node_Evt_HT_tags": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_5j_ge4t_tHW_node_Evt_M2_minDrTaggedJets": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_5j_ge4t_tHW_node_Evt_M_TaggedJetsAverage": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_5j_ge4t_tHW_node_Evt_Pt_JetsAverage": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_5j_ge4t_tHW_node_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_5j_ge4t_tHW_node_Evt_Pt_minDrTaggedJets": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_5j_ge4t_tHW_node_Evt_blr": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_5j_ge4t_tHW_node_Evt_blr_transformed": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_5j_ge4t_tHW_node_Jet_CSV_0": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_5j_ge4t_tHW_node_Jet_Pt_0": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_5j_ge4t_tHW_node_N_Jets": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_5j_ge4t_tHW_node_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_5j_ge4t_tHW_node_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_5j_ge4t_tHW_node_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_5j_ge4t_tHW_node_Reco_tHq_bestJABDToutput": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_5j_ge4t_tHW_node_Reco_ttH_bestJABDToutput": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_5j_ge4t_tHW_node_Reco_ttH_h_pt": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_5j_ge4t_tHW_node_Reco_ttH_toplep_m": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_5j_ge4t_tHW_node_Reco_ttbar_bestJABDToutput": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_5j_ge4t_tHW_node_TaggedJet_Pt_2": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_5j_ge4t_tHW_node_memDBp": {
+        "bottom": "tHW node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_5j_ge4t_tHq_node_CSV_2": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_5j_ge4t_tHq_node_Evt_CSV_avg": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_5j_ge4t_tHq_node_Evt_CSV_avg_tagged": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_5j_ge4t_tHq_node_Evt_Deta_JetsAverage": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_5j_ge4t_tHq_node_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_5j_ge4t_tHq_node_Evt_Dr_minDrTaggedJets": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_5j_ge4t_tHq_node_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_5j_ge4t_tHq_node_Evt_HT_jets": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_5j_ge4t_tHq_node_Evt_HT_tags": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_5j_ge4t_tHq_node_Evt_M2_minDrTaggedJets": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_5j_ge4t_tHq_node_Evt_M_TaggedJetsAverage": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_5j_ge4t_tHq_node_Evt_Pt_JetsAverage": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_5j_ge4t_tHq_node_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_5j_ge4t_tHq_node_Evt_Pt_minDrTaggedJets": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_5j_ge4t_tHq_node_Evt_blr": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_5j_ge4t_tHq_node_Evt_blr_transformed": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_5j_ge4t_tHq_node_Jet_CSV_0": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_5j_ge4t_tHq_node_Jet_Pt_0": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_5j_ge4t_tHq_node_N_Jets": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_5j_ge4t_tHq_node_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_5j_ge4t_tHq_node_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_5j_ge4t_tHq_node_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_5j_ge4t_tHq_node_Reco_tHq_bestJABDToutput": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_5j_ge4t_tHq_node_Reco_ttH_bestJABDToutput": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_5j_ge4t_tHq_node_Reco_ttH_h_pt": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_5j_ge4t_tHq_node_Reco_ttH_toplep_m": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_5j_ge4t_tHq_node_Reco_ttbar_bestJABDToutput": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_5j_ge4t_tHq_node_TaggedJet_Pt_2": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_5j_ge4t_tHq_node_memDBp": {
+        "bottom": "tHq node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_5j_ge4t_tt2b_node_CSV_2": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_5j_ge4t_tt2b_node_Evt_CSV_avg": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_5j_ge4t_tt2b_node_Evt_CSV_avg_tagged": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_5j_ge4t_tt2b_node_Evt_Deta_JetsAverage": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_5j_ge4t_tt2b_node_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_5j_ge4t_tt2b_node_Evt_Dr_minDrTaggedJets": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_5j_ge4t_tt2b_node_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_5j_ge4t_tt2b_node_Evt_HT_jets": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_5j_ge4t_tt2b_node_Evt_HT_tags": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_5j_ge4t_tt2b_node_Evt_M2_minDrTaggedJets": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_5j_ge4t_tt2b_node_Evt_M_TaggedJetsAverage": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_5j_ge4t_tt2b_node_Evt_Pt_JetsAverage": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_5j_ge4t_tt2b_node_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_5j_ge4t_tt2b_node_Evt_Pt_minDrTaggedJets": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_5j_ge4t_tt2b_node_Evt_blr": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_5j_ge4t_tt2b_node_Evt_blr_transformed": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_5j_ge4t_tt2b_node_Jet_CSV_0": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_5j_ge4t_tt2b_node_Jet_Pt_0": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_5j_ge4t_tt2b_node_N_Jets": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_5j_ge4t_tt2b_node_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_5j_ge4t_tt2b_node_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_5j_ge4t_tt2b_node_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_5j_ge4t_tt2b_node_Reco_tHq_bestJABDToutput": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_5j_ge4t_tt2b_node_Reco_ttH_bestJABDToutput": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_5j_ge4t_tt2b_node_Reco_ttH_h_pt": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_5j_ge4t_tt2b_node_Reco_ttH_toplep_m": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_5j_ge4t_tt2b_node_Reco_ttbar_bestJABDToutput": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_5j_ge4t_tt2b_node_TaggedJet_Pt_2": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_5j_ge4t_tt2b_node_memDBp": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_5j_ge4t_ttH_node_CSV_2": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_5j_ge4t_ttH_node_Evt_CSV_avg": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_5j_ge4t_ttH_node_Evt_CSV_avg_tagged": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_5j_ge4t_ttH_node_Evt_Deta_JetsAverage": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_5j_ge4t_ttH_node_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_5j_ge4t_ttH_node_Evt_Dr_minDrTaggedJets": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_5j_ge4t_ttH_node_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_5j_ge4t_ttH_node_Evt_HT_jets": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_5j_ge4t_ttH_node_Evt_HT_tags": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_5j_ge4t_ttH_node_Evt_M2_minDrTaggedJets": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_5j_ge4t_ttH_node_Evt_M_TaggedJetsAverage": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_5j_ge4t_ttH_node_Evt_Pt_JetsAverage": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_5j_ge4t_ttH_node_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_5j_ge4t_ttH_node_Evt_Pt_minDrTaggedJets": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_5j_ge4t_ttH_node_Evt_blr": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_5j_ge4t_ttH_node_Evt_blr_transformed": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_5j_ge4t_ttH_node_Jet_CSV_0": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_5j_ge4t_ttH_node_Jet_Pt_0": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_5j_ge4t_ttH_node_N_Jets": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_5j_ge4t_ttH_node_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_5j_ge4t_ttH_node_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_5j_ge4t_ttH_node_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_5j_ge4t_ttH_node_Reco_tHq_bestJABDToutput": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_5j_ge4t_ttH_node_Reco_ttH_bestJABDToutput": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_5j_ge4t_ttH_node_Reco_ttH_h_pt": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_5j_ge4t_ttH_node_Reco_ttH_toplep_m": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_5j_ge4t_ttH_node_Reco_ttbar_bestJABDToutput": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_5j_ge4t_ttH_node_TaggedJet_Pt_2": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_5j_ge4t_ttH_node_memDBp": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_5j_ge4t_ttcc_node_CSV_2": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_5j_ge4t_ttcc_node_Evt_CSV_avg": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_5j_ge4t_ttcc_node_Evt_CSV_avg_tagged": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_5j_ge4t_ttcc_node_Evt_Deta_JetsAverage": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_5j_ge4t_ttcc_node_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_5j_ge4t_ttcc_node_Evt_Dr_minDrTaggedJets": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_5j_ge4t_ttcc_node_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_5j_ge4t_ttcc_node_Evt_HT_jets": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_5j_ge4t_ttcc_node_Evt_HT_tags": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_5j_ge4t_ttcc_node_Evt_M2_minDrTaggedJets": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_5j_ge4t_ttcc_node_Evt_M_TaggedJetsAverage": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_5j_ge4t_ttcc_node_Evt_Pt_JetsAverage": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_5j_ge4t_ttcc_node_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_5j_ge4t_ttcc_node_Evt_Pt_minDrTaggedJets": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_5j_ge4t_ttcc_node_Evt_blr": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_5j_ge4t_ttcc_node_Evt_blr_transformed": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_5j_ge4t_ttcc_node_Jet_CSV_0": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_5j_ge4t_ttcc_node_Jet_Pt_0": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_5j_ge4t_ttcc_node_N_Jets": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_5j_ge4t_ttcc_node_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_5j_ge4t_ttcc_node_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_5j_ge4t_ttcc_node_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_5j_ge4t_ttcc_node_Reco_tHq_bestJABDToutput": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_5j_ge4t_ttcc_node_Reco_ttH_bestJABDToutput": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_5j_ge4t_ttcc_node_Reco_ttH_h_pt": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_5j_ge4t_ttcc_node_Reco_ttH_toplep_m": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_5j_ge4t_ttcc_node_Reco_ttbar_bestJABDToutput": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_5j_ge4t_ttcc_node_TaggedJet_Pt_2": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_5j_ge4t_ttcc_node_memDBp": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_5j_ge4t_ttlf_node_CSV_2": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_5j_ge4t_ttlf_node_Evt_CSV_avg": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_5j_ge4t_ttlf_node_Evt_CSV_avg_tagged": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_5j_ge4t_ttlf_node_Evt_Deta_JetsAverage": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_5j_ge4t_ttlf_node_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_5j_ge4t_ttlf_node_Evt_Dr_minDrTaggedJets": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_5j_ge4t_ttlf_node_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_5j_ge4t_ttlf_node_Evt_HT_jets": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_5j_ge4t_ttlf_node_Evt_HT_tags": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_5j_ge4t_ttlf_node_Evt_M2_minDrTaggedJets": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_5j_ge4t_ttlf_node_Evt_M_TaggedJetsAverage": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_5j_ge4t_ttlf_node_Evt_Pt_JetsAverage": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_5j_ge4t_ttlf_node_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_5j_ge4t_ttlf_node_Evt_Pt_minDrTaggedJets": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_5j_ge4t_ttlf_node_Evt_blr": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_5j_ge4t_ttlf_node_Evt_blr_transformed": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_5j_ge4t_ttlf_node_Jet_CSV_0": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_5j_ge4t_ttlf_node_Jet_Pt_0": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_5j_ge4t_ttlf_node_N_Jets": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_5j_ge4t_ttlf_node_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_5j_ge4t_ttlf_node_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_5j_ge4t_ttlf_node_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_5j_ge4t_ttlf_node_Reco_tHq_bestJABDToutput": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_5j_ge4t_ttlf_node_Reco_ttH_bestJABDToutput": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_5j_ge4t_ttlf_node_Reco_ttH_h_pt": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_5j_ge4t_ttlf_node_Reco_ttH_toplep_m": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_5j_ge4t_ttlf_node_Reco_ttbar_bestJABDToutput": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_5j_ge4t_ttlf_node_TaggedJet_Pt_2": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_5j_ge4t_ttlf_node_memDBp": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_5j_ge4t_ttmb_node_CSV_2": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_5j_ge4t_ttmb_node_Evt_CSV_avg": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_5j_ge4t_ttmb_node_Evt_CSV_avg_tagged": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_5j_ge4t_ttmb_node_Evt_Deta_JetsAverage": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_5j_ge4t_ttmb_node_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_5j_ge4t_ttmb_node_Evt_Dr_minDrTaggedJets": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_5j_ge4t_ttmb_node_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_5j_ge4t_ttmb_node_Evt_HT_jets": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_5j_ge4t_ttmb_node_Evt_HT_tags": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_5j_ge4t_ttmb_node_Evt_M2_minDrTaggedJets": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_5j_ge4t_ttmb_node_Evt_M_TaggedJetsAverage": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_5j_ge4t_ttmb_node_Evt_Pt_JetsAverage": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_5j_ge4t_ttmb_node_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_5j_ge4t_ttmb_node_Evt_Pt_minDrTaggedJets": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_5j_ge4t_ttmb_node_Evt_blr": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_5j_ge4t_ttmb_node_Evt_blr_transformed": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_5j_ge4t_ttmb_node_Jet_CSV_0": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_5j_ge4t_ttmb_node_Jet_Pt_0": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_5j_ge4t_ttmb_node_N_Jets": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_5j_ge4t_ttmb_node_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_5j_ge4t_ttmb_node_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_5j_ge4t_ttmb_node_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_5j_ge4t_ttmb_node_Reco_tHq_bestJABDToutput": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_5j_ge4t_ttmb_node_Reco_ttH_bestJABDToutput": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_5j_ge4t_ttmb_node_Reco_ttH_h_pt": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_5j_ge4t_ttmb_node_Reco_ttH_toplep_m": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_5j_ge4t_ttmb_node_Reco_ttbar_bestJABDToutput": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_5j_ge4t_ttmb_node_TaggedJet_Pt_2": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_5j_ge4t_ttmb_node_memDBp": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL 5 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_ge5j_ge4t_CSV_2": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_ge5j_ge4t_Evt_CSV_avg": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_ge5j_ge4t_Evt_CSV_avg_tagged": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_Evt_Deta_JetsAverage": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_ge5j_ge4t_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_ge5j_ge4t_Evt_Dr_minDrTaggedJets": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_ge5j_ge4t_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge5j_ge4t_Evt_HT_jets": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_ge5j_ge4t_Evt_HT_tags": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge5j_ge4t_Evt_M2_minDrTaggedJets": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge5j_ge4t_Evt_M_TaggedJetsAverage": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_Evt_Pt_JetsAverage": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_ge5j_ge4t_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_Evt_Pt_minDrTaggedJets": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge5j_ge4t_Evt_blr": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_ge5j_ge4t_Evt_blr_transformed": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_ge5j_ge4t_Jet_CSV_0": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_ge5j_ge4t_Jet_Pt_0": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_ge5j_ge4t_N_Jets": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_ge5j_ge4t_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_ge5j_ge4t_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_ge5j_ge4t_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_ge5j_ge4t_Reco_tHq_bestJABDToutput": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_ge5j_ge4t_Reco_ttH_bestJABDToutput": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_ge5j_ge4t_Reco_ttH_h_pt": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_ge5j_ge4t_Reco_ttH_toplep_m": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_ge5j_ge4t_Reco_ttbar_bestJABDToutput": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_ge5j_ge4t_TaggedJet_Pt_2": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_ge5j_ge4t_memDBp": {
+        "bottom": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_CSV_2": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Evt_CSV_avg": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Evt_CSV_avg_tagged": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Evt_Deta_JetsAverage": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Evt_Dr_minDrTaggedJets": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Evt_HT_jets": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Evt_HT_tags": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Evt_M2_minDrTaggedJets": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Evt_M_TaggedJetsAverage": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Evt_Pt_JetsAverage": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Evt_Pt_minDrTaggedJets": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Evt_blr": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Evt_blr_transformed": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Jet_CSV_0": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Jet_Pt_0": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_N_Jets": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Reco_tHq_bestJABDToutput": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Reco_ttH_bestJABDToutput": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Reco_ttH_h_pt": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Reco_ttH_toplep_m": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_Reco_ttbar_bestJABDToutput": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_TaggedJet_Pt_2": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_ge5j_ge4t_ratio_obs_memDBp": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_ge5j_ge4t_tHW_node_CSV_2": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Evt_CSV_avg": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Evt_CSV_avg_tagged": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Evt_Deta_JetsAverage": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Evt_Dr_minDrTaggedJets": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Evt_HT_jets": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Evt_HT_tags": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Evt_M2_minDrTaggedJets": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Evt_M_TaggedJetsAverage": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Evt_Pt_JetsAverage": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Evt_Pt_minDrTaggedJets": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Evt_blr": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Evt_blr_transformed": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Jet_CSV_0": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Jet_Pt_0": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_ge5j_ge4t_tHW_node_N_Jets": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Reco_tHq_bestJABDToutput": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Reco_ttH_bestJABDToutput": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Reco_ttH_h_pt": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Reco_ttH_toplep_m": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_ge5j_ge4t_tHW_node_Reco_ttbar_bestJABDToutput": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_ge5j_ge4t_tHW_node_TaggedJet_Pt_2": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_ge5j_ge4t_tHW_node_memDBp": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_ge5j_ge4t_tHq_node_CSV_2": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Evt_CSV_avg": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Evt_CSV_avg_tagged": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Evt_Deta_JetsAverage": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Evt_Dr_minDrTaggedJets": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Evt_HT_jets": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Evt_HT_tags": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Evt_M2_minDrTaggedJets": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Evt_M_TaggedJetsAverage": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Evt_Pt_JetsAverage": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Evt_Pt_minDrTaggedJets": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Evt_blr": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Evt_blr_transformed": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Jet_CSV_0": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Jet_Pt_0": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_ge5j_ge4t_tHq_node_N_Jets": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Reco_tHq_bestJABDToutput": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Reco_ttH_bestJABDToutput": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Reco_ttH_h_pt": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Reco_ttH_toplep_m": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_ge5j_ge4t_tHq_node_Reco_ttbar_bestJABDToutput": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_ge5j_ge4t_tHq_node_TaggedJet_Pt_2": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_ge5j_ge4t_tHq_node_memDBp": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_CSV_2": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Evt_CSV_avg": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Evt_CSV_avg_tagged": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Evt_Deta_JetsAverage": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Evt_Dr_minDrTaggedJets": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Evt_HT_jets": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Evt_HT_tags": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Evt_M2_minDrTaggedJets": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Evt_M_TaggedJetsAverage": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Evt_Pt_JetsAverage": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Evt_Pt_minDrTaggedJets": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Evt_blr": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Evt_blr_transformed": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Jet_CSV_0": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Jet_Pt_0": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_N_Jets": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Reco_tHq_bestJABDToutput": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Reco_ttH_bestJABDToutput": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Reco_ttH_h_pt": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Reco_ttH_toplep_m": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_Reco_ttbar_bestJABDToutput": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_TaggedJet_Pt_2": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_ge5j_ge4t_tt2b_node_memDBp": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_ge5j_ge4t_ttH_node_CSV_2": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Evt_CSV_avg": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Evt_CSV_avg_tagged": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Evt_Deta_JetsAverage": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Evt_Dr_minDrTaggedJets": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Evt_HT_jets": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Evt_HT_tags": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Evt_M2_minDrTaggedJets": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Evt_M_TaggedJetsAverage": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Evt_Pt_JetsAverage": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Evt_Pt_minDrTaggedJets": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Evt_blr": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Evt_blr_transformed": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Jet_CSV_0": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Jet_Pt_0": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_ge5j_ge4t_ttH_node_N_Jets": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Reco_tHq_bestJABDToutput": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Reco_ttH_bestJABDToutput": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Reco_ttH_h_pt": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Reco_ttH_toplep_m": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_ge5j_ge4t_ttH_node_Reco_ttbar_bestJABDToutput": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_ge5j_ge4t_ttH_node_TaggedJet_Pt_2": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_ge5j_ge4t_ttH_node_memDBp": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_CSV_2": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Evt_CSV_avg": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Evt_CSV_avg_tagged": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Evt_Deta_JetsAverage": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Evt_Dr_minDrTaggedJets": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Evt_HT_jets": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Evt_HT_tags": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Evt_M2_minDrTaggedJets": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Evt_M_TaggedJetsAverage": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Evt_Pt_JetsAverage": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Evt_Pt_minDrTaggedJets": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Evt_blr": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Evt_blr_transformed": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Jet_CSV_0": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Jet_Pt_0": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_N_Jets": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Reco_tHq_bestJABDToutput": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Reco_ttH_bestJABDToutput": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Reco_ttH_h_pt": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Reco_ttH_toplep_m": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_Reco_ttbar_bestJABDToutput": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_TaggedJet_Pt_2": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_ge5j_ge4t_ttcc_node_memDBp": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_CSV_2": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Evt_CSV_avg": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Evt_CSV_avg_tagged": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Evt_Deta_JetsAverage": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Evt_Dr_minDrTaggedJets": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Evt_HT_jets": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Evt_HT_tags": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Evt_M2_minDrTaggedJets": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Evt_M_TaggedJetsAverage": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Evt_Pt_JetsAverage": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Evt_Pt_minDrTaggedJets": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Evt_blr": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Evt_blr_transformed": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Jet_CSV_0": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Jet_Pt_0": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_N_Jets": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Reco_tHq_bestJABDToutput": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Reco_ttH_bestJABDToutput": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Reco_ttH_h_pt": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Reco_ttH_toplep_m": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_Reco_ttbar_bestJABDToutput": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_TaggedJet_Pt_2": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_ge5j_ge4t_ttlf_node_memDBp": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_CSV_2": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Evt_CSV_avg": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Evt_CSV_avg_tagged": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Evt_Deta_JetsAverage": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Evt_Dr_minDrTaggedJets": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Evt_HT_jets": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Evt_HT_tags": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Evt_M2_minDrTaggedJets": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Evt_M_TaggedJetsAverage": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Evt_Pt_JetsAverage": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Evt_Pt_minDrTaggedJets": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Evt_blr": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Evt_blr_transformed": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Jet_CSV_0": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Jet_Pt_0": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_N_Jets": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Reco_tHq_bestJABDToutput": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Reco_ttH_bestJABDToutput": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Reco_ttH_h_pt": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Reco_ttH_toplep_m": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_Reco_ttbar_bestJABDToutput": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_TaggedJet_Pt_2": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_ge5j_ge4t_ttmb_node_memDBp": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 5 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_ge6j_ge4t_CSV_2": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_ge6j_ge4t_Evt_CSV_avg": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_ge6j_ge4t_Evt_CSV_avg_tagged": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_Evt_Deta_JetsAverage": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_ge6j_ge4t_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_ge6j_ge4t_Evt_Dr_minDrTaggedJets": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_ge6j_ge4t_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge6j_ge4t_Evt_HT_jets": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_ge6j_ge4t_Evt_HT_tags": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge6j_ge4t_Evt_M2_minDrTaggedJets": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge6j_ge4t_Evt_M_TaggedJetsAverage": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_Evt_Pt_JetsAverage": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_ge6j_ge4t_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_Evt_Pt_minDrTaggedJets": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge6j_ge4t_Evt_blr": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_ge6j_ge4t_Evt_blr_transformed": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_ge6j_ge4t_Jet_CSV_0": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_ge6j_ge4t_Jet_Pt_0": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_ge6j_ge4t_N_Jets": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_ge6j_ge4t_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_ge6j_ge4t_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_ge6j_ge4t_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_ge6j_ge4t_Reco_tHq_bestJABDToutput": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_ge6j_ge4t_Reco_ttH_bestJABDToutput": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_ge6j_ge4t_Reco_ttH_h_pt": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_ge6j_ge4t_Reco_ttH_toplep_m": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_ge6j_ge4t_Reco_ttbar_bestJABDToutput": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_ge6j_ge4t_TaggedJet_Pt_2": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_ge6j_ge4t_memDBp": {
+        "bottom": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_CSV_2": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Evt_CSV_avg": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Evt_CSV_avg_tagged": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Evt_Deta_JetsAverage": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Evt_Dr_minDrTaggedJets": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Evt_HT_jets": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Evt_HT_tags": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Evt_M2_minDrTaggedJets": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Evt_M_TaggedJetsAverage": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Evt_Pt_JetsAverage": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Evt_Pt_minDrTaggedJets": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Evt_blr": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Evt_blr_transformed": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Jet_CSV_0": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Jet_Pt_0": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_N_Jets": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Reco_tHq_bestJABDToutput": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Reco_ttH_bestJABDToutput": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Reco_ttH_h_pt": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Reco_ttH_toplep_m": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_Reco_ttbar_bestJABDToutput": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_TaggedJet_Pt_2": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_ge6j_ge4t_ratio_obs_memDBp": {
+        "bottom": "t#bar{t}H + t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_ge6j_ge4t_tHW_node_CSV_2": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Evt_CSV_avg": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Evt_CSV_avg_tagged": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Evt_Deta_JetsAverage": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Evt_Dr_minDrTaggedJets": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Evt_HT_jets": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Evt_HT_tags": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Evt_M2_minDrTaggedJets": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Evt_M_TaggedJetsAverage": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Evt_Pt_JetsAverage": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Evt_Pt_minDrTaggedJets": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Evt_blr": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Evt_blr_transformed": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Jet_CSV_0": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Jet_Pt_0": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_ge6j_ge4t_tHW_node_N_Jets": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Reco_tHq_bestJABDToutput": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Reco_ttH_bestJABDToutput": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Reco_ttH_h_pt": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Reco_ttH_toplep_m": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_ge6j_ge4t_tHW_node_Reco_ttbar_bestJABDToutput": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_ge6j_ge4t_tHW_node_TaggedJet_Pt_2": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_ge6j_ge4t_tHW_node_memDBp": {
+        "bottom": "tHW node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_ge6j_ge4t_tHq_node_CSV_2": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Evt_CSV_avg": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Evt_CSV_avg_tagged": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Evt_Deta_JetsAverage": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Evt_Dr_minDrTaggedJets": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Evt_HT_jets": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Evt_HT_tags": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Evt_M2_minDrTaggedJets": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Evt_M_TaggedJetsAverage": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Evt_Pt_JetsAverage": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Evt_Pt_minDrTaggedJets": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Evt_blr": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Evt_blr_transformed": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Jet_CSV_0": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Jet_Pt_0": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_ge6j_ge4t_tHq_node_N_Jets": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Reco_tHq_bestJABDToutput": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Reco_ttH_bestJABDToutput": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Reco_ttH_h_pt": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Reco_ttH_toplep_m": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_ge6j_ge4t_tHq_node_Reco_ttbar_bestJABDToutput": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_ge6j_ge4t_tHq_node_TaggedJet_Pt_2": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_ge6j_ge4t_tHq_node_memDBp": {
+        "bottom": "tHq node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_CSV_2": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Evt_CSV_avg": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Evt_CSV_avg_tagged": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Evt_Deta_JetsAverage": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Evt_Dr_minDrTaggedJets": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Evt_HT_jets": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Evt_HT_tags": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Evt_M2_minDrTaggedJets": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Evt_M_TaggedJetsAverage": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Evt_Pt_JetsAverage": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Evt_Pt_minDrTaggedJets": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Evt_blr": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Evt_blr_transformed": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Jet_CSV_0": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Jet_Pt_0": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_N_Jets": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Reco_tHq_bestJABDToutput": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Reco_ttH_bestJABDToutput": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Reco_ttH_h_pt": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Reco_ttH_toplep_m": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_Reco_ttbar_bestJABDToutput": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_TaggedJet_Pt_2": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_ge6j_ge4t_tt2b_node_memDBp": {
+        "bottom": "t#bar{t}2b node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_ge6j_ge4t_ttH_node_CSV_2": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Evt_CSV_avg": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Evt_CSV_avg_tagged": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Evt_Deta_JetsAverage": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Evt_Dr_minDrTaggedJets": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Evt_HT_jets": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Evt_HT_tags": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Evt_M2_minDrTaggedJets": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Evt_M_TaggedJetsAverage": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Evt_Pt_JetsAverage": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Evt_Pt_minDrTaggedJets": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Evt_blr": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Evt_blr_transformed": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Jet_CSV_0": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Jet_Pt_0": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_ge6j_ge4t_ttH_node_N_Jets": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Reco_tHq_bestJABDToutput": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Reco_ttH_bestJABDToutput": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Reco_ttH_h_pt": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Reco_ttH_toplep_m": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_ge6j_ge4t_ttH_node_Reco_ttbar_bestJABDToutput": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_ge6j_ge4t_ttH_node_TaggedJet_Pt_2": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_ge6j_ge4t_ttH_node_memDBp": {
+        "bottom": "t#bar{t}H node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_CSV_2": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Evt_CSV_avg": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Evt_CSV_avg_tagged": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Evt_Deta_JetsAverage": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Evt_Dr_minDrTaggedJets": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Evt_HT_jets": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Evt_HT_tags": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Evt_M2_minDrTaggedJets": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Evt_M_TaggedJetsAverage": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Evt_Pt_JetsAverage": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Evt_Pt_minDrTaggedJets": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Evt_blr": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Evt_blr_transformed": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Jet_CSV_0": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Jet_Pt_0": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_N_Jets": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Reco_tHq_bestJABDToutput": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Reco_ttH_bestJABDToutput": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Reco_ttH_h_pt": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Reco_ttH_toplep_m": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_Reco_ttbar_bestJABDToutput": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_TaggedJet_Pt_2": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_ge6j_ge4t_ttcc_node_memDBp": {
+        "bottom": "t#bar{t}C node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_CSV_2": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Evt_CSV_avg": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Evt_CSV_avg_tagged": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Evt_Deta_JetsAverage": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Evt_Dr_minDrTaggedJets": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Evt_HT_jets": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Evt_HT_tags": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Evt_M2_minDrTaggedJets": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Evt_M_TaggedJetsAverage": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Evt_Pt_JetsAverage": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Evt_Pt_minDrTaggedJets": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Evt_blr": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Evt_blr_transformed": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Jet_CSV_0": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Jet_Pt_0": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_N_Jets": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Reco_tHq_bestJABDToutput": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Reco_ttH_bestJABDToutput": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Reco_ttH_h_pt": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Reco_ttH_toplep_m": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_Reco_ttbar_bestJABDToutput": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_TaggedJet_Pt_2": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_ge6j_ge4t_ttlf_node_memDBp": {
+        "bottom": "t#bar{t}LF node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_CSV_2": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}^{3}_{#it{b}}"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Evt_CSV_avg": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(j) #GT"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Evt_CSV_avg_tagged": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #it{d}_{#it{b}}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Evt_Deta_JetsAverage": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(jj) #GT"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Evt_Deta_TaggedJetsAverage": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#LT #Delta#it{#eta}(bb) #GT"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Evt_Dr_minDrTaggedJets": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Evt_HT_b-tags": {
+        "bottoms": "",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Evt_HT_jets": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Evt_HT_tags": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(b)"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Evt_M2_minDrTaggedJets": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Evt_M_TaggedJetsAverage": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{m}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Evt_Pt_JetsAverage": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(j) #GT"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Evt_Pt_TaggedJetsAverage": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#LT #it{p}_{T}(b) #GT"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Evt_Pt_minDrTaggedJets": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Evt_blr": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BLR"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Evt_blr_transformed": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "log(#frac{BLR}{1 - BLR})"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Jet_CSV_0": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "leading jet #it{d}_{#it{b}}"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Jet_Pt_0": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "leading jet #it{p}_{T}"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_N_Jets": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Reco_JABDT_tHW_Jet_CSV_btop": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Reco_JABDT_tHq_abs_ljet_eta": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "#||{#it{#eta}#(){q^{tHq}}}"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Reco_tHq_bestJABDToutput": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{tHq}"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Reco_ttH_bestJABDToutput": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}H}"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Reco_ttH_h_pt": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(H)"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Reco_ttH_toplep_m": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_Reco_ttbar_bestJABDToutput": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "BDT^{t#bar{t}}"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_TaggedJet_Pt_2": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(b^{3})"
+    },
+    "ljets_ge6j_ge4t_ttmb_node_memDBp": {
+        "bottom": "t#bar{t}b/b#bar{b} node",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
+        "xtitle": "MEM"
+    },
+    "ttH_hbb_13TeV_2016_dl_3j3b_HT_jets": {
+        "bottom": "",
+        "top": "DL 3 jets, 3 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ttH_hbb_13TeV_2016_dl_3j3b_N_bb-tags": {
+        "bottom": "",
+        "top": "DL 3 jets, 3 b-tags",
+        "xtitle": "b-tagged jet multiplicity"
+    },
+    "ttH_hbb_13TeV_2016_dl_3j3b_N_jets": {
+        "bottom": "",
+        "top": "DL 3 jets, 3 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ttH_hbb_13TeV_2016_dl_3j3b_minDeltaR_tag_tag": {
+        "bottom": "",
+        "top": "DL 3 jets, 3 b-tags",
+        "xtitle": "min #Delta#it{R}(bb)"
+    },
+    "ttH_hbb_13TeV_2016_dl_3j3b_pT_tag_tag_min_deltaR": {
+        "bottom": "",
+        "top": "DL 3 jets, 3 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    },
+    "ttH_hbb_13TeV_2016_dl_4j3b_HT_jets": {
+        "bottom": "",
+        "top": "DL \\geq 4 jets, 3 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{H}_{T}(j)"
+    },
+    "ttH_hbb_13TeV_2016_dl_4j3b_MEM": {
+        "bottom": "",
+        "top": "DL \\geq 4 jets, 3 b-tags",
+        "xtitle": "MEM"
+    },
+    "ttH_hbb_13TeV_2016_dl_4j3b_N_bb-tags": {
+        "bottom": "",
+        "top": "DL \\geq 4 jets, 3 b-tags",
+        "xtitle": "b-tagged jet multiplicity"
+    },
+    "ttH_hbb_13TeV_2016_dl_4j3b_N_jets": {
+        "bottom": "",
+        "top": "DL \\geq 4 jets, 3 b-tags",
+        "xtitle": "jet multiplicity"
+    },
+    "ttH_hbb_13TeV_2016_dl_4j3b_minDeltaR_tag_tag": {
+        "bottom": "",
+        "top": "DL \\geq 4 jets, 3 b-tags",
+        "xtitle": "min #Delta#it{R} (bb)"
+    },
+    "ttH_hbb_13TeV_2016_dl_4j3b_pT_tag_tag_min_deltaR": {
+        "bottom": "",
+        "top": "DL \\geq 4 jets, 3 b-tags",
+        "unit": "GeV",
+        "xtitle": "#it{p}_{T}(bb_{min #Delta#it{R}})"
+    }
+}

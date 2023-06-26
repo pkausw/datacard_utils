@@ -1,395 +1,429 @@
 {
     "fh_j7_t4_RecoHiggsPt": {
-        "top": "FH 7 jets, \\geq 4 tags",
+        "top": "FH 7 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "p_{T} (H) in GeV"
+        "xtitle": "#it{p}_{T}(H)",
+        "unit": "GeV"
     },
     "fh_j7_t4_jetsByPt_0_pt":{
-        "top":"FH 7 jets, \\geq 4 tags",
+        "top":"FH 7 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "hardest jet p_{T}"
+        "xtitle": "leading jet #it{p}_{T}",
+        "unit": "GeV"
     },
     "fh_j7_t4_jetsByPt_0_btag": {
-        "top":"FH 7 jets, \\geq 4 tags",
+        "top":"FH 7 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "hardest jet b-tag score"
+        "xtitle": "leading jet b-tag score"
     },
     "fh_j7_t4_numJets": {
-        "top":"FH 7 jets, \\geq 4 tags",
+        "top":"FH 7 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "N_{j}"
+        "xtitle": "jet multiplicity"
     },
     "fh_j7_t4_ht30": {
-        "top":"FH 7 jets, \\geq 4 tags",
+        "top":"FH 7 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "H_{T, j}"
+        "xtitle": "#it{H}_{T}(j)",
+        "unit": "GeV"
     },
     "fh_j8_t4_RecoHiggsPt": {
-        "top": "FH 8 jets, \\geq 4 tags",
+        "top": "FH 8 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "p_{T} (H) in GeV"
+        "xtitle": "#it{p}_{T}(H)",
+        "unit": "GeV"
     },
     "fh_j8_t4_jetsByPt_0_pt":{
-        "top":"FH 8 jets, \\geq 4 tags",
+        "top":"FH 8 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "hardest jet p_{T}"
+        "xtitle": "leading jet #it{p}_{T}",
+        "unit": "GeV"
     },
     "fh_j8_t4_jetsByPt_0_btag": {
-        "top":"FH 8 jets, \\geq 4 tags",
+        "top":"FH 8 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "hardest jet b-tag score"
+        "xtitle": "leading jet b-tag score"
     },
     "fh_j8_t4_numJets": {
-        "top":"FH 8 jets, \\geq 4 tags",
+        "top":"FH 8 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "N_{j}"
+        "xtitle": "jet multiplicity"
     },
     "fh_j8_t4_ht30": {
-        "top":"FH 8 jets, \\geq 4 tags",
+        "top":"FH 8 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "H_{T, j}"
+        "xtitle": "#it{H}_{T}(j)",
+        "unit": "GeV"
+
     },"fh_j9_t4_RecoHiggsPt": {
-        "top": "FH \\geq 9 jets, \\geq 4 tags",
+        "top": "FH \\geq 9 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "p_{T} (H) in GeV"
+        "xtitle": "#it{p}_{T}(H)",
+        "unit": "GeV"
     },
     "fh_j9_t4_jetsByPt_0_pt":{
-        "top":"FH \\geq 9 jets, \\geq 4 tags",
+        "top":"FH \\geq 9 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "hardest jet p_{T}"
+        "xtitle": "leading jet #it{p}_{T}",
+        "unit": "GeV"
     },
     "fh_j9_t4_jetsByPt_0_btag": {
-        "top":"FH \\geq 9 jets, \\geq 4 tags",
+        "top":"FH \\geq 9 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "hardest jet b-tag score"
+        "xtitle": "leading jet b-tag score"
     },
     "fh_j9_t4_numJets": {
-        "top":"FH \\geq 9 jets, \\geq 4 tags",
+        "top":"FH \\geq 9 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "N_{j}"
+        "xtitle": "jet multiplicity"
     },
     "fh_j9_t4_ht30": {
-        "top":"FH \\geq 9 jets, \\geq 4 tags",
+        "top":"FH \\geq 9 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "H_{T, j}"
+        "xtitle": "#it{H}_{T}(j)",
+        "unit": "GeV"
     },
     "ljets_5j_ge4t_Evt_Pt_TaggedJetsAverage":{
-        "top": "SL 5 jets, \\geq 4 tags",
+        "top": "SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "p^{avg}_{T; b}"
+        "xtitle": "p^{avg}_{T; b}",
+        "unit": "GeV"
     },
     "ljets_ge6j_ge4t_Evt_Pt_TaggedJetsAverage":{
-        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "p^{avg}_{T; b}"
+        "xtitle": "p^{avg}_{T; b}",
+        "unit": "GeV"
     },
     
     "ljets_5j_ge4t_Evt_Pt_minDrTaggedJets": {
-        "top":"SL 5 jets, \\geq 4 tags",
+        "top":"SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "p^{min #Delta R}_{T; b,b}"
+        "xtitle": "#it{p}_{T}(bb_{min #Delta #it{R}})",
+        "unit": "GeV"
     },
     "ljets_ge6j_ge4t_Evt_Pt_minDrTaggedJets": {
-        "top":"SL \\geq 6 jets, \\geq 4 tags",
+        "top":"SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "p^{min #Delta R}_{T; b,b}"
+        "xtitle": "#it{p}_{T}(bb_{min #Delta #it{R}})",
+        "unit": "GeV"
     },
     
     "ljets_5j_ge4t_Evt_blr_transformed": {
-        "top":"SL 5 jets, \\geq 4 tags",
+        "top":"SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
         "xtitle": "log(#frac{BLR}{1 - BLR})"
     },
     "ljets_ge6j_ge4t_Evt_blr_transformed": {
-        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
         "xtitle": "log(#frac{BLR}{1 - BLR})"
     },
     
     "ljets_5j_ge4t_Jet_CSV_0": {
-        "top":"SL 5 jets, \\geq 4 tags",
+        "top":"SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "hardest jet b-tag score"
+        "xtitle": "leading jet #it{d}_{#it{b}}"
     },
     "ljets_ge6j_ge4t_Jet_CSV_0": {
-        "top":"SL \\geq 6 jets, \\geq 4 tags",
+        "top":"SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "hardest jet b-tag score"
+        "xtitle": "leading jet #it{d}_{#it{b}}"
     },
     
     "ljets_5j_ge4t_Jet_Pt_0": {
-        "top":"SL 5 jets, \\geq 4 tags",
+        "top":"SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "hardest jet p_{T}" 
+        "xtitle": "leading jet #it{p}_{T}",
+        "unit": "GeV"
     },
     "ljets_ge6j_ge4t_Jet_Pt_0": {
-        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "hardest jet p_{T}" 
+        "xtitle": "leading jet #it{p}_{T}",
+        "unit": "GeV"
     },
     "ljets_5j_ge4t_N_Jets": {
-        "top": "SL 5 jets, \\geq 4 tags",
+        "top": "SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "N_{j}"
+        "xtitle": "jet multiplicity"
     },
     "ljets_ge6j_ge4t_N_Jets": {
-        "top":"SL \\geq 6 jets, \\geq 4 tags",
+        "top":"SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "N_{j}"
+        "xtitle": "jet multiplicity"
     },
     "ljets_5j_ge4t_Reco_JABDT_tHW_Jet_CSV_btop": {
-        "top": "SL 5 jets, \\geq 4 tags",
+        "top": "SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "tHW reco b-tag score(b_{top})"
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
     },
     "ljets_ge6j_ge4t_Reco_JABDT_tHW_Jet_CSV_btop": {
-        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "tHW reco b-tag score(b_{top})"
+        "xtitle": "#it{d}_{#it{b}}(b_{top}^{tHW})"
     },
     "ljets_5j_ge4t_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
-        "top":"SL 5 jets, \\geq 4 tags",
+        "top":"SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "tHW reco #frac{p_{T}(t) + p_{T}(H) + p_{T}(Wb)}{H_{T} + p_{T}(MET) + p_{T}(lep)}"
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
     },
     "ljets_ge6j_ge4t_Reco_JABDT_tHW_top_pt__P__h_pt__P__wb_pt__DIV__Evt_HT__P__Evt_Pt_MET__P__Lep_Pt": {
-        "top":"SL \\geq 6 jets, \\geq 4 tags",
+        "top":"SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "tHW reco #frac{p_{T}(t) + p_{T}(H) + p_{T}(Wb)}{H_{T} + p_{T}(MET) + p_{T}(lep)}"
+        "xtitle": "tHW reco #frac{#it{p}_{T}(t) + #it{p}_{T}(H) + #it{p}_{T}(Wb)}{#it{H}_{T} + #it{p}_{T}(MET) + #it{p}_{T}(lep)}"
     },
     "ljets_5j_ge4t_Reco_JABDT_tHq_abs_ljet_eta": {
-        "top": "SL 5 jets, \\geq 4 tags",
+        "top": "SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "tHq reco |#eta|(q)"
+        "xtitle": "#||{#it{#eta}(q^{tHq})}"
     },
     "ljets_ge6j_ge4t_Reco_JABDT_tHq_abs_ljet_eta": {
-        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "tHq reco |#eta|(q)"
+        "xtitle": "#||{#it{#eta}(q^{tHq})}"
     },
     "ljets_5j_ge4t_Reco_tHq_bestJABDToutput": {
-        "top": "SL 5 jets, \\geq 4 tags",
+        "top": "SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "tHq reco discr"
+        "xtitle": "BDT^{tHq}"
     },
     "ljets_ge6j_ge4t_Reco_tHq_bestJABDToutput": {
-        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "tHq reco discr"
+        "xtitle": "BDT^{tHq}"
     },
     "ljets_5j_ge4t_Reco_ttH_bestJABDToutput": {
-        "top": "SL 5 jets, \\geq 4 tags",
+        "top": "SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle":"ttH reco discr"
+        "xtitle":"BDT^{t#bar{t}H}"
     },
     "ljets_ge6j_ge4t_Reco_ttH_bestJABDToutput": {
-        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle":"ttH reco discr"
+        "xtitle":"BDT^{t#bar{t}H}"
     },
     "ljets_5j_ge4t_Reco_ttH_h_pt": {
-        "top": "SL 5 jets, \\geq 4 tags",
+        "top": "SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "p_{T} (H) in GeV"
+        "xtitle": "#it{p}_{T}(H)",
+        "unit": "GeV"
     },
     "ljets_ge6j_ge4t_Reco_ttH_h_pt": {
-        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "p_{T} (H) in GeV"
+        "xtitle": "#it{p}_{T}(H)",
+        "unit": "GeV"
     },
     "ljets_5j_ge4t_Reco_ttH_toplep_m": {
-        "top": "SL 5 jets, \\geq 4 tags",
+        "top": "SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "ttH reco m(top_{lep})"
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})",
+        "unit": "GeV"
     },
     "ljets_ge6j_ge4t_Reco_ttH_toplep_m": {
-        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "ttH reco m(top_{lep})"
+        "xtitle": "#it{m}(t_{lep}^{t#bar{t}H})",
+        "unit": "GeV"
     },
     "ljets_5j_ge4t_Reco_ttbar_bestJABDToutput": {
-        "top":"SL 5 jets, \\geq 4 tags",
+        "top":"SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "t#bar{t} reco discr"
+        "xtitle": "BDT^{t#bar{t}}"
     },
     "ljets_ge6j_ge4t_Reco_ttbar_bestJABDToutput": {
-        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "t#bar{t} reco discr"
+        "xtitle": "BDT^{t#bar{t}}"
     },
     "ljets_5j_ge4t_memDBp": {
-        "top": "SL 5 jets, \\geq 4 tags",
+        "top": "SL 5 jets, \\geq 4 b-tags",
         "bottom" : "",
         "xtitle": "MEM"
     },
     "ljets_ge6j_ge4t_memDBp": {
-        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
         "xtitle": "MEM"
     },
     "ljets_5j_ge4t_CSV_2": {
-        "top": "SL 5 jets, \\geq 4 tags",
+        "top": "SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "third highest b-tag score"
+        "xtitle": "#it{d}^{3}_{#it{b}}"
     },
     "ljets_ge6j_ge4t_CSV_2": {
-        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "third highest b-tag score"
+        "xtitle": "#it{d}^{3}_{#it{b}}"
     },
     "ljets_5j_ge4t_Evt_CSV_avg": {
-        "top": "SL 5 jets, \\geq 4 tags",
+        "top": "SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "b-tag score^{avg}_{j}"
+        "xtitle": "#LT #it{d}_{#it{b}}(j)#GT"
     },
     "ljets_ge6j_ge4t_Evt_CSV_avg": {
-        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "b-tag score^{avg}_{j}"
+        "xtitle": "#LT #it{d}_{#it{b}}(j)#GT"
     },
     "ljets_5j_ge4t_Evt_CSV_avg_tagged": {
-        "top": "SL 5 jets, \\geq 4 tags",
+        "top": "SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "b-tag score^{avg}_{b}"
+        "xtitle": "#LT #it{d}_{#it{b}}(b)#GT"
     },
     "ljets_ge6j_ge4t_Evt_CSV_avg_tagged": {
-        "top":"SL \\geq 6 jets, \\geq 4 tags",
+        "top":"SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "b-tag score^{avg}_{b}"
+        "xtitle": "#LT #it{d}_{#it{b}}(b)#GT"
     },
     "ljets_5j_ge4t_Evt_Deta_JetsAverage": {
-        "top": "SL 5 jets, \\geq 4 tags",
+        "top": "SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "#Delta #eta^{avg}_{j,j}"
+        "xtitle": "#LT #Delta #it{#eta}(jj) #GT"
     },
     "ljets_ge6j_ge4t_Evt_Deta_JetsAverage": {
-        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "#Delta #eta^{avg}_{j,j}"
+        "xtitle": "#LT #Delta #it{#eta}(jj) #GT"
     },
     "ljets_5j_ge4t_Evt_Deta_TaggedJetsAverage": {
-        "top": "SL 5 jets, \\geq 4 tags",
+        "top": "SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "#Delta #eta^{avg}_{b,b}"
+        "xtitle": "#LT #Delta #it{#eta}(bb) #GT"
     },
     "ljets_ge6j_ge4t_Evt_Deta_TaggedJetsAverage": {
-        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "#Delta #eta^{avg}_{b,b}"
+        "xtitle": "#LT #Delta #it{#eta}(bb) #GT"
     },
     "ljets_5j_ge4t_Evt_Dr_minDrTaggedJets": {
-        "top": "SL 5 jets, \\geq 4 tags",
+        "top": "SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "#Delta R^{min}_{b,b}"
+        "xtitle": "min #Delta #it{R}(bb)"
     },
     "ljets_ge6j_ge4t_Evt_Dr_minDrTaggedJets": {
-        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "#Delta R^{min}_{b,b}"
+        "xtitle": "min #Delta #it{R}(bb)"
     },
     "ttH_hbb_13TeV_2016_dl_3j3b_HT_jets": {
-        "top": "DL 3 jets, 3 tags",
+        "top": "DL 3 jets, 3 b-tags",
         "bottom": "",
-        "xtitle" : "H_{T, j}"
+        "xtitle" : "#it{H}_{T}(j)",
+        "unit": "GeV"
     },
-    "ttH_hbb_13TeV_2016_dl_3j3b_N_btags": {
-        "top":"DL 3 jets, 3 tags",
+    "ttH_hbb_13TeV_2016_dl_3j3b_N_bb-tags": {
+        "top":"DL 3 jets, 3 b-tags",
         "bottom": "",
-        "xtitle": "N_{b}"
+        "xtitle": "b-tagged jet multiplicity"
     },
     "ttH_hbb_13TeV_2016_dl_3j3b_N_jets": {
-        "top":"DL 3 jets, 3 tags",
+        "top":"DL 3 jets, 3 b-tags",
         "bottom": "",
-        "xtitle": "N_{j}"
+        "xtitle": "jet multiplicity"
     },
     "ttH_hbb_13TeV_2016_dl_3j3b_minDeltaR_tag_tag": {
-        "top": "DL 3 jets, 3 tags",
+        "top": "DL 3 jets, 3 b-tags",
         "bottom": "",
-        "xtitle": "#Delta R^{min}_{b,b}"
+        "xtitle": "min #Delta #it{R}(bb)"
     },
     "ttH_hbb_13TeV_2016_dl_3j3b_pT_tag_tag_min_deltaR": {
-        "top":"DL 3 jets, 3 tags",
+        "top":"DL 3 jets, 3 b-tags",
         "bottom": "",
-        "xtitle": "p^{min #Delta R}_{T; b,b}"
+        "xtitle": "#it{p}_{T}(bb_{min #Delta #it{R}})",
+        "unit": "GeV"
     },
     "ttH_hbb_13TeV_2016_dl_4j3b_HT_jets": {
-        "top": "DL \\geq 4 jets, 3 tags",
+        "top": "DL \\geq 4 jets, 3 b-tags",
         "bottom": "",
-        "xtitle" : "H_{T, j}"
+        "xtitle" : "#it{H}_{T}(j)",
+        "unit": "GeV"
     },
-    "ttH_hbb_13TeV_2016_dl_4j3b_N_btags": {
-        "top": "DL \\geq 4 jets, 3 tags",
+    "ttH_hbb_13TeV_2016_dl_4j3b_N_bb-tags": {
+        "top": "DL \\geq 4 jets, 3 b-tags",
         "bottom": "",
-        "xtitle": "N_{b}"
+        "xtitle": "b-tagged jet multiplicity"
     },
     "ttH_hbb_13TeV_2016_dl_4j3b_N_jets": {
-        "top": "DL \\geq 4 jets, 3 tags",
+        "top": "DL \\geq 4 jets, 3 b-tags",
         "bottom": "",
-        "xtitle": "N_{j}"
+        "xtitle": "jet multiplicity"
     },
     "ttH_hbb_13TeV_2016_dl_4j3b_minDeltaR_tag_tag": {
-        "top": "DL \\geq 4 jets, 3 tags",
+        "top": "DL \\geq 4 jets, 3 b-tags",
         "bottom": "",
-        "xtitle": "#Delta R^{min}_{b,b}"
+        "xtitle": "min #Delta #it{R} (bb)"
     },
     "ttH_hbb_13TeV_2016_dl_4j3b_pT_tag_tag_min_deltaR": {
-        "top": "DL \\geq 4 jets, 3 tags",
+        "top": "DL \\geq 4 jets, 3 b-tags",
         "bottom": "",
-        "xtitle": "p^{min #Delta R}_{T; b,b}"
+        "xtitle": "#it{p}_{T}(bb_{min #Delta #it{R}})",
+        "unit": "GeV"
     },
     "ljets_5j_ge4t_Evt_HT_jets": {
-        "top": "SL 5 jets, \\geq 4 tags",
+        "top": "SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "H_{T, j}"
+        "xtitle": "#it{H}_{T}(j)",
+        "unit": "GeV"
     },
     "ljets_ge6j_ge4t_Evt_HT_jets": {
-        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "H_{T, j}"
+        "xtitle": "#it{H}_{T}(j)",
+        "unit": "GeV"
     },
     "ttH_hbb_13TeV_2016_dl_4j3b_MEM": {
-        "top":"DL \\geq 4 jets, 3 tags",
+        "top":"DL \\geq 4 jets, 3 b-tags",
         "bottom": "",
         "xtitle": "MEM"
     },
-    "ljets_5j_ge4t_Evt_HT_tags": {
-        "top": "SL 5 jets, \\geq 4 tags",
+    "ljets_5j_ge4t_Evt_HT_b-tags": {
+        "top": "SL 5 jets, \\geq 4 b-tags",
         "bottoms": "",
-        "xtitle": "H_{T, b}"
+        "xtitle": "#it{H}_{T}(b)",
+        "unit": "GeV"
     },
-    "ljets_ge6j_ge4t_Evt_HT_tags": {
-        "top": "SL \\geq 6 jets, \\geq 4 tags",
+    "ljets_ge6j_ge4t_Evt_HT_b-tags": {
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
         "bottoms": "",
-        "xtitle": "H_{T, b}"
+        "xtitle": "#it{H}_{T}(b)",
+        "unit": "GeV"
     },
     "ljets_5j_ge4t_Evt_M2_minDrTaggedJets": {
-        "top": "SL 5 jets, \\geq 4 tags",
+        "top": "SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "m^{min #Delta R}_{b,b}"
+        "xtitle": "#it{m}(bb_{min #Delta #it{R}})",
+        "unit": "GeV"
     },
     "ljets_ge6j_ge4t_Evt_M2_minDrTaggedJets": {
-        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "m^{min #Delta R}_{b,b}"
+        "xtitle": "#it{m}(bb_{min #Delta #it{R}})",
+        "unit": "GeV"
     },
     "ljets_5j_ge4t_Evt_M_TaggedJetsAverage": {
-        "top":"SL 5 jets, \\geq 4 tags",
+        "top":"SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "m^{avg}_{b}"
+        "xtitle": "#LT #it{m}(b)#GT",
+        "unit": "GeV"
     },
     "ljets_ge6j_ge4t_Evt_M_TaggedJetsAverage": {
-        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "m^{avg}_{b}"
+        "xtitle": "#LT #it{m}(b)#GT",
+        "unit": "GeV"
     },
     "ljets_5j_ge4t_Evt_Pt_JetsAverage": {
-        "top": "SL 5 jets, \\geq 4 tags",
+        "top": "SL 5 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "p^{avg}_{T; j}"
+        "xtitle": "#LT #it{p}_{T}(j)#GT",
+        "unit": "GeV"
     },
     "ljets_ge6j_ge4t_Evt_Pt_JetsAverage": {
-        "top": "SL \\geq 6 jets, \\geq 4 tags",
+        "top": "SL \\geq 6 jets, \\geq 4 b-tags",
         "bottom": "",
-        "xtitle": "p^{avg}_{T; j}"
+        "xtitle": "#LT #it{p}_{T}(j)#GT",
+        "unit": "GeV"
     }
 }
