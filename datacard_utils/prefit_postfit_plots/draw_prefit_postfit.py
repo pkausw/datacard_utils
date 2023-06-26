@@ -7,6 +7,10 @@ import sys
 import json
 from optparse import OptionParser
 from subprocess import call
+import ROOT
+
+ROOT.gROOT.SetBatch(True)
+ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 thisdir = os.path.dirname(os.path.realpath(__file__))
 
@@ -108,6 +112,17 @@ def parse_arguments():
                         type = "str",
                         default = ""
                     )
+    parser.add_option( "--total",
+                        help = " ".join("""
+                        Draw the total (i.e. summed) distributions, which don't
+                        follow the same naming scheme as the individual channels
+                        per year. Note that the file name provided with option 's'
+                        is presumed to be the actual channel name in this case. 
+                        """.split()),
+                        dest = "total",
+                        action="store_true",
+                        default = False,
+                    )
     
     options, files = parser.parse_args()
     if not os.path.exists(options.labelconfig):
@@ -117,9 +132,18 @@ def parse_arguments():
         parser.error("Could not find plot config in '{}'".format(options.labelconfig))
     return options, files
 
+def load_file_keys(file):
+    rfile = ROOT.TFile.Open(file)
+    if rfile.IsOpen() and not rfile.IsZombie() and not rfile.TestBit(ROOT.TFile.kRecovered):
+        return [x.GetName() for x in rfile.GetListOfKeys() if x.IsFolder()]
+
+
 def generate_plots(file, options):
     # dictionary containing the information from config
     # keys are channel names in source.root file
+
+    # load keys to avoid running command for missing channels
+    source_channel_list = load_file_keys(file)
     labels = {}
     configpath = options.labelconfig
     with open(configpath) as f:
@@ -140,13 +164,29 @@ def generate_plots(file, options):
         "shapes_fit_s" : "postfit"
     }
     prefix = options.prefix
-    for channel in labels:
-        top = labels[channel].get("top", "")
-        bottom = labels[channel].get("bottom", "")
+
+    # filter relevant channels for more efficiency
+    relevant_channels = list()
+    basename = os.path.basename(file)
+    lambda_func = lambda x: True
+    if options.total:
+        lambda_func = lambda x: x in basename
+    else:
+        lambda_func = lambda x: x in source_channel_list
+    relevant_channels = list(filter(lambda_func, labels.keys()))
+    for channel in relevant_channels:
         final_channel = channel if prefix == "" \
                             else "_".join([prefix, channel])
+        final_pdfname = final_channel
+        if options.total:
+            final_channel = "total"
+            
+        top = labels[channel].get("top", "")
+        bottom = labels[channel].get("bottom", "")
+        
         xtitle = labels[channel].get("xtitle", "ANN Discriminant")
-        ratio_range = labels[channel].get("range", 0.2)
+        unit = labels[channel].get("unit")
+        ratio_range = labels[channel].get("range", 0.18)
         for flag in flags:
             # pdfname = "{}_{}.pdf".format(channel, flag)
             final_bottom = " ".join([bottom, flags[flag]])
@@ -154,9 +194,11 @@ def generate_plots(file, options):
             cmd = cmd_base.format( channel = final_channel,
                                     label = label,
                                     flag = flag,
-                                    pdfname = final_channel,
+                                    pdfname = final_pdfname,
                                     xtitle = xtitle,
                                     **base_options)
+            if unit:
+                cmd += " --unit '{}'".format(unit)
             if not options.unblind:
                 cmd += " --plot-blind"
             if options.lumiLabel:
