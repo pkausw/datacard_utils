@@ -136,6 +136,7 @@ def load_file_keys(file):
     rfile = ROOT.TFile.Open(file)
     if rfile.IsOpen() and not rfile.IsZombie() and not rfile.TestBit(ROOT.TFile.kRecovered):
         return [x.GetName() for x in rfile.GetListOfKeys() if x.IsFolder()]
+    return list()
 
 
 def generate_plots(file, options):
@@ -172,8 +173,9 @@ def generate_plots(file, options):
     if options.total:
         lambda_func = lambda x: x in basename
     else:
-        lambda_func = lambda x: x in source_channel_list
+        lambda_func = lambda x: any(x in y for y in source_channel_list)
     relevant_channels = list(filter(lambda_func, labels.keys()))
+
     for channel in relevant_channels:
         final_channel = channel if prefix == "" \
                             else "_".join([prefix, channel])
