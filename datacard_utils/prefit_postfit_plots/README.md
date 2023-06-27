@@ -58,7 +58,7 @@ python PlotScript.py -p plotconfig.py --combineflag shapes_prefit -r path/to/inp
 , where `CHANNEL_YOU_WANT_TO_DRAW` is the name of the channel you would like to draw as specified in the corresponding datacard.
 
 If you would like to produce the plots for all channels in one go, you can also use the wrapper `draw_prefit_postfit.py`.
-You need to provide a .json file containing the labels to draw (e.g. [config_labels.json](config_labels.json) in this repo) and the plotconfig to be parsed to the `PlotScript` (e.g. [plotconfig_FHCRs.py](plotconfig_FHCRs.py)).
+You need to provide a .json file containing the labels to draw (e.g. [this](./config_labels_other_SL_cats.json) file in this repo) and the plotconfig to be parsed to the `PlotScript` (e.g. [plotconfig_FHCRs.py](./plotconfig_FHCRs.py)).
 For more options, please have a look at the help function of the wrapper.
 
 To draw prefit and postfit plots for the respective channels, you can use `../PreFitPostFitPlots/draw_prefit_postfit.py`.
@@ -67,6 +67,12 @@ Example:
 ```bash
 python draw_prefit_postfit.py -l config_labels_other_SL_cats.json -p plotconfig_FHCRs_blinded.py -s path/to/file/with/prefitpostfit_shapes.root -d path/to/original/datacard
 ```
+
+You can also use [draw_prefit_postfit.py](./draw_prefit_postfit.py) to draw the full Run-II distributions using the option `--total`.
+Note that when producing these distributions with the CombineHarvester, the "usual" naming scheme is broken and the distributions are located in a folder called e.g. `total_prefit`.
+In order to match the entry in the `labels_config` file, the name of the source file name must include the key in the config.
+For example, if you want to draw something with the options specified under the key `OBSERVABLE_NAME_1`, the .root file containing the distributions must contain `OBSERVABLE_NAME_1` in its name (e.g. `some_prefix_OBSERVABLE_NAME_1_some_suffix.root`).
+The final plot is then saved as e.g. `OBSERVABLE_NAME_1_prefit.pdf` for prefit distributions.
 
 For additional information about the different options, please have a look at `python ../PreFitPostFitPlots/draw_prefit_postfit.py -h`
 
