@@ -438,7 +438,7 @@ class DrawHistograms:
                     errorband=None, background=None, displayname=None, logoption=False, shape=False,
                     normalize=False, combineflag=False, splitlegend=False, datalabel="data",
                     sortedProcesses=False, yLabel="Events expected", xLabel = None, dontScaleSignal=False,
-                    divideByBinWidth = False):
+                    divideByBinWidth = False, onlyMainDivisionsXaxis=False):
         self.PlotList       = PlotList
         self.canvasName     = canvasName
         self.data           = data 
@@ -470,6 +470,7 @@ class DrawHistograms:
         self.dontScaleSignal = dontScaleSignal
         self.ratio_lower_bound = 0.5
         self.ratio_upper_bound = 1.5
+        self.onlyMainDivisionsXaxis = onlyMainDivisionsXaxis
     # ===============================================
     # DRAW HISTOGRAMS ON CANVAS
     # ===============================================
@@ -572,6 +573,12 @@ class DrawHistograms:
         else:
             firstHist.GetXaxis().SetTitle(canvaslabel)
             firstHist.SetTitle("")
+
+        """
+        Set N divisions X axis
+        """
+        if self.onlyMainDivisionsXaxis:
+            firstHist.GetXaxis().SetNdivisions(firstHist.GetNbinsX())
 
         """
         Draws first hist
@@ -828,6 +835,8 @@ class DrawHistograms:
 
         line.GetYaxis().SetTitleOffset(0.5)
         line.GetYaxis().SetNdivisions(505)
+        if self.onlyMainDivisionsXaxis: 
+            line.GetXaxis().SetNdivisions(line.GetNbinsX())
         for i in range(line.GetNbinsX()+1):
             line.SetBinContent(i, 1)
             line.SetBinError(i, 1)
