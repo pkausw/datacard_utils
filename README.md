@@ -92,3 +92,25 @@ The rest of the workflow is the same as for the other datacards.
 
 You should use this script to modify basic datacards for the different input channels.
 After this, you can follow the instructions in the already established work flow.
+
+## Producing correlation matrices
+
+Correlation matrices can be produced using the [corrMat.py](./corrMat.py) script.
+This can be used like this
+
+```bash
+python corrMat.py -f FIT_RESULT_OBJECT path/to/file_with_roofitresult.root -o . -t name_config_for_nuisance.json
+```
+
+where
+- `-f` specifies the name of the `RooFitResult` object in the source file. This will be
+  - `fit_s` for s+b fit or `fit_b` for background-only fit if you used the `FitDiagnostics` method
+  - `fit_mdf` if you used the `MultiDimFit` method
+- `-o`: path to the output directory in which you want to save the files in
+- `-t`: path to a config containing clear names for the parameters. This follows the conventions used for the CombineHarvester, e.g. [this config](./impact_scripts/scripts/nuisance_names.json) that is used for the impacts.
+
+Additionally, the script requires the path to the file containing the fit results as positional arguments.
+
+This will produce two plots: One containing the full correlation matrix, and one that only include the correlations between POIs (everything that starts with `r_`).
+You can also specify a list of parameters that you want to use to construct a correlation matrix with the `-a` option.
+For more information, please use the help function with `python corrMat.py -h`.
