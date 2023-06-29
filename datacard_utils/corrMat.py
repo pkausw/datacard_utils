@@ -2,8 +2,14 @@ import ROOT
 import glob
 from argparse import ArgumentParser
 import os
+import sys
 import json
 
+thisdir = os.path.realpath(os.path.dirname(__file__))
+if not thisdir in sys.path:
+    sys.path.append(thisdir)
+
+from base.CMS_pad import CMS_pad
 
 ROOT.gROOT.SetBatch(True)
 ROOT.PyConfig.IgnoreCommandLineOptions = True
@@ -12,16 +18,25 @@ ROOT.gStyle.SetPaintTextFormat(".3f")
 #ROOT.gStyle.SetOptTitle(0)
 
 
-def create_matrix(fitResult, params, name, outpath, param_names):
-    canvas = ROOT.TCanvas(name, "", 2524, 2524)
-
-    canvas.SetRightMargin(.15)
-    canvas.SetLeftMargin(0.15)
-    canvas.SetBottomMargin(0.15)
+def create_matrix(
+    fitResult,
+    params,
+    name,
+    outpath,
+    param_names,
+    xlabelsize=0.03,
+    ylabelsize=0.03,
+    textsize=1.5,
+):
+    # canvas = ROOT.TCanvas(name, "", 2524, 2524)
+    canvas = CMS_pad(extraText="", )
+    canvas.getCanvas().SetRightMargin(.15)
+    # canvas.SetLeftMargin(0.15)
+    # canvas.SetBottomMargin(0.15)
     corr_mat = ROOT.TH2F("cor_{}".format(name),"",len(params),0,len(params),len(params),0,len(params))
     corr_mat.SetStats(0)
-    corr_mat.GetXaxis().SetLabelSize(0.03)
-    corr_mat.GetYaxis().SetLabelSize(0.03)
+    corr_mat.GetXaxis().SetLabelSize(xlabelsize)
+    corr_mat.GetYaxis().SetLabelSize(ylabelsize)
 
 
 
@@ -37,12 +52,12 @@ def create_matrix(fitResult, params, name, outpath, param_names):
     corr_mat.GetZaxis().SetRangeUser(-1,1)
     # corr_mat.SetTitle(name)
     if len(params)<10:
+        corr_mat.SetMarkerSize(textsize)
         corr_mat.Draw("colz text1")
     else:
         corr_mat.Draw("colz")
     outname = os.path.join(outpath, name)
-    canvas.SaveAs(outname+".png")
-    canvas.SaveAs(outname+".pdf")
+    canvas.saveCanvas(outname=outname)
     return corr_mat
 
 
@@ -129,10 +144,20 @@ def main():
         print(sigparams)
 
         corr_mat = create_matrix(fitResult = fit_s, params = params, name = name, outpath = outpath, param_names=param_names)    
+        # outroot.WriteTObject(corr_mat, corr_mat.GetName())
         outroot.WriteTObject(corr_mat, corr_mat.GetName())
 
-        corrMat = create_matrix(fitResult = fit_s, params = sigparams, name = name+"_Sig", outpath = outpath, param_names=param_names)
+        corrMat = create_matrix(
+            fitResult=fit_s,
+            params=sigparams,
+            name=name+"_Sig",
+            outpath=outpath,
+            param_names=param_names,
+            xlabelsize=0.1,
+            ylabelsize=0.1
+        )
         
+        # outroot.WriteTObject(corrMat, corrMat.GetTitle())
         outroot.WriteTObject(corrMat, corrMat.GetTitle())
 
         if additional_params:

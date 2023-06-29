@@ -238,3 +238,19 @@ cd -
             print ("File %s is not intact!" % filename)
         if f.IsOpen(): f.Close()
         return None
+
+    def save_canvas(self, c, outname, extensions=None):
+        outname = self.treat_special_chars(outname)
+        if not extensions:
+            extensions = ["pdf", "png"]
+        for ext in extensions:
+            c.SaveAs(".".join([outname, ext]))
+    
+    def treat_special_chars(self, string):
+        string = string.replace("#", "")
+        string = string.replace(" ", "_")
+        string = string.replace("{", "")
+        string = string.replace("}", "")
+        string = string.replace("?", "X")
+        string = string.replace("*", "X")
+        return string
