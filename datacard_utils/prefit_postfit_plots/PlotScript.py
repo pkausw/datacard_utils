@@ -176,6 +176,8 @@ styleOptions.add_option("--ratio-lower-bound", dest="ratio_lower_bound", default
         help= "set lower bound for the ratio plot range. Defaults to 0.5")
 styleOptions.add_option("--ratio-upper-bound", dest="ratio_upper_bound", default = 1.5, type = "float",
         help= "set upper bound for the ratio plot range. Defaults to 1.5")
+styleOptions.add_option("--onlyMainDivisionsXaxis", dest="onlyMainDivisionsXaxis", default=False,
+        help= "draw only main divisions on x-axis, e.g. for NJets plots. Default False.")
 parser.add_option_group(styleOptions)
 
 """
@@ -626,7 +628,7 @@ DrawHistogramObject = Plots.DrawHistograms(PlotList,options.channelName,
                                 combineflag=combineflag,shape=shape,
                                 sortedProcesses=sortedProcesses,
                                 yLabel=yLabel, xLabel = xLabel, dontScaleSignal=options.dontScaleSignal,
-                                divideByBinWidth = divideByBinWidth
+                                divideByBinWidth = divideByBinWidth, onlyMainDivisionsXaxis=options.onlyMainDivisionsXaxis
                                 )
 
 
