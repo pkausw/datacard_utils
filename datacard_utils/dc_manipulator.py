@@ -53,9 +53,9 @@ def remove_minor_JEC(harvester):
     for decay in "hbb hcc hzg hgluglu hgg hww htt hzz".split():
         for proc in "tHq tHW".split():
             processes.append("{}_{}".format(proc, decay))
-    params = """CMS_res_j*
-        CMS_scale*_j
-        CMS_scale*_j_*
+    params = """CMS_res_j.*
+        CMS_scale.*_j
+        CMS_scale.*_j_.*
         """.split()
     
     np_manipulator = NuisanceManipulator()
@@ -333,13 +333,12 @@ def transfer_ue(target, transfer_from):
     target_eras = target.era_set()
     if len(eras) != 1:
         raise NotImplementedError("Can only transfer UE uncertainty if one source era is given!")
-    
+
     np_manipulator = NuisanceManipulator()
 
     # loop through the available source bins
     source_bins = source_harvester.bin_set()
     ue_wildcard = "CMS_ttHbb_UE.*"
-            
 
     for b in source_bins:
         # load the processes for which UE is available in the source
@@ -350,9 +349,12 @@ def transfer_ue(target, transfer_from):
         np_manipulator.remove_nuisances_from_procs(target, bins=[str(b)])
 
         for e in target_eras:
-            sub_source.ForEachSyst(
-                lambda s: target.InsertSystematic(np_manipulator.copy_and_rename(s, era=e))
-            )
+            for target_b in target.bin_set():
+                sub_source.ForEachSyst(
+                    lambda s: target.InsertSystematic(
+                        np_manipulator.copy_and_rename(s, bin=target_b, era=e)
+                    )
+                )
 
 def main(**kwargs):
 
