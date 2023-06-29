@@ -612,9 +612,9 @@ if divideByBinWidth:
         dataHist.Scale(1., "width")
 
 if unit:
-    xLabel = xLabel+" in {}".format(unit)
+    xLabel = xLabel+" ({})".format(unit)
     if divideByBinWidth:
-        yLabel = yLabel+" in 1/{}".format(unit)
+        yLabel = yLabel+" (1/{})".format(unit)
 print("="*130)
 print("ratio: {}".format(ratio))
 print("="*130)
