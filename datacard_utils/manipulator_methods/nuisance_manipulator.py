@@ -48,7 +48,7 @@ class NuisanceManipulator(object):
                 and (p.channel()==s.channel()) and (p.bin_id()==s.bin_id()) \
                 and (p.mass()==s.mass()))
 
-    def copy_and_rename(self, syst, suffix=None, era=None):
+    def copy_and_rename(self, syst, suffix=None, bin=None, era=None):
         copy_func = getattr(syst, "Copy", None)
         if not callable(copy_func):
             msg = " ".join("""This version of CombineHarvester does not include the 
@@ -61,8 +61,12 @@ class NuisanceManipulator(object):
             name = "_".join([name, suffix])
         new.set_name(name)
 
+        # overwrite nuisance parameter information if needed
         if era:
-            new.set_era = era
+            new.set_era(era)
+        if bin:
+            new.set_bin(bin)
+
 
         return new
 
