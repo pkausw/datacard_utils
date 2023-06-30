@@ -36,6 +36,7 @@ class ValidationInterface(ProcessManipulator):
         self.__validation_dict = None
         self.__do_smallShapeEff = True
         self.__do_smallSigCut = True
+        self.__remove_empty_shapes = True
         self.__cmd_template = " ".join("ValidateDatacards.py -p 3 \
             --mass 125.38 --jsonFile {outpath} {input_path}".split())
         self.__np_manipulator = NuisanceManipulator()
@@ -43,6 +44,7 @@ class ValidationInterface(ProcessManipulator):
         self.__do_smallBkgCut = True
         self.__symmetrize = False
         self.__channels_to_combine = []
+        
     
     @property
     def verbosity(self):
@@ -394,6 +396,28 @@ class ValidationInterface(ProcessManipulator):
                 self.drop_small_processes(harvester = harvester, chan = [chan], \
                                 era = [era], bins = these_bins)
                 
+    def drop_empty_shapes(self, harv, validation_dict):
+        """
+        input structure:
+        {
+            nuisance_name: {
+                bin: {
+                    process: {
+                        val_u: XXX,
+                        val_d: YYY,
+                    }
+                }
+            }
+        }
+        """
+        for nuisance in validation_dict:
+            for b in validation_dict[nuisance]:
+                self.__np_manipulator.to_remove = {
+                    nuisance: list(validation_dict[nuisance][b].keys())
+                }
+                self.__np_manipulator.remove_nuisances_from_procs(
+                    harvester=harv, bins=[str(b)]
+                )
 
     def apply_validation(self, harvester,  eras = [".*"], \
                             channels = [".*"], bins = [".*"]):
@@ -420,10 +444,15 @@ class ValidationInterface(ProcessManipulator):
                 self.drop_small_signals(harvester, change_dict = subdict,
                                         eras = eras, channels = channels,
                                         bins = bins)
-
                 if self.verbosity > 15:
                     print("Processes after small signal pruning:")
                     harvester.PrintProcs()
+            if "emptySystematicShape" in self.validation_dict and self.__remove_empty_shapes:
+                print("removing systematics with empty shapes")
+                subdict = self.validation_dict["emptySystematicShape"]
+                self.drop_empty_shapes(harvester, subdict)
+
+                
         if self.__do_smallBkgCut:
             self.drop_small_backgrounds(harvester, eras = eras, 
                                         channels = channels,
