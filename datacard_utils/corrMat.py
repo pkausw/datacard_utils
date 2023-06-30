@@ -26,11 +26,14 @@ def create_matrix(
     param_names,
     xlabelsize=0.03,
     ylabelsize=0.03,
-    textsize=1.5,
+    textsize=1.8,
 ):
     # canvas = ROOT.TCanvas(name, "", 2524, 2524)
-    canvas = CMS_pad(extraText="", )
-    canvas.getCanvas().SetRightMargin(.15)
+    canvas = CMS_pad(extraText="", left_margin=0.12,
+                     right_margin=0.14, bottom_margin=0.15, top_margin=0.1,
+                     width=2524, height=2524
+                     )
+    # canvas.getCanvas().SetRightMargin(.15)
     # canvas.SetLeftMargin(0.15)
     # canvas.SetBottomMargin(0.15)
     corr_mat = ROOT.TH2F("cor_{}".format(name),"",len(params),0,len(params),len(params),0,len(params))
