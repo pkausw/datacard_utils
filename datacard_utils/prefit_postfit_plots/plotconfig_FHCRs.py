@@ -239,8 +239,8 @@ systematics = [   ]
 
 # order of the stack processes, descending from top to bottom
 sortedprocesses = [   
-    'signal',
-    'total_signal',
+    #'signal',
+    #'total_signal',
     'multijet',
     'ttlf',
     'ttcc',
