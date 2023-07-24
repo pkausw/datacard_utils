@@ -139,9 +139,11 @@ plotOptions.add_option("--plot-blind", dest = "plot_blind", default = False, act
         help = "do not draw the data points")
 plotOptions.add_option("--hide-signal", dest = "hide_signal", default = False, action = "store_true", 
         help = "do not draw the total signal template")
-parser.add_option_group(plotOptions)
-parser.add_option("--stackPrefitSignal", dest="stack_prefit_signal", default = False, action = "store_true",
+
+plotOptions.add_option("--stackPrefitSignal", dest="stack_prefit_signal", default = False, action = "store_true",
         help = "include prefit signal to the stack")
+
+parser.add_option_group(plotOptions)
 
 """
 Aesthetic options
