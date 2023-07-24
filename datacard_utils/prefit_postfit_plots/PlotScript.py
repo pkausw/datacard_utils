@@ -140,7 +140,8 @@ plotOptions.add_option("--plot-blind", dest = "plot_blind", default = False, act
 plotOptions.add_option("--hide-signal", dest = "hide_signal", default = False, action = "store_true", 
         help = "do not draw the total signal template")
 parser.add_option_group(plotOptions)
-
+parser.add_option("--stackPrefitSignal", dest="stack_prefit_signal", default = False, action = "store_true",
+        help = "include prefit signal to the stack")
 
 """
 Aesthetic options
@@ -469,7 +470,7 @@ for sample in plottingsamples:
 Get errorband and signalhist in case of combine output file,
 else no signal
 """
-
+stack_prefit_signal = options.stack_prefit_signal
 background = None
 if combineflag:
     str_total = "total" if not options.drawFromHarvester else "TotalProcs"
@@ -479,8 +480,10 @@ if combineflag:
                      else "TotalSig"
     totalsignalkey  = nominalKey.replace(procIden, str_total_sig)
     totalsignal     = rootFile.Get(totalsignalkey)
+    signal_for_shape= rootFile.Get(totalsignalkey).Clone() # duplicate for line signal in pre-fit plot
     if not binEdges is None:
         totalsignal = Plots.updateBinEdges(totalsignal, binEdges)
+        signal_for_shape = Plots.updateBinEdges(signal_for_shape, binEdges)
 
     signallabel   = getParserConfigDefaultValue(parser=options.signallabel,config="signallabel",
                                             plotoptions=plotoptions,defaultvalue="signal")
@@ -488,7 +491,8 @@ if combineflag:
                                             plotoptions=plotoptions,defaultvalue=ROOT.kBlue)
     """
     add signal to stack plot if already fitted (post fit),
-    else keep as shape plot
+    else check the option stack_prefit_signal. If false, prefit signal is not added to the stack, otherwise it is.
+    In any case, the signal is shown as a line in prefit plots.
     """
     if combineflag=="shapes_fit_s":
         bkgKey = nominalKey.replace(procIden, str_total)
@@ -497,10 +501,21 @@ if combineflag:
                                         typ="bkg", OverUnderFlowInc=True, color = signalcolor)
         options.ratio = "#frac{data}{total MC}"
     else:
-        bkgKey = nominalKey.replace(procIden, str_total_bkg)
-        if not multisignal:
-            PlotList["total_signal"] = Plots.Plot(totalsignal,"total_signal",label=signallabel,
-                                        typ="signal", OverUnderFlowInc=True, color = signalcolor)
+        if not stack_prefit_signal:
+            bkgKey = nominalKey.replace(procIden, str_total_bkg)
+            if not multisignal:
+                PlotList["signal"] = Plots.Plot(signal_for_shape,"signal",label=signallabel,
+                                                typ="signal", OverUnderFlowInc=True, color = signalcolor)
+        else:
+            #add prefit signal to stack, and show as line too
+            bkgKey = nominalKey.replace(procIden, str_total)
+            if not multisignal:
+                PlotList["total_signal"] = Plots.Plot(totalsignal,"total_signal",label=signallabel,
+                                           typ="bkg", OverUnderFlowInc=True, color = signalcolor)
+                PlotList["signal"] = Plots.Plot(signal_for_shape,"signal",label=signallabel,
+                                           typ="signal", OverUnderFlowInc=True, color = signalcolor)
+            options.ratio = "#frac{data}{total MC}"
+
     # from total background or total background+signal prediction histogram in mlfit file, get the error band
     if not xLabel == "" and not multisignal:
         PlotList["total_signal"].hist.SetTitle(xLabel)
