@@ -161,11 +161,11 @@ class Style:
         self.processes = { # label, color, line style, line width
             "data" : [ "Data",             1, 1, 1 ],
             "ttH"  : [ "t#bar{t}H",      601, 1, 1 ],
-            "ttH1" : [ "t#bar{t}H 1",      2, 1, 1 ],
-            "ttH2" : [ "t#bar{t}H 2",      2, 3, 1 ],
-            "ttH3" : [ "t#bar{t}H 3",      4, 1, 1 ],
-            "ttH4" : [ "t#bar{t}H 4",    604, 1, 1 ],
-            "ttH5" : [ "t#bar{t}H 5",    604, 3, 1 ],
+            "ttH1" : [ "t#bar{t}H 1",    604, 1, 1 ],
+            "ttH2" : [ "t#bar{t}H 2",    604, 3, 1 ],
+            "ttH3" : [ "t#bar{t}H 3",      2, 1, 1 ],
+            "ttH4" : [ "t#bar{t}H 4",      2, 3, 1 ],
+            "ttH5" : [ "t#bar{t}H 5",    418, 1, 1 ],
             "tHq"  : [ "tHq",            606, 1, 1 ],
             "tHW"  : [ "tHW",            603, 1, 1 ],
             "QCD"  : [ "QCD",            418, 1, 1 ],
@@ -398,7 +398,7 @@ def set_style(hist, process):
     hist.SetLineWidth(linewidth)
 
 
-def get_annotations(analysis_cfg, for_ratio=False):
+def get_annotations(analysis_cfg, y_scale, pad_position):
     """Return the separator lines and labels for channels, categories, nodes"""
 
     # Store bin position and which boundaries are crossed
@@ -463,7 +463,7 @@ def get_annotations(analysis_cfg, for_ratio=False):
     # categories, and nodes
     lines = []
     # Iterate over all line infos
-    y1_ndc = ROOT.gPad.GetBottomMargin() if for_ratio else 0
+    y1_ndc = ROOT.gPad.GetBottomMargin() if pad_position=="bottom" else 0
     for info in line_info:
         
         # line height and style depend on whether it separates
@@ -473,7 +473,7 @@ def get_annotations(analysis_cfg, for_ratio=False):
             line_style = 1
             line_color = ROOT.kBlack
         if info[1]=="jettag":
-            y2_ndc = 1.-ROOT.gStyle.GetPadTopMargin()-0.24
+            y2_ndc = 1.-ROOT.gStyle.GetPadTopMargin()-0.24*(1.+0.5*(y_scale-1.))
             line_style = 1
             line_color = ROOT.kBlack
         if info[1]=="node":
@@ -484,7 +484,7 @@ def get_annotations(analysis_cfg, for_ratio=False):
             y2_ndc = 1.-ROOT.gStyle.GetPadTopMargin()-0.36
             line_style = 2
             line_color = ROOT.kBlack
-        if for_ratio:
+        if not pad_position=="top":
             y2_ndc = 1
 
         l = get_vertical_line(info[0], y1_ndc, y2_ndc)
@@ -495,46 +495,46 @@ def get_annotations(analysis_cfg, for_ratio=False):
     # create channel, jettag category, node labels
     labels = []
 
-    # if not the ratio plot
-    if not for_ratio:
+    # if for the top pad
+    if pad_position=="top":
         # create channel labels
         # also include b-tag label, since same selection in a channel
-        y2_ndc = 1.-ROOT.gStyle.GetPadTopMargin()-0.06
+        y2_ndc = 1.-ROOT.gStyle.GetPadTopMargin()-0.06*y_scale
         for i,info in enumerate(channel_info):
             x = info[0]+0.005 if i > 0 else info[0]+0.015
             btags = "#geq3" if info[1]=="DL" else "#geq4"
             labels.append(
                 get_label(
                     x=x, y=y2_ndc,
-                    txt=f"{info[1]}", size=0.06
+                    txt=f"{info[1]}", size=0.06*y_scale
                 )
             )
             labels[-1].SetTextFont(62)
             labels.append(
                 get_label(
-                    x=x, y=y2_ndc-0.14,
-                    txt=f"{btags} b-tags", size=0.05
+                    x=x, y=y2_ndc-0.15,
+                    txt=f"{btags} b-tags", size=0.05*y_scale
                 )
             )
             
         # create jettag category labels
-        y2_ndc = 1.-ROOT.gStyle.GetPadTopMargin()-0.24
+        y2_ndc = 1.-ROOT.gStyle.GetPadTopMargin()-0.24*(1.+0.5*(y_scale-1.))
         for i,info in enumerate(jettag_info):
             x = info[0]+0.005 if i > 0 else info[0]+0.015
             labels.append(
                 get_label(
                     x=x, y=y2_ndc,
-                    txt=style.jettag_tex_name(info[1]), size=0.05,
-                    align=13
+                    txt=style.jettag_tex_name(info[1]),
+                    size=0.05*y_scale, align=13
                 )
             )
             if analysis_cfg["stxs"]:
                 # create STXS bin label
                 labels.append(
                     get_label(
-                        x=x, y=y2_ndc-0.09,
-                        txt="p_{T}^{H} bin", size=0.05,
-                        align=13
+                        x=x, y=y2_ndc-0.07,
+                        txt="p_{T}^{H} bin",
+                        size=0.05*y_scale, align=13
                     )
                 )
             
@@ -551,7 +551,7 @@ def get_annotations(analysis_cfg, for_ratio=False):
                     labels.append(
                         get_label(
                             x=x, y=y2_ndc,
-                            txt=txt, size=0.043, align=13
+                            txt=txt, size=0.043*y_scale, align=13
                         )
                     )
                 else:
@@ -560,8 +560,8 @@ def get_annotations(analysis_cfg, for_ratio=False):
                     if analysis_cfg["stxs"]: # for STXS plot
                         labels.append(
                             get_label(
-                                x=x, y=y2_ndc-0.04,
-                                txt=txt, size=0.043, align=13
+                                x=x, y=y2_ndc-0.045,
+                                txt=txt, size=0.043*y_scale, align=13
                             )
                         )
                     else: # for inclusive plot
@@ -572,13 +572,13 @@ def get_annotations(analysis_cfg, for_ratio=False):
                         labels.append(
                             get_label(
                                 x=x, y=y2_ndc,
-                                txt=txt, size=0.043, align=13
+                                txt=txt, size=0.043*y_scale, align=13
                             )
                         )
                         labels.append(
                             get_label(
                                 x=x, y=y2_ndc-0.04,
-                                txt="cat.", size=0.043, align=13
+                                txt="cat.", size=0.043*y_scale, align=13
                             )
                         )
             
@@ -586,7 +586,7 @@ def get_annotations(analysis_cfg, for_ratio=False):
     return lines, labels
 
 
-def create_cms_label(plot_cfg):
+def create_cms_label(plot_cfg, y_scale):
     """Return CMS label"""
 
     # Coordinates of bottom-left corner
@@ -598,12 +598,12 @@ def create_cms_label(plot_cfg):
         txt="#bf{CMS}"
     if plot_cfg["publication"]=="preliminary":
         txt="#bf{CMS} #it{Preliminary}"
-    l = get_label(x, y, txt=txt, size=0.09, align=11)
+    l = get_label(x, y, txt=txt, size=0.09*y_scale, align=11)
 
     return l
 
 
-def create_lumi_label(year):
+def create_lumi_label(year, y_scale):
     """Return lumi label"""
 
     # Coordinates of bottom-left corner
@@ -620,17 +620,17 @@ def create_lumi_label(year):
         lumi = "59.7"
 
     # Create label
-    l = get_label(x, y, txt=f"{lumi} fb^{{-1}} (13 TeV)", size=0.06, align=31)
+    l = get_label(x, y, txt=f"{lumi} fb^{{-1}} (13 TeV)", size=0.06*y_scale, align=31)
 
     return l
 
 
-def create_fit_label(fit):
+def create_fit_label(fit, y_scale):
     """Prefit or Postfit"""
     
     # Coordinates of bottom-left corner
     x = 1.-ROOT.gStyle.GetPadRightMargin()-0.08
-    y = 1.-ROOT.gStyle.GetPadTopMargin()-0.085
+    y = 1.-ROOT.gStyle.GetPadTopMargin()-0.085*y_scale
 
     # Create label
     if fit=="prefit":
@@ -638,7 +638,7 @@ def create_fit_label(fit):
     if fit=="postfit":
         txt = "Postfit"
         x -= 0.01
-    l = get_label(x, y, txt=txt, size=0.07, align=11)
+    l = get_label(x, y, txt=txt, size=0.07*y_scale, align=11)
     l.SetTextFont(62)
 
     return l
@@ -662,11 +662,11 @@ def get_label(x, y, txt="", size=0.05, color=ROOT.kBlack, align=12):
     l.SetTextSize(size)
     return l
 
-def create_legend(analysis_cfg):
+def create_legend(analysis_cfg, y_scale):
     x0 = 0.39
     x1 = 0.765
     y1 = 1.-ROOT.gStyle.GetPadTopMargin()-0.05
-    y0 = y1-0.17
+    y0 = y1-0.17*y_scale
     # adjust for STXS plots
     if analysis_cfg["stxs"]:
         x0 -= 0.20
@@ -678,7 +678,7 @@ def create_legend(analysis_cfg):
     l.SetFillColor(0)
     l.SetFillStyle(0)
     l.SetTextFont(42)
-    l.SetTextSize(0.05)
+    l.SetTextSize(0.05*y_scale)
     return l
 
 
@@ -701,7 +701,7 @@ def y_NDC(y):
     return (y - ROOT.gPad.GetY1()) / (ROOT.gPad.GetY2()-ROOT.gPad.GetY1())
 
 
-def set_gstyle():
+def set_gstyle(additional_signal_pad=False):
     ROOT.gStyle.Reset()
 
     ROOT.gStyle.SetErrorX(0)
@@ -717,8 +717,12 @@ def set_gstyle():
     ROOT.gStyle.SetFrameLineWidth(1)
     ROOT.gStyle.SetPadLeftMargin(0.07) 
     ROOT.gStyle.SetPadRightMargin(0.01)
-    ROOT.gStyle.SetPadTopMargin(0.10)
-    ROOT.gStyle.SetPadBottomMargin(0.37)
+    if additional_signal_pad:
+        ROOT.gStyle.SetPadTopMargin(0.12)
+        ROOT.gStyle.SetPadBottomMargin(0.4)
+    else:
+        ROOT.gStyle.SetPadTopMargin(0.10)
+        ROOT.gStyle.SetPadBottomMargin(0.37)
 
     # For the axis
     ROOT.gStyle.SetAxisColor(1,"XYZ")
@@ -816,19 +820,40 @@ def get_ratios(data, denominator, signals=[]):
     return r_data, r_sigs
 
 
-def create_canvas():
+def add_histos(histos):
+    name = str(np.random.rand())
+    h_added = histos[0].Clone(name)
+    for h in histos[1:]:
+        h_added.Add(h)
+
+    return h_added
+    
+
+def create_canvas(additional_signal_pad=False):
     
     name = str(np.random.rand())
-    c = ROOT.TCanvas(name,"",800,400) 
-    c.Divide(1,2)
-    
-    # top canvas for histograms
-    c.GetPad(1).SetPad(0.0,0.3,1.0,1.0)
-    c.GetPad(1).SetBottomMargin(0) 
+    c = ROOT.TCanvas(name,"",800,400)
 
-    # bottom canvas for ratios
-    c.GetPad(2).SetPad(0.0,0.0,1.0,0.3)
-    c.GetPad(2).SetTopMargin(0)
+    if additional_signal_pad:
+        c.Divide(1,3)
+        # top canvas for histograms
+        c.GetPad(1).SetPad(0.0, 0.44, 1.0, 1.0)
+        c.GetPad(1).SetBottomMargin(0) 
+        # midle canvas for signals
+        c.GetPad(2).SetPad(0.0, 0.28, 1.0, 0.44)
+        c.GetPad(2).SetTopMargin(0)
+        c.GetPad(2).SetBottomMargin(0) 
+        # bottom canvas for ratios
+        c.GetPad(3).SetPad(0.0, 0.0, 1.0, 0.28)
+        c.GetPad(3).SetTopMargin(0)
+    else:
+        c.Divide(1,2)
+        # top canvas for histograms
+        c.GetPad(1).SetPad(0.0, 0.3, 1.0, 1.0)
+        c.GetPad(1).SetBottomMargin(0) 
+        # bottom canvas for ratios
+        c.GetPad(2).SetPad(0.0, 0.0, 1.0, 0.3)
+        c.GetPad(2).SetTopMargin(0)
 
     c.cd()
     
@@ -854,7 +879,7 @@ def make_frame_ratios(nbins, ratio_type, year):
     frame.SetLineColor(ROOT.kBlack)
     frame.SetLineStyle(2)
     frame.GetYaxis().SetNdivisions(505)
-    frame.GetXaxis().SetTitle(f"{year} analysis bins")
+    frame.GetXaxis().SetTitle(f"{year} discriminant bins")
     frame.GetYaxis().SetRangeUser(0.56,1.44)
     if ratio_type=="ratio_to_bkg":
         frame.GetYaxis().SetTitle("Events/bkg")
@@ -864,11 +889,28 @@ def make_frame_ratios(nbins, ratio_type, year):
     return frame
 
 
-def make_frames(nbins, ratio_type, year):
+def make_frame_signal_pad(nbins):
+    name = str(np.random.rand())
+    frame = ROOT.TH1D(name,"",nbins,0,nbins)
+    frame.SetLineColor(ROOT.kBlack)
+    frame.GetYaxis().SetNdivisions(505)
+    frame.GetYaxis().SetRangeUser(1.1E-2,18)
+    frame.GetYaxis().SetTitle("Signal")
+    
+    # for log scale: the global offset value is interpreted
+    # differently depending on log/linear scale... Jesus Christ
+    # https://sft.its.cern.ch/jira/browse/ROOT-7433
+    frame.GetYaxis().SetLabelOffset(-0.008)
+
+    return frame
+
+
+def make_frames(nbins, ratio_type, year, additional_signal_pad=False):
     """Return frames for top and bottom canvas"""
 
     frame_histos = make_frame_histos(nbins)
     frame_ratios = make_frame_ratios(nbins, ratio_type, year)
+    frame_signal = make_frame_signal_pad(nbins)
 
     # set tick length
     # this is totally crazy how it works:
@@ -880,8 +922,18 @@ def make_frames(nbins, ratio_type, year):
     frame_histos.GetXaxis().SetTickLength(base_length*scale_xy)
     frame_ratios.GetYaxis().SetTickLength(base_length*1.5)
     frame_ratios.GetXaxis().SetTickLength(base_length*scale_xy*2.5)
+
+    if additional_signal_pad:
+        scale_xy = 4.
+        frame_histos.GetYaxis().SetTickLength(base_length)
+        frame_histos.GetXaxis().SetTickLength(base_length*scale_xy)
+        frame_signal.GetYaxis().SetTickLength(base_length*0.9)
+        frame_signal.GetXaxis().SetTickLength(base_length*scale_xy*4.0)
+        frame_ratios.GetYaxis().SetTickLength(base_length*1.5)
+        frame_ratios.GetXaxis().SetTickLength(base_length*scale_xy*2.0)
+
     
-    return frame_histos, frame_ratios
+    return frame_histos, frame_ratios, frame_signal
     
 
 
@@ -910,13 +962,15 @@ def make_plot(analysis_cfg, plot_cfg):
         s_filled = s.Clone()
         s_filled.SetFillColor(s.GetLineColor())
         bkgsig_stack.Add(s_filled)
-
-    if analysis_cfg["stxs"]:
-        for s in signals:
-            s.SetLineWidth(2)
-
+    tot_sig = add_histos(signals)
+    tot_sig.SetLineColor( style.process_color("ttH") )
+    tot_sig.SetLineStyle( style.process_linestyle("ttH") )
+        
     if plot_cfg["ratio"]=="ratio_to_bkg":
-        ratio_data, ratio_signals = get_ratios(data, tot_bkg, signals)
+        if plot_cfg["additional_signal_pad"]:
+            ratio_data, ratio_signals = get_ratios(data, tot_bkg, [tot_sig])
+        else:
+            ratio_data, ratio_signals = get_ratios(data, tot_bkg, signals)
     else:
         ratio_data, ratio_signals = get_ratios(data, tot_procs)
 
@@ -924,40 +978,56 @@ def make_plot(analysis_cfg, plot_cfg):
     error_histo = get_error_band(tot_procs)
     error_ratio = get_error_band(tot_procs, for_ratio=True)
             
-    frame_histos, frame_ratios = make_frames(data.GetNbinsX(), plot_cfg["ratio"], analysis_cfg["year"])
-            
-    can = create_canvas()
+    frame_histos, frame_ratios, frame_signal = make_frames(data.GetNbinsX(), plot_cfg["ratio"], analysis_cfg["year"], plot_cfg["additional_signal_pad"])
+
+    y_scale = 1.0
+    if plot_cfg["additional_signal_pad"]:
+        y_scale = 1.25
+    
+    can = create_canvas(plot_cfg["additional_signal_pad"])
     can.cd(1)
     frame_histos.Draw()
     bkgsig_stack.Draw("HISTsame")
     error_histo.Draw("2same")
     tot_procs.Draw("HISTsame")
-    for s in signals:
-        s.Draw("HISTsame")
+    if not plot_cfg["additional_signal_pad"]:
+        for s in signals:
+            s.Draw("HISTsame")
     data.Draw("PEsame")
 
-    legend = create_legend(analysis_cfg)
+    legend = create_legend(analysis_cfg, y_scale)
     for i in reversed(legend_entries):
         legend.AddEntry(i[0], i[1], i[2])
     legend.AddEntry(data, "Data", "PL")
     legend.AddEntry(error_histo, "Syst", "F")
     legend.Draw()
 
-    lines_categories_1, labels_categories_1 = get_annotations(analysis_cfg, for_ratio=False)
+    lines_categories_1, labels_categories_1 = get_annotations(analysis_cfg, y_scale=y_scale, pad_position="top")
     for line in lines_categories_1:
         line.Draw()
     for label in labels_categories_1:
         label.Draw()
-    label_cms = create_cms_label(plot_cfg)
+    label_cms = create_cms_label(plot_cfg, y_scale)
     label_cms.Draw()
-    label_lumi = create_lumi_label(analysis_cfg["year"])
+    label_lumi = create_lumi_label(analysis_cfg["year"], y_scale)
     label_lumi.Draw()
-    label_fit = create_fit_label(analysis_cfg["fit"])
+    label_fit = create_fit_label(analysis_cfg["fit"], y_scale)
     label_fit.Draw()
     ROOT.gPad.SetLogy(True)
     ROOT.gPad.RedrawAxis()
 
     can.cd(2)
+    if plot_cfg["additional_signal_pad"]:
+        frame_signal.Draw()
+        for s in signals:
+            s.Draw("HISTsame")
+        lines_categories_2, labels_categories_2 = get_annotations(analysis_cfg, y_scale=y_scale, pad_position="middle")
+        for line in lines_categories_2:
+            line.Draw()
+        ROOT.gPad.SetLogy(True)
+        ROOT.gPad.RedrawAxis()
+        can.cd(3)
+        
     frame_ratios.Draw()
     error_ratio.Draw("2same")
     frame_ratios.Draw("HISTsame")
@@ -965,8 +1035,8 @@ def make_plot(analysis_cfg, plot_cfg):
         s.Draw("HISTsame")
     frame_ratios.Draw("HISTsame")
     ratio_data.Draw("PE0same")
-    lines_categories_2, labels_categories_2 = get_annotations(analysis_cfg, for_ratio=True)
-    for line in lines_categories_2:
+    lines_categories_3, labels_categories_3 = get_annotations(analysis_cfg, y_scale=y_scale, pad_position="bottom")
+    for line in lines_categories_3:
         line.Draw()
     ROOT.gPad.SetLogy(False)
     ROOT.gPad.RedrawAxis()
@@ -1006,11 +1076,6 @@ def print_setup(analysis_cfg):
 
 if __name__ == '__main__':
 
-    # global style object    
-    style = Style()
-    set_gstyle()
-
-    
     processes_incl = [
         # data
         Process(name="data", type="data",       templates=["data_obs"]),
@@ -1128,9 +1193,11 @@ if __name__ == '__main__':
     }
     
     plot_cfg = {
+        "additional_signal_pad" : False,
         "ratio" : "ratio_to_bkg",
         "out_name_prefix" : "NOT SET",
-        "publication" : "preliminary"
+        #"publication" : "preliminary"
+        "publication" : "paper"
     }
 
 
@@ -1140,13 +1207,20 @@ if __name__ == '__main__':
     if plot_stxs:
         analysis_cfg = analysis_cfg_stxs
         plot_cfg["out_name_prefix"] = "summary_stxs"
+        plot_cfg["additional_signal_pad"] = True
     else:
         analysis_cfg = analysis_cfg_incl
         plot_cfg["out_name_prefix"] = "summary_incl"
 
+
+    # global style object    
+    style = Style()
+    set_gstyle(plot_cfg["additional_signal_pad"])
+    print_setup(analysis_cfg)
         
     for fit in ["prefit", "postfit"]:
         analysis_cfg["fit"] = fit
         for year in ["2016", "2017", "2018"]:
             analysis_cfg["year"] = year
-            make_plot(analysis_cfg=analysis_cfg, plot_cfg=plot_cfg) 
+            make_plot(analysis_cfg=analysis_cfg, plot_cfg=plot_cfg)
+            
