@@ -181,6 +181,11 @@ styleOptions.add_option("--ratio-upper-bound", dest="ratio_upper_bound", default
         help= "set upper bound for the ratio plot range. Defaults to 1.5")
 styleOptions.add_option("--onlyMainDivisionsXaxis", dest="onlyMainDivisionsXaxis", default=False,
         help= "draw only main divisions on x-axis, e.g. for NJets plots. Default False.")
+styleOptions.add_option("--yMin",dest="yMinUser", default=None, type = "float",
+        help="force range of y axis to start here. If None, default values are used.")
+styleOptions.add_option("--yMax",dest="yMaxUser", default=None, type = "float",
+        help="force range of y axis to end here. If None, default values are used.")
+
 parser.add_option_group(styleOptions)
 
 """
@@ -356,6 +361,8 @@ if combineflag:
         for i in range(binHist.GetNbinsX()+1):
             binEdges.append( binHist.GetBinLowEdge(i+1) )
 
+# Hard coded bin edges can be put here. To do: add an option from command line.
+#binEdges = [4.5,5.5,6.5,7.5,8.5,9.5]
 # build keys
 if chIden in options.nominalKey:
     print("inserting channel name '{}' into nominal template".format(options.channelName))
@@ -645,7 +652,8 @@ DrawHistogramObject = Plots.DrawHistograms(PlotList,options.channelName,
                                 combineflag=combineflag,shape=shape,
                                 sortedProcesses=sortedProcesses,
                                 yLabel=yLabel, xLabel = xLabel, dontScaleSignal=options.dontScaleSignal,
-                                divideByBinWidth = divideByBinWidth, onlyMainDivisionsXaxis=options.onlyMainDivisionsXaxis
+                                divideByBinWidth = divideByBinWidth, onlyMainDivisionsXaxis=options.onlyMainDivisionsXaxis,
+                                yMinUser=options.yMinUser, yMaxUser=options.yMaxUser
                                 )
 
 

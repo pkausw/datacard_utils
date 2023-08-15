@@ -438,7 +438,7 @@ class DrawHistograms:
                     errorband=None, background=None, displayname=None, logoption=False, shape=False,
                     normalize=False, combineflag=False, splitlegend=False, datalabel="data",
                     sortedProcesses=False, yLabel="Events expected", xLabel = None, dontScaleSignal=False,
-                    divideByBinWidth = False, onlyMainDivisionsXaxis=False):
+                    divideByBinWidth = False, onlyMainDivisionsXaxis=False, yMinUser=None, yMaxUser=None):
         self.PlotList       = PlotList
         self.canvasName     = canvasName
         self.data           = data 
@@ -471,6 +471,8 @@ class DrawHistograms:
         self.ratio_lower_bound = 0.5
         self.ratio_upper_bound = 1.5
         self.onlyMainDivisionsXaxis = onlyMainDivisionsXaxis
+        self.yMinUser = yMinUser
+        self.yMaxUser = yMaxUser
     # ===============================================
     # DRAW HISTOGRAMS ON CANVAS
     # ===============================================
@@ -547,15 +549,35 @@ class DrawHistograms:
         self.canvas.cd(1)
 
         """
-        consider logoption and set the user range accordingly
-        scaling maximal and minimal y value for better readability
+        set range of y axis.
+        use user-defined y axis ranges if provided
+        otherwise, consider logoption and set the user range accordingly
+        scaling maximal and minimal y value for better readability.
+
         """
+        y_min = self.yMinUser
+        y_max = self.yMaxUser
+
+        if y_min is None:
+            if self.logoption:
+                y_min = self.yMinMax/10
+            else:
+                y_min = 0.01
+
+        if y_max is None:
+            if self.logoption:
+                y_max = self.yMax*1000
+            else:
+                y_max = self.yMax*1.6
+
+        print "y_min = ", y_min
+        print "y_max = ", y_max
+
+        firstHist.GetYaxis().SetRangeUser(y_min,y_max)
+
         if self.logoption:
-            firstHist.GetYaxis().SetRangeUser(self.yMinMax/10, self.yMax*1000)
             ROOT.gPad.SetLogy(1)
-        else:
-            firstHist.GetYaxis().SetRangeUser(0.01, self.yMax*1.6)
-        
+
         """
         Handle titles
         """
@@ -1053,20 +1075,20 @@ def getLegend():
     return legend
 
 def getLegend1():
-    legend=ROOT.TLegend(0.65,0.7,0.8,0.9)
+    legend=ROOT.TLegend(0.60,0.63,0.75,0.9)
     legend.SetBorderSize(0)
     legend.SetLineStyle(0)
     legend.SetTextFont(42)
-    legend.SetTextSize(0.03)
+    legend.SetTextSize(0.036)
     legend.SetFillStyle(0)
     return legend
 
 def getLegend2():
-    legend=ROOT.TLegend(0.8,0.7,0.95,0.9)
+    legend=ROOT.TLegend(0.75,0.63,0.90,0.9)
     legend.SetBorderSize(0)
     legend.SetLineStyle(0)
     legend.SetTextFont(42)
-    legend.SetTextSize(0.03)
+    legend.SetTextSize(0.036)
     legend.SetFillStyle(0)
     return legend
 
