@@ -582,7 +582,9 @@ class DrawHistograms:
         Handle titles
         """
         firstHist.GetYaxis().SetTitle(self.GetyTitle())
-        firstHist.GetYaxis().SetTitleSize(firstHist.GetYaxis().GetTitleSize()*1.2)
+        firstHist.GetYaxis().SetTitleSize(firstHist.GetYaxis().GetTitleSize()*1.5) #1.2
+        firstHist.GetYaxis().SetLabelSize(firstHist.GetYaxis().GetLabelSize()*1.5)
+
         if self.xLabel is None:
             canvaslabel=firstHist.GetTitle()
         else:
@@ -848,12 +850,12 @@ class DrawHistograms:
         line.GetYaxis().CenterTitle(True)
         line.SetTitle("")
 
-        line.GetXaxis().SetLabelSize(line.GetXaxis().GetLabelSize()*2.4)
+        line.GetXaxis().SetLabelSize(line.GetXaxis().GetLabelSize()*3)
         line.GetYaxis().SetLabelSize(line.GetYaxis().GetLabelSize()*2.2)
         line.GetXaxis().SetTitle(canvaslabel)
 
-        line.GetXaxis().SetTitleSize(line.GetXaxis().GetTitleSize()*3)
-        line.GetYaxis().SetTitleSize(line.GetYaxis().GetTitleSize()*2)
+        line.GetXaxis().SetTitleSize(line.GetXaxis().GetTitleSize()*3.2)
+        line.GetYaxis().SetTitleSize(line.GetYaxis().GetTitleSize()*2.2)
 
         line.GetYaxis().SetTitleOffset(0.5)
         line.GetYaxis().SetNdivisions(505)
@@ -950,18 +952,26 @@ class DrawHistograms:
                 n+=1
 
             legendentries = len(self.sortedShapes)+len(self.sortedStacks)
-            for i,shape in enumerate(self.sortedShapes):
-                if not n%2:
-                    self.legend1.AddEntry(self.shapePlots[i], self.PlotList[shape].label, "L")
-                else:
-                    self.legend2.AddEntry(self.shapePlots[i], self.PlotList[shape].label, "L")
-                n+=1
             for i,stack in enumerate(self.sortedStacks):
                 if not n%2:
                     self.legend1.AddEntry(self.stackPlots[i], self.PlotList[stack].label, "F")
                 else:
                     self.legend2.AddEntry(self.stackPlots[i], self.PlotList[stack].label, "F")
                 n+=1
+            # add the signal shapes.
+            # If there is only one, add it to the left. Otherwise split between sides.
+            for i,shape in enumerate(self.sortedShapes):
+                if len(self.sortedShapes) < 2:
+                    self.legend1.AddEntry(self.shapePlots[i], self.PlotList[shape].label, "L")
+                else:
+                    if not n%2:
+                        self.legend1.AddEntry(self.shapePlots[i], self.PlotList[shape].label, "L")
+                    else:
+                        self.legend2.AddEntry(self.shapePlots[i], self.PlotList[shape].label, "L")
+                    n+=1
+            # add entry for error band at last. Always on the rigth side, as last.
+            self.legend2.AddEntry(self.errorband, "total unc.", "F")
+
             self.legend1.Draw("same")
             self.legend2.Draw("same")
         else:
@@ -1020,7 +1030,7 @@ class DrawHistograms:
         latex = ROOT.TLatex() 
         latex.SetNDC() 
         latex.SetTextColor(ROOT.kBlack) 
-        latex.SetTextSize(0.04)
+        latex.SetTextSize(0.045)
 
         text = "CMS #bf{#it{"+cmslabel+"}}"
 
@@ -1075,7 +1085,7 @@ def getLegend():
     return legend
 
 def getLegend1():
-    legend=ROOT.TLegend(0.60,0.63,0.75,0.9)
+    legend=ROOT.TLegend(0.57,0.6,0.75,0.9)
     legend.SetBorderSize(0)
     legend.SetLineStyle(0)
     legend.SetTextFont(42)
@@ -1084,7 +1094,7 @@ def getLegend1():
     return legend
 
 def getLegend2():
-    legend=ROOT.TLegend(0.75,0.63,0.90,0.9)
+    legend=ROOT.TLegend(0.75,0.6,0.94,0.9)
     legend.SetBorderSize(0)
     legend.SetLineStyle(0)
     legend.SetTextFont(42)
