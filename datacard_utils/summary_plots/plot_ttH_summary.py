@@ -629,7 +629,7 @@ def create_fit_label(fit, y_scale):
     """Prefit or Postfit"""
     
     # Coordinates of bottom-left corner
-    x = 1.-ROOT.gStyle.GetPadRightMargin()-0.08
+    x = 1.-ROOT.gStyle.GetPadRightMargin()-0.07
     y = 1.-ROOT.gStyle.GetPadTopMargin()-0.085*y_scale
 
     # Create label
@@ -639,7 +639,6 @@ def create_fit_label(fit, y_scale):
         txt = "Postfit"
         x -= 0.01
     l = get_label(x, y, txt=txt, size=0.07*y_scale, align=11)
-    l.SetTextFont(62)
 
     return l
 
