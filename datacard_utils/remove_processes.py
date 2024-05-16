@@ -24,43 +24,30 @@ except:
 thisdir = os.path.dirname(os.path.realpath(__file__))
 if not thisdir in sys.path:
     sys.path.append(os.path.abspath(thisdir))
-# manipulator_dir = os.path.join(thisdir, "manipulator_methods")
-# if not manipulator_dir in sys.path:
-#     sys.path.append(manipulator_dir)
+manipulator_dir = os.path.join(thisdir, "manipulator_methods")
+if not manipulator_dir in sys.path:
+    sys.path.append(manipulator_dir)
+
+from manipulator_methods.process_manipulator import ProcessManipulator
+
+proc_manipulator = ProcessManipulator()
 
 def freeze_nuisances(harvester):
-    to_freeze = "kfactor_wjets kfactor_zjets CMS_ttHbb_bgscale_MCCR".split()
-    systs = harvester.syst_name_set()
-    for p in to_freeze:
-        if p in systs:
+    to_freeze = """kfactor_wjets kfactor_zjets
+                                .*bgscale_MCCR.* .*bgnorm_ttcc_FH""".split()
+    harvester.SetFlag("filters-use-regex", True)
+    for par in to_freeze:
+        systs = harvester.cp().syst_name([par]).syst_name_set()
+        for p in systs:
             harvester.GetParameter(p).set_frozen(True)
 
-def matching_proc(p,s):
-    return ((p.bin()==s.bin()) and (p.process()==s.process()) \
-            and (p.signal()==s.signal()) and \
-            (p.analysis()==s.analysis()) and (p.era()==s.era()) \
-            and (p.channel()==s.channel()) and (p.bin_id()==s.bin_id()) \
-            and (p.mass()==s.mass()))
 
-def drop_procs(chob, proc, bin_name, drop_list):
-    drop = proc.process() in drop_list and proc.bin() == bin_name
-    if(drop):
-        chob.FilterSysts(lambda sys: matching_proc(proc,sys)) 
-    return drop
-
-def drop_processes(harvester, removal_list, bin_list):
-    
-    if bin_list == ["*"]:
-        bin_list = harvester.bin_set()
-    for b in bin_list:
-        harvester.cp().bin([b]).PrintAll()
-        harvester.FilterProcs(lambda x: drop_procs(harvester, x, b, removal_list))
-        harvester.cp().bin([b]).PrintAll()
 
 def main(**kwargs):
 
     harvester = ch.CombineHarvester()
     harvester.SetFlag("allow-missing-shapes", False)
+    harvester.SetFlag("filters-use-regex", True)
     cardpath = kwargs.get("datacard")
     
     print(cardpath)
@@ -75,11 +62,11 @@ def main(**kwargs):
     freeze_nuisances(harvester)
 
     removal_list = kwargs.get("removal_list", [])
-    bin_list = kwargs.get("bin_list", [])
+    bin_list = kwargs.get("bin_list", [".*"])
 
-    drop_processes(  harvester = harvester,
-                    removal_list = removal_list,
-                    bin_list = bin_list)
+    proc_manipulator.drop_all_processes(  harvester = harvester,
+                    to_drop = removal_list,
+                    bins = bin_list)
     
     outdir = kwargs.get("outdir")
     if not os.path.exists(outdir):
@@ -201,7 +188,7 @@ def parse_arguments():
         parser.error("Could not find datacard in '{}'".format(cardpath))
     
     if options.bin_list is None or len(options.bin_list) == 0:
-        options.bin_list = ["*"]
+        options.bin_list = [".*"]
     l = options.removal_list
     final_list = []
     for p in l:

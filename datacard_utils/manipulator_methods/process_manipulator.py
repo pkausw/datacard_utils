@@ -34,7 +34,7 @@ class ProcessManipulator(object):
     def __init__(self):
         super(ProcessManipulator, self).__init__()
         self.background_threshold = 15
-        self.__debug = 50
+        self.__debug = 10
     @property
     def verbosity(self):
         return self.__debug
@@ -118,6 +118,11 @@ class ProcessManipulator(object):
                 harvester.cp().era(eras).channel(channels).PrintProcs()
             
                 print(("="*130))
+        elif self.verbosity >= 10:
+            print(("pruning bins '{}'".format(", ".join(bins))))
+            print(("to drop: [{}]".format(", ".join(to_drop))))
+            print("pruning eras '{}'".format(", ".join(eras)))
+            print("pruning channels '{}'".format(", ".join(channels)))
         harvester.cp().era(eras).channel(channels).bin(bins)\
             .ForEachProc(lambda x: \
                 harvester.FilterProcs(lambda y: True if self.matching_proc(x, y) and \
