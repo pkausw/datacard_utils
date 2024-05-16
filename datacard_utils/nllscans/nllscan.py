@@ -91,6 +91,10 @@ def make_mdf_command(   datacard, nPoints, unconstrained, params, xVar,
                                             keyword = "--exclude", 
                                             joinwith="remove"
                                         )
+    multidimfitcmd = helper.insert_values(   cmds = multidimfitcmd, 
+                                            keyword = "--sub-opts", 
+                                            joinwith="remove"
+                                        )
     if "--firstPoint=0" in additionalCmds or not any("--firstPoint" in x for x in additionalCmds):
          multidimfitcmd.append('--saveWorkspace')
     
@@ -233,7 +237,8 @@ def do_fits():
         if os.path.exists(script):
             scripts.append(script)
     if len(scripts) != 0:
-        # batch.runtime = 
+        batch.memory = 4000
+        batch.runtime = 60*60*6 
         arrayid = batch.submitArrayToBatch( scripts = scripts, 
                                         arrayscriptpath = "arrayJob.sh")
                         
