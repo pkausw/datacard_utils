@@ -3,6 +3,7 @@ import glob
 import json
 import ROOT
 from math import fsum
+import CombineHarvester.CombineTools.combine.utils as utils
 
 def loadPOIs(workspace):
     """
@@ -90,19 +91,18 @@ def create_param_entry(nll_tree, param, poi):
     return param_entry
     
 def calculate_missing_impacts(datacard, impact_comb_dir, params, log_file, impact_json_file, pois = ["r"]):
-    groups = load_groups(datacard)      
-	       	   
-    # impact_comb_dir = os.path.join(impact_year_dir, comb)
-    
+    groups = load_groups(datacard)
+
     with open(impact_json_file) as f:
         dic = json.load(f)
-
+    paramList = set(x["name"] for x in dic["params"])
+    paramList.update(params)
+    prefit_dict = utils.prefit_from_workspace(datacard, 'w', list(paramList))
+    # impact_comb_dir = os.path.join(impact_year_dir, comb)
 
     # first filter the param from the dictionary
-    orig_params = dic["params"]
-    clean_params = [x for x in orig_params if not any(x.get("name") == param for param in params)]
+    dic["params"] = [x for x in dic["params"] if not any(x.get("name") == param for param in params)]
     
-    dic["params"] = clean_params
 
     #load POIs from input workspace
     
@@ -115,20 +115,15 @@ def calculate_missing_impacts(datacard, impact_comb_dir, params, log_file, impac
         # os.system("rm -rf merged_combine_output.root nllscan_*")
         # os.system("source "+os.path.join(param_dir, "merge_files.sh"))
                     
-        param_entry = {}
-        param_entry["groups"] = []
+        param_entry = prefit_dict[param]
         param_entry["name"] = param
         
-        if "CMS_ttHbb_bgnorm_" in param:
-            param_entry["prefit"] = [1.0, 1.0, 1.0]
-            param_entry["type"] = "Unconstrained"
-        else:
-            param_entry["prefit"] = [-1.0, 0, 1.0]
-            param_entry["type"] = "Gaussian"
-        
-        for g in groups:
-            if param in groups[g]:
-                param_entry["groups"].append(g)
+        # if "CMS_ttHbb_bgnorm_" in param:
+        #     param_entry["prefit"] = [1.0, 1.0, 1.0]
+        #     param_entry["type"] = "Unconstrained"
+        # else:
+        #     param_entry["prefit"] = [-1.0, 0, 1.0]
+        #     param_entry["type"] = "Gaussian"
         
         if not os.path.exists("merged_combine_output.root"):
             print("generating merged root file")
