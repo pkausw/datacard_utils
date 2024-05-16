@@ -374,7 +374,7 @@ def create_plot(fit_results, outname, style, include_signi = False, display_styl
     if display_style == "XS":
         headers = "#sigma       #color[4]{tot}      #color[2]{stat}    syst".split()
     print(headers)
-    width = 10
+    width = 8
     latex_parts = ["{value: ^{width}}".format(value = x, width = width) for x in headers]
     print(latex_parts)
     final_header = (" "*6).join(latex_parts)
@@ -387,9 +387,9 @@ def create_plot(fit_results, outname, style, include_signi = False, display_styl
         uncertainty_template = "{{}}^{{{:+.2f} %}}_{{{:-.2f} %}}"
 
     leg.SetNDC()
-    leg.DrawLatex( 0.5, 0.87, final_header)
+    leg.DrawLatex( 0.58, 0.87, final_header)
     upper_stretch = 1.05 if not display_style == "XS" else 1.05*2.5
-    body_position = xmax*upper_stretch
+    body_position = xmax*upper_stretch*1.1
 
     for ich,channel in enumerate(channels):
         res = ROOT.TLatex()
@@ -496,7 +496,7 @@ def my_style():
     ROOT.gStyle.SetTitleFont( 62, "bla" )
 
     ROOT.gStyle.SetFrameLineWidth(2)
-    ROOT.gStyle.SetPadLeftMargin(0.26)
+    ROOT.gStyle.SetPadLeftMargin(0.36)
     ROOT.gStyle.SetPadBottomMargin(0.14)
     ROOT.gStyle.SetPadTopMargin(0.05)
     ROOT.gStyle.SetPadRightMargin(0.02)
