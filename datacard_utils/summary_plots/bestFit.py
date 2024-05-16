@@ -370,11 +370,11 @@ def create_plot(fit_results, outname, style, include_signi = False, display_styl
     leg.SetTextFont( 42 )
     leg.SetTextSize( 0.035 )
     leg.SetTextAlign( 11 )
-    headers = "#mu       #color[4]{tot}      #color[2]{stat}    syst".split()
+    headers = "#hat{#mu}       #color[4]{tot}      #color[2]{stat}    syst".split()
     if display_style == "XS":
         headers = "#sigma       #color[4]{tot}      #color[2]{stat}    syst".split()
     print(headers)
-    width = 8
+    width = 9
     latex_parts = ["{value: ^{width}}".format(value = x, width = width) for x in headers]
     print(latex_parts)
     final_header = (" "*6).join(latex_parts)
@@ -382,12 +382,12 @@ def create_plot(fit_results, outname, style, include_signi = False, display_styl
     if include_signi:
         latex_parts += "       "
 
-    uncertainty_template = "{{}}^{{{:+.2f}}}_{{{:-.2f}}}"
+    uncertainty_template = "{{}}^{{#plus{:.2f}}}_{{#minus{:.2f}}}"
     if display_style == "XS":
-        uncertainty_template = "{{}}^{{{:+.2f} %}}_{{{:-.2f} %}}"
+        uncertainty_template = "{{}}^{{{:+.2f} %}}_{{#minus{:.2f} %}}"
 
     leg.SetNDC()
-    leg.DrawLatex( 0.58, 0.87, final_header)
+    leg.DrawLatex( 0.62, 0.87, final_header)
     upper_stretch = 1.05 if not display_style == "XS" else 1.05*2.5
     body_position = xmax*upper_stretch*1.1
 
@@ -396,15 +396,15 @@ def create_plot(fit_results, outname, style, include_signi = False, display_styl
         res.SetTextFont( 42 )
         res.SetTextSize( 0.045 )
         res.SetTextAlign( 31 )
-        uncertainties = uncertainty_template.format(fit_results["up"][ich],fit_results["dn"][ich])
+        uncertainties = uncertainty_template.format(fit_results["up"][ich],abs(fit_results["dn"][ich]))
         latex_parts = ["{val:.2f} #color[4]{{ {uncertainties: ^{width}} }}".\
                         format(val = fit_results["mu"][ich],uncertainties = uncertainties, width = width)]
         uncertainties = uncertainty_template.\
-                        format(fit_results["up_stat"][ich],fit_results["dn_stat"][ich])
+                        format(fit_results["up_stat"][ich],abs(fit_results["dn_stat"][ich]))
         latex_parts += ["#color[2]{{ {uncertainties: ^{width}} }}".\
                         format(uncertainties = uncertainties, width = width)]
         uncertainties = uncertainty_template.\
-                        format(fit_results["up_syst"][ich],fit_results["dn_syst"][ich])
+                        format(fit_results["up_syst"][ich],abs(fit_results["dn_syst"][ich]))
         latex_parts += ["{uncertainties: ^{width}}".\
                         format(uncertainties = uncertainties, width = width)]
         if include_signi:
@@ -469,9 +469,14 @@ def draw_canvas_histo( nchannels, xmin, xmax, title, entry_names, labels, positi
     pub.SetNDC()
     pub.SetTextFont( 42 )
     pub.SetTextSize( 0.05 )
-    pub.SetTextAlign( 13 )
-    pub.DrawLatex( ROOT.gStyle.GetPadLeftMargin()+0.03,
-                   1.-ROOT.gStyle.GetPadTopMargin()-0.033,
+    pub.SetTextAlign( 11 )
+    pub.DrawLatex( 
+        # ROOT.gStyle.GetPadLeftMargin()+0.03,
+        ROOT.gStyle.GetPadLeftMargin(),
+                #    1.-ROOT.gStyle.GetPadTopMargin()-0.06,
+                1.-ROOT.gStyle.GetPadTopMargin()+0.01,
+                # 1.,
+                # 0.965,
                    "#bf{CMS}" )
                 #    "#bf{CMS} #it{Preliminary}")
 
