@@ -21,6 +21,7 @@ cmd_base_parts += "--channelname {channel}".split()
 cmd_base_parts += "--combineDatacard {datacard}".split()
 cmd_base_parts += "--pdfname {pdfname}".split()
 cmd_base_parts += '--xLabel "{xtitle}"'.split()
+cmd_base_parts += '--yDenominatorLabel "{yDenominatorLabel}"'.split()
 #cmd_base_parts += "--skipErrorbands --pdftag noError".split()
 # cmd_base_parts += "--dontScaleSignal".split()
 
@@ -188,6 +189,7 @@ def generate_plots(file, options):
         
         xtitle = labels[channel].get("xtitle", "ANN Discriminant")
         unit = labels[channel].get("unit")
+        y_denom = labels[channel].get("yDenominatorLabel", "bin width")
         ratio_range = labels[channel].get("range", 0.18)
         for flag in flags:
             # pdfname = "{}_{}.pdf".format(channel, flag)
@@ -198,6 +200,7 @@ def generate_plots(file, options):
                                     flag = flag,
                                     pdfname = final_pdfname,
                                     xtitle = xtitle,
+                                    yDenominatorLabel = y_denom,
                                     **base_options)
             if unit:
                 cmd += " --unit '{}'".format(unit)

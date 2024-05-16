@@ -168,7 +168,9 @@ styleOptions.add_option("--yLabel", dest="yLabel", default=None,
 styleOptions.add_option("--xLabel", dest="xLabel", default=None,
         help="axis label of x-axis (inferred from histogram if None)")
 styleOptions.add_option("--unit", dest="unit", default=None,
-        help="Unit to display on the x-axis. If 'divideByBinWidth' is used, add [1/UNIT] to y-axis.")
+        help="Unit to display on the x-axis. If 'divideByBinWidth' is used, add [1/UNIT] to y-axis.")#
+plotOptions.add_option("--yDenominatorLabel", dest = "yDenominatorLabel", default = "bin width", type=str, 
+        help = "If divideByBinWidth is used, this is the label of the denominator in the ratio plot. Default: bin width")
 styleOptions.add_option("--cmslabel", dest="cmslabel", default=None,
         help="print CMS label on canvas")
 styleOptions.add_option("--splitlegend", dest="splitlegend",  default=None,
@@ -224,7 +226,6 @@ plotconfig  = options.plotconfig
 workdir     = options.workdir
 
 divideByBinWidth = options.divideByBinWidth
-
 """
 import plot class
 """
@@ -607,6 +608,9 @@ normalize       = getParserConfigDefaultBool(parser=options.normalize,config="no
                                             plotoptions=plotoptions,defaultbool=False)
 shape           = getParserConfigDefaultBool(parser=options.shape,config="shape",
                                             plotoptions=plotoptions,defaultbool=False)
+yDenominatorLabel = getParserConfigDefaultValue(parser=options.yDenominatorLabel,config="yDenominatorLabel",
+                                            plotoptions=plotoptions, defaultvalue="bin width")
+
 
 if shape:
     dataHist        = None
@@ -626,7 +630,7 @@ else:
 
 """
 if divideByBinWidth:
-    yLabel = yLabel+" /(bin width)"
+    yLabel = yLabel+" /({})".format(yDenominatorLabel)
     for p in PlotList:
         if isinstance(PlotList[p], str):
             continue
