@@ -582,7 +582,8 @@ class DrawHistograms:
         Handle titles
         """
         firstHist.GetYaxis().SetTitle(self.GetyTitle())
-        firstHist.GetYaxis().SetTitleSize(firstHist.GetYaxis().GetTitleSize()*1.5) #1.2
+        firstHist.GetYaxis().SetTitleOffset(1.1)
+        firstHist.GetYaxis().SetTitleSize(firstHist.GetYaxis().GetTitleSize()*1.7) #1.2
         firstHist.GetYaxis().SetLabelSize(firstHist.GetYaxis().GetLabelSize()*1.5)
 
         if self.xLabel is None:
@@ -850,12 +851,12 @@ class DrawHistograms:
         line.GetYaxis().CenterTitle(True)
         line.SetTitle("")
 
-        line.GetXaxis().SetLabelSize(line.GetXaxis().GetLabelSize()*3)
-        line.GetYaxis().SetLabelSize(line.GetYaxis().GetLabelSize()*2.2)
+        line.GetXaxis().SetLabelSize(line.GetXaxis().GetLabelSize()*3.2)
+        line.GetYaxis().SetLabelSize(line.GetYaxis().GetLabelSize()*2.3)
         line.GetXaxis().SetTitle(canvaslabel)
 
-        line.GetXaxis().SetTitleSize(line.GetXaxis().GetTitleSize()*3.2)
-        line.GetYaxis().SetTitleSize(line.GetYaxis().GetTitleSize()*2.2)
+        line.GetXaxis().SetTitleSize(line.GetXaxis().GetTitleSize()*3.6) 
+        line.GetYaxis().SetTitleSize(line.GetYaxis().GetTitleSize()*2.3)
 
         line.GetYaxis().SetTitleOffset(0.5)
         line.GetYaxis().SetNdivisions(505)
@@ -1002,6 +1003,7 @@ class DrawHistograms:
         latex = ROOT.TLatex()
         latex.SetNDC()
         latex.SetTextColor(ROOT.kBlack)
+        latex.SetTextFont(42)
         
         if self.ratio:  latex.DrawLatex(l+0.60,1.-t+0.04,lumi_text)
         else:           latex.DrawLatex(l+0.53,1.-t+0.02,lumi_text)
@@ -1016,6 +1018,7 @@ class DrawHistograms:
         latex = ROOT.TLatex()
         latex.SetNDC()
         latex.SetTextColor(ROOT.kBlack)
+        latex.SetTextFont(42)
 
         if self.ratio:  latex.DrawLatex(l+0.09,1.-t-0.06, channelLabel)
         else:           latex.DrawLatex(l+0.02,1.-t-0.06, channelLabel)
@@ -1029,8 +1032,8 @@ class DrawHistograms:
      
         latex = ROOT.TLatex() 
         latex.SetNDC() 
-        latex.SetTextColor(ROOT.kBlack) 
-        latex.SetTextSize(0.045)
+        latex.SetTextColor(ROOT.kBlack)
+        latex.SetTextSize(0.07) #0.045
 
         text = "CMS #bf{#it{"+cmslabel+"}}"
 
