@@ -484,6 +484,7 @@ def main(options, datacard_paths):
                     # arrayscriptname = "arrayScript_%s.sh" % suffix
                     arrayscriptname = "arrayJob.sh"
                     # batch.runtime = 60*60*5
+                    batch.memory = 4000
                     batch.submitArrayToBatch(   scripts = scripts, 
                                             arrayscriptpath = arrayscriptname)
                 else:
