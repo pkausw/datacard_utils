@@ -1020,8 +1020,8 @@ class DrawHistograms:
         latex.SetTextColor(ROOT.kBlack)
         latex.SetTextFont(42)
 
-        if self.ratio:  latex.DrawLatex(l+0.09,1.-t-0.06, channelLabel)
-        else:           latex.DrawLatex(l+0.02,1.-t-0.06, channelLabel)
+        if self.ratio:  latex.DrawLatex(l+0.09,1.-t-0.1, channelLabel)
+        else:           latex.DrawLatex(l+0.02,1.-t-0.1, channelLabel)
 
     def printCMSLabel(self, cmslabel):
         self.canvas.cd(1) 
