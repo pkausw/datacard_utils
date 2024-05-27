@@ -81,7 +81,7 @@ class Translator:
                 "STXS5"   : "STXS_4_",
             },
             "SL" : {
-                "ttH+ttB" : "ttH_ttmb_ratioObservable",
+                "ttH+ttb(b)" : "ttH_ttmb_ratioObservable",
                 "STXS1"   : "classification_ttH_ttmb_vs_slike_times_ttHbb_STXS_0",
                 "STXS2"   : "classification_ttH_ttmb_vs_slike_times_ttHbb_STXS_1",
                 "STXS3"   : "classification_ttH_ttmb_vs_slike_times_ttHbb_STXS_2",
@@ -147,10 +147,11 @@ class Style:
         self.node_tex_names = {
             "ttLF"    : "ttLF",
             "ttC"     : "ttC",
-            "tt2b"    : "tt2b",
+            "tt2b"    : "tt+2b",
             "tHq"     : "tHq",
             "tHW"     : "tHW",
-            "ttH+ttB" : "ttH+ttB",
+            "ttH+ttb(b)" : "ttH / tt+b(b)",
+            "ttH+ttB" : "ttH / ttB",
             "STXS1"   : "1",
             "STXS2"   : "2",
             "STXS3"   : "3",
@@ -997,7 +998,7 @@ def make_plot(analysis_cfg, plot_cfg):
     legend = create_legend(analysis_cfg, y_scale)
     for i in reversed(legend_entries):
         legend.AddEntry(i[0], i[1], i[2])
-    legend.AddEntry(data, "Data", "PL")
+    legend.AddEntry(data, "Data", "PE")
     legend.AddEntry(error_histo, "Syst", "F")
     legend.Draw()
 
@@ -1136,14 +1137,14 @@ if __name__ == '__main__':
         Category(channel="SL", jettag="5j4t", node="tt2b"),
         Category(channel="SL", jettag="5j4t", node="tHq"),
         Category(channel="SL", jettag="5j4t", node="tHW"),
-        Category(channel="SL", jettag="5j4t", node="ttH+ttB"),
+        Category(channel="SL", jettag="5j4t", node="ttH+ttb(b)"),
         
         Category(channel="SL", jettag="6j4t", node="ttLF"),
         Category(channel="SL", jettag="6j4t", node="ttC"),
         Category(channel="SL", jettag="6j4t", node="tt2b"),
         Category(channel="SL", jettag="6j4t", node="tHq"),
         Category(channel="SL", jettag="6j4t", node="tHW"),
-        Category(channel="SL", jettag="6j4t", node="ttH+ttB"),
+        Category(channel="SL", jettag="6j4t", node="ttH+ttb(b)"),
         
         Category(channel="DL", jettag="3j3t", node=""),
         
@@ -1200,7 +1201,7 @@ if __name__ == '__main__':
     }
 
 
-    plot_stxs = True
+    plot_stxs = False
     
 
     if plot_stxs:
