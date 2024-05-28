@@ -282,6 +282,15 @@ def updateBinEdges(hist, edges):
     
     return newHist
 
+def updateBinLabels(hist, labels):
+    if isinstance(labels, list):
+        nbins = hist.GetNbinsX() if isinstance(hist, ROOT.TH1) else hist.GetN()
+        if not nbins == len(labels):
+            raise ValueError("Number of bins in histogram does not match number of bin labels")
+        for i, label in enumerate(labels, 1):
+            hist.GetXaxis().SetBinLabel(i, label)
+    
+    return hist
 
 """
 Combine Output Style where Errorbands already exist
@@ -438,7 +447,8 @@ class DrawHistograms:
                     errorband=None, background=None, displayname=None, logoption=False, shape=False,
                     normalize=False, combineflag=False, splitlegend=False, datalabel="data",
                     sortedProcesses=False, yLabel="Events expected", xLabel = None, dontScaleSignal=False,
-                    divideByBinWidth = False, onlyMainDivisionsXaxis=False, yMinUser=None, yMaxUser=None):
+                    divideByBinWidth = False, onlyMainDivisionsXaxis=False, yMinUser=None, yMaxUser=None,
+        ):
         self.PlotList       = PlotList
         self.canvasName     = canvasName
         self.data           = data 
@@ -949,7 +959,7 @@ class DrawHistograms:
             self.legend2 = getLegend2()
             n = 0
             if self.data:
-                self.legend1.AddEntry(self.data,self.datalabel,"P")
+                self.legend1.AddEntry(self.data,self.datalabel,"PE")
                 n+=1
 
             legendentries = len(self.sortedShapes)+len(self.sortedStacks)
@@ -978,7 +988,7 @@ class DrawHistograms:
         else:
             self.legend = getLegend2()
             if self.data:
-                self.legend.AddEntry(self.data,self.datalabel,"P")
+                self.legend.AddEntry(self.data,self.datalabel,"PE")
 
             for i,shape in enumerate(self.sortedShapes):
                 self.legend.AddEntry(self.shapePlots[i], self.PlotList[shape].label, "L")
