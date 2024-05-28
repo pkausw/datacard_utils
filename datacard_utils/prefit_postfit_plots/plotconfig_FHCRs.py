@@ -269,6 +269,6 @@ plotoptions = {   'cmslabel': ' ',
     'statErrorband': False,
     'systematicKey': '$PROCESS__$CHANNEL__$SYSTEMATIC',
     # "combineflag" : "shapes_prefit"/"shapes_fit_s",
-    # "signallabel" : "Signal"
+    "signallabel" : 't#bar{t}H',
 }
     
