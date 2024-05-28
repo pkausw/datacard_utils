@@ -25,7 +25,7 @@
     "fh_j7_t4_numJets": {
         "bottom": "",
         "top": "FH 7 jets, \\geq 4 b-tags",
-        "xtitle": "jet multiplicity"
+        "xtitle": "Number of jets"
     },
     "fh_j8_t4_RecoHiggsPt": {
         "bottom": "",
@@ -53,7 +53,7 @@
     "fh_j8_t4_numJets": {
         "bottom": "",
         "top": "FH 8 jets, \\geq 4 b-tags",
-        "xtitle": "jet multiplicity"
+        "xtitle": "Number of jets"
     },
     "fh_j9_t4_RecoHiggsPt": {
         "bottom": "",
@@ -81,7 +81,7 @@
     "fh_j9_t4_numJets": {
         "bottom": "",
         "top": "FH \\geq 9 jets, \\geq 4 b-tags",
-        "xtitle": "jet multiplicity"
+        "xtitle": "Number of jets"
     },
     "ljets_5j_ge4t_CSV_2": {
         "bottom": "",
@@ -185,7 +185,7 @@
     "ljets_5j_ge4t_N_Jets": {
         "bottom": "",
         "top": "SL 5 jets, \\geq 4 b-tags",
-        "xtitle": "jet multiplicity"
+        "xtitle": "Number of jets"
     },
     "ljets_5j_ge4t_Reco_JABDT_tHW_Jet_CSV_btop": {
         "bottom": "",
@@ -342,7 +342,8 @@
     "ljets_ge5j_ge4t_N_Jets": {
         "bottom": "",
         "top": "SL \\geq 5 jets, \\geq 4 b-tags",
-        "xtitle": "jet multiplicity"
+        "xtitle": "Number of jets",
+        "manualBinLabels": ["5", "6", "7", "8", "#geq 9"]
     },
     "ljets_ge5j_ge4t_Reco_JABDT_tHW_Jet_CSV_btop": {
         "bottom": "",
@@ -499,7 +500,7 @@
     "ljets_ge6j_ge4t_N_Jets": {
         "bottom": "",
         "top": "SL \\geq 6 jets, \\geq 4 b-tags",
-        "xtitle": "jet multiplicity"
+        "xtitle": "Number of jets"
     },
     "ljets_ge6j_ge4t_Reco_JABDT_tHW_Jet_CSV_btop": {
         "bottom": "",
@@ -568,7 +569,7 @@
     "ttH_hbb_13TeV_2016_dl_3j3b_N_jets": {
         "bottom": "",
         "top": "DL 3 jets, 3 b-tags",
-        "xtitle": "jet multiplicity"
+        "xtitle": "Number of jets"
     },
     "ttH_hbb_13TeV_2016_dl_3j3b_minDeltaR_tag_tag": {
         "bottom": "",
@@ -600,7 +601,7 @@
     "ttH_hbb_13TeV_2016_dl_4j3b_N_jets": {
         "bottom": "",
         "top": "DL \\geq 4 jets, 3 b-tags",
-        "xtitle": "jet multiplicity"
+        "xtitle": "Number of jets"
     },
     "ttH_hbb_13TeV_2016_dl_4j3b_minDeltaR_tag_tag": {
         "bottom": "",

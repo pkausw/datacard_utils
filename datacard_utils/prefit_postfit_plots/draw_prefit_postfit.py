@@ -190,6 +190,9 @@ def generate_plots(file, options):
         xtitle = labels[channel].get("xtitle", "ANN Discriminant")
         unit = labels[channel].get("unit")
         y_denom = labels[channel].get("yDenominatorLabel", "bin width")
+        manual_bin_labels = labels[channel].get("manualBinLabels", None)
+        
+
         ratio_range = labels[channel].get("range", 0.18)
         for flag in flags:
             # pdfname = "{}_{}.pdf".format(channel, flag)
@@ -212,6 +215,8 @@ def generate_plots(file, options):
                 cmd += " --drawFromHarvester"
             if options.multisignal:
                 cmd += " --multisignal"
+            if manual_bin_labels:
+                cmd += ' --manualBinLabels "{}"'.format(",".join(manual_bin_labels))
             if options.divideByBinWidth:
                 cmd += " --divideByBinWidth"
             if flag == "shapes_fit_s":

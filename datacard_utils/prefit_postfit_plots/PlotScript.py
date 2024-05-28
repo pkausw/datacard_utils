@@ -167,6 +167,8 @@ styleOptions.add_option("--yLabel", dest="yLabel", default=None,
         help="axis label of y-axis")
 styleOptions.add_option("--xLabel", dest="xLabel", default=None,
         help="axis label of x-axis (inferred from histogram if None)")
+styleOptions.add_option("--manualBinLabels", dest="manualBinLabels", default=None,
+        help="List of labels to use for bin edges, e.g. 'bin1,bin2,bin3,bin4,bin5' for 4 bins. Error is raised if number of bins does not match number of labels.")
 styleOptions.add_option("--unit", dest="unit", default=None,
         help="Unit to display on the x-axis. If 'divideByBinWidth' is used, add [1/UNIT] to y-axis.")#
 plotOptions.add_option("--yDenominatorLabel", dest = "yDenominatorLabel", default = "bin width", type=str, 
@@ -216,6 +218,8 @@ if not options.examplePlotconfig:
     if not options.workdir:
         parser.error("Workdir not given!")
 
+if options.manualBinLabels:
+    options.manualBinLabels = options.manualBinLabels.split(",")
 
 # Define directories used to import stuff
 tooldir   = options.directory
@@ -482,6 +486,8 @@ else no signal
 """
 stack_prefit_signal = options.stack_prefit_signal
 background = None
+manualBinLabels = getParserConfigDefaultValue(parser=options.manualBinLabels,config="manualBinLabels",
+                                            plotoptions=plotoptions, defaultvalue=None)
 if combineflag:
     str_total = "total" if not options.drawFromHarvester else "TotalProcs"
     str_total_bkg = "total_background" if not options.drawFromHarvester\
@@ -544,6 +550,12 @@ if combineflag:
 else:
     errorband = None
 
+# update labels for x axis if they are provided
+if manualBinLabels:
+    for p in PlotList.values():
+        if isinstance(p, str):
+            continue
+        p.hist = Plots.updateBinLabels(p.hist, manualBinLabels)
 
 """
 load data if avaliable and move under and overflow bin
@@ -562,6 +574,7 @@ if data:
         dataHist.SetStats(False)
         if not binEdges is None:
             dataHist = Plots.updateBinEdges(dataHist, binEdges)
+        
         Plots.moveOverUnderFlow(dataHist)
         print "using data: %s" % (dataKey)
     # data in combine in TGraphAsymmErrors, get TH1 out of it
@@ -579,6 +592,8 @@ else:
         print "ATTENTION: Not using data!"
         dataHist=None
 
+if manualBinLabels and dataHist:
+    dataHist = Plots.updateBinLabels(dataHist, manualBinLabels)
 print '''
 # ========================================================
 # plotting histograms and Errorbands
@@ -657,8 +672,9 @@ DrawHistogramObject = Plots.DrawHistograms(PlotList,options.channelName,
                                 sortedProcesses=sortedProcesses,
                                 yLabel=yLabel, xLabel = xLabel, dontScaleSignal=options.dontScaleSignal,
                                 divideByBinWidth = divideByBinWidth, onlyMainDivisionsXaxis=options.onlyMainDivisionsXaxis,
-                                yMinUser=options.yMinUser, yMaxUser=options.yMaxUser
-                                )
+                                yMinUser=options.yMinUser, yMaxUser=options.yMaxUser,
+                            )
+                                
 
 
 DrawHistogramObject.ratio_lower_bound = options.ratio_lower_bound
