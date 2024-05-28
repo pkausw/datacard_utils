@@ -645,7 +645,7 @@ else:
 
 """
 if divideByBinWidth:
-    yLabel = yLabel+" /({})".format(yDenominatorLabel)
+    yLabel = yLabel+"/({})".format(yDenominatorLabel)
     for p in PlotList:
         if isinstance(PlotList[p], str):
             continue
