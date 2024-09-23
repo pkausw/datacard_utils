@@ -122,7 +122,7 @@ def convert_file(
     is_harvester = not load_keyword(kwargs, "not_harvester")
     overwrite_category = load_keyword(kwargs, "overwrite_category")
     in_file = ROOT.TFile.Open(infile_path)
-    yields = get_yields(in_file, categories, "prefit" , cfg_module,\
+    yields = get_yields(in_file, categories, mode , cfg_module,\
                                  prefix, is_harvester)
 
     if overwrite_category and len(yields) >1:
