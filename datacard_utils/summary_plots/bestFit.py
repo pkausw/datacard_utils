@@ -271,6 +271,36 @@ def bestfit( **kwargs ):
     if significance_expected is not None:
         assert(len(significance_expected) == len(significance))
 
+    # optionally load Asimov results
+    results_json_expected = kwargs.get("results_json_expected", "")
+    if results_json_expected is not None:
+        if results_json_expected == "" or not os.path.exists(results_json_expected):
+            raise ImportError("json file '{}' does not exist!".format(results_json))
+        with open( results_json_expected, "r" ) as in_file:
+            res_expected = json.load(in_file)
+        values_expected = res_expected.get("results", {})
+        mu_expected = load_values(
+            result_dict   = values_expected,
+            result_set    = "bestfit",
+            value_keyword = "value",
+            order         = order
+            )
+        upper_expected = load_values(
+            result_dict   = values_expected,
+            result_set    = "bestfit",
+            value_keyword = "up",
+            order         = order
+            )
+        lower_expected = load_values(
+            result_dict   = values_expected,
+            result_set    = "bestfit",
+            value_keyword = "down",
+            order         = order
+            )
+        assert(len(mu_expected) == len(mu))
+        assert(len(upper_expected) == len(mu))
+        assert(len(lower_expected) == len(mu))
+
     upper_syst = np.sqrt(upper**2 - upper_stat**2)
     lower_syst = -np.sqrt(lower**2 - lower_stat**2)
     print(upper)
@@ -301,7 +331,10 @@ def bestfit( **kwargs ):
     }
     if significance_expected is not None:
         fit_results["sigma_exp"] = significance_expected
-
+    if results_json_expected is not None:
+        fit_results["mu_exp"] = mu_expected
+        fit_results["up_exp"] = upper_expected
+        fit_results["dn_exp"] = lower_expected
 
     create_plot(fit_results, outname=outname,
                 include_signi=include_signi, style=kwargs, display_style=display_style)
@@ -340,6 +373,16 @@ def create_plot(fit_results, outname, style, include_signi = False, display_styl
                                 labels = fit_results["labels"],
                                 lumilabel = style.get("lumilabel", ""))
 
+    # optionally, add Asimov expected uncertainty
+    if "mu_exp" in fit_results:
+        y_error = np.array([ 0.5 for y in channels ])
+        gmu_exp = ROOT.TGraphAsymmErrors( nchannels, fit_results["mu_exp"], channels, np.abs(fit_results["dn_exp"]), np.abs(fit_results["up_exp"]), y_error, y_error )
+        gmu_exp.SetMarkerStyle( 0 )
+        gmu_exp.SetFillStyle( 1001 )
+        gmu_exp.SetFillColorAlpha( ROOT.kGray, 0.8 )
+        gmu_exp.SetLineColorAlpha( ROOT.kGray, 0.8 )
+        gmu_exp.Draw("2same")
+
     # line at SM expectation (default = 1)
     lines = []
     for i, exp_val in enumerate(reversed(fit_results["expected"]), 1):
@@ -366,6 +409,7 @@ def create_plot(fit_results, outname, style, include_signi = False, display_styl
     gmu.SetLineWidth( 2 )
     gmu.Draw( "pe1same" )
 
+    
     leg = ROOT.TLatex()
     leg.SetTextFont( 42 )
     leg.SetTextSize( 0.035 )
@@ -381,13 +425,22 @@ def create_plot(fit_results, outname, style, include_signi = False, display_styl
     print(final_header)
     if include_signi:
         latex_parts += "       "
+    leg.SetNDC()
+    leg.DrawLatex( 0.62, 0.87, final_header)
+
+    # if Asimov expected uncertainties are shown
+    if "mu_exp" in fit_results:
+        leg_exp = ROOT.TLatex()
+        leg_exp.SetTextFont( 42 )
+        leg_exp.SetTextSize( 0.035 )
+        leg_exp.SetTextAlign( 11 )
+        leg.SetNDC()
+        leg.DrawLatex( 0.49, 0.87, "#color[15]{exp.}")
 
     uncertainty_template = "{{}}^{{#plus{:.2f}}}_{{#minus{:.2f}}}"
     if display_style == "XS":
         uncertainty_template = "{{}}^{{{:+.2f} %}}_{{#minus{:.2f} %}}"
 
-    leg.SetNDC()
-    leg.DrawLatex( 0.62, 0.87, final_header)
     upper_stretch = 1.05 if not display_style == "XS" else 1.05*2.5
     body_position = xmax*upper_stretch*1.1
 
@@ -658,6 +711,14 @@ def parse_arguments():
                         dest = "display_style",
                         choices = "poi XS".split(),
                         default = "poi"
+                    )
+    style_group.add_option("-e", "--results_json_expected",
+                        help = " ".join("""
+                            Asimov
+                        """.split()),
+                        dest = "results_json_expected",
+                        metavar = "path/to/file.json",
+                        type = "str"
                     )
 
     parser.add_option_group(style_group)
