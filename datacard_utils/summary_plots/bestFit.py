@@ -645,6 +645,17 @@ def parse_arguments():
                     )
     parser.add_option_group(required_group)
 
+    optional_inputs = OptionGroup(parser, "Optional inputs")
+    optional_inputs.add_option("-e", "--results_json_expected",
+                        help = " ".join("""
+                            path to json file containing Asimov expected results
+                        """.split()),
+                        dest = "results_json_expected",
+                        metavar = "path/to/file.json",
+                        type = "str"
+                    )
+    parser.add_option_group(optional_inputs)
+
     style_group = OptionGroup(parser, "Style Options")
     style_group.add_option("-s", "--stepsize",
                         help = " ".join("""
@@ -711,14 +722,6 @@ def parse_arguments():
                         dest = "display_style",
                         choices = "poi XS".split(),
                         default = "poi"
-                    )
-    style_group.add_option("-e", "--results_json_expected",
-                        help = " ".join("""
-                            Asimov
-                        """.split()),
-                        dest = "results_json_expected",
-                        metavar = "path/to/file.json",
-                        type = "str"
                     )
 
     parser.add_option_group(style_group)
