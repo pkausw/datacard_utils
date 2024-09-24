@@ -426,7 +426,8 @@ def create_plot(fit_results, outname, style, include_signi = False, display_styl
     if include_signi:
         latex_parts += "       "
     leg.SetNDC()
-    leg.DrawLatex( 0.62, 0.87, final_header)
+    final_header = "#hat{#mu}         #color[4]{tot}       #color[2]{stat}     syst"
+    leg.DrawLatex( 0.645, 0.87, final_header)
 
     # if Asimov expected uncertainties are shown
     if "mu_exp" in fit_results:
@@ -435,7 +436,11 @@ def create_plot(fit_results, outname, style, include_signi = False, display_styl
         leg_exp.SetTextSize( 0.035 )
         leg_exp.SetTextAlign( 11 )
         leg.SetNDC()
-        leg.DrawLatex( 0.49, 0.87, "#color[15]{exp.}")
+        # bad hack to get position for incl and STXS
+        xpos = 0.49
+        if "FH" in fit_results["names"]:
+            xpos = 0.42
+        leg.DrawLatex( xpos, 0.87, "#color[15]{exp.}")
 
     uncertainty_template = "{{}}^{{#plus{:.2f}}}_{{#minus{:.2f}}}"
     if display_style == "XS":
