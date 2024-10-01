@@ -4,6 +4,7 @@ import sys
 import importlib
 from optparse import OptionParser
 from array import array
+from util import PubRoundSym
 
 mu_s = 1
 
@@ -108,7 +109,14 @@ def get_yields(in_file, categories, prepostfit, cfg_module, prefix = "",\
 
     return category_yield_map
 
-def get_yield_string(category_yield_map,category,process,sig_scale=1, total_sig = "total_sig"):
+def get_yield_string(
+    category_yield_map,
+    category,
+    process,
+    sig_scale=1,
+    total_sig = "total_sig",
+    data = "data_obs",
+):
     y=0
     ye=0
     if not category_yield_map:
@@ -136,26 +144,51 @@ def get_yield_string(category_yield_map,category,process,sig_scale=1, total_sig 
         y  = sig_scale * y
         ye = sig_scale * ye
 
-    if y < 1:
-        return "{:10.1f}".format(y), "{:5.1f}".format(ye)
-    else:
+    # do proper rounding for publications
+    if y <= 0 or ye <= 0:
         return "{:10.0f}".format(y), "{:5.0f}".format(ye)
+    magnitude = 1
+    final_val = y
+    final_err = ye
 
-def fill_template_line( template, sub_categories, njet_category, 
-                        process, yield_map_prefit, yield_map_postfit, total_sig):
+    if process != data:
+        round_val, round_err, magnitude = PubRoundSym(y, ye)
+        final_val = float(round_val) * 10**magnitude
+        final_err = float(round_err[0]) * 10**magnitude
+
+    if final_val < 1:
+        return (
+            "{val:10.{magnitude}f}".format(val=final_val, magnitude=abs(magnitude)),
+            "{val:5.{magnitude}f}".format(val=final_err, magnitude=abs(magnitude)),
+        )
+    else:
+        return "{:10.0f}".format(final_val), "{:5.0f}".format(final_err)
+
+def fill_template_line(
+    template,
+    sub_categories,
+    njet_category,
+    process,
+    yield_map_prefit,
+    yield_map_postfit,
+    total_sig,
+    data="data_obs",
+):
     entries = []
     for sub_category in sub_categories:
         cat_string = category(njet_category,sub_category)
         val_prefit, err_prefit = get_yield_string(category_yield_map = yield_map_prefit, 
                                                     category = cat_string, 
                                                     process = process,
-                                                    total_sig = total_sig
+                                                    total_sig = total_sig,
+                                                    data=data,
                                                     )
         val_postfit, err_postfit = get_yield_string(category_yield_map = yield_map_postfit, 
                                                     category = cat_string, 
                                                     process = process,
                                                     total_sig = total_sig,
-                                                    sig_scale = mu_s)
+                                                    sig_scale = mu_s,
+                                                    data=data,)
 
         entries.append(template.format( prefit_val = val_prefit, 
                                         postfit_val = val_postfit,
@@ -185,7 +218,8 @@ def print_table_line(yield_map_prefit, yield_map_postfit, njet_category,
                                     yield_map_prefit = yield_map_prefit,
                                     yield_map_postfit = yield_map_postfit,
                                     process = process,
-                                    total_sig = cfg_module.total_sig
+                                    total_sig = cfg_module.total_sig,
+                                    data=cfg_module.data,
                                 )
     print("entries for process '{}'".format(process))
     print(entries)
@@ -201,7 +235,8 @@ def print_table_line(yield_map_prefit, yield_map_postfit, njet_category,
                                     yield_map_prefit = yield_map_prefit,
                                     yield_map_postfit = yield_map_postfit,
                                     process = process,
-                                    total_sig = cfg_module.total_sig
+                                    total_sig = cfg_module.total_sig,
+                                    data=cfg_module.data,
                                 ) 
         l += line_template.format(  process = "{:10}".format("$\\pm$ tot unc."),
                                    values = " & ".join(entries))
@@ -221,7 +256,6 @@ def create_header(sub_categories, sub_category_cmds, postfit = False):
         categories = ["\\multicolumn{{2}}{{c}}{{ {} }}".format(sub_category_cmds.get(x,x)) 
                                                             for x in sub_categories]
     sub = """
-    \\hline\\hline
     & \\multicolumn{{ {length} }}{{c}}{{ {header_text} }} \\\\
     Process & {categories} \\\\
     \\hline\n""".format(  length = ncols,
@@ -232,7 +266,6 @@ def create_header(sub_categories, sub_category_cmds, postfit = False):
 
 def create_footer():
     s = """
-    \\hline\\hline
     \\end{tabular}
     \\renewcommand{\\arraystretch}{1}
     """
@@ -280,7 +313,7 @@ def print_table(yield_map_prefit, njet_category, cfg_module,
     bodylines.append(print_table_line(process = cfg_module.data, 
                                         print_error = False, **opts)
                     )
-    body = "\\hline\n".join(bodylines)
+    body = "\n".join(bodylines)
 
     footer = create_footer()
     return "\n".join([header, body, footer])
