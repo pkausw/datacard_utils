@@ -35,13 +35,13 @@ category_channel_map = {
 }
 
 process_commands = {
-    "ttlf"           : "\\ttlf",
+    "ttlf"           : "\\ttLF",
     "ttcc"           : "\\ttC",
     "ttbb"           : "\\ttB",
     "singlet"        : "\\singlet",
     "vjets"          : "\\Vjets",
     "ttbarV"         : "\\ttV",
-    "ttbarGamma"     : "\\ttGamma",
+    "ttbarGamma"     : "\\ttg",
     "diboson"        : "\\diboson",
     "tH"	     : "\\tH",
     total_bkg       : "Total\\;bkg.",
@@ -50,10 +50,10 @@ process_commands = {
 }
 
 sub_category_commands = {
-    "4j \\geq 3t ttHbb" : "$4j \\geq 3t$ Ratio (\\ttH + \\ttbb)", 
+    "4j \\geq 3t ttHbb" : "$4j \\geq 3t$ Ratio (\\ttH + \\ttB)", 
     # "4j \\geq 3t ttbb" : "$4j \\geq 3t$ \\ttbb",
-    "4j \\geq 3t ttcc" : "$4j \\geq 3t$ \\ttcc",
-    "4j \\geq 3t ttlf" : "$4j \\geq 3t$ \\ttlf",
+    "4j \\geq 3t ttcc" : "$4j \\geq 3t$ \\ttC",
+    "4j \\geq 3t ttlf" : "$4j \\geq 3t$ \\ttLF",
     # "3t"   : "\\dlFourThree",
     # "4tl"  : "\\dlFourFour BDT-low",
     # "4th"  : "\\dlFourFour BDT-high",
