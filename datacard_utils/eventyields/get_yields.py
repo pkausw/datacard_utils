@@ -240,7 +240,7 @@ def create_footer():
 
 def print_table(yield_map_prefit, njet_category, cfg_module, 
                     yield_map_postfit = None, print_errors = True):
-    print "print_table: ", njet_category
+    print( "print_table: {}".format(njet_category))
 
     sub_categories = []
     # if "SL" in njet_category:
@@ -297,7 +297,7 @@ def init_module(config_path):
 
 def load_keyword(dict, keyword):
     item = dict.get(keyword, None) 
-    if not item:
+    if item == None:
         raise ValueError("Could not load keyword '{}'".format(keyword))
     return item
 
@@ -335,8 +335,6 @@ def main(**kwargs):
         outname = ".".join(inpath.split(".")[:-1])
 
     for njet_category in cfg_module.njet_categories:
-        print
-        print
         s = print_table(    yield_map_prefit = yield_map_prefit,
                         njet_category = njet_category,
                         cfg_module = cfg_module,
