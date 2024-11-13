@@ -2,7 +2,6 @@ from __future__ import absolute_import
 from __future__ import print_function
 import os
 import sys
-from types import NoneType
 import ROOT
 import json
 import numpy as np
@@ -66,7 +65,7 @@ class ValidationInterface(ProcessManipulator):
 
     @channels_to_combine.setter
     def channels_to_combine(self, varlist):
-        if not isinstance(varlist, (list, NoneType)):
+        if not isinstance(varlist, (list, type(None))):
             raise ValueError("'channels_to_combine' must be a list of channels or None!")
         else:
             self.__channels_to_combine = varlist
