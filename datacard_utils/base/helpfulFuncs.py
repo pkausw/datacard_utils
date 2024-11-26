@@ -1,6 +1,7 @@
 import ROOT
 import os
 import shutil
+import subprocess
 
 class helpfulFuncs(object):
 
@@ -128,12 +129,12 @@ class helpfulFuncs(object):
         parts = pathToDatacard.split(".")
         outputPath = ".".join(parts[:len(parts)-1]) + ".root"
         if not os.path.exists(outputPath):
-            print "generating workspace for", pathToDatacard
+            print( "generating workspace for", pathToDatacard)
             
             bashCmd = ["source {0} ;".format(pathToCMSSWsetup)]
             bashCmd.append("text2workspace.py -m 125 " + pathToDatacard)
             bashCmd.append("-o " + outputPath)
-            print bashCmd
+            print( bashCmd)
             subprocess.call([" ".join(bashCmd)], shell = True)
     
         workspacePath = outputPath
@@ -145,17 +146,17 @@ class helpfulFuncs(object):
             else:
                 test = f.Get("w")
                 if not isinstance(test, ROOT.RooWorkspace):
-                    print "could not find workspace in", workspacePath
+                    print ("could not find workspace in", workspacePath)
                     workspacePath = ""
         else:
-            print "could not find", workspacePath
+            print ("could not find", workspacePath)
             workspacePath = ""
         return workspacePath
         
     def check_for_reset(self, folder):
         
         if os.path.exists(folder):
-            print "resetting folder", folder
+            print ("resetting folder", folder)
             shutil.rmtree(folder)
         os.makedirs(folder)
 

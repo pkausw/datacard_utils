@@ -19,7 +19,8 @@ dc_manipulator_path = os.path.join(pwd, "dc_manipulator.py")
 
 
 cmd_template = helper.JOB_PREFIX
-cmd_template += "python {}".format(dc_manipulator_path)
+cmd_template += "export PYTHONPATH={path}:$PYTHONPATH\n".format(path = os.path.dirname(pwd))
+cmd_template += "python3 {executable}"
 cmd_template += """ -i '{input}' --directory {directory} {additional}
 """
 def parse_arguments():
@@ -27,6 +28,17 @@ def parse_arguments():
     usage = "python %prog [options]"
     parser = OptionParser(usage = usage)
 
+    parser.add_option("-e", "--executable",
+        help = " ".join(
+            """
+            path to the dc_manipulator.py script. Default is the one in the 
+            datacard_utils package
+            """.split()
+        ),
+        dest = "executable",
+        type = "str",
+        default = dc_manipulator_path,                  
+    )
     parser.add_option("-i", "--input",
                         help = " ".join(
                             """
@@ -78,11 +90,12 @@ def parse_arguments():
 
     return options, args
 
-def create_script(input, outdir, additional_cmds = []):
+def create_script(input, outdir, executable, additional_cmds = []):
 
     name = helper.check_for_twin("dc_manipulator.sh")
     script = cmd_template.format(input = input, directory = outdir, 
-                                additional = " ".join(additional_cmds))
+                                additional = " ".join(additional_cmds),
+                                executable = executable)
     print("writing script at {}".format(os.path.abspath(name)))
     with open(name, "w") as f:
         f.write(script)
@@ -92,6 +105,7 @@ def create_script(input, outdir, additional_cmds = []):
 def main(**kwargs):
     inputs = kwargs.get("inputs")
     outdir = kwargs.get("directory")
+    executable = os.path.abspath(kwargs.get("executable", dc_manipulator_path))
     dry_run = kwargs.get("dry_run", False)
     additional_cmds = kwargs.get("additional_cmds", [])
     if not additional_cmds:
@@ -100,7 +114,7 @@ def main(**kwargs):
     scripts = []
     for i in inputs:
         s = create_script(input = i, outdir= outdir, 
-                        additional_cmds = additional_cmds)
+                        additional_cmds = additional_cmds, executable = executable)
         scripts.append(s)
     
     
@@ -108,6 +122,7 @@ def main(**kwargs):
         if not dry_run:
             arrayname = "arrayJob.sh"
             arrayname = helper.check_for_twin(arrayname)
+            batch.memory = 2048
             batch.submitArrayToBatch(scripts = scripts, arrayscriptpath = arrayname)
     else:
         print("Could not generate any dc_manipulator scripts!")
